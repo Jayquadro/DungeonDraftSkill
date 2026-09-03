@@ -608,7 +608,46 @@ trovata): `table_round`, `chair`, `bed`, `crate`, `barrel`, `bookshelf`,
 `brazier`. `paths` resta vuota: nessuna mappa reale di Jay usa un elemento
 `path`, coerente con quanto gia notato in §3 per `rich_reference`.
 
-## 11. Prossimi passi
+## 11. `tests/fixtures/reference_8x8.dungeondraft_map` — provenienza (TASK-5)
+
+Nessun template 8×8 vuoto esiste sull'installazione di Jay (il piu piccolo
+file reale trovato e 35×20, §8.4). E stato quindi usato un export genuino
+di terze parti gia presente sul sistema:
+`source/github/dungeondraft_maps/crosshead_style/corpse_flower.dungeondraft_map`
+(build `1.0.4.7 corrosive medusa`, 10 pack, 5 oggetti, 1 percorso — **non e
+vuoto** di elementi disegnabili, da cui il nome `reference_8x8` invece di
+`blank_8x8` usato inizialmente nell'AC del task).
+
+**Perche va bene comunque come fixture:** le dimensioni dei blob, una volta
+interpretate correttamente come stringhe `PoolIntArray`/`PoolByteArray` (non
+come lunghezza della stringa JSON grezza — vedi nota metodologica sotto),
+coincidono esattamente con l'esempio verificato in SPEC.md §2:
+
+| Campo | Atteso (SPEC.md §2 per 8×8) | Osservato in `reference_8x8` |
+|---|---|---|
+| `tiles.cells` | `width×height` = 64 elementi | 64 |
+| `terrain.splat` | `width×height×64` = 4096 elementi | 4096 |
+| `cave.bitmap` | 154 byte (valore noto, non lineare) | 154 elementi |
+
+Il file e usato **solo** per verificare le formule dimensionali dei blob e
+il meccanismo di `template.blank_level`/`prepare` (TASK-8): non e la fonte
+di nessuno schema di elemento (quello resta `rich_reference.dungeondraft_map`
+e le mappe reali di Jay, §5). La build piu vecchia non e un problema per
+questo scopo: le differenze osservate finora fra build (`point_index` nei
+portal, schema di `light`) non riguardano i blob binari.
+
+**Nota metodologica importante (per chi tocca `validate.py`, TASK-13):**
+`tiles.cells` e `terrain.splat` sono serializzati come **stringhe**
+`"PoolIntArray( ... )"` / `"PoolByteArray( ... )"`, esattamente come
+`PoolVector2Array` (§6.1 di SPEC.md). **Non chiamare `len()` sulla stringa
+grezza**: bisogna prima fare il parsing (dividere sulla virgola dopo aver
+tolto il wrapper `PoolXxxArray( ... )`) e contare gli elementi. Un tentativo
+di misurazione errato durante questo task ha inizialmente suggerito che le
+formule di DDF010/DDF011 non tornassero su nessun file reale di Jay — errore
+di misurazione, non del formato: dopo il parsing corretto, tutte le mappe
+controllate (80×80, 35×20, 40×32, 8×8) rispettano le formule esattamente.
+
+## 12. Prossimi passi
 
 - **Gate umano M1/M3**: confermare il segno delle rotazioni delle porte e il
   significato di `direction`, aggiornando §6 di questo documento.
