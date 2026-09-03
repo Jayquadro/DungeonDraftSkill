@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ddforge"
+version = "0.1.0"
+description = "Generatore procedurale di mappe .dungeondraft_map per Dungeondraft"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jay" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+preview = ["Pillow>=10"]
+
+[project.scripts]
+ddforge = "ddforge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ddforge = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: test lenti (golden file), esclusi con -m 'not slow'",
+]
