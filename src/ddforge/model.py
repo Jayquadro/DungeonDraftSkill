@@ -19,20 +19,26 @@ class Rect:
 
     @property
     def w(self) -> int:
-        raise NotImplementedError
+        return self.x2 - self.x1
 
     @property
     def h(self) -> int:
-        raise NotImplementedError
+        return self.y2 - self.y1
 
     def center(self) -> tuple[float, float]:
-        raise NotImplementedError
+        return ((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2)
 
     def overlaps(self, other: "Rect", margin: int = 0) -> bool:
-        raise NotImplementedError
+        """Vero se i due rettangoli si intersecano, allargati di `margin` per lato."""
+        return not (
+            self.x2 + margin <= other.x1
+            or other.x2 + margin <= self.x1
+            or self.y2 + margin <= other.y1
+            or other.y2 + margin <= self.y1
+        )
 
     def shrink(self, n: int) -> "Rect":
-        raise NotImplementedError
+        return Rect(self.x1 + n, self.y1 + n, self.x2 - n, self.y2 - n)
 
 
 @dataclass
