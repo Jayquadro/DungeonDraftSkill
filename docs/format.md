@@ -122,17 +122,53 @@ Verificato per ispezione diretta di `templates/rich_reference.dungeondraft_map`:
 **Condizione di stop dell'AC5 di TASK-2 (luce e testo assenti): non applicabile.**
 Il template ricco contiene sia una luce sia un testo: si procede senza fermarsi.
 
-## 4. Schema di `light` e `text` — osservazione TASK-2, derivazione formale TASK-3
+## 4. Schema di `light` e `text` (TASK-3 — derivazione consolidata)
 
-Questi due schemi **non erano verificati** in SPEC.md §13. Quanto segue e
-un'osservazione diretta e letterale del singolo esemplare presente nel
-template ricco. **Un solo campione non e sufficiente per derivarne le
-regole generali** (es. quali campi sono opzionali, quali range sono validi):
-questo resta compito di TASK-3, che deve anche verificare se altri
-esempi nelle mappe reali di Jay (`NovaMistralis/Mappe/*.dungeondraft_map`,
-che contengono fino a 41 luci ciascuna) confermano lo schema.
+Questi due schemi **non erano verificati** in SPEC.md §13. Oltre al campione
+di `rich_reference.dungeondraft_map` (TASK-2), sono state ispezionate le
+mappe reali della campagna di Jay in `NovaMistralis/`, che contengono luci
+in quantita (fino a 41 per mappa): **82 luci reali** aggiuntive confermano
+i campi comuni e rivelano che `rich_reference` mostra una **variante
+diversa** dalla maggioranza. Per `text` non e stato trovato nessun altro
+campione: resta **un solo esemplare** in tutto il progetto (verificato
+anche nelle mappe di terze parti in `dungeondraft_maps/crosshead_style/`,
+che non ne contengono nessuno).
 
-### `light` (osservato, 1 campione)
+### `light` — due varianti osservate, non una
+
+**Variante A — "luce puntiforme", 82/83 campioni osservati** (mappe reali
+`NovaMistralis/Mappe/*.dungeondraft_map` e
+`.../Da espandere/Bozze - Atto 1/Carcere/*.dungeondraft_map`):
+
+```json
+{
+  "position": "Vector2( 1971, 2739 )",
+  "range": 3.5,
+  "color": "aaccff",
+  "intensity": 0.8,
+  "shadows": true,
+  "node_id": "6"
+}
+```
+
+- `position`: Vector2, osservato.
+- `range`: float, osservato, valori fra 1.5 e 6.0 nel campione (raggio in
+  quadretti, non in pixel: coerente con range piccoli tipo torcia/braciere).
+- `color`: stringa esadecimale **a 6 cifre RGB, non 8 cifre ARGB** —
+  diverso dalla convenzione di `godot.argb()` usata per muri/pattern/testo.
+  Osservato su tutti gli 82 campioni, mai un valore a 8 cifre in questa
+  variante. **Da rispettare cosi com'e in `add_light`: non passare il
+  colore delle luci per `argb()`.**
+- `intensity`: float, osservato, valori fra 0.45 e 0.85.
+- `shadows`: bool, osservato **sempre `true`** sugli 82 campioni — non e
+  chiaro se `false` sia un valore valido mai usato da Jay o se il campo
+  venga omesso quando falso (come si e visto per `portal.locked`, TASK-2
+  §5). **Ipotizzato, non osservato:** che `shadows: false` sia comunque
+  accettato da Dungeondraft.
+- **Non ha `rotation` ne `texture`**: assenti su tutti gli 82 campioni.
+
+**Variante B — "luce con sprite", 1/83 campioni osservato** (il campione di
+`rich_reference.dungeondraft_map`):
 
 ```json
 {
@@ -147,10 +183,26 @@ che contengono fino a 41 luci ciascuna) confermano lo schema.
 }
 ```
 
-Non e annidata in nessun'altra struttura: e un elemento di primo livello in
-`level.lights`, come le altre liste disegnabili.
+Stessi campi base della variante A, piu `rotation` (float) e `texture`
+(path `res://`), e qui il colore **e** a 8 cifre ARGB. **Ipotesi piu
+plausibile (non confermata su piu campioni):** `rotation`/`texture` compaiono
+solo quando la luce ha uno sprite associato (es. un effetto di
+fiamma/particellare come `fragments.png`), mentre le luci "semplici" per
+illuminare un ambiente (variante A, la stragrande maggioranza nell'uso
+reale di Jay) li omettono. Se il colore a 8 vs 6 cifre sia legato alla
+stessa distinzione o sia un'inconsistenza fra build diverse **non e
+verificato**: `rich_reference` e in build 1.2.0.1 come le mappe reali, quindi
+non e una differenza di versione.
 
-### `text` (osservato, 1 campione)
+**Per `build.add_light` (TASK-10):** implementare la variante A come
+default (i campi base sono quelli confermati su 82 campioni); accettare
+`rotation`/`texture` opzionali per la variante B. Non forzare `color` a 8
+cifre.
+
+In entrambe le varianti l'elemento non e annidato in nessun'altra
+struttura: e un elemento di primo livello in `level.lights`.
+
+### `text` (osservato, 1 solo campione in tutto il progetto)
 
 ```json
 {
@@ -164,11 +216,163 @@ Non e annidata in nessun'altra struttura: e un elemento di primo livello in
 }
 ```
 
-`box_shape` e un intero, significato non ancora determinato (probabile enum
-per la forma dello sfondo/box del testo: da verificare in TASK-3, magari
-provando valori diversi in Dungeondraft e osservando l'effetto).
+Tutti i campi **osservati** (non ipotizzati), ma su un solo esemplare:
 
-## 5. Differenza osservata nello schema `portal` rispetto a SPEC.md §13
+- `text`: stringa, il contenuto letterale.
+- `position`: Vector2.
+- `font_name`: stringa, nome del font di sistema/Godot (`"Libre Baskerville"`).
+- `font_size`: intero, in punti presumibilmente (32 qui).
+- `font_color`: colore 8 cifre ARGB (coerente con `godot.argb()`, a
+  differenza di `light.color`).
+- `box_shape`: intero, **significato non determinato — ipotizzato essere un
+  enum per la forma dello sfondo/box del testo** (0 osservato, valori
+  alternativi non noti). Nessuna seconda istanza disponibile per
+  confrontare. Se `build.add_text` (TASK-10) necessita di variare
+  `box_shape`, va prima chiesto a Jay di esportare un template con piu
+  testi diversi, oppure sperimentato direttamente in Dungeondraft
+  osservando l'effetto — non va inventato un valore.
+- Nessun campo di rotazione osservato per `text`.
+
+**Condizione di stop dell'AC5 di TASK-3: non applicabile.** Il template
+ricco contiene sia luci sia testi (confermato anche in TASK-2): si procede.
+
+## 5. Schema di riferimento consolidato di tutti gli elementi
+
+Riferimento unico del progetto (AC4 di TASK-3): schema verificato di ogni
+tipo di elemento disegnabile. `wall`, `portal` (variante annidata),
+`pattern`, `object`, `path` e `roof` sono presi da SPEC.md §13 (verificati
+sull'analisi originale su mappe 1.0.4.x) e confermati compatibili con la
+build 1.2.0.1 osservata nei template di questo progetto, salvo le eccezioni
+segnalate esplicitamente. `light` e `text` sono quelli derivati sopra (§4).
+
+### `wall`
+
+```json
+{
+  "points": "PoolVector2Array( 512, 512, 2048, 512 )",
+  "texture": "res://textures/walls/stone.png",
+  "color": "ffffffff",
+  "loop": true,
+  "type": 1,
+  "joint": 0,
+  "normalize_uv": true,
+  "shadow": true,
+  "node_id": "8e",
+  "portals": []
+}
+```
+
+`type` osservato sempre `1`. `joint`: `0` o `1`. `portals` e la lista delle
+porte annidate (vedi sotto): sempre presente, anche se vuota.
+
+### `portal` (annidato in `wall.portals` — l'unico tipo che il generatore deve produrre)
+
+```json
+{
+  "position": "Vector2( 5504, 1792 )",
+  "rotation": 3.141593,
+  "scale": "Vector2( 1, 1 )",
+  "direction": "Vector2( -1, 0 )",
+  "texture": "res://packs/xjCzavyl/textures/portals/door_metal_03.png",
+  "radius": 128,
+  "wall_id": "8e",
+  "wall_distance": 0.5,
+  "closed": true,
+  "node_id": "90",
+  "locked": true
+}
+```
+
+**Eccezioni osservate in build 1.2.0.1** (§6-7 sotto per il dettaglio):
+campo `point_index` aggiuntivo osservato in `rich_reference`; campo
+`locked` assente quando la porta non e bloccata (ipotesi, non confermata).
+Esiste anche un secondo tipo di `portal`, non annidato e con schema
+completamente diverso, usato per porte posizionate liberamente: **il
+generatore di questo progetto non lo produce mai** (§7).
+
+### `pattern`
+
+```json
+{
+  "position": "Vector2( 0, 0 )",
+  "shape_rotation": 0,
+  "rotation": 0,
+  "scale": "Vector2( 1, 1 )",
+  "points": "PoolVector2Array( 2816, 512, 3840, 512, 3840, 1280, 2816, 1280 )",
+  "layer": -400,
+  "color": "ffffffff",
+  "outline": false,
+  "texture": "...",
+  "node_id": "1a",
+  "locked": true
+}
+```
+
+### `object`
+
+```json
+{
+  "position": "Vector2( 1029.38, 979.371 )",
+  "rotation": -1.047195,
+  "scale": "Vector2( 1, 1 )",
+  "mirror": false,
+  "texture": "...",
+  "layer": 100,
+  "shadow": false,
+  "block_light": false,
+  "node_id": "a0d"
+}
+```
+
+### `path`
+
+```json
+{
+  "position": "Vector2( 4608, 3456 )",
+  "rotation": 0,
+  "scale": "Vector2( 1, 1 )",
+  "edit_points": "PoolVector2Array( 0, 0, 2560, 0 )",
+  "smoothness": 1,
+  "texture": "...",
+  "width": 472,
+  "layer": 100,
+  "fade_in": false,
+  "fade_out": false,
+  "grow": false,
+  "shrink": false,
+  "block_light": false,
+  "loop": false,
+  "node_id": "a30"
+}
+```
+
+`edit_points` sono relativi a `position` (`position` = primo punto). Nessun
+campione reale disponibile in questo progetto (§3): schema preso
+integralmente da SPEC.md §13, non riverificato qui.
+
+### `roof` (dentro `level.roofs.roofs`)
+
+```json
+{
+  "position": "Vector2( 0, 0 )",
+  "rotation": 0,
+  "scale": "Vector2( 1, 1 )",
+  "points": "PoolVector2Array( 8960, 5888, 8960, 4352 )",
+  "texture": "...",
+  "width": 512,
+  "type": 0,
+  "node_id": "7e5"
+}
+```
+
+Contenitore: `{"shade": true, "shade_contrast": 0.5, "sun_direction": 45, "roofs": [...]}`.
+
+### `light` e `text`
+
+Vedi §4 sopra: entrambi derivati per questo progetto, `light` ha due
+varianti osservate, `text` un solo campione.
+
+## 6. Differenza osservata nello schema `portal` rispetto a SPEC.md §13
 
 Il portal osservato nel template ricco (build 1.2.0.1) ha un campo
 **`point_index`** non presente nello schema documentato in SPEC.md §13
@@ -196,7 +400,7 @@ confermare quando si implementa `build.add_portal` (TASK-10): se
 Dungeondraft accetta il documento anche senza `locked`, ometterlo per le
 porte sbloccate invece di scrivere sempre `"locked": false`.
 
-## 6. Scoperta importante: esistono due schemi di `portal` distinti
+## 7. Scoperta importante: esistono due schemi di `portal` distinti
 
 L'ispezione delle mappe reali della campagna di Jay (`NovaMistralis/`, non
 template ma mappe di gioco vere, disegnate a mano nell'editor) mostra un
@@ -249,13 +453,13 @@ sempre un muro su cui agganciare la porta.
   dentro `wall['portals']`, come da SPEC.md §6.5. Non serve una primitiva per
   il tipo libero: fuori perimetro per questo progetto.
 
-## 7. File `.dungeondraft_map` trovati sul sistema (catalogo completo)
+## 8. File `.dungeondraft_map` trovati sul sistema (catalogo completo)
 
 Ricerca eseguita su home directory, Desktop, Documents, Downloads,
 `%AppData%\Roaming\Dungeondraft`, e le cartelle di lavoro sotto
 `source/github`. Nessun altro file trovato altrove sul disco.
 
-### 6.1 Candidati al ruolo di template (cartella `Desktop/ddraft_examples/`)
+### 7.1 Candidati al ruolo di template (cartella `Desktop/ddraft_examples/`)
 
 | File | Dimensione file | world (w×h) | format | build | pack | elementi |
 |---|---:|---|---|---|---:|---|
@@ -263,13 +467,13 @@ Ricerca eseguita su home directory, Desktop, Documents, Downloads,
 | `template_ricco.dungeondraft_map` | 1.690.233 B | 80×80 | 3 | 1.2.0.1 opulent kirin | 42 | 2 patterns, 2 walls (2 portals annidati), 1 object, 1 light, 1 text, 1 roof, 0 paths — **usato come rich** |
 | `mappa_ricca.dungeondraft_map` | 1.690.233 B | 80×80 | 3 | 1.2.0.1 opulent kirin | 42 | identico byte-per-byte a `template_ricco.dungeondraft_map` (SHA-256 uguale) |
 
-### 6.2 Backup automatico di Dungeondraft
+### 7.2 Backup automatico di Dungeondraft
 
 | File | Dimensione | world (w×h) | format | build | pack | elementi |
 |---|---:|---|---|---|---:|---|
 | `%AppData%\Roaming\Dungeondraft\backups\mappa_ricca.dungeondraft_map` | 436.003 B | 40×40 | 3 | 1.2.0.1 opulent kirin | 42 | 2 patterns, 2 walls (2 portals annidati), 0 object/light/text — snapshot intermedio, meno completo della versione su Desktop. **Non usato**: interessante solo perche conferma che Jay ha lavorato anche a 40×40 in passato, ma la versione finale e la 80×80 su Desktop. |
 
-### 6.3 File esclusi perche non genuini: `fortezza_san_leandro.dungeondraft_map`
+### 7.3 File esclusi perche non genuini: `fortezza_san_leandro.dungeondraft_map`
 
 `Desktop/fortezza_san_leandro.dungeondraft_map` (62.437 B, dichiara
 `creation_build: "1.0.4.3 treacherous tiefling"`) **non e un export reale
@@ -296,7 +500,7 @@ schema. Puo pero essere utile in TASK-15 come fixture "corrotta" gia pronta
 per testare DDF002/DDF007/DDF009 nel validatore, se si preferisce a fixture
 costruite ad hoc.
 
-### 6.4 Mappe reali della campagna (Nova Mistralis, cartella `source/github/NovaMistralis`)
+### 7.4 Mappe reali della campagna (Nova Mistralis, cartella `source/github/NovaMistralis`)
 
 Non sono template ma mappe di gioco vere e proprie della campagna di Jay
 ("Carcere" = complesso carcerario, coerente col mondo Nova Mistralis citato
@@ -318,7 +522,7 @@ non produca falsi positivi su mappe fatte a mano.
 | `Mappe/Carcere_sotterraneo.dungeondraft_map` | 334.075 B | 40×30 | 0 | 0/10/14/5/0 |
 | `Mappe/Carcere_torre.dungeondraft_map` | 577.253 B | 55×38 | 0 | 10/26/3/14/0 |
 
-### 6.5 Mappe di terze parti (repo `source/github/dungeondraft_maps`, stile "Crosshead")
+### 7.5 Mappe di terze parti (repo `source/github/dungeondraft_maps`, stile "Crosshead")
 
 Repository Git separato di mappe di esempio scaricate/di terze parti, usato
 presumibilmente come riferimento stilistico. Build fra `1.0.1.3` e
@@ -347,7 +551,7 @@ almeno la build `1.0.1.3` fino alla `1.2.0.1` attuale — utile per sapere che
 il formato non e cambiato di recente, anche se i template da usare restano
 quelli dell'installazione corrente.
 
-## 8. Prossimi passi
+## 9. Prossimi passi
 
 - **TASK-3**: derivazione formale dello schema di `lights`/`texts` (piu
   campioni, verifica di `box_shape`), da consolidare in questo stesso file.
