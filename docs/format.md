@@ -647,7 +647,25 @@ formule di DDF010/DDF011 non tornassero su nessun file reale di Jay — errore
 di misurazione, non del formato: dopo il parsing corretto, tutte le mappe
 controllate (80×80, 35×20, 40×32, 8×8) rispettano le formule esattamente.
 
-## 12. Prossimi passi
+## 12. `texts_vis` — 18ª chiave di livello, assente da SPEC.md §13 (TASK-13)
+
+Le 17 chiavi di `LEVEL_KEYS` (SPEC.md §13, `template.py` §6.3) sono state
+derivate da mappe build 1.0.4.x. Sia `blank_80x80.dungeondraft_map` sia
+`rich_reference.dungeondraft_map` (build 1.2.0.1, i due template di questo
+progetto) hanno una **18ª chiave**: `texts_vis`, booleana (`true` in
+entrambi), quasi certamente un flag di visibilita del layer testi nell'
+editor. La fixture 8×8 di terze parti (build 1.0.4.7, TASK-5) **non** ce
+l'ha, confermando che e stata aggiunta in una build successiva.
+
+**Correzione applicata:** `template.LEVEL_KEYS` ora include `texts_vis`
+come 18ª voce. `blank_level`/`prepare` non ne risentivano (preservano
+sempre tutte le chiavi del livello sorgente, comprese quelle non elencate),
+ma `validate.py` (DDF003, TASK-13) avrebbe segnalato un falso errore
+"chiave imprevista" su ogni documento reale della build corrente se
+`LEVEL_KEYS` fosse rimasto a 17 voci. Nessun'altra chiave extra e stata
+trovata nei documenti ispezionati finora.
+
+## 13. Prossimi passi
 
 - **Gate umano M1/M3**: confermare il segno delle rotazioni delle porte e il
   significato di `direction`, aggiornando §6 di questo documento.

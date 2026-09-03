@@ -57,12 +57,25 @@ def test_blank_level_clears_only_drawable_lists_and_metadata(reference_8x8_doc):
     level = reference_8x8_doc["world"]["levels"]["0"]
     blanked = blank_level(level)
 
-    assert set(blanked.keys()) == set(LEVEL_KEYS)
+    # blank_level non deve mai perdere chiavi: preserva esattamente quelle
+    # del livello sorgente. La fixture 8x8 e di una build che non ha
+    # texts_vis (assente da SPEC.md §13, aggiunta in build successive alla
+    # 1.0.4.x -- vedi docs/format.md §12), quindi qui non verifichiamo
+    # LEVEL_KEYS come sovrainsieme fisso, solo che nulla vada perso.
+    assert set(blanked.keys()) == set(level.keys())
     for key in DRAWABLE_LISTS:
         assert blanked[key] == []
 
     for key in ("tiles", "terrain", "cave", "water", "environment", "layers"):
         assert blanked[key] == level[key]
+
+
+def test_blank_level_covers_level_keys_on_current_build_template():
+    """Sulla build 1.2.0.1 reale (blank_80x80), LEVEL_KEYS include texts_vis."""
+    doc = load_template("templates/blank_80x80.dungeondraft_map")
+    level = doc["world"]["levels"]["0"]
+    blanked = blank_level(level)
+    assert set(LEVEL_KEYS).issubset(blanked.keys())
 
 
 def test_blank_level_preserves_terrain_splat_length(reference_8x8_doc):
@@ -94,9 +107,10 @@ def test_prepare_duplicates_first_level_when_more_requested(reference_8x8_doc):
     prepared = prepare(reference_8x8_doc, levels=3)
     levels = prepared["world"]["levels"]
     assert set(levels.keys()) == {"0", "1", "2"}
+    original_keys = set(reference_8x8_doc["world"]["levels"]["0"].keys())
     for lvl in levels.values():
         assert lvl["walls"] == []
-        assert set(lvl.keys()) == set(LEVEL_KEYS)
+        assert set(lvl.keys()) == original_keys
 
 
 def test_prepare_uses_labels(reference_8x8_doc):

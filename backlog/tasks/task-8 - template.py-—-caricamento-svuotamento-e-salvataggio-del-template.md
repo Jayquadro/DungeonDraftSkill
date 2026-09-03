@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@jayquadro'
 created_date: '2026-09-03 11:27'
-updated_date: '2026-09-03 14:36'
+updated_date: '2026-09-03 14:45'
 labels: []
 milestone: m-1
 dependencies:
@@ -46,6 +46,8 @@ Implementare load_template con validazione esplicita (header dict, world dict, w
 
 <!-- SECTION:NOTES:BEGIN -->
 Implementato load_template/blank_level/prepare/finalize/save. blank_level segue la base verificata di SPEC.md §12: oltre alle 7 liste disegnabili azzera anche shapes e materials (metadati derivati dai disegnabili, non blob dimensionati) — deviazione dalla lettera dell'AC2 originale ('solo le liste disegnabili'), corretta esplicitamente nell'AC per allinearla al codice di riferimento della spec. roofs preserva shade/shade_contrast/sun_direction e svuota solo la lista roofs. 18 test nuovi in tests/test_template.py sulla fixture 8x8 reale, incluso un test che confronta l'hash SHA-256 del file template prima e dopo un ciclo completo load->prepare->finalize->save per dimostrare che il sorgente non viene mai toccato. Suite completa: 66 test verdi.
+
+Correzione post-chiusura (scoperta durante TASK-13): LEVEL_KEYS aveva solo le 17 chiavi storiche di SPEC.md §13 (build 1.0.4.x). Entrambi i template reali del progetto (build 1.2.0.1) hanno una 18a chiave, texts_vis (bool), assente dalla fixture 8x8 di terze parti usata nei test originali di questo task — motivo per cui non era emerso prima. Aggiunta texts_vis a LEVEL_KEYS, aggiornati i test di blank_level/prepare per verificare la proprieta corretta (preserva le chiavi del sorgente, non forza un set fisso), aggiunto un test dedicato sul template reale blank_80x80. Documentato in docs/format.md §12. blank_level/prepare non necessitavano fix funzionali: preservano gia qualunque chiave extra tramite deepcopy.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

@@ -19,6 +19,12 @@ LEVEL_KEYS = (
     "label", "environment", "layers", "shapes", "tiles", "patterns",
     "walls", "portals", "cave", "terrain", "water", "materials",
     "paths", "objects", "lights", "roofs", "texts",
+    # "texts_vis" (bool, visibilita del layer testi) e presente in tutte le
+    # mappe build 1.2.0.1 osservate (blank_80x80, rich_reference) ma assente
+    # dalle 17 chiavi verificate in SPEC.md §13, derivate da mappe 1.0.4.x:
+    # e stato aggiunto in una build successiva. Vedi docs/format.md §12
+    # (sezione "texts_vis — 18a chiave di livello").
+    "texts_vis",
 )
 
 DRAWABLE_LISTS = (
