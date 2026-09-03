@@ -1,0 +1,353 @@
+{
+  "packs": [
+    {
+      "name": "Lost Lands Castles",
+      "id": "0vMF1pHo",
+      "author": "Lost Lands",
+      "version": "1"
+    },
+    {
+      "name": "BB BaseCity Colored",
+      "id": "2VHJB262",
+      "author": "BluBerrey",
+      "version": "1"
+    },
+    {
+      "name": "BB RiversRunnin Colored",
+      "id": "4MPa6ax6",
+      "author": "BluBerrey",
+      "version": "1"
+    },
+    {
+      "name": "CSA - Community Suggested Assets",
+      "id": "566ki5wO",
+      "author": "Nexoness",
+      "version": "1,1"
+    },
+    {
+      "name": "GoGots-Water",
+      "id": "74SaGFcV",
+      "author": "GoGots",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Wooden Stuff",
+      "id": "8LR9chxF",
+      "author": "Skront",
+      "version": "1.3"
+    },
+    {
+      "name": "CHR - Town Maps",
+      "id": "Bp03igMq",
+      "author": "Crosshead",
+      "version": "0,2"
+    },
+    {
+      "name": "TygerWagons",
+      "id": "CJYX8Yjo",
+      "author": "Tyger_purr",
+      "version": "1"
+    },
+    {
+      "name": "Benthic Botany",
+      "id": "E0ZgzvXT",
+      "author": "Stovetop",
+      "version": "1"
+    },
+    {
+      "name": "FA_Starter_Pack_v3.0",
+      "id": "FA30DDXY",
+      "author": "Forgotten Adventures",
+      "version": "3.0"
+    },
+    {
+      "name": "GoGots-Mushroom",
+      "id": "FjQPhftV",
+      "author": "GoGots",
+      "version": "1"
+    },
+    {
+      "name": "TygerBar",
+      "id": "H2ndnvOE",
+      "author": "Tyger_purr",
+      "version": "1.1"
+    },
+    {
+      "name": "GoGots-Forest",
+      "id": "HJANrMeL",
+      "author": "GoGots",
+      "version": "1,2"
+    },
+    {
+      "name": "Expanded Nature Vol. 1",
+      "id": "JoOKLIJc",
+      "author": "Scott Avery",
+      "version": "1"
+    },
+    {
+      "name": "BB KeepsAndCastles Colored",
+      "id": "KtpqsMIX",
+      "author": "BluBerrey",
+      "version": "1"
+    },
+    {
+      "name": "T23's Royal Furniture",
+      "id": "LLmsOZ4X",
+      "author": "Toblakai23",
+      "version": "1"
+    },
+    {
+      "name": "DQ_Pack_Theme_16 Arcane Laboratory FREE",
+      "id": "LPjlqz9Q",
+      "author": "DungeonQuill",
+      "version": "1"
+    },
+    {
+      "name": "TygerLibrary",
+      "id": "MJQ9gdYx",
+      "author": "Tyger_purr",
+      "version": "1"
+    },
+    {
+      "name": "IC_Apothecary",
+      "id": "MKedRBxF",
+      "author": "InsightCheque",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Books",
+      "id": "MiS6cyNC",
+      "author": "Skront",
+      "version": "1.1"
+    },
+    {
+      "name": "Maelstrom Maps Free Simple Castle Asset Pack",
+      "id": "P5JygHfx",
+      "author": "Maelstrom Maps",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Treasure",
+      "id": "PGz110gg",
+      "author": "Skront",
+      "version": "1"
+    },
+    {
+      "name": "CH - Worldmap",
+      "id": "Prdr1WET",
+      "author": "Crosshead",
+      "version": "0,5"
+    },
+    {
+      "name": "BB SeasAndShores Colored",
+      "id": "QofNvPQx",
+      "author": "BluBerrey",
+      "version": "1"
+    },
+    {
+      "name": "GF Colorable Furniture and Stairs",
+      "id": "QzahaP3O",
+      "author": "Gnome Factory",
+      "version": "1"
+    },
+    {
+      "name": "City Terrain",
+      "id": "RchUgE31",
+      "author": "Clay Robeson",
+      "version": "1"
+    },
+    {
+      "name": "WFW 5th Anniversary Free Megapack",
+      "id": "WFWMFRDX",
+      "author": "White Fox Works",
+      "version": "1"
+    },
+    {
+      "name": "BB RugsNRiches Colored",
+      "id": "a8D9WX4I",
+      "author": "BluBerrey",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Alchemy Mk2",
+      "id": "dS0IUhwf",
+      "author": "Skront",
+      "version": "1"
+    },
+    {
+      "name": "Crosshead's Ghibli Pack",
+      "id": "eMSwy6B7",
+      "author": "Crosshead",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Farm and Field",
+      "id": "hA8yMy2D",
+      "author": "Skront",
+      "version": "1.1"
+    },
+    {
+      "name": "[ADA]#28 - a day at the city center [FREE]",
+      "id": "iVabeBCC",
+      "author": "a day at",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Alchemy",
+      "id": "kNUrZPY0",
+      "author": "Skront",
+      "version": "1"
+    },
+    {
+      "name": "Skront's Rocks and Bricks",
+      "id": "o4K03ljk",
+      "author": "Skront",
+      "version": "1"
+    },
+    {
+      "name": "TygerMusic",
+      "id": "pMI97nEl",
+      "author": "Tyger_purr",
+      "version": "1.1"
+    },
+    {
+      "name": "Spacious Stable",
+      "id": "pkqBedwn",
+      "author": "InsightCheque",
+      "version": "1.1"
+    },
+    {
+      "name": "[DQ] 2Y_Anniversary_Pack",
+      "id": "qTwZcByF",
+      "author": "DungeonQuill",
+      "version": "1.1"
+    },
+    {
+      "name": "Lost Lands Hamlets",
+      "id": "roSIrsHG",
+      "author": "Lost Lands",
+      "version": "1"
+    },
+    {
+      "name": "Unofficial Jonathan Roberts Free Pack",
+      "id": "s7XNt1yd",
+      "author": "",
+      "version": "1"
+    },
+    {
+      "name": "TygerNautical",
+      "id": "sI3jbFGs",
+      "author": "Tyger_purr",
+      "version": "2.1"
+    },
+    {
+      "name": "Stained Glass Windows",
+      "id": "u492rwJO",
+      "author": "Olooriel",
+      "version": "1"
+    },
+    {
+      "name": "[ADA]#25- a day at the resort [FREE]",
+      "id": "uZflDG7o",
+      "author": "a day at",
+      "version": "1"
+    },
+    {
+      "name": "GoGots-Forest Add",
+      "id": "vpUPLad1",
+      "author": "GoGots",
+      "version": "1"
+    },
+    {
+      "name": "WFW Sample Pack",
+      "id": "ygxXFHkC",
+      "author": "White Fox Works",
+      "version": "1"
+    }
+  ],
+  "walls": {
+    "battlements": "res://textures/walls/battlements.png",
+    "cobble": "res://textures/walls/cobble.png",
+    "concrete": "res://textures/walls/concrete.png",
+    "stone": "res://textures/walls/stone.png",
+    "stone_09": "res://textures/walls/stone_09.png",
+    "wood_04": "res://textures/walls/wood_04.png"
+  },
+  "floors": {
+    "cobblestone": "res://textures/patterns/normal/cobblestone.png",
+    "stone_floor": "res://textures/patterns/normal/stone_floor.png",
+    "tileset_brick_basketweave": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
+    "tileset_cobble": "res://textures/tilesets/simple/tileset_cobble.png",
+    "wood_planks": "res://textures/patterns/normal/wood_planks.png",
+    "wooden_flooring_m_light": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp"
+  },
+  "portals": {
+    "archway": "res://textures/portals/archway.png",
+    "door_00": "res://textures/portals/door_00.png",
+    "door_02": "res://textures/portals/door_02.png",
+    "door_06": "res://textures/portals/door_06.png",
+    "door_09": "res://textures/portals/door_09.png",
+    "door_iron": "res://textures/portals/door_iron.png",
+    "door_secret": "res://textures/portals/door_secret.png",
+    "door_wood_double": "res://textures/portals/door_wood_double.png",
+    "door_wood_single": "res://textures/portals/door_wood_single.png",
+    "portcullis": "res://textures/portals/portcullis.png",
+    "portcullis_02": "res://textures/portals/portcullis_02.png",
+    "stained_glass_window_double_02_a_ashen": "res://packs/WFWMFRDX/textures/portals/Stained_Glass_Window_Double_02_A_Ashen.webp",
+    "stained_glass_window_single_02_a_ashen": "res://packs/WFWMFRDX/textures/portals/Stained_Glass_Window_Single_02_A_Ashen.webp",
+    "threshold_01": "res://textures/portals/threshold_01.png",
+    "window_05": "res://textures/portals/window_05.png"
+  },
+  "roofs": {
+    "tiles": "res://textures/roofs/flat_clay_red/tiles.png"
+  },
+  "paths": {},
+  "objects": {
+    "animal_cage_top_02_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Cage_Top_02_A.webp",
+    "animal_dish_dented_full": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Dish_Dented_Full.webp",
+    "barrel": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+    "barrel_01": "res://textures/objects/containers/barrel_01.png",
+    "barrel_forge_01": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+    "bed": "res://textures/objects/tables/bed_wood_single_01.png",
+    "bed_wood_single_01": "res://textures/objects/tables/bed_wood_single_01.png",
+    "bench_wood_01": "res://textures/objects/tables/bench_wood_01.png",
+    "bookshelf": "res://textures/objects/tables/bookshelf_wood_01.png",
+    "bookshelf_wood_01": "res://textures/objects/tables/bookshelf_wood_01.png",
+    "bowl_berries_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Food/[WFW] Food - Readymade Dishes/Bowl_Berries_01_A.webp",
+    "brazier": "res://textures/objects/light/brazier_01.png",
+    "brazier_01": "res://textures/objects/light/brazier_01.png",
+    "cage_04": "res://textures/objects/supplies/cages/cage_04.png",
+    "campfire_07": "res://textures/objects/camp/campfire_07.png",
+    "campfire_lit_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Camping/Campfire_Lit_01_A.webp",
+    "chair": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Seats/Chair_01_Ashen.webp",
+    "chair_01_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Seats/Chair_01_Ashen.webp",
+    "chair_wood_01": "res://textures/objects/tables/chair_wood_01.png",
+    "crate": "res://textures/objects/containers/crate_wood_01.png",
+    "crate_wood_01": "res://textures/objects/containers/crate_wood_01.png",
+    "cupboard_wood_light_d_2x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
+    "cupboard_wood_light_h2_2x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_H2_2x1.webp",
+    "desk_wood_01": "res://textures/objects/tables/desk_wood_01.png",
+    "fountain_stone_01": "res://textures/objects/decor/fountain_stone_01.png",
+    "keg_wood_light_h_1x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Keg_Wood_Light_H_1x1.webp",
+    "latrine_multiple_01_a_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Latrines/Latrine_Multiple_01_A_Ashen.webp",
+    "magic_circle_01": "res://textures/objects/decor/magic_circle_01.png",
+    "magic_circle_small_01": "res://textures/objects/decor/magic_circle_small_01.png",
+    "oven_brick_red_a2_2x2": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
+    "pan": "res://textures/objects/activities/cooking/pan.png",
+    "pants_02_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Clothing/Pants_02_A.webp",
+    "rug_01": "res://textures/objects/decor/rug_01.png",
+    "rug_rectangle_m2_colorable_3x2": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/colorable/Rug_Rectangle_M2_Colorable_3x2.webp",
+    "sauce_pan_lid_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Kitchenware/Sauce_Pan_Lid_01_A.webp",
+    "skeleton_04": "res://textures/objects/decor/dungeon/skeleton_04.png",
+    "skeleton_grave_02": "res://textures/objects/decor/dungeon/skeleton_grave_02.png",
+    "small_table_08": "res://textures/objects/furniture/tables/small_table_08.png",
+    "small_table_10": "res://textures/objects/furniture/tables/small_table_10.png",
+    "stairs_round_04": "res://textures/objects/structures/stairs/stairs_round_04.png",
+    "stairs_round_08": "res://textures/objects/structures/stairs/stairs_round_08.png",
+    "statue_male_mage_alt_03_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Ornaments and Decoration/[WFW] Statues/Statue_Male_Mage_Alt_03_A.webp",
+    "table_corner_wood_01": "res://textures/objects/furniture/tables/table_corner_wood_01.png",
+    "table_round": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Tables/Table_Round_02_Ashen.webp",
+    "table_round_02_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Tables/Table_Round_02_Ashen.webp",
+    "table_wood_rectangular_small_01": "res://textures/objects/tables/table_wood_rectangular_small_01.png"
+  }
+}

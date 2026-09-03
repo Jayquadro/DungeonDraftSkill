@@ -551,11 +551,64 @@ almeno la build `1.0.1.3` fino alla `1.2.0.1` attuale — utile per sapere che
 il formato non e cambiato di recente, anche se i template da usare restano
 quelli dell'installazione corrente.
 
-## 9. Prossimi passi
+## 10. `data/assets.json` — provenienza (TASK-4)
 
-- **TASK-3**: derivazione formale dello schema di `lights`/`texts` (piu
-  campioni, verifica di `box_shape`), da consolidare in questo stesso file.
-- **TASK-4**: generare `data/assets.json` da `templates/rich_reference.dungeondraft_map`
-  usando l'elenco pack di §2.
+`rich_reference.dungeondraft_map` da solo ha troppo poche texture per
+popolare un catalogo utile (1 muro, 2 pattern, 2 portal, 1 oggetto, 1
+tetto). Il file committato in `data/assets.json` e stato generato unendo
+`rich_reference.dungeondraft_map` con le mappe reali della campagna di Jay
+in `NovaMistralis/` (non template, ma file `.dungeondraft_map` genuini
+esportati dalla stessa installazione, quindi con lo stesso `world.format`
+e build, e con i pack ID reali nel loro `header.asset_manifest`):
+
+```
+templates/rich_reference.dungeondraft_map
+NovaMistralis/Mappe/Carcere_celle.dungeondraft_map
+NovaMistralis/Mappe/Carcere_Nova.dungeondraft_map
+NovaMistralis/Mappe/Carcere_Nova_2.dungeondraft_map
+NovaMistralis/Mappe/Carcere_sotterraneo.dungeondraft_map
+NovaMistralis/Mappe/Carcere_torre.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere1.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere_Nova_Mistralis_PianoTerra.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova2.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova3.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/ProvaMappa.dungeondraft_map
+```
+
+Comando esatto usato (`ddforge catalog --from` e ripetibile):
+
+```
+ddforge catalog --from templates/rich_reference.dungeondraft_map \
+  --from ".../NovaMistralis/Mappe/Carcere_celle.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_Nova.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_Nova_2.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_sotterraneo.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_torre.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere1.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere_Nova_Mistralis_PianoTerra.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova2.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova3.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/ProvaMappa.dungeondraft_map" \
+  --out data/assets.json
+```
+
+Risultato: 44 pack, 6 walls, 6 floors, 15 portals, 1 roof, 0 paths, 46
+oggetti (chiave = slug del nome file). Nessuna texture nel catalogo e stata
+inventata: ogni voce e presa letteralmente da uno dei documenti sopra.
+
+**Categorie di SPEC.md §6.7 senza controparte reale, lasciate assenti:**
+`torch`, `altar`, `sarcophagus`, `column`, `chest`. Nessuno dei file
+`.dungeondraft_map` reali di Jay contiene un oggetto identificabile con
+questi nomi. Per popolarle: Jay puo aggiungere un esemplare di ciascuno
+al template ricco (o in una qualunque mappa) e rilanciare `ddforge catalog`
+con quel file incluso fra i `--from` — mai inventare un path a mano.
+
+**Alias semantici popolati con successo** (nome SPEC.md -> texture reale
+trovata): `table_round`, `chair`, `bed`, `crate`, `barrel`, `bookshelf`,
+`brazier`. `paths` resta vuota: nessuna mappa reale di Jay usa un elemento
+`path`, coerente con quanto gia notato in §3 per `rich_reference`.
+
+## 11. Prossimi passi
+
 - **Gate umano M1/M3**: confermare il segno delle rotazioni delle porte e il
-  significato di `direction`, aggiornando §5 di questo documento.
+  significato di `direction`, aggiornando §6 di questo documento.

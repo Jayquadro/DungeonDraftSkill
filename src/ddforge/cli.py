@@ -8,6 +8,7 @@ completa cosi `ddforge --help` la documenta fin da subito.
 
 import argparse
 import sys
+from pathlib import Path
 
 
 def _cmd_generate(args: argparse.Namespace) -> int:
@@ -23,7 +24,26 @@ def _cmd_inspect(args: argparse.Namespace) -> int:
 
 
 def _cmd_catalog(args: argparse.Namespace) -> int:
-    raise NotImplementedError("ddforge catalog: implementato in TASK-4")
+    import json
+
+    from ddforge.assets import build_catalog
+
+    docs = []
+    for path in args.from_template:
+        with open(path, encoding="utf-8") as f:
+            docs.append(json.load(f))
+
+    catalog = build_catalog(*docs)
+
+    out_path = Path(args.out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(catalog, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+    counts = ", ".join(f"{k}={len(v)}" for k, v in catalog.items() if k != "packs")
+    print(f"Scritto {out_path}: {len(catalog['packs'])} pack, {counts}")
+    return 0
 
 
 def _cmd_preview(args: argparse.Namespace) -> int:
@@ -58,8 +78,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_inspect.add_argument("file")
     p_inspect.set_defaults(func=_cmd_inspect)
 
-    p_catalog = subparsers.add_parser("catalog", help="rigenera data/assets.json da un template")
-    p_catalog.add_argument("--from", dest="from_template", required=True)
+    p_catalog = subparsers.add_parser("catalog", help="rigenera data/assets.json da uno o piu template")
+    p_catalog.add_argument(
+        "--from", dest="from_template", action="append", required=True,
+        help="documento .dungeondraft_map sorgente; ripetibile per unire piu file",
+    )
+    p_catalog.add_argument("--out", default="data/assets.json")
     p_catalog.set_defaults(func=_cmd_catalog)
 
     p_preview = subparsers.add_parser("preview", help="renderizza un PNG di anteprima (M6)")
