@@ -183,8 +183,14 @@ def test_connect_l_corridor_result_passes_validate_with_no_errors_or_blocking_wa
     doc = _full_doc(level, ids.next_free)
     assert _errors_excluding_blob_size(doc) == []
     warnings = {i.code for i in validate(doc) if i.severity == "warning"}
-    assert "DDF102" not in warnings
     assert "DDF105" not in warnings
+    # DDF102 non e piu verificabile qui dal gate M3 (TASK-26): ora i due
+    # bracci della L si uniscono davvero all'angolo, quindi i loro muri
+    # condividono un estremo e formano un gruppo connesso senza porte. E'
+    # esattamente il falso positivo gia documentato in
+    # validate._check_ddf102_unreachable_rooms (il validatore non sa
+    # distinguere un corridoio da una stanza): warning non bloccante, e su
+    # una mappa vera non compare (generated/dungeon_m3 valida pulita).
 
 
 def test_connect_adjacent_rooms_result_passes_validate_with_no_errors():

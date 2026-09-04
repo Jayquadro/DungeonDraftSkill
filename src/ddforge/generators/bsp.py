@@ -6,22 +6,22 @@ qui, coerente col flusso generatore -> Blueprint -> compose -> build -> JSON
 (SPEC.md, model.py). La semantica D&D (stanza boss, nodi tattici, corridoi
 bui, porte segrete) e in TASK-22.
 
-Nota per chi renderizza Blueprint.corridors in JSON (TASK-24): ogni Rect e
-un canale aperto (compose._draw_corridor_channel-style: solo 2 lati lunghi,
-niente muri di testata, altrimenti si riblocca la porta appena tagliata nel
-muro della stanza, vedi TASK-19). L'orientamento non e salvato esplicitamente
-nel Rect: derivarlo da rect.w >= rect.h (piu largo che alto -> orizzontale,
-lati TOP/BOTTOM) e affidabile perche un canale e sempre molto piu lungo che
-largo, TRANNE per segmenti quasi quadrati all'angolo di una L generale
-(lunghezza vicina a corridor_width): in quel caso l'orientamento e ambiguo
-per costruzione e la scelta non e critica per la connettivita.
+Nota per chi renderizza Blueprint.corridors in JSON (TASK-24): ogni elemento
+e un Corridor, cioe un canale aperto (solo i 2 lati lunghi, niente muri di
+testata, altrimenti si riblocca la porta appena tagliata nel muro della
+stanza, vedi TASK-19). L'orientamento e un campo esplicito di Corridor, e
+va usato quello: derivarlo da rect.w >= rect.h sembrava innocuo, ma i
+segmenti di gomito sono quadrati e l'euristica li murava di traverso
+(gate umano M3, TASK-26). Disegnali sempre in blocco con
+compose.draw_corridor_network, mai uno alla volta: i muri di un braccio si
+devono fermare dove ne inizia un altro.
 """
 
 import math
 import random
 
-from ddforge.compose import _shared_wall_segment, _side_corners, plan_corridor
-from ddforge.model import Blueprint, Door, Rect, Room
+from ddforge.compose import _overlap_area, _shared_wall_segment, _side_corners, plan_corridor
+from ddforge.model import Blueprint, Corridor, Door, Rect, Room
 
 
 class _BSPNode:
@@ -79,8 +79,8 @@ def _build_tree(root_rect: Rect, rng: random.Random, *, rooms_target: int, max_r
 
 
 def _inscribe_room(leaf_rect: Rect, rng: random.Random, min_room: int) -> Rect:
-    max_margin_x = max(0, (leaf_rect.w - min_room) // 2)
-    max_margin_y = max(0, (leaf_rect.h - min_room) // 2)
+    max_margin_x = max(0, int(leaf_rect.w - min_room) // 2)
+    max_margin_y = max(0, int(leaf_rect.h - min_room) // 2)
     margin_x = rng.randint(0, min(2, max_margin_x))
     margin_y = rng.randint(0, min(2, max_margin_y))
     return Rect(
@@ -120,43 +120,77 @@ def _non_colliding_t(room: Room, wall_index: int, desired_t: float, min_gap: flo
     return t
 
 
-def _connect_rooms(room_a: Room, room_b: Room, corridors: list, corridor_width: float, *, kind: str = "wood") -> None:
+def _connect_rooms(rooms: list, index_a: int, index_b: int, corridors: list, corridor_width: float, *, kind: str = "wood", require_clean: bool = False) -> bool:
     """Decide come collegare due stanze e popola Room.doors/corridors,
-    senza toccare nessun JSON: riusa la stessa geometria di compose.py."""
+    senza toccare nessun JSON: riusa la stessa geometria di compose.py.
+    Ritorna True se il collegamento e stato fatto.
+
+    Prende la lista completa delle stanze, non solo le due da collegare:
+    tutte le altre sono ostacoli che il corridoio deve scansare (gate umano
+    M3, TASK-26). Con `require_clean` rinuncia del tutto al collegamento se
+    la rotta migliore entra comunque in una stanza di passaggio: e la scelta
+    giusta per i collegamenti facoltativi (anelli, porte segrete), che sono
+    un abbellimento e non devono mai scavare dentro un'altra stanza pur di
+    esistere. La connettivita non dipende da loro: quella la garantisce
+    l'albero."""
+    room_a, room_b = rooms[index_a], rooms[index_b]
     shared = _shared_wall_segment(room_a.rect, room_b.rect)
     if shared is not None:
-        side_a, side_b, midpoint = shared
-        t_a = _non_colliding_t(room_a, side_a, _t_on_side(room_a.rect, side_a, midpoint))
-        t_b = _non_colliding_t(room_b, side_b, _t_on_side(room_b.rect, side_b, midpoint))
-        room_a.doors.append(Door(wall_index=side_a, t=t_a, kind=kind))
-        room_b.doors.append(Door(wall_index=side_b, t=t_b, kind=kind))
-        return
+        side_a, side_b, point_a = shared
+        point_b = point_a
+        segments = []
+    else:
+        obstacles = [r.rect for i, r in enumerate(rooms) if i not in (index_a, index_b)]
+        segments, (side_a, point_a), (side_b, point_b) = plan_corridor(
+            room_a.rect, room_b.rect, width=corridor_width, obstacles=obstacles
+        )
+        if require_clean and any(
+            _overlap_area(segment, obstacle) for segment in segments for obstacle in obstacles
+        ):
+            return False
 
-    segments, door_a, door_b = plan_corridor(room_a.rect, room_b.rect, width=corridor_width)
-    corridors.extend(rect for rect, _ in segments)
-    side_a, point_a = door_a
-    side_b, point_b = door_b
+    corridors.extend(segments)
     t_a = _non_colliding_t(room_a, side_a, _t_on_side(room_a.rect, side_a, point_a))
     t_b = _non_colliding_t(room_b, side_b, _t_on_side(room_b.rect, side_b, point_b))
     room_a.doors.append(Door(wall_index=side_a, t=t_a, kind=kind))
     room_b.doors.append(Door(wall_index=side_b, t=t_b, kind=kind))
+    return True
 
 
-def _connect_subtree(node: _BSPNode, rng: random.Random, rooms: list, graph: dict, corridors: list, corridor_width: float) -> int:
-    """Risale l'albero collegando le due sorelle di ogni nodo interno.
-    Ritorna l'indice (in `rooms`) di una stanza rappresentativa del
-    sottoalbero di `node`, da usare per la connessione del livello superiore."""
+def _closest_pair(rooms: list, group_a: list, group_b: list) -> tuple[int, int]:
+    """Coppia di stanze piu vicina (centro-centro) fra i due sottoalberi."""
+    def distance(pair: tuple[int, int]) -> float:
+        (ax, ay), (bx, by) = rooms[pair[0]].rect.center(), rooms[pair[1]].rect.center()
+        return math.hypot(bx - ax, by - ay)
+
+    return min(
+        ((i, j) for i in group_a for j in group_b),
+        key=lambda pair: (distance(pair), pair),  # pareggio -> indici piu bassi, riproducibile
+    )
+
+
+def _connect_subtree(node: _BSPNode, rooms: list, graph: dict, corridors: list, corridor_width: float) -> list:
+    """Risale l'albero collegando i due sottoalberi di ogni nodo interno.
+    Ritorna gli indici (in `rooms`) di tutte le stanze del sottoalbero.
+
+    Le due meta si collegano attraverso la coppia di stanze piu vicina al
+    taglio, non attraverso due rappresentanti a caso: cosi ogni corridoio
+    resta locale alla partizione BSP che lo genera. Con il rappresentante
+    casuale (com'era fino al gate M3, TASK-26) capitava che due stanze agli
+    angoli opposti della mappa si collegassero fra loro, con un corridoio
+    che attraversava tutto quello che trovava in mezzo."""
     if node.is_leaf:
-        return node.room_index
+        return [node.room_index]
 
-    idx_left = _connect_subtree(node.left, rng, rooms, graph, corridors, corridor_width)
-    idx_right = _connect_subtree(node.right, rng, rooms, graph, corridors, corridor_width)
+    left = _connect_subtree(node.left, rooms, graph, corridors, corridor_width)
+    right = _connect_subtree(node.right, rooms, graph, corridors, corridor_width)
 
-    _connect_rooms(rooms[idx_left], rooms[idx_right], corridors, corridor_width)
+    idx_left, idx_right = _closest_pair(rooms, left, right)
+    _connect_rooms(rooms, idx_left, idx_right, corridors, corridor_width)
     graph[idx_left].append(idx_right)
     graph[idx_right].append(idx_left)
 
-    return rng.choice((idx_left, idx_right))
+    return left + right
 
 
 def _add_loop_connections(rooms: list, graph: dict, corridors: list, rng: random.Random, loops: float, corridor_width: float) -> None:
@@ -179,7 +213,8 @@ def _add_loop_connections(rooms: list, graph: dict, corridors: list, rng: random
 
     n_extra = round(loops * n)
     for _, i, j in candidates[:n_extra]:
-        _connect_rooms(rooms[i], rooms[j], corridors, corridor_width)
+        if not _connect_rooms(rooms, i, j, corridors, corridor_width, require_clean=True):
+            continue
         graph[i].append(j)
         graph[j].append(i)
 
@@ -213,12 +248,33 @@ def _mark_tactical_rooms(blueprint: Blueprint) -> None:
     )
 
 
+def _reproject_doors(room: Room, old_rect: Rect) -> None:
+    """Riporta ogni porta al punto assoluto che occupava con `old_rect`.
+
+    Door.t e una frazione del muro su cui la porta e appoggiata, quindi
+    dipende dalla LUNGHEZZA di quel muro. Allargare una stanza sui lati
+    perpendicolari non sposta il lato che porta la porta, ma lo allunga, e
+    la porta scivola via insieme a lui: nel gate M3 (TASK-26) la porta della
+    stanza boss e finita a mezzo quadretto dal corridoio che ci arrivava,
+    lasciando un moncone di muro in mezzo al passaggio."""
+    for door in room.doors:
+        (x0, y0), (x1, y1) = _side_corners(old_rect, door.wall_index)
+        point = (x0 + (x1 - x0) * door.t, y0 + (y1 - y0) * door.t)
+        door.t = _t_on_side(room.rect, door.wall_index, point)
+
+
 def _enlarge_room(blueprint: Blueprint, room_index: int, margins=(3, 2, 1)) -> bool:
-    """Ingrandisce room_index solo sui lati SENZA porte (i lati con porte
-    non si toccano: la posizione assoluta della porta e gia stata
-    proiettata su corridoi/stanze vicine, spostare quel lato la
-    disallineerebbe). Prova margini decrescenti; se nessuno entra nel
-    canvas senza sovrapporsi ad altre stanze, lascia la stanza com'e."""
+    """Ingrandisce room_index solo sui lati SENZA porte, e riproietta le
+    porte esistenti sul nuovo perimetro perche restino dove sono in
+    coordinate assolute (la loro posizione e gia stata proiettata su
+    corridoi e stanze vicine: se si spostano, si disallineano). Prova
+    margini decrescenti; se nessuno entra nel
+    canvas senza sovrapporsi ad altre stanze o ai corridoi gia tracciati,
+    lascia la stanza com'e.
+
+    I corridoi contano come ostacoli quanto le stanze: allargarsi sopra un
+    corridoio di passaggio produce esattamente il difetto segnalato nel
+    gate M3, un corridoio che finisce dentro una stanza (TASK-26)."""
     room = blueprint.rooms[room_index]
     occupied = {d.wall_index for d in room.doors}
     rect = room.rect
@@ -234,9 +290,10 @@ def _enlarge_room(blueprint: Blueprint, room_index: int, margins=(3, 2, 1)) -> b
         collides = any(
             i != room_index and candidate.overlaps(blueprint.rooms[i].rect, margin=1)
             for i in range(len(blueprint.rooms))
-        )
+        ) or any(_overlap_area(candidate, corridor) for corridor in blueprint.corridors)
         if not collides:
             room.rect = candidate
+            _reproject_doors(room, rect)
             return True
     return False
 
@@ -259,7 +316,13 @@ def _add_secret_doors(blueprint: Blueprint, corridor_width: float) -> None:
     """Le stanze di grado 1 (vicoli ciechi sul percorso principale)
     ricevono una porta segreta verso la stanza libera piu vicina, cosi
     diventano raggiungibili anche da un percorso diverso da quello
-    principale (SPEC.md §9.1)."""
+    principale (SPEC.md §9.1).
+
+    Fra i candidati, in ordine di distanza, si prende il primo che si
+    raggiunge senza passare dentro una terza stanza: una scorciatoia
+    nascosta e un extra, e non vale un cunicolo che sbuca in mezzo al
+    pavimento di qualcun altro. Se nessun candidato e pulito, il vicolo
+    cieco resta tale (gate umano M3, TASK-26)."""
     rooms = blueprint.rooms
     graph = blueprint.graph
     n = len(rooms)
@@ -274,12 +337,14 @@ def _add_secret_doors(blueprint: Blueprint, corridor_width: float) -> None:
                 j,
             ),
         )
-        if not candidates:
-            continue
-        j = candidates[0]
-        _connect_rooms(rooms[i], rooms[j], blueprint.corridors, corridor_width, kind="secret")
-        graph[i].append(j)
-        graph[j].append(i)
+        for j in candidates:
+            if _connect_rooms(
+                rooms, i, j, blueprint.corridors, corridor_width,
+                kind="secret", require_clean=True,
+            ):
+                graph[i].append(j)
+                graph[j].append(i)
+                break
 
 
 def _mark_long_corridors(blueprint: Blueprint) -> None:
@@ -311,8 +376,8 @@ def generate(*, width: int, height: int, seed: int,
         leaf.room_index = i
 
     graph: dict[int, list[int]] = {i: [] for i in range(len(blueprint_rooms))}
-    corridors: list[Rect] = []
-    _connect_subtree(tree_root, rng, blueprint_rooms, graph, corridors, corridor_width)
+    corridors: list[Corridor] = []
+    _connect_subtree(tree_root, blueprint_rooms, graph, corridors, corridor_width)
     _add_loop_connections(blueprint_rooms, graph, corridors, rng, loops, corridor_width)
 
     blueprint = Blueprint(

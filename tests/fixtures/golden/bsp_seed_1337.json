@@ -140,7 +140,7 @@
     "format": 3,
     "width": 80,
     "height": 80,
-    "next_node_id": "17f",
+    "next_node_id": "1a5",
     "next_prefab_id": "0",
     "msi": {
       "offset_map_size": 512,
@@ -6632,7 +6632,7 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 512, 12288, 10496, 12288, 10496, 19712, 512, 19712 )",
+            "points": "PoolVector2Array( 256, 12288, 10752, 12288, 10752, 19968, 256, 19968 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -6673,7 +6673,7 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "1e"
+            "node_id": "1d"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6697,7 +6697,7 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "2d"
+            "node_id": "2f"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6709,7 +6709,7 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "35"
+            "node_id": "38"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6721,7 +6721,7 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "3d"
+            "node_id": "41"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6733,7 +6733,7 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "40"
+            "node_id": "44"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6745,79 +6745,43 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "43"
+            "node_id": "47"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 4608, 9856, 5376, 9856, 5376, 10112, 4608, 10112 )",
+            "points": "PoolVector2Array( 4608, 6784, 5632, 6784, 5632, 7040, 4608, 7040 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "46"
+            "node_id": "4a"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 2688, 2816, 7424, 2816, 7424, 3072, 2688, 3072 )",
+            "points": "PoolVector2Array( 9472, 5120, 9728, 5120, 9728, 5632, 9472, 5632 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "49"
+            "node_id": "4d"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 2560, 2944, 2816, 2944, 2816, 5888, 2560, 5888 )",
+            "points": "PoolVector2Array( 7808, 11520, 8064, 11520, 8064, 12288, 7808, 12288 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "4c"
-          },
-          {
-            "position": "Vector2( 0, 0 )",
-            "shape_rotation": 0,
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 8704, 5120, 8960, 5120, 8960, 12288, 8704, 12288 )",
-            "layer": -400,
-            "color": "ffffffff",
-            "outline": false,
-            "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "4f"
-          },
-          {
-            "position": "Vector2( 0, 0 )",
-            "shape_rotation": 0,
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 10496, 15872, 11008, 15872, 11008, 16128, 10496, 16128 )",
-            "layer": -400,
-            "color": "ffffffff",
-            "outline": false,
-            "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "52"
-          },
-          {
-            "position": "Vector2( 0, 0 )",
-            "shape_rotation": 0,
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 9472, 8192, 9728, 8192, 9728, 8448, 9472, 8448 )",
-            "layer": -400,
-            "color": "ffffffff",
-            "outline": false,
-            "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "55"
+            "node_id": "50"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6829,7 +6793,43 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "58"
+            "node_id": "53"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 9472, 8192, 9728, 8192, 9728, 8448, 9472, 8448 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/stone_floor.png",
+            "node_id": "56"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 10496, 9856, 11008, 9856, 11008, 10112, 10496, 10112 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/stone_floor.png",
+            "node_id": "59"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 2560, 11520, 2816, 11520, 2816, 12288, 2560, 12288 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/stone_floor.png",
+            "node_id": "5c"
           },
           {
             "position": "Vector2( 0, 0 )",
@@ -6841,7 +6841,19 @@
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/stone_floor.png",
-            "node_id": "5b"
+            "node_id": "5f"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 4608, 9856, 5376, 9856, 5376, 10112, 4608, 10112 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/stone_floor.png",
+            "node_id": "62"
           }
         ],
         "walls": [
@@ -6893,18 +6905,6 @@
             "node_id": "5",
             "portals": [
               {
-                "position": "Vector2( 11008, 16000 )",
-                "rotation": -1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
-                "texture": "res://textures/portals/door_iron.png",
-                "radius": 128,
-                "wall_id": "5",
-                "wall_distance": 0.21153846153846154,
-                "closed": true,
-                "node_id": "6"
-              },
-              {
                 "position": "Vector2( 11008, 6912 )",
                 "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
@@ -6914,12 +6914,24 @@
                 "wall_id": "5",
                 "wall_distance": 0.6666666666666666,
                 "closed": true,
+                "node_id": "6"
+              },
+              {
+                "position": "Vector2( 11008, 9984 )",
+                "rotation": -1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, -1 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "5",
+                "wall_distance": 0.5128205128205128,
+                "closed": true,
                 "node_id": "7"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 512, 12288, 10496, 12288 )",
+            "points": "PoolVector2Array( 256, 12288, 10752, 12288 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6930,21 +6942,33 @@
             "node_id": "9",
             "portals": [
               {
-                "position": "Vector2( 8832, 12288 )",
+                "position": "Vector2( 7936, 12288 )",
                 "rotation": 0.0,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
                 "wall_id": "9",
-                "wall_distance": 0.8333333333333334,
+                "wall_distance": 0.7317073170731707,
                 "closed": true,
                 "node_id": "d"
+              },
+              {
+                "position": "Vector2( 2688, 12288 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "9",
+                "wall_distance": 0.23170731707317074,
+                "closed": true,
+                "node_id": "e"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 10496, 12288, 10496, 19712 )",
+            "points": "PoolVector2Array( 10752, 12288, 10752, 19968 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6953,23 +6977,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "a",
-            "portals": [
-              {
-                "position": "Vector2( 10496, 16000 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/door_iron.png",
-                "radius": 128,
-                "wall_id": "a",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "e"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 10496, 19712, 512, 19712 )",
+            "points": "PoolVector2Array( 10752, 19968, 256, 19968 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6981,7 +6992,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 512, 19712, 512, 12288 )",
+            "points": "PoolVector2Array( 256, 19968, 256, 12288 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7102,16 +7113,16 @@
             "node_id": "19",
             "portals": [
               {
-                "position": "Vector2( 8832, 5120 )",
+                "position": "Vector2( 9600, 5120 )",
                 "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
                 "wall_id": "19",
-                "wall_distance": 0.5,
+                "wall_distance": 0.22727272727272727,
                 "closed": true,
-                "node_id": "1d"
+                "node_id": "1c"
               }
             ]
           },
@@ -7137,18 +7148,6 @@
                 "wall_distance": 0.5,
                 "closed": true,
                 "node_id": "1b"
-              },
-              {
-                "position": "Vector2( 7424, 2421.76 )",
-                "rotation": -1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
-                "texture": "res://textures/portals/door_iron.png",
-                "radius": 128,
-                "wall_id": "1a",
-                "wall_distance": 0.62,
-                "closed": true,
-                "node_id": "1c"
               }
             ]
           },
@@ -7161,21 +7160,8 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "1f",
-            "portals": [
-              {
-                "position": "Vector2( 2688, 5888 )",
-                "rotation": 0.0,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
-                "texture": "res://textures/portals/door_iron.png",
-                "radius": 128,
-                "wall_id": "1f",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "24"
-              }
-            ]
+            "node_id": "1e",
+            "portals": []
           },
           {
             "points": "PoolVector2Array( 4608, 5888, 4608, 11520 )",
@@ -7186,8 +7172,20 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "20",
+            "node_id": "1f",
             "portals": [
+              {
+                "position": "Vector2( 4608, 6912 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "1f",
+                "wall_distance": 0.18181818181818182,
+                "closed": true,
+                "node_id": "22"
+              },
               {
                 "position": "Vector2( 4608, 9984 )",
                 "rotation": 1.5707963267948966,
@@ -7195,10 +7193,10 @@
                 "direction": "Vector2( 0, 1 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "20",
+                "wall_id": "1f",
                 "wall_distance": 0.7272727272727273,
                 "closed": true,
-                "node_id": "23"
+                "node_id": "24"
               }
             ]
           },
@@ -7211,8 +7209,21 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "21",
-            "portals": []
+            "node_id": "20",
+            "portals": [
+              {
+                "position": "Vector2( 2688, 11520 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "20",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "23"
+              }
+            ]
           },
           {
             "points": "PoolVector2Array( 768, 11520, 768, 5888 )",
@@ -7223,7 +7234,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "22",
+            "node_id": "21",
             "portals": []
           },
           {
@@ -7273,7 +7284,20 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "27",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 10496, 9984 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "27",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "2d"
+              }
+            ]
           },
           {
             "points": "PoolVector2Array( 10496, 11520, 5376, 11520 )",
@@ -7285,7 +7309,20 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "28",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 7936, 11520 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "28",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "2b"
+              }
+            ]
           },
           {
             "points": "PoolVector2Array( 5376, 11520, 5376, 8448 )",
@@ -7308,7 +7345,7 @@
                 "wall_id": "29",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "2b"
+                "node_id": "2e"
               }
             ]
           },
@@ -7321,7 +7358,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "2e",
+            "node_id": "30",
             "portals": [
               {
                 "position": "Vector2( 6144, 5888 )",
@@ -7330,10 +7367,10 @@
                 "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "2e",
+                "wall_id": "30",
                 "wall_distance": 0.2222222222222222,
                 "closed": true,
-                "node_id": "34"
+                "node_id": "37"
               }
             ]
           },
@@ -7346,7 +7383,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "2f",
+            "node_id": "31",
             "portals": [
               {
                 "position": "Vector2( 7936, 6912 )",
@@ -7355,10 +7392,10 @@
                 "direction": "Vector2( 0, 1 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "2f",
+                "wall_id": "31",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "32"
+                "node_id": "34"
               }
             ]
           },
@@ -7371,7 +7408,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "30",
+            "node_id": "32",
             "portals": [
               {
                 "position": "Vector2( 6784, 7936 )",
@@ -7380,10 +7417,10 @@
                 "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "30",
+                "wall_id": "32",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "33"
+                "node_id": "35"
               }
             ]
           },
@@ -7396,8 +7433,21 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "31",
-            "portals": []
+            "node_id": "33",
+            "portals": [
+              {
+                "position": "Vector2( 5632, 6912 )",
+                "rotation": -1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, -1 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "33",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "36"
+              }
+            ]
           },
           {
             "points": "PoolVector2Array( 8960, 5632, 10240, 5632 )",
@@ -7408,8 +7458,21 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "36",
-            "portals": []
+            "node_id": "39",
+            "portals": [
+              {
+                "position": "Vector2( 9600, 5632 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/door_iron.png",
+                "radius": 128,
+                "wall_id": "39",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "3e"
+              }
+            ]
           },
           {
             "points": "PoolVector2Array( 10240, 5632, 10240, 8192 )",
@@ -7420,7 +7483,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "37",
+            "node_id": "3a",
             "portals": [
               {
                 "position": "Vector2( 10240, 6912 )",
@@ -7429,10 +7492,10 @@
                 "direction": "Vector2( 0, 1 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "37",
+                "wall_id": "3a",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "3c"
+                "node_id": "3f"
               }
             ]
           },
@@ -7445,7 +7508,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "38",
+            "node_id": "3b",
             "portals": [
               {
                 "position": "Vector2( 9600, 8192 )",
@@ -7454,10 +7517,10 @@
                 "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "38",
+                "wall_id": "3b",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "3b"
+                "node_id": "40"
               }
             ]
           },
@@ -7470,7 +7533,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "39",
+            "node_id": "3c",
             "portals": [
               {
                 "position": "Vector2( 8960, 6912 )",
@@ -7479,10 +7542,10 @@
                 "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/door_iron.png",
                 "radius": 128,
-                "wall_id": "39",
+                "wall_id": "3c",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "3a"
+                "node_id": "3d"
               }
             ]
           },
@@ -7495,11 +7558,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "3e",
+            "node_id": "42",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 7424, 3072, 6656, 3072 )",
+            "points": "PoolVector2Array( 6656, 3072, 7424, 3072 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7507,7 +7570,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "3f",
+            "node_id": "43",
             "portals": []
           },
           {
@@ -7519,47 +7582,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "41",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 8960, 7040, 7936, 7040 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "42",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 6656, 8448, 6656, 7936 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "44",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 6912, 7936, 6912, 8448 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
             "node_id": "45",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 4608, 9856, 5376, 9856 )",
+            "points": "PoolVector2Array( 7936, 7040, 8960, 7040 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7567,11 +7594,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "47",
+            "node_id": "46",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 5376, 10112, 4608, 10112 )",
+            "points": "PoolVector2Array( 6656, 7936, 6656, 8448 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7583,7 +7610,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2688, 2816, 7424, 2816 )",
+            "points": "PoolVector2Array( 6912, 7936, 6912, 8448 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7591,11 +7618,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "4a",
+            "node_id": "49",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 7424, 3072, 2688, 3072 )",
+            "points": "PoolVector2Array( 4608, 6784, 5632, 6784 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7607,7 +7634,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2560, 5888, 2560, 2944 )",
+            "points": "PoolVector2Array( 4608, 7040, 5632, 7040 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7615,11 +7642,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "4d",
+            "node_id": "4c",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2816, 2944, 2816, 5888 )",
+            "points": "PoolVector2Array( 9472, 5120, 9472, 5632 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7631,7 +7658,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 8704, 12288, 8704, 5120 )",
+            "points": "PoolVector2Array( 9728, 5120, 9728, 5632 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7639,11 +7666,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "50",
+            "node_id": "4f",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 8960, 5120, 8960, 12288 )",
+            "points": "PoolVector2Array( 7808, 11520, 7808, 12288 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7655,7 +7682,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 10496, 15872, 11008, 15872 )",
+            "points": "PoolVector2Array( 8064, 11520, 8064, 12288 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7663,43 +7690,7 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "53",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 11008, 16128, 10496, 16128 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "54",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 9472, 8192, 9728, 8192 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "56",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 9728, 8448, 9472, 8448 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "57",
+            "node_id": "52",
             "portals": []
           },
           {
@@ -7711,11 +7702,47 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "59",
+            "node_id": "54",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 11008, 7040, 10240, 7040 )",
+            "points": "PoolVector2Array( 10240, 7040, 11008, 7040 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "55",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 9472, 8192, 9472, 8448 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "57",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 9728, 8192, 9728, 8448 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "58",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 10496, 9856, 11008, 9856 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7727,7 +7754,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 6016, 5632, 6272, 5632 )",
+            "points": "PoolVector2Array( 10496, 10112, 11008, 10112 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7735,11 +7762,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "5c",
+            "node_id": "5b",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 6272, 5888, 6016, 5888 )",
+            "points": "PoolVector2Array( 2560, 11520, 2560, 12288 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -7748,6 +7775,66 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "5d",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 2816, 11520, 2816, 12288 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "5e",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 6016, 5632, 6016, 5888 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "60",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 6272, 5632, 6272, 5888 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "61",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 4608, 9856, 5376, 9856 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "63",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 4608, 10112, 5376, 10112 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "64",
             "portals": []
           }
         ],
@@ -7784,7 +7871,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "5e"
+            "node_id": "65"
           },
           {
             "position": "Vector2( 17565.77767333804, 15735.186173059752 )",
@@ -7795,7 +7882,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "5f"
+            "node_id": "66"
           },
           {
             "position": "Vector2( 18082.93091124456, 18661.03494960851 )",
@@ -7806,7 +7893,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "60"
+            "node_id": "67"
           },
           {
             "position": "Vector2( 17254.194443079206, 15462.357088450728 )",
@@ -7817,7 +7904,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "61"
+            "node_id": "68"
           },
           {
             "position": "Vector2( 18359.12116285689, 8218.02143136953 )",
@@ -7828,7 +7915,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "62"
+            "node_id": "69"
           },
           {
             "position": "Vector2( 16994.374420516142, 17994.195918044712 )",
@@ -7839,7 +7926,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "63"
+            "node_id": "6a"
           },
           {
             "position": "Vector2( 18176.58358550978, 13509.737692623905 )",
@@ -7850,7 +7937,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "64"
+            "node_id": "6b"
           },
           {
             "position": "Vector2( 15137.965770002975, 19376.625704488673 )",
@@ -7861,7 +7948,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "65"
+            "node_id": "6c"
           },
           {
             "position": "Vector2( 19267.100841576575, 12328.496157948097 )",
@@ -7872,7 +7959,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "66"
+            "node_id": "6d"
           },
           {
             "position": "Vector2( 12808.794189780261, 1599.8518367601764 )",
@@ -7883,7 +7970,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "67"
+            "node_id": "6e"
           },
           {
             "position": "Vector2( 19697.211531077235, 15701.353545041411 )",
@@ -7894,7 +7981,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "68"
+            "node_id": "6f"
           },
           {
             "position": "Vector2( 16858.187962658154, 12631.07905235081 )",
@@ -7905,7 +7992,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "69"
+            "node_id": "70"
           },
           {
             "position": "Vector2( 12771.50499514727, 2344.458939026289 )",
@@ -7916,7 +8003,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "6a"
+            "node_id": "71"
           },
           {
             "position": "Vector2( 19220.11612699111, 16195.232868875326 )",
@@ -7927,7 +8014,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "6b"
+            "node_id": "72"
           },
           {
             "position": "Vector2( 19402.343903308414, 6917.1644777472675 )",
@@ -7938,7 +8025,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "6c"
+            "node_id": "73"
           },
           {
             "position": "Vector2( 15932.498828132895, 15751.104630155834 )",
@@ -7949,7 +8036,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "6d"
+            "node_id": "74"
           },
           {
             "position": "Vector2( 13761.396853818977, 18055.673734025455 )",
@@ -7960,7 +8047,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "6e"
+            "node_id": "75"
           },
           {
             "position": "Vector2( 15748.51921545979, 10808.051636560474 )",
@@ -7971,7 +8058,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "6f"
+            "node_id": "76"
           },
           {
             "position": "Vector2( 15440.149686102633, 14962.409224573677 )",
@@ -7982,7 +8069,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "70"
+            "node_id": "77"
           },
           {
             "position": "Vector2( 11228.092073773605, 10685.273033202766 )",
@@ -7993,7 +8080,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "71"
+            "node_id": "78"
           },
           {
             "position": "Vector2( 17538.682311352666, 7296.89530431104 )",
@@ -8004,7 +8091,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "72"
+            "node_id": "79"
           },
           {
             "position": "Vector2( 16784.201045999656, 5483.2105774106585 )",
@@ -8015,7 +8102,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "73"
+            "node_id": "7a"
           },
           {
             "position": "Vector2( 11535.74197888768, 3652.861604025829 )",
@@ -8026,7 +8113,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "74"
+            "node_id": "7b"
           },
           {
             "position": "Vector2( 19543.892532186666, 16899.84691569852 )",
@@ -8037,7 +8124,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "75"
+            "node_id": "7c"
           },
           {
             "position": "Vector2( 14834.41884274045, 12364.451553198702 )",
@@ -8048,7 +8135,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "76"
+            "node_id": "7d"
           },
           {
             "position": "Vector2( 17648.094430915946, 3362.310345391351 )",
@@ -8059,7 +8146,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "77"
+            "node_id": "7e"
           },
           {
             "position": "Vector2( 14416.770947254798, 4417.660410859835 )",
@@ -8070,7 +8157,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "78"
+            "node_id": "7f"
           },
           {
             "position": "Vector2( 16392.60616918229, 14580.595712037479 )",
@@ -8081,7 +8168,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "79"
+            "node_id": "80"
           },
           {
             "position": "Vector2( 14519.208174631165, 8834.161394348268 )",
@@ -8092,7 +8179,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7a"
+            "node_id": "81"
           },
           {
             "position": "Vector2( 17382.119185824176, 17082.588760438095 )",
@@ -8103,7 +8190,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7b"
+            "node_id": "82"
           },
           {
             "position": "Vector2( 18193.70777262791, 19379.05613087101 )",
@@ -8114,7 +8201,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7c"
+            "node_id": "83"
           },
           {
             "position": "Vector2( 17440.454398007114, 12675.615296205682 )",
@@ -8125,7 +8212,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7d"
+            "node_id": "84"
           },
           {
             "position": "Vector2( 11278.919187352752, 12235.72636220048 )",
@@ -8136,7 +8223,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7e"
+            "node_id": "85"
           },
           {
             "position": "Vector2( 17846.636756904903, 19410.809674448803 )",
@@ -8147,7 +8234,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7f"
+            "node_id": "86"
           },
           {
             "position": "Vector2( 18839.008296116444, 4750.692710010345 )",
@@ -8158,7 +8245,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "80"
+            "node_id": "87"
           },
           {
             "position": "Vector2( 16206.041159185394, 19538.86889200375 )",
@@ -8169,7 +8256,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "81"
+            "node_id": "88"
           },
           {
             "position": "Vector2( 18358.335940641686, 15483.484383031604 )",
@@ -8180,7 +8267,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "82"
+            "node_id": "89"
           },
           {
             "position": "Vector2( 17354.883855827513, 9456.72248103104 )",
@@ -8191,7 +8278,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "83"
+            "node_id": "8a"
           },
           {
             "position": "Vector2( 18545.699351523675, 5751.388008793846 )",
@@ -8202,7 +8289,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "84"
+            "node_id": "8b"
           },
           {
             "position": "Vector2( 11340.829704397933, 19090.787073771768 )",
@@ -8213,7 +8300,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "85"
+            "node_id": "8c"
           },
           {
             "position": "Vector2( 16737.85226736247, 2526.040546466346 )",
@@ -8224,7 +8311,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "86"
+            "node_id": "8d"
           },
           {
             "position": "Vector2( 15413.117698055792, 14572.712815423212 )",
@@ -8235,7 +8322,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "87"
+            "node_id": "8e"
           },
           {
             "position": "Vector2( 19331.224295972504, 11836.831626135823 )",
@@ -8246,7 +8333,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "88"
+            "node_id": "8f"
           },
           {
             "position": "Vector2( 17038.451303976035, 3301.944350155074 )",
@@ -8257,7 +8344,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "89"
+            "node_id": "90"
           },
           {
             "position": "Vector2( 11395.282805325809, 11446.76059095146 )",
@@ -8268,7 +8355,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "8a"
+            "node_id": "91"
           },
           {
             "position": "Vector2( 12335.272331823151, 19780.438091785356 )",
@@ -8279,7 +8366,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "8b"
+            "node_id": "92"
           },
           {
             "position": "Vector2( 15388.711674818045, 9392.43461483919 )",
@@ -8290,7 +8377,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "8c"
+            "node_id": "93"
           },
           {
             "position": "Vector2( 18092.901822563523, 3497.303151111172 )",
@@ -8301,7 +8388,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "8d"
+            "node_id": "94"
           },
           {
             "position": "Vector2( 17377.318718227103, 16214.896946661309 )",
@@ -8312,7 +8399,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "8e"
+            "node_id": "95"
           },
           {
             "position": "Vector2( 14646.135048986464, 6384.391503682446 )",
@@ -8323,7 +8410,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "8f"
+            "node_id": "96"
           },
           {
             "position": "Vector2( 14827.47602721703, 16074.979654614075 )",
@@ -8334,7 +8421,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "90"
+            "node_id": "97"
           },
           {
             "position": "Vector2( 11735.340393297816, 562.382012924818 )",
@@ -8345,7 +8432,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "91"
+            "node_id": "98"
           },
           {
             "position": "Vector2( 18703.605319559025, 3389.4381892621254 )",
@@ -8356,7 +8443,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "92"
+            "node_id": "99"
           },
           {
             "position": "Vector2( 12436.783005240437, 13085.779154087757 )",
@@ -8367,7 +8454,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "93"
+            "node_id": "9a"
           },
           {
             "position": "Vector2( 13207.955620393981, 18513.506228988947 )",
@@ -8378,7 +8465,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "94"
+            "node_id": "9b"
           },
           {
             "position": "Vector2( 17105.909245650135, 8556.70843049489 )",
@@ -8389,7 +8476,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "95"
+            "node_id": "9c"
           },
           {
             "position": "Vector2( 17679.278737632965, 1731.1481127821137 )",
@@ -8400,7 +8487,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "96"
+            "node_id": "9d"
           },
           {
             "position": "Vector2( 16933.647716074924, 7462.5437723078185 )",
@@ -8411,7 +8498,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "97"
+            "node_id": "9e"
           },
           {
             "position": "Vector2( 19186.880917215178, 5139.025876269062 )",
@@ -8422,7 +8509,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "98"
+            "node_id": "9f"
           },
           {
             "position": "Vector2( 12038.98987499181, 13275.894939288568 )",
@@ -8433,7 +8520,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "99"
+            "node_id": "a0"
           },
           {
             "position": "Vector2( 15685.64808592948, 18558.501251966394 )",
@@ -8444,7 +8531,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "9a"
+            "node_id": "a1"
           },
           {
             "position": "Vector2( 13690.531389269507, 7675.713407547866 )",
@@ -8455,7 +8542,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "9b"
+            "node_id": "a2"
           },
           {
             "position": "Vector2( 17782.533931921487, 1385.644094386545 )",
@@ -8466,7 +8553,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "9c"
+            "node_id": "a3"
           },
           {
             "position": "Vector2( 14359.818224013516, 8962.94186135746 )",
@@ -8477,7 +8564,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "9d"
+            "node_id": "a4"
           },
           {
             "position": "Vector2( 12564.60825809595, 10174.842841077523 )",
@@ -8488,7 +8575,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "9e"
+            "node_id": "a5"
           },
           {
             "position": "Vector2( 12706.082461494034, 8743.542249198726 )",
@@ -8499,7 +8586,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "9f"
+            "node_id": "a6"
           },
           {
             "position": "Vector2( 16739.648308381184, 15920.082090443013 )",
@@ -8510,7 +8597,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a0"
+            "node_id": "a7"
           },
           {
             "position": "Vector2( 18937.381591994763, 17026.51967673031 )",
@@ -8521,7 +8608,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a1"
+            "node_id": "a8"
           },
           {
             "position": "Vector2( 14921.939582277293, 8745.13022015622 )",
@@ -8532,7 +8619,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a2"
+            "node_id": "a9"
           },
           {
             "position": "Vector2( 13744.90283517898, 14510.406410413672 )",
@@ -8543,7 +8630,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a3"
+            "node_id": "aa"
           },
           {
             "position": "Vector2( 11471.270349287372, 14424.57572638161 )",
@@ -8554,7 +8641,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a4"
+            "node_id": "ab"
           },
           {
             "position": "Vector2( 14240.590180315174, 12064.56788212712 )",
@@ -8565,7 +8652,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a5"
+            "node_id": "ac"
           },
           {
             "position": "Vector2( 19034.06283921894, 800.3670203220468 )",
@@ -8576,7 +8663,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a6"
+            "node_id": "ad"
           },
           {
             "position": "Vector2( 15744.426122552177, 19806.12987708526 )",
@@ -8587,7 +8674,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a7"
+            "node_id": "ae"
           },
           {
             "position": "Vector2( 16778.359909879473, 13801.015163306422 )",
@@ -8598,7 +8685,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a8"
+            "node_id": "af"
           },
           {
             "position": "Vector2( 11746.250474398388, 6673.183159973613 )",
@@ -8609,7 +8696,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "a9"
+            "node_id": "b0"
           },
           {
             "position": "Vector2( 16039.117254045588, 19354.17776990554 )",
@@ -8620,7 +8707,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "aa"
+            "node_id": "b1"
           },
           {
             "position": "Vector2( 16250.278306147891, 17369.00355568125 )",
@@ -8631,7 +8718,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ab"
+            "node_id": "b2"
           },
           {
             "position": "Vector2( 11297.434805039762, 3174.3546150215448 )",
@@ -8642,7 +8729,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ac"
+            "node_id": "b3"
           },
           {
             "position": "Vector2( 14670.240973917334, 2968.273108873541 )",
@@ -8653,7 +8740,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ad"
+            "node_id": "b4"
           },
           {
             "position": "Vector2( 14470.345966244617, 7021.666582994212 )",
@@ -8664,7 +8751,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ae"
+            "node_id": "b5"
           },
           {
             "position": "Vector2( 12472.940259647858, 12238.496918631461 )",
@@ -8675,7 +8762,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "af"
+            "node_id": "b6"
           },
           {
             "position": "Vector2( 15855.275749344246, 1968.7922527100595 )",
@@ -8686,7 +8773,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b0"
+            "node_id": "b7"
           },
           {
             "position": "Vector2( 12363.387145233846, 2423.3537322325883 )",
@@ -8697,7 +8784,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b1"
+            "node_id": "b8"
           },
           {
             "position": "Vector2( 12308.984362901041, 14217.691766210686 )",
@@ -8708,7 +8795,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b2"
+            "node_id": "b9"
           },
           {
             "position": "Vector2( 14159.372936874328, 6444.472731667144 )",
@@ -8719,7 +8806,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b3"
+            "node_id": "ba"
           },
           {
             "position": "Vector2( 15624.181850012603, 12665.557161250917 )",
@@ -8730,7 +8817,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b4"
+            "node_id": "bb"
           },
           {
             "position": "Vector2( 17553.30307456656, 8316.528803001678 )",
@@ -8741,7 +8828,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b5"
+            "node_id": "bc"
           },
           {
             "position": "Vector2( 17429.588018677794, 7451.697379381916 )",
@@ -8752,7 +8839,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b6"
+            "node_id": "bd"
           },
           {
             "position": "Vector2( 15759.635522425622, 13473.199575363486 )",
@@ -8763,7 +8850,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b7"
+            "node_id": "be"
           },
           {
             "position": "Vector2( 13180.172352819745, 6167.33584854859 )",
@@ -8774,7 +8861,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b8"
+            "node_id": "bf"
           },
           {
             "position": "Vector2( 18852.840784416367, 18528.216200593622 )",
@@ -8785,7 +8872,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "b9"
+            "node_id": "c0"
           },
           {
             "position": "Vector2( 14057.200008595895, 2030.936001005874 )",
@@ -8796,7 +8883,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ba"
+            "node_id": "c1"
           },
           {
             "position": "Vector2( 13416.505427853926, 5756.998624217499 )",
@@ -8807,7 +8894,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "bb"
+            "node_id": "c2"
           },
           {
             "position": "Vector2( 11455.193875737912, 3048.055445481409 )",
@@ -8818,7 +8905,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "bc"
+            "node_id": "c3"
           },
           {
             "position": "Vector2( 16773.012908552788, 11576.227910615185 )",
@@ -8829,7 +8916,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "bd"
+            "node_id": "c4"
           },
           {
             "position": "Vector2( 19727.44906827704, 13407.299910812373 )",
@@ -8840,7 +8927,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "be"
+            "node_id": "c5"
           },
           {
             "position": "Vector2( 12706.805295406824, 14127.696536653815 )",
@@ -8851,7 +8938,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "bf"
+            "node_id": "c6"
           },
           {
             "position": "Vector2( 12869.114211649956, 10738.484741559008 )",
@@ -8862,7 +8949,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c0"
+            "node_id": "c7"
           },
           {
             "position": "Vector2( 14661.813771615998, 9299.693163631557 )",
@@ -8873,7 +8960,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c1"
+            "node_id": "c8"
           },
           {
             "position": "Vector2( 14515.61214876144, 15155.061256932271 )",
@@ -8884,7 +8971,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c2"
+            "node_id": "c9"
           },
           {
             "position": "Vector2( 13971.40588478859, 5280.930000633277 )",
@@ -8895,7 +8982,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c3"
+            "node_id": "ca"
           },
           {
             "position": "Vector2( 15700.276170285599, 2372.510394728765 )",
@@ -8906,7 +8993,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c4"
+            "node_id": "cb"
           },
           {
             "position": "Vector2( 14126.257062427805, 8500.690532805416 )",
@@ -8917,7 +9004,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c5"
+            "node_id": "cc"
           },
           {
             "position": "Vector2( 12376.382020281984, 7991.563904788118 )",
@@ -8928,7 +9015,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c6"
+            "node_id": "cd"
           },
           {
             "position": "Vector2( 15945.533770776063, 15751.598104549581 )",
@@ -8939,7 +9026,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c7"
+            "node_id": "ce"
           },
           {
             "position": "Vector2( 17515.4019691165, 12710.975383856736 )",
@@ -8950,7 +9037,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c8"
+            "node_id": "cf"
           },
           {
             "position": "Vector2( 11925.006039021326, 18922.994427722813 )",
@@ -8961,7 +9048,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "c9"
+            "node_id": "d0"
           },
           {
             "position": "Vector2( 13082.788788816957, 1609.7360406001737 )",
@@ -8972,7 +9059,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ca"
+            "node_id": "d1"
           },
           {
             "position": "Vector2( 19488.803318013262, 1362.537656377877 )",
@@ -8983,7 +9070,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "cb"
+            "node_id": "d2"
           },
           {
             "position": "Vector2( 16243.235640362753, 10681.979362484253 )",
@@ -8994,7 +9081,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "cc"
+            "node_id": "d3"
           },
           {
             "position": "Vector2( 18832.22155593061, 15728.139282286289 )",
@@ -9005,7 +9092,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "cd"
+            "node_id": "d4"
           },
           {
             "position": "Vector2( 13222.632750340606, 12120.002169494803 )",
@@ -9016,7 +9103,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "ce"
+            "node_id": "d5"
           },
           {
             "position": "Vector2( 19227.861318160612, 19527.453967416564 )",
@@ -9027,7 +9114,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "cf"
+            "node_id": "d6"
           },
           {
             "position": "Vector2( 14040.929878240411, 3831.2424058381507 )",
@@ -9038,7 +9125,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d0"
+            "node_id": "d7"
           },
           {
             "position": "Vector2( 18775.121188819056, 18433.621898300516 )",
@@ -9049,7 +9136,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d1"
+            "node_id": "d8"
           },
           {
             "position": "Vector2( 13062.591780954535, 15509.18091845205 )",
@@ -9060,7 +9147,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d2"
+            "node_id": "d9"
           },
           {
             "position": "Vector2( 17338.0459959921, 10592.541317594681 )",
@@ -9071,7 +9158,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d3"
+            "node_id": "da"
           },
           {
             "position": "Vector2( 16332.526377851684, 7056.407085351226 )",
@@ -9082,7 +9169,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d4"
+            "node_id": "db"
           },
           {
             "position": "Vector2( 13817.5483118873, 806.3224026893589 )",
@@ -9093,7 +9180,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d5"
+            "node_id": "dc"
           },
           {
             "position": "Vector2( 15712.146617335035, 8109.950383397545 )",
@@ -9104,7 +9191,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d6"
+            "node_id": "dd"
           },
           {
             "position": "Vector2( 16546.072899399125, 11845.22652348316 )",
@@ -9115,7 +9202,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d7"
+            "node_id": "de"
           },
           {
             "position": "Vector2( 12660.37777375588, 13846.89449704033 )",
@@ -9126,7 +9213,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d8"
+            "node_id": "df"
           },
           {
             "position": "Vector2( 17031.73316029172, 8322.425206335452 )",
@@ -9137,7 +9224,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "d9"
+            "node_id": "e0"
           },
           {
             "position": "Vector2( 18499.738239697785, 12769.821179797666 )",
@@ -9148,7 +9235,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "da"
+            "node_id": "e1"
           },
           {
             "position": "Vector2( 15871.774417026576, 9828.096844853988 )",
@@ -9159,7 +9246,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "db"
+            "node_id": "e2"
           },
           {
             "position": "Vector2( 13673.488348302235, 3521.3961735854446 )",
@@ -9170,7 +9257,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "dc"
+            "node_id": "e3"
           },
           {
             "position": "Vector2( 13768.287398552973, 8168.303756966368 )",
@@ -9181,7 +9268,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "dd"
+            "node_id": "e4"
           },
           {
             "position": "Vector2( 15958.732638268739, 8576.785686328152 )",
@@ -9192,7 +9279,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "de"
+            "node_id": "e5"
           },
           {
             "position": "Vector2( 17115.75488629085, 20045.499835311522 )",
@@ -9203,7 +9290,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "df"
+            "node_id": "e6"
           },
           {
             "position": "Vector2( 11957.655904075838, 17716.664787875372 )",
@@ -9214,7 +9301,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "e0"
+            "node_id": "e7"
           },
           {
             "position": "Vector2( 13045.388444724236, 5550.4043030223465 )",
@@ -9225,7 +9312,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "e1"
+            "node_id": "e8"
           },
           {
             "position": "Vector2( 12968.728177300341, 6871.876232887587 )",
@@ -9236,7 +9323,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "e2"
+            "node_id": "e9"
           },
           {
             "position": "Vector2( 16647.199764585726, 11431.885863949328 )",
@@ -9247,7 +9334,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "e3"
+            "node_id": "ea"
           },
           {
             "position": "Vector2( 17277.474194627386, 4852.457334540017 )",
@@ -9258,7 +9345,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "e4"
+            "node_id": "eb"
           },
           {
             "position": "Vector2( 16238.735650659062, 8474.787714302684 )",
@@ -9269,88 +9356,11 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "e5"
-          },
-          {
-            "position": "Vector2( 9992.693292109196, 12548.832722552223 )",
-            "rotation": 0.8722090180066157,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "e6"
-          },
-          {
-            "position": "Vector2( 2774.6701911710397, 17698.970284116003 )",
-            "rotation": 3.53260115871809,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "e7"
-          },
-          {
-            "position": "Vector2( 8902.985628227643, 16163.06452188175 )",
-            "rotation": 1.257665526441483,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "e8"
-          },
-          {
-            "position": "Vector2( 10261.633238125965, 14701.256180069115 )",
-            "rotation": 0.8316242839517174,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "e9"
-          },
-          {
-            "position": "Vector2( 10266.560998699395, 14302.68956960272 )",
-            "rotation": 5.217194539928931,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "ea"
-          },
-          {
-            "position": "Vector2( 5086.573680887743, 19248.980983813875 )",
-            "rotation": 1.7951048356396577,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "eb"
-          },
-          {
-            "position": "Vector2( 9995.656785156425, 12527.124547048936 )",
-            "rotation": 6.252342956739392,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
             "node_id": "ec"
           },
           {
-            "position": "Vector2( 7555.890094652105, 17756.45461468715 )",
-            "rotation": 5.5203207948695,
+            "position": "Vector2( 10222.882691704539, 12557.826954364367 )",
+            "rotation": 0.8722090180066157,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -9360,30 +9370,30 @@
             "node_id": "ed"
           },
           {
-            "position": "Vector2( 1772.1054684873282, 13396.797745190825 )",
-            "rotation": 0.6078628505474167,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "ee"
-          },
-          {
-            "position": "Vector2( 1914.8814757265054, 17642.34822300631 )",
-            "rotation": 4.740634304024209,
+            "position": "Vector2( 2634.7045599490416, 17885.5554663269 )",
+            "rotation": 3.53260115871809,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "ee"
+          },
+          {
+            "position": "Vector2( 9077.292583521368, 16296.687436429396 )",
+            "rotation": 1.257665526441483,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "ef"
           },
           {
-            "position": "Vector2( 2188.349759108263, 14267.138708056587 )",
-            "rotation": 2.568895815486332,
+            "position": "Vector2( 10505.614429824733, 14784.471910416325 )",
+            "rotation": 0.8316242839517174,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9393,19 +9403,19 @@
             "node_id": "f0"
           },
           {
-            "position": "Vector2( 4798.916900506956, 15478.805341883775 )",
-            "rotation": 5.472781867077424,
+            "position": "Vector2( 10510.794896068594, 14372.161623726952 )",
+            "rotation": 5.217194539928931,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "f1"
           },
           {
-            "position": "Vector2( 3264.656409138773, 14571.266822697904 )",
-            "rotation": 5.690567628466146,
+            "position": "Vector2( 5065.1672029845495, 19489.01481084194 )",
+            "rotation": 1.7951048356396577,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -9415,19 +9425,19 @@
             "node_id": "f2"
           },
           {
-            "position": "Vector2( 7387.889758681124, 13159.14650918076 )",
-            "rotation": 5.45598068966703,
+            "position": "Vector2( 10225.998158754192, 12535.370221085106 )",
+            "rotation": 6.252342956739392,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "f3"
           },
           {
-            "position": "Vector2( 5755.557636357629, 18673.663278112108 )",
-            "rotation": 1.9854536219052035,
+            "position": "Vector2( 7661.115227711188, 17945.0220151936 )",
+            "rotation": 5.5203207948695,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -9437,52 +9447,52 @@
             "node_id": "f4"
           },
           {
-            "position": "Vector2( 5742.674329666353, 19105.15179020345 )",
-            "rotation": 5.349362135315102,
+            "position": "Vector2( 1580.7262617430886, 13435.032150197405 )",
+            "rotation": 0.6078628505474167,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "f5"
           },
           {
-            "position": "Vector2( 4830.605867561751, 14371.878755040825 )",
-            "rotation": 4.081285041524119,
+            "position": "Vector2( 1730.824115507352, 17826.980920351354 )",
+            "rotation": 4.740634304024209,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "f6"
           },
           {
-            "position": "Vector2( 6170.386459601786, 16104.698219909578 )",
-            "rotation": 4.94508251145422,
+            "position": "Vector2( 2018.3164134215071, 14335.384870403366 )",
+            "rotation": 2.568895815486332,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "f7"
           },
           {
-            "position": "Vector2( 6899.511565774852, 16824.988310066517 )",
-            "rotation": 4.732377781685733,
+            "position": "Vector2( 4762.7587928406465, 15588.833112293561 )",
+            "rotation": 5.472781867077424,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "f8"
           },
           {
-            "position": "Vector2( 3179.739277552625, 16863.966011264056 )",
-            "rotation": 5.258297356444963,
+            "position": "Vector2( 3149.818276274095, 14650.000161411626 )",
+            "rotation": 5.690567628466146,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -9492,7 +9502,95 @@
             "node_id": "f9"
           },
           {
-            "position": "Vector2( 8214.070115407369, 18131.016572772616 )",
+            "position": "Vector2( 7484.499489895539, 13189.186043980098 )",
+            "rotation": 5.45598068966703,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "fa"
+          },
+          {
+            "position": "Vector2( 5768.458027965713, 18893.858563564252 )",
+            "rotation": 1.9854536219052035,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "fb"
+          },
+          {
+            "position": "Vector2( 5754.914038880012, 19340.225989865638 )",
+            "rotation": 5.349362135315102,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "fc"
+          },
+          {
+            "position": "Vector2( 10623.285427337887, 15798.59618735029 )",
+            "rotation": 4.686968767219076,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "fd"
+          },
+          {
+            "position": "Vector2( 4860.7920640824395, 17276.595367876413 )",
+            "rotation": 0.8267546240916317,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "fe"
+          },
+          {
+            "position": "Vector2( 3267.249239097283, 18332.423621339316 )",
+            "rotation": 3.672757966587595,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "ff"
+          },
+          {
+            "position": "Vector2( 3552.5240495528433, 18072.432510977607 )",
+            "rotation": 3.4395623647519527,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "100"
+          },
+          {
+            "position": "Vector2( 1744.843135937595, 14668.902834141769 )",
+            "rotation": 4.847108752403301,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "101"
+          },
+          {
+            "position": "Vector2( 8516.816533919906, 18866.525779608357 )",
             "rotation": 2.3804307006204573,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -9500,99 +9598,11 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "fa"
-          },
-          {
-            "position": "Vector2( 6097.6739026012865, 13660.425289296894 )",
-            "rotation": 2.100309672003407,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "fb"
-          },
-          {
-            "position": "Vector2( 3993.5903348243555, 14681.366232904878 )",
-            "rotation": 0.09673819668868995,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "fc"
-          },
-          {
-            "position": "Vector2( 4220.387003951626, 18757.459067782947 )",
-            "rotation": 3.3032288259333975,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "fd"
-          },
-          {
-            "position": "Vector2( 9791.843132771332, 15848.52048869517 )",
-            "rotation": 1.45415799133562,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "fe"
-          },
-          {
-            "position": "Vector2( 7932.738614959304, 19493.920172388986 )",
-            "rotation": 5.499418646408875,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "ff"
-          },
-          {
-            "position": "Vector2( 1947.6958818534201, 14511.566773782548 )",
-            "rotation": 5.432658381075135,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "100"
-          },
-          {
-            "position": "Vector2( 7129.294873811157, 17177.765341831473 )",
-            "rotation": 1.6148359486210642,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "101"
-          },
-          {
-            "position": "Vector2( 3465.530285595259, 14717.32879779701 )",
-            "rotation": 3.252370536758832,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
             "node_id": "102"
           },
           {
-            "position": "Vector2( 8203.394387627559, 18873.456860534436 )",
-            "rotation": 0.32703993035178175,
+            "position": "Vector2( 6128.118718119302, 13707.75029927265 )",
+            "rotation": 2.100309672003407,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9602,8 +9612,8 @@
             "node_id": "103"
           },
           {
-            "position": "Vector2( 2017.9283896241805, 19094.403730084825 )",
-            "rotation": 3.192472673304069,
+            "position": "Vector2( 3916.1334289179126, 14763.896103005047 )",
+            "rotation": 0.09673819668868995,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9613,8 +9623,8 @@
             "node_id": "104"
           },
           {
-            "position": "Vector2( 7650.2713412528365, 19113.191321874492 )",
-            "rotation": 2.3442290566795223,
+            "position": "Vector2( 4154.560696461966, 18980.54386322374 )",
+            "rotation": 3.3032288259333975,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9624,19 +9634,19 @@
             "node_id": "105"
           },
           {
-            "position": "Vector2( 2221.788810861427, 13868.940527200642 )",
-            "rotation": 5.905709307701566,
+            "position": "Vector2( 10011.732524195502, 15971.297057270865 )",
+            "rotation": 1.45415799133562,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "106"
           },
           {
-            "position": "Vector2( 2377.372197060895, 15930.626783241409 )",
-            "rotation": 5.4111463526307215,
+            "position": "Vector2( 8057.289313162345, 19742.400178333435 )",
+            "rotation": 5.499418646408875,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -9646,8 +9656,8 @@
             "node_id": "107"
           },
           {
-            "position": "Vector2( 7605.326907902341, 13108.092909684543 )",
-            "rotation": 1.8128511920741006,
+            "position": "Vector2( 1765.3213116920572, 14588.241490119875 )",
+            "rotation": 5.432658381075135,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9657,41 +9667,41 @@
             "node_id": "108"
           },
           {
-            "position": "Vector2( 8892.390116527282, 15677.520654638676 )",
-            "rotation": 2.6310261132557757,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "109"
-          },
-          {
-            "position": "Vector2( 8515.628942118532, 17293.598044234062 )",
-            "rotation": 0.8020535898260266,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "10a"
-          },
-          {
-            "position": "Vector2( 3519.5833764579074, 15456.418457119642 )",
-            "rotation": 2.827282103697981,
+            "position": "Vector2( 7212.6433288783965, 17346.37793982566 )",
+            "rotation": 1.6148359486210642,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "109"
+          },
+          {
+            "position": "Vector2( 3360.9933771642463, 14801.098756341737 )",
+            "rotation": 3.252370536758832,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "10a"
+          },
+          {
+            "position": "Vector2( 8341.824869044356, 19100.54157986321 )",
+            "rotation": 0.32703993035178175,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "10b"
           },
           {
-            "position": "Vector2( 3897.3497778056144, 15312.94699453803 )",
-            "rotation": 4.580754271934857,
+            "position": "Vector2( 1839.1554865279845, 19329.107306984304 )",
+            "rotation": 3.192472673304069,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9701,52 +9711,52 @@
             "node_id": "10c"
           },
           {
-            "position": "Vector2( 3963.953570021489, 16992.981735225443 )",
-            "rotation": 5.72492274087505,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "10d"
-          },
-          {
-            "position": "Vector2( 3163.9428041506376, 15823.889049407386 )",
-            "rotation": 2.1630386070845415,
+            "position": "Vector2( 10475.027814451756, 16125.094127090995 )",
+            "rotation": 6.277186871144908,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "10e"
+            "node_id": "10d"
           },
           {
-            "position": "Vector2( 2735.054484663542, 15386.75714609867 )",
-            "rotation": 5.483870908605885,
+            "position": "Vector2( 9218.47407684824, 15153.374531406313 )",
+            "rotation": 1.4610687267169804,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "10e"
+          },
+          {
+            "position": "Vector2( 2834.7481190690287, 19506.60732506511 )",
+            "rotation": 2.205763910886277,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "10f"
           },
           {
-            "position": "Vector2( 7063.723958407798, 12922.036423381389 )",
-            "rotation": 3.917334490887589,
+            "position": "Vector2( 9386.516663857044, 16709.44749587949 )",
+            "rotation": 5.4111463526307215,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "110"
           },
           {
-            "position": "Vector2( 5265.701408151459, 18023.757716252352 )",
-            "rotation": 6.2745592611279,
+            "position": "Vector2( 7713.087262153744, 13136.371975535734 )",
+            "rotation": 1.8128511920741006,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9756,8 +9766,8 @@
             "node_id": "111"
           },
           {
-            "position": "Vector2( 9127.315060898469, 14113.323366886307 )",
-            "rotation": 5.030237146923019,
+            "position": "Vector2( 9066.153712246629, 15794.400677212423 )",
+            "rotation": 2.6310261132557757,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -9767,8 +9777,8 @@
             "node_id": "112"
           },
           {
-            "position": "Vector2( 1372.6656674867663, 15854.616028910652 )",
-            "rotation": 4.990445882358848,
+            "position": "Vector2( 8670.071451970765, 17466.20487334558 )",
+            "rotation": 0.8020535898260266,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9778,19 +9788,19 @@
             "node_id": "113"
           },
           {
-            "position": "Vector2( 823.3909226597675, 13246.90261043869 )",
-            "rotation": 1.2762248550213318,
+            "position": "Vector2( 3417.818421404467, 15565.674265985836 )",
+            "rotation": 2.827282103697981,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "114"
           },
           {
-            "position": "Vector2( 6871.419816127746, 16122.966263197992 )",
-            "rotation": 1.6435826811318441,
+            "position": "Vector2( 3814.9574587187226, 15417.255511591065 )",
+            "rotation": 4.580754271934857,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9800,52 +9810,52 @@
             "node_id": "115"
           },
           {
-            "position": "Vector2( 9448.184403969444, 18401.495877822406 )",
-            "rotation": 3.468000675762272,
+            "position": "Vector2( 3884.9768300225915, 17155.222484715974 )",
+            "rotation": 5.72492274087505,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "116"
           },
           {
-            "position": "Vector2( 8141.349070773646, 16238.650957897164 )",
-            "rotation": 0.12342575410822723,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "117"
-          },
-          {
-            "position": "Vector2( 10006.884627079084, 19138.28459258553 )",
-            "rotation": 1.5443334425465975,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "118"
-          },
-          {
-            "position": "Vector2( 6011.965510842713, 16443.24134423859 )",
-            "rotation": 2.1064748998912384,
+            "position": "Vector2( 3043.9398710301575, 15945.816258007639 )",
+            "rotation": 2.1630386070845415,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "117"
+          },
+          {
+            "position": "Vector2( 2593.0572787488522, 15493.610840791727 )",
+            "rotation": 5.483870908605885,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "118"
+          },
+          {
+            "position": "Vector2( 7143.709802428712, 12943.899748325575 )",
+            "rotation": 3.917334490887589,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "119"
           },
           {
-            "position": "Vector2( 6009.732550687002, 13748.865047765106 )",
-            "rotation": 5.525107767709103,
+            "position": "Vector2( 5253.480967543842, 18221.54246508864 )",
+            "rotation": 6.2745592611279,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9855,41 +9865,41 @@
             "node_id": "11a"
           },
           {
-            "position": "Vector2( 2840.2255183832035, 16300.47885367842 )",
-            "rotation": 0.6080635599094267,
+            "position": "Vector2( 9313.126089662494, 14176.265551951352 )",
+            "rotation": 5.030237146923019,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "11b"
           },
           {
-            "position": "Vector2( 4611.392749548487, 17171.120642333226 )",
-            "rotation": 0.8191695682964595,
+            "position": "Vector2( 1160.8023683835236, 15977.602788528262 )",
+            "rotation": 4.990445882358848,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "11c"
           },
           {
-            "position": "Vector2( 2082.3184116769035, 18791.885217709132 )",
-            "rotation": 1.5360563250285946,
+            "position": "Vector2( 583.359687924371, 13279.968217695197 )",
+            "rotation": 1.2762248550213318,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "11d"
           },
           {
-            "position": "Vector2( 7892.903598359642, 13868.90294461218 )",
-            "rotation": 4.237019175571897,
+            "position": "Vector2( 6941.543909262502, 16255.206479170336 )",
+            "rotation": 1.6435826811318441,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9899,8 +9909,8 @@
             "node_id": "11e"
           },
           {
-            "position": "Vector2( 1202.037273108727, 3261.8437855834454 )",
-            "rotation": 3.899822781142149,
+            "position": "Vector2( 9650.450270839672, 18612.306080505936 )",
+            "rotation": 3.468000675762272,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -9910,52 +9920,52 @@
             "node_id": "11f"
           },
           {
-            "position": "Vector2( 5073.48303363504, 1887.2939548365307 )",
-            "rotation": 5.1931641323287385,
+            "position": "Vector2( 8276.59774106973, 16374.880301272928 )",
+            "rotation": 0.12342575410822723,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "120"
           },
           {
-            "position": "Vector2( 2505.0171421498567, 719.958210110515 )",
-            "rotation": 5.249566322791153,
+            "position": "Vector2( 10237.801787442115, 19374.501302674686 )",
+            "rotation": 1.5443334425465975,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "121"
           },
           {
-            "position": "Vector2( 6387.2366215976035, 4088.8762480733417 )",
-            "rotation": 4.008532793148449,
+            "position": "Vector2( 6038.015024219262, 16586.52552852268 )",
+            "rotation": 2.1064748998912384,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "122"
           },
           {
-            "position": "Vector2( 4425.634080147858, 3006.7619878942332 )",
-            "rotation": 6.233123811806489,
+            "position": "Vector2( 6035.667553286335, 13799.239704584594 )",
+            "rotation": 5.525107767709103,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "123"
           },
           {
-            "position": "Vector2( 3963.994150112111, 4399.3610814479325 )",
-            "rotation": 1.037163538504228,
+            "position": "Vector2( 2703.6216988131114, 16438.840193460434 )",
+            "rotation": 0.6080635599094267,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -9965,41 +9975,41 @@
             "node_id": "124"
           },
           {
-            "position": "Vector2( 3270.5715282379842, 2707.310620454282 )",
-            "rotation": 1.7350404572583613,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "125"
-          },
-          {
-            "position": "Vector2( 4625.687927342642, 1423.7850921047288 )",
-            "rotation": 1.465276880988107,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "126"
-          },
-          {
-            "position": "Vector2( 5508.537477389526, 3519.115045323232 )",
-            "rotation": 3.0042348108917603,
+            "position": "Vector2( 4565.618018756101, 17339.50411275851 )",
+            "rotation": 0.8191695682964595,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "125"
+          },
+          {
+            "position": "Vector2( 1906.847560993668, 19016.157121768065 )",
+            "rotation": 1.5360563250285946,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "126"
+          },
+          {
+            "position": "Vector2( 8015.411475198598, 13923.41683925398 )",
+            "rotation": 4.237019175571897,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "127"
           },
           {
-            "position": "Vector2( 1860.9435618926432, 1600.9097971975966 )",
-            "rotation": 1.8878946976141802,
+            "position": "Vector2( 1434.8136748940753, 16582.062550833492 )",
+            "rotation": 3.899822781142149,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10009,19 +10019,19 @@
             "node_id": "128"
           },
           {
-            "position": "Vector2( 5611.845910491948, 1026.2784618070414 )",
-            "rotation": 2.5696811681657943,
+            "position": "Vector2( 8048.533515793193, 14618.419935480759 )",
+            "rotation": 5.1931641323287385,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "129"
           },
           {
-            "position": "Vector2( 2712.328523042533, 5050.53165258615 )",
-            "rotation": 5.409310737670986,
+            "position": "Vector2( 3660.7376178393383, 12950.79744301502 )",
+            "rotation": 5.249566322791153,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10031,8 +10041,8 @@
             "node_id": "12a"
           },
           {
-            "position": "Vector2( 6122.080515758844, 4070.428857379529 )",
-            "rotation": 0.0943994703249209,
+            "position": "Vector2( 10292.862561895907, 17763.53749724763 )",
+            "rotation": 4.008532793148449,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10042,8 +10052,8 @@
             "node_id": "12b"
           },
           {
-            "position": "Vector2( 2821.4163987808643, 1493.324996157876 )",
-            "rotation": 4.461469985869495,
+            "position": "Vector2( 6941.791553585925, 16217.659982706047 )",
+            "rotation": 6.233123811806489,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10053,8 +10063,8 @@
             "node_id": "12c"
           },
           {
-            "position": "Vector2( 5534.333414415584, 5093.618258610658 )",
-            "rotation": 5.857785781212699,
+            "position": "Vector2( 6153.15667310819, 18207.08725921133 )",
+            "rotation": 1.037163538504228,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10064,8 +10074,8 @@
             "node_id": "12d"
           },
           {
-            "position": "Vector2( 2200.631995137819, 2904.1386689126216 )",
-            "rotation": 0.3222109079996688,
+            "position": "Vector2( 4968.559694073223, 15789.872314934688 )",
+            "rotation": 1.7350404572583613,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10075,96 +10085,96 @@
             "node_id": "12e"
           },
           {
-            "position": "Vector2( 5280.519970855052, 1938.1158888614523 )",
-            "rotation": 5.918977125593353,
+            "position": "Vector2( 7283.550209210346, 13956.26441729247 )",
+            "rotation": 1.465276880988107,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "12f"
           },
           {
-            "position": "Vector2( 4590.203455396053, 4873.192549746105 )",
-            "rotation": 0.1819252908629195,
+            "position": "Vector2( 8791.751523873774, 16949.592921890333 )",
+            "rotation": 3.0042348108917603,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "130"
           },
           {
-            "position": "Vector2( 4202.147326680167, 2609.837922833569 )",
-            "rotation": 4.451638091954918,
+            "position": "Vector2( 2560.445251566599, 14209.299710282281 )",
+            "rotation": 1.8878946976141802,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "131"
           },
           {
-            "position": "Vector2( 2098.951971546515, 5178.618019187582 )",
-            "rotation": 0.4730583689438368,
+            "position": "Vector2( 8968.236763757079, 13388.397802581487 )",
+            "rotation": 2.5696811681657943,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "132"
           },
           {
-            "position": "Vector2( 2255.9330471473713, 4708.435328435258 )",
-            "rotation": 5.204982691883677,
+            "position": "Vector2( 4014.8945601976607, 19137.33093226593 )",
+            "rotation": 5.409310737670986,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "133"
           },
           {
-            "position": "Vector2( 6392.521313866905, 3647.7659622929946 )",
-            "rotation": 5.547541301482114,
+            "position": "Vector2( 9839.887547754692, 17737.184081970758 )",
+            "rotation": 0.0943994703249209,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "134"
           },
           {
-            "position": "Vector2( 1753.2538757671168, 4762.08258772525 )",
-            "rotation": 6.106562976309789,
+            "position": "Vector2( 4201.253014583976, 14055.607137368395 )",
+            "rotation": 4.461469985869495,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "135"
           },
           {
-            "position": "Vector2( 2023.2929669651753, 3137.0182059961453 )",
-            "rotation": 1.6291622610054972,
+            "position": "Vector2( 8835.819582959957, 19198.883226586655 )",
+            "rotation": 5.857785781212699,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "136"
           },
           {
-            "position": "Vector2( 2095.6163635169355, 1219.0297664304271 )",
-            "rotation": 4.917391726799178,
+            "position": "Vector2( 3140.746325027107, 16071.055241303744 )",
+            "rotation": 0.3222109079996688,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10174,19 +10184,19 @@
             "node_id": "137"
           },
           {
-            "position": "Vector2( 8671.12574596566, 4757.108471615435 )",
-            "rotation": 0.5050232492267267,
+            "position": "Vector2( 8402.221616877381, 14691.022698373503 )",
+            "rotation": 5.918977125593353,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "138"
           },
           {
-            "position": "Vector2( 7590.602188636392, 3311.7061289741105 )",
-            "rotation": 5.721799563218924,
+            "position": "Vector2( 7222.930902968257, 18883.98935678015 )",
+            "rotation": 0.1819252908629195,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -10196,52 +10206,52 @@
             "node_id": "139"
           },
           {
-            "position": "Vector2( 9267.511474056437, 2172.868272893462 )",
-            "rotation": 1.62753614502771,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "13a"
-          },
-          {
-            "position": "Vector2( 8933.008018134442, 2155.1250787886866 )",
-            "rotation": 0.24648517948478496,
+            "position": "Vector2( 6560.001683078618, 15650.625604047957 )",
+            "rotation": 4.451638091954918,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "13b"
+            "node_id": "13a"
           },
           {
-            "position": "Vector2( 9457.292744944038, 2998.7133919379867 )",
-            "rotation": 0.9034977058424448,
+            "position": "Vector2( 2967.042951391963, 19320.31145598226 )",
+            "rotation": 0.4730583689438368,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "13b"
+          },
+          {
+            "position": "Vector2( 3235.2189555434265, 18648.621897764657 )",
+            "rotation": 5.204982691883677,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "13c"
           },
           {
-            "position": "Vector2( 8675.886529523274, 1752.7278739777794 )",
-            "rotation": 3.4334135263408294,
+            "position": "Vector2( 10301.890577855962, 17133.37994613285 )",
+            "rotation": 5.547541301482114,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "13d"
           },
           {
-            "position": "Vector2( 7756.6882657226615, 910.809110502299 )",
-            "rotation": 5.6254344066096,
+            "position": "Vector2( 2376.475371102158, 18725.2608396075 )",
+            "rotation": 6.106562976309789,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10251,8 +10261,8 @@
             "node_id": "13e"
           },
           {
-            "position": "Vector2( 9678.545573404492, 2401.740855470629 )",
-            "rotation": 3.5263268297124903,
+            "position": "Vector2( 2837.792151898841, 16403.740294280207 )",
+            "rotation": 1.6291622610054972,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -10262,41 +10272,41 @@
             "node_id": "13f"
           },
           {
-            "position": "Vector2( 8857.672966354141, 1271.817331497819 )",
-            "rotation": 4.222119650412966,
+            "position": "Vector2( 2961.3446210080983, 13663.756809186325 )",
+            "rotation": 4.917391726799178,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "140"
           },
           {
-            "position": "Vector2( 8057.814815283132, 1401.814815283132 )",
-            "rotation": 0.0,
+            "position": "Vector2( 4904.377780417463, 19327.60318520371 )",
+            "rotation": 0.5050232492267267,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "141"
           },
           {
-            "position": "Vector2( 8057.814815283132, 2413.444445849396 )",
-            "rotation": 0.0,
+            "position": "Vector2( 1339.1204607887637, 15624.757648439756 )",
+            "rotation": 5.801430679309647,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "142"
           },
           {
-            "position": "Vector2( 8057.814815283132, 3425.07407641566 )",
-            "rotation": 0.0,
+            "position": "Vector2( 4490.602653370365, 18447.90064815779 )",
+            "rotation": 0.032466290878943344,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10306,8 +10316,8 @@
             "node_id": "143"
           },
           {
-            "position": "Vector2( 8057.814815283132, 4436.7037069819235 )",
-            "rotation": 0.0,
+            "position": "Vector2( 9650.575159796115, 12742.36960537198 )",
+            "rotation": 0.3502242448140569,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10317,8 +10327,8 @@
             "node_id": "144"
           },
           {
-            "position": "Vector2( 9069.444445849396, 1401.814815283132 )",
-            "rotation": 0.0,
+            "position": "Vector2( 9814.210569871595, 17315.758565608463 )",
+            "rotation": 4.087310886593708,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -10328,8 +10338,8 @@
             "node_id": "145"
           },
           {
-            "position": "Vector2( 9069.444445849396, 2413.444445849396 )",
-            "rotation": 0.0,
+            "position": "Vector2( 2974.7833149996554, 16403.476413093933 )",
+            "rotation": 1.2226202539593327,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
@@ -10339,8 +10349,8 @@
             "node_id": "146"
           },
           {
-            "position": "Vector2( 9069.444445849396, 3425.07407641566 )",
-            "rotation": 0.0,
+            "position": "Vector2( 667.7510971570582, 17833.343849847377 )",
+            "rotation": 4.74283778715312,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10350,19 +10360,19 @@
             "node_id": "147"
           },
           {
-            "position": "Vector2( 9069.444445849396, 4436.7037069819235 )",
-            "rotation": 0.0,
+            "position": "Vector2( 1765.284138044801, 15702.23598960893 )",
+            "rotation": 0.21882567296724525,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "148"
           },
           {
-            "position": "Vector2( 10081.07407641566, 1401.814815283132 )",
-            "rotation": 0.0,
+            "position": "Vector2( 967.0963537496061, 4170.570868455858 )",
+            "rotation": 0.20618017114876622,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10372,63 +10382,63 @@
             "node_id": "149"
           },
           {
-            "position": "Vector2( 10081.07407641566, 2413.444445849396 )",
-            "rotation": 0.0,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "14a"
-          },
-          {
-            "position": "Vector2( 10081.07407641566, 3425.07407641566 )",
-            "rotation": 0.0,
+            "position": "Vector2( 5046.966547942307, 993.7268902073235 )",
+            "rotation": 5.038739570322258,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "14b"
+            "node_id": "14a"
           },
           {
-            "position": "Vector2( 10081.07407641566, 4436.7037069819235 )",
-            "rotation": 0.0,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "14c"
-          },
-          {
-            "position": "Vector2( 1534.2712480578316, 6654.827053308269 )",
-            "rotation": 1.9859585578809722,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "14d"
-          },
-          {
-            "position": "Vector2( 2851.871811024293, 8470.450427005075 )",
-            "rotation": 3.1799348686225914,
+            "position": "Vector2( 3960.2115332484, 2993.012026676086 )",
+            "rotation": 3.7315943135573217,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "14b"
+          },
+          {
+            "position": "Vector2( 4640.591130759058, 5372.222241891542 )",
+            "rotation": 5.875429190344238,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "14c"
+          },
+          {
+            "position": "Vector2( 5024.150219961008, 4831.084658443716 )",
+            "rotation": 6.191972443747086,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "14d"
+          },
+          {
+            "position": "Vector2( 1977.6085294291727, 5142.5910153232735 )",
+            "rotation": 3.760303539331134,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "14e"
           },
           {
-            "position": "Vector2( 1551.8916107995624, 9018.286750897532 )",
-            "rotation": 2.536536490189899,
+            "position": "Vector2( 1392.869918492932, 2237.4165489598945 )",
+            "rotation": 1.8845613204960896,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10438,41 +10448,41 @@
             "node_id": "14f"
           },
           {
-            "position": "Vector2( 1588.7181582451753, 10732.661285225124 )",
-            "rotation": 5.825319238524519,
+            "position": "Vector2( 2601.674551520784, 3707.608468209132 )",
+            "rotation": 4.103956648470693,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "150"
           },
           {
-            "position": "Vector2( 1249.3810442535164, 8188.828950448558 )",
-            "rotation": 4.821482538886489,
+            "position": "Vector2( 6270.281621942063, 2571.0122683078584 )",
+            "rotation": 3.1799348686225914,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "151"
           },
           {
-            "position": "Vector2( 1023.1999120873292, 7063.331507912089 )",
-            "rotation": 3.98508004797639,
+            "position": "Vector2( 1766.2265772792998, 3244.0009894930995 )",
+            "rotation": 2.536536490189899,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "152"
           },
           {
-            "position": "Vector2( 2535.4137228655345, 10707.092724141508 )",
-            "rotation": 3.8566682560723935,
+            "position": "Vector2( 1825.1490531922805, 4880.449408623981 )",
+            "rotation": 5.825319238524519,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10482,41 +10492,41 @@
             "node_id": "153"
           },
           {
-            "position": "Vector2( 2448.419452485743, 10230.898822789652 )",
-            "rotation": 2.7470379323217697,
+            "position": "Vector2( 1282.209670805626, 2452.24581633726 )",
+            "rotation": 4.821482538886489,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "154"
           },
           {
-            "position": "Vector2( 4417.265935995116, 7225.612495434161 )",
-            "rotation": 6.113538461050591,
+            "position": "Vector2( 920.3198593397267, 1377.9073484615394 )",
+            "rotation": 3.98508004797639,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "155"
           },
           {
-            "position": "Vector2( 1255.763491811095, 8818.65273752371 )",
-            "rotation": 3.636000602739512,
+            "position": "Vector2( 3339.861956584855, 4856.04305486235 )",
+            "rotation": 3.8566682560723935,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "156"
           },
           {
-            "position": "Vector2( 3606.453606479891, 9613.083071400113 )",
-            "rotation": 1.7833261391998867,
+            "position": "Vector2( 3200.6711239771894, 4401.494330844667 )",
+            "rotation": 2.7470379323217697,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10526,7 +10536,40 @@
             "node_id": "157"
           },
           {
-            "position": "Vector2( 3097.825967890869, 10137.369807203755 )",
+            "position": "Vector2( 6350.825497592186, 1532.8119274598812 )",
+            "rotation": 6.113538461050591,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "158"
+          },
+          {
+            "position": "Vector2( 1292.4215868977521, 3053.4412494544504 )",
+            "rotation": 3.636000602739512,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "159"
+          },
+          {
+            "position": "Vector2( 5053.525770367825, 3811.761113609199 )",
+            "rotation": 1.7833261391998867,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "15a"
+          },
+          {
+            "position": "Vector2( 4239.72154862539, 4312.216634149039 )",
             "rotation": 2.2154527359843295,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -10534,10 +10577,10 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "158"
+            "node_id": "15b"
           },
           {
-            "position": "Vector2( 1781.1205280171766, 9239.720345113134 )",
+            "position": "Vector2( 2132.9928448274823, 3455.3694203352634 )",
             "rotation": 6.058632984432169,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -10545,10 +10588,10 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "159"
+            "node_id": "15c"
           },
           {
-            "position": "Vector2( 3113.624997483, 7847.7036650062655 )",
+            "position": "Vector2( 4264.999995972799, 2126.626225687798 )",
             "rotation": 5.24336225911077,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -10556,10 +10599,10 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "15a"
+            "node_id": "15d"
           },
           {
-            "position": "Vector2( 3154.9287191968397, 9873.063039809054 )",
+            "position": "Vector2( 4331.0859507149435, 4059.923810726825 )",
             "rotation": 1.3645848637356097,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -10567,10 +10610,10 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "15b"
+            "node_id": "15e"
           },
           {
-            "position": "Vector2( 1323.670313036635, 8997.818217269745 )",
+            "position": "Vector2( 1401.072500858616, 3224.4628437574834 )",
             "rotation": 1.5090478938575502,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -10578,44 +10621,11 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "15c"
-          },
-          {
-            "position": "Vector2( 9749.451356470268, 9410.762347625747 )",
-            "rotation": 2.0678264388494987,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "15d"
-          },
-          {
-            "position": "Vector2( 10294.968338054206, 10702.809704745396 )",
-            "rotation": 0.0925687419847712,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "15e"
-          },
-          {
-            "position": "Vector2( 8982.991705007746, 9258.107891366406 )",
-            "rotation": 0.2371594477877784,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
             "node_id": "15f"
           },
           {
-            "position": "Vector2( 10278.769211809009, 8653.752767633054 )",
-            "rotation": 1.1758780943573648,
+            "position": "Vector2( 5760.141627764324, 1940.8341083450582 )",
+            "rotation": 2.0678264388494987,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10625,41 +10635,41 @@
             "node_id": "160"
           },
           {
-            "position": "Vector2( 6664.700953933087, 8904.554403088376 )",
-            "rotation": 1.6198330736236937,
+            "position": "Vector2( 6414.7620056650485, 4201.916983304444 )",
+            "rotation": 0.0925687419847712,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "161"
           },
           {
-            "position": "Vector2( 6480.051041931114, 10535.15735069392 )",
-            "rotation": 6.1699930639272536,
+            "position": "Vector2( 9407.84543775426, 1915.6528461024093 )",
+            "rotation": 0.2371594477877784,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "162"
           },
           {
-            "position": "Vector2( 5779.464329028331, 8606.787207725378 )",
-            "rotation": 4.365870287110839,
+            "position": "Vector2( 9497.396631352643, 4251.460667188434 )",
+            "rotation": 0.9337942439495519,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "163"
           },
           {
-            "position": "Vector2( 10205.002564776838, 8776.22316158197 )",
-            "rotation": 2.4775195081593457,
+            "position": "Vector2( 9350.667604133318, 2040.87818463477 )",
+            "rotation": 4.268879036345021,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10669,41 +10679,41 @@
             "node_id": "164"
           },
           {
-            "position": "Vector2( 8001.138804515186, 9644.67729574649 )",
-            "rotation": 2.864831259073186,
+            "position": "Vector2( 9094.980037311238, 3086.5422827522802 )",
+            "rotation": 0.3247687013503133,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "165"
           },
           {
-            "position": "Vector2( 9900.423057365688, 10747.439167316283 )",
-            "rotation": 4.510233318692702,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "166"
-          },
-          {
-            "position": "Vector2( 6588.182096547088, 8937.149075657586 )",
-            "rotation": 4.223201668143958,
+            "position": "Vector2( 7971.629578863808, 2663.8231125522566 )",
+            "rotation": 4.680704561917337,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "166"
+          },
+          {
+            "position": "Vector2( 9162.530928301629, 950.3663000417349 )",
+            "rotation": 2.4475733079654103,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "167"
           },
           {
-            "position": "Vector2( 7673.25281873626, 8852.755337801034 )",
-            "rotation": 5.380946031346202,
+            "position": "Vector2( 9566.432431123056, 2752.3033477367007 )",
+            "rotation": 1.1277897010277764,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10713,63 +10723,63 @@
             "node_id": "168"
           },
           {
-            "position": "Vector2( 5973.0330056725625, 9045.033005672563 )",
-            "rotation": 0.0,
+            "position": "Vector2( 9445.397810904264, 1798.354782065025 )",
+            "rotation": 1.3500284140499128,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "169"
           },
           {
-            "position": "Vector2( 5973.0330056725625, 9983.099017017688 )",
-            "rotation": 0.0,
+            "position": "Vector2( 9316.755873983882, 2720.664895925821 )",
+            "rotation": 3.426969064430668,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "16a"
           },
           {
-            "position": "Vector2( 5973.0330056725625, 10921.165028362813 )",
-            "rotation": 0.0,
+            "position": "Vector2( 2785.4313313409084, 8841.116875867934 )",
+            "rotation": 3.989455799755518,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "16b"
           },
           {
-            "position": "Vector2( 6911.099017017687, 9045.033005672563 )",
-            "rotation": 0.0,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "16c"
-          },
-          {
-            "position": "Vector2( 6911.099017017687, 9983.099017017688 )",
-            "rotation": 0.0,
+            "position": "Vector2( 1792.7063700858766, 10192.877845567327 )",
+            "rotation": 4.840349797940511,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "16c"
+          },
+          {
+            "position": "Vector2( 2598.524373556051, 8540.363607600175 )",
+            "rotation": 5.375649331931125,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "16d"
           },
           {
-            "position": "Vector2( 6911.099017017687, 10921.165028362813 )",
-            "rotation": 0.0,
+            "position": "Vector2( 3455.254313495026, 9613.752256633123 )",
+            "rotation": 2.177138060463033,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10779,63 +10789,63 @@
             "node_id": "16e"
           },
           {
-            "position": "Vector2( 7849.165028362812, 9045.033005672563 )",
-            "rotation": 0.0,
+            "position": "Vector2( 2152.561014802998, 7436.766085424611 )",
+            "rotation": 4.968727604900949,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "16f"
           },
           {
-            "position": "Vector2( 7849.165028362812, 9983.099017017688 )",
-            "rotation": 0.0,
+            "position": "Vector2( 1928.537435955084, 6381.080131913575 )",
+            "rotation": 0.5302171930256727,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "170"
           },
           {
-            "position": "Vector2( 7849.165028362812, 10921.165028362813 )",
-            "rotation": 0.0,
+            "position": "Vector2( 1998.334498779293, 10570.5698296677 )",
+            "rotation": 4.967583066894963,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "171"
           },
           {
-            "position": "Vector2( 8787.231039707938, 9045.033005672563 )",
-            "rotation": 0.0,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "172"
-          },
-          {
-            "position": "Vector2( 8787.231039707938, 9983.099017017688 )",
-            "rotation": 0.0,
+            "position": "Vector2( 3789.2267394714677, 10424.379688484401 )",
+            "rotation": 4.6782338087197575,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
+            "node_id": "172"
+          },
+          {
+            "position": "Vector2( 3864.628488214581, 9412.639118740233 )",
+            "rotation": 3.2069296834740633,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
             "node_id": "173"
           },
           {
-            "position": "Vector2( 8787.231039707938, 10921.165028362813 )",
-            "rotation": 0.0,
+            "position": "Vector2( 2036.9801838355977, 8169.454492236395 )",
+            "rotation": 5.679883465284568,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10845,30 +10855,30 @@
             "node_id": "174"
           },
           {
-            "position": "Vector2( 9725.297051053063, 9045.033005672563 )",
-            "rotation": 0.0,
+            "position": "Vector2( 928.6502378836879, 8607.886879133468 )",
+            "rotation": 0.27009246786364044,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "175"
           },
           {
-            "position": "Vector2( 9725.297051053063, 9983.099017017688 )",
-            "rotation": 0.0,
+            "position": "Vector2( 1248.269704868837, 6962.613934861773 )",
+            "rotation": 0.03419225722641883,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "176"
           },
           {
-            "position": "Vector2( 9725.297051053063, 10921.165028362813 )",
-            "rotation": 0.0,
+            "position": "Vector2( 2673.4905099316293, 7486.919024526817 )",
+            "rotation": 3.817018868469656,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10878,8 +10888,8 @@
             "node_id": "177"
           },
           {
-            "position": "Vector2( 7252.600511016864, 6737.513017082973 )",
-            "rotation": 6.00936309846763,
+            "position": "Vector2( 3121.470827361627, 10810.684471666984 )",
+            "rotation": 1.1684235477901521,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10889,52 +10899,52 @@
             "node_id": "178"
           },
           {
-            "position": "Vector2( 5826.426927268124, 6544.178399348956 )",
-            "rotation": 0.49437183159241244,
+            "position": "Vector2( 1386.7899142558922, 8749.07088756753 )",
+            "rotation": 4.878170887266653,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "179"
           },
           {
-            "position": "Vector2( 7365.102682268143, 6541.177792441789 )",
-            "rotation": 3.1560595204412576,
+            "position": "Vector2( 4418.789229260396, 10978.243841812397 )",
+            "rotation": 2.6497301058484,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/light/brazier_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "17a"
           },
           {
-            "position": "Vector2( 6112.132044330068, 6820.392480862789 )",
-            "rotation": 2.7589396531917427,
+            "position": "Vector2( 9651.28284678632, 10636.044510846448 )",
+            "rotation": 1.2397088565740941,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "17b"
           },
           {
-            "position": "Vector2( 6556.349451015801, 6246.099356156736 )",
-            "rotation": 5.895442016364159,
+            "position": "Vector2( 9395.388738372496, 9426.154287588823 )",
+            "rotation": 0.03770614360377925,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/light/brazier_01.png",
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "17c"
           },
           {
-            "position": "Vector2( 9181.153326444497, 6290.106234074979 )",
-            "rotation": 4.7640279776395165,
+            "position": "Vector2( 9300.214782366662, 10796.042603645375 )",
+            "rotation": 4.010241827015888,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/light/brazier_01.png",
@@ -10944,8 +10954,8 @@
             "node_id": "17d"
           },
           {
-            "position": "Vector2( 9323.390687392459, 7242.55100646014 )",
-            "rotation": 3.850857636290198,
+            "position": "Vector2( 10113.553298765484, 11037.064413686503 )",
+            "rotation": 2.4312339013364355,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -10953,6 +10963,424 @@
             "shadow": true,
             "block_light": false,
             "node_id": "17e"
+          },
+          {
+            "position": "Vector2( 6196.483045161246, 11194.897495916186 )",
+            "rotation": 3.80450260175007,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "17f"
+          },
+          {
+            "position": "Vector2( 8047.40500715855, 10951.950151071447 )",
+            "rotation": 0.16691997728446706,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "180"
+          },
+          {
+            "position": "Vector2( 6777.420718931816, 10147.420113440787 )",
+            "rotation": 0.7977316507335672,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "181"
+          },
+          {
+            "position": "Vector2( 9216.573382500577, 9927.053392310427 )",
+            "rotation": 2.6457078333962234,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "182"
+          },
+          {
+            "position": "Vector2( 6928.2139480804, 11061.67584516999 )",
+            "rotation": 0.19071756715269927,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "183"
+          },
+          {
+            "position": "Vector2( 7336.933845628158, 8738.018160626569 )",
+            "rotation": 6.1470186284847905,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "184"
+          },
+          {
+            "position": "Vector2( 5671.140021538977, 9350.316998505234 )",
+            "rotation": 3.136877155123343,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "185"
+          },
+          {
+            "position": "Vector2( 9479.211857316686, 9036.745117772116 )",
+            "rotation": 0.5989963263209196,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "186"
+          },
+          {
+            "position": "Vector2( 5919.451023224322, 8991.451023224323 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "187"
+          },
+          {
+            "position": "Vector2( 5919.451023224322, 9822.353069672967 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "188"
+          },
+          {
+            "position": "Vector2( 5919.451023224322, 10653.25511612161 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "189"
+          },
+          {
+            "position": "Vector2( 6750.353069672966, 8991.451023224323 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "18a"
+          },
+          {
+            "position": "Vector2( 6750.353069672966, 9822.353069672967 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "18b"
+          },
+          {
+            "position": "Vector2( 6750.353069672966, 10653.25511612161 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "18c"
+          },
+          {
+            "position": "Vector2( 7581.25511612161, 8991.451023224323 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "18d"
+          },
+          {
+            "position": "Vector2( 7581.25511612161, 9822.353069672967 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "18e"
+          },
+          {
+            "position": "Vector2( 7581.25511612161, 10653.25511612161 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "18f"
+          },
+          {
+            "position": "Vector2( 8412.157162570255, 8991.451023224323 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "190"
+          },
+          {
+            "position": "Vector2( 8412.157162570255, 9822.353069672967 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "191"
+          },
+          {
+            "position": "Vector2( 8412.157162570255, 10653.25511612161 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "192"
+          },
+          {
+            "position": "Vector2( 9243.059209018898, 8991.451023224323 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "193"
+          },
+          {
+            "position": "Vector2( 9243.059209018898, 9822.353069672967 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "194"
+          },
+          {
+            "position": "Vector2( 9243.059209018898, 10653.25511612161 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "195"
+          },
+          {
+            "position": "Vector2( 10073.961255467542, 8991.451023224323 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "196"
+          },
+          {
+            "position": "Vector2( 10073.961255467542, 9822.353069672967 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "197"
+          },
+          {
+            "position": "Vector2( 10073.961255467542, 10653.25511612161 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "198"
+          },
+          {
+            "position": "Vector2( 6214.098510698211, 6506.963835900774 )",
+            "rotation": 3.935677797075421,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "199"
+          },
+          {
+            "position": "Vector2( 6334.270352365775, 6423.6445457784275 )",
+            "rotation": 3.355804425707858,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "19a"
+          },
+          {
+            "position": "Vector2( 6924.930445255307, 7329.466010452599 )",
+            "rotation": 4.456867293570194,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/light/brazier_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "19b"
+          },
+          {
+            "position": "Vector2( 6304.191080497228, 6320.461698953105 )",
+            "rotation": 5.575584597541011,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "19c"
+          },
+          {
+            "position": "Vector2( 6236.289051174455, 6492.289051174455 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "19d"
+          },
+          {
+            "position": "Vector2( 6236.289051174455, 7444.867153523365 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "19e"
+          },
+          {
+            "position": "Vector2( 7188.867153523365, 6492.289051174455 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "19f"
+          },
+          {
+            "position": "Vector2( 7188.867153523365, 7444.867153523365 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "1a0"
+          },
+          {
+            "position": "Vector2( 9412.729018037375, 6541.617184628254 )",
+            "rotation": 3.7245051026263574,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "1a1"
+          },
+          {
+            "position": "Vector2( 9999.66651280028, 7443.840201230932 )",
+            "rotation": 5.443311274405427,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "1a2"
+          },
+          {
+            "position": "Vector2( 9567.213015290756, 6239.213015290756 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "1a3"
+          },
+          {
+            "position": "Vector2( 9567.213015290756, 7197.639045872267 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": false,
+            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "layer": 100,
+            "shadow": true,
+            "block_light": false,
+            "node_id": "1a4"
           }
         ],
         "lights": [],

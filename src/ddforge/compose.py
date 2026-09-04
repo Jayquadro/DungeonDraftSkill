@@ -10,7 +10,7 @@ import math
 
 from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall
 from ddforge.godot import grid_to_px, parse_pv2
-from ddforge.model import Blueprint, Rect, Room
+from ddforge.model import Blueprint, Corridor, Rect, Room
 
 # Indici di lato coerenti con l'ordine di _draw_perimeter: 0=top, 1=right,
 # 2=bottom, 3=left (percorrendo i 4 vertici di Rect in senso orario a
@@ -29,7 +29,7 @@ def _wall_tangent(wall: dict) -> tuple[float, float]:
     confermato esattamente sui 2 campioni reali di rich_reference:
     muro verticale (8704,9216)->(8704,10496): tangente (0,1) == direction
     osservata; muro orizzontale (8704,10496)->(9984,10496): tangente (1,0)
-    == direction osservata. Vedi docs/format.md §5.
+    == direction osservata. Vedi docs/format.md §9.1.
     """
     points = parse_pv2(wall["points"])
     (ax, ay), (bx, by) = points[0], points[-1]
@@ -42,7 +42,7 @@ def _wall_tangent(wall: dict) -> tuple[float, float]:
 
 def _rotation_for_direction(direction: tuple[float, float]) -> float:
     """rotation = atan2(direction.y, direction.x): formula confermata su
-    tutti e 3 i campioni reali osservati (docs/format.md §5)."""
+    tutti e 3 i campioni reali osservati (docs/format.md §9.1)."""
     return math.atan2(direction[1], direction[0])
 
 
@@ -178,80 +178,236 @@ def _connect_adjacent(level, ids, room_a, room_b, palette, side_a, side_b, midpo
     return {"portal": portal, "corridors": [], "portals": [portal], "room": room}
 
 
-def _draw_corridor_channel(level, ids, rect: Rect, palette, *, horizontal: bool) -> dict:
-    """Segmento di corridoio usato da connect(): disegna solo i due lati
-    lunghi (paralleli alla direzione di marcia), lasciando gli estremi
-    aperti. Un box chiuso a 4 muri (draw_corridor) ribloccherebbe la porta
-    appena tagliata nel muro della stanza all'estremita del corridoio."""
-    pattern = add_pattern(level, ids, rect, palette.floor)
-    sides = (_TOP, _BOTTOM) if horizontal else (_LEFT, _RIGHT)
-    walls = [add_wall(level, ids, list(_side_corners(rect, side)), palette.wall) for side in sides]
-    return {"walls": walls, "pattern": pattern}
+def _long_sides(corridor: Rect) -> tuple[int, int]:
+    """I due lati su cui vanno i muri di un canale: quelli paralleli alla
+    direzione di marcia. L'orientamento e un dato esplicito di Corridor, non
+    si indovina piu da `w >= h` (vedi model.Corridor e il gate M3, TASK-26);
+    il fallback serve solo ai Rect nudi passati a mano nei test."""
+    horizontal = getattr(corridor, "horizontal", corridor.w >= corridor.h)
+    return (_TOP, _BOTTOM) if horizontal else (_LEFT, _RIGHT)
 
 
-def plan_corridor(rect_a: Rect, rect_b: Rect, width: float = 1.0):
+def _subtract_intervals(span: tuple[float, float], holes) -> list[tuple[float, float]]:
+    """`span` meno una lista di intervalli, come lista di pezzi rimasti."""
+    pieces = [span]
+    for h1, h2 in holes:
+        remaining = []
+        for a, b in pieces:
+            if h2 <= a or h1 >= b:
+                remaining.append((a, b))
+                continue
+            if a < h1:
+                remaining.append((a, h1))
+            if h2 < b:
+                remaining.append((h2, b))
+        pieces = remaining
+    return pieces
+
+
+def _channel_wall_pieces(corridor: Rect, side: int, channels) -> list[tuple[tuple, tuple]]:
+    """Pezzi del muro `side` di `corridor` che vanno davvero disegnati.
+
+    Si toglie ogni tratto che cade DENTRO un altro canale: li il corridoio
+    prosegue, e un muro pieno chiuderebbe il passaggio. E' la regola che
+    apre il gomito di una L (docs/format.md §9.3): senza, il braccio
+    orizzontale mura a meta l'imbocco di quello verticale."""
+    (x1, y1), (x2, y2) = _side_corners(corridor, side)
+    vertical = x1 == x2
+    if vertical:
+        fixed, start, end = x1, min(y1, y2), max(y1, y2)
+    else:
+        fixed, start, end = y1, min(x1, x2), max(x1, x2)
+
+    holes = []
+    for other in channels:
+        if other is corridor:
+            continue
+        # Confine escluso: un muro appoggiato al bordo di un altro canale
+        # non lo attraversa, e restare li e proprio quello che chiude
+        # l'angolo esterno del gomito.
+        across = (other.x1, other.x2) if vertical else (other.y1, other.y2)
+        if not across[0] < fixed < across[1]:
+            continue
+        holes.append((other.y1, other.y2) if vertical else (other.x1, other.x2))
+
+    pieces = [(a, b) for a, b in _subtract_intervals((start, end), holes) if b > a]
+    if vertical:
+        return [((fixed, a), (fixed, b)) for a, b in pieces]
+    return [((a, fixed), (b, fixed)) for a, b in pieces]
+
+
+def draw_corridor_network(level, ids, corridors, palette) -> dict:
+    """Disegna una rete di canali aperti: per ogni segmento il pavimento e i
+    due muri lunghi, tagliati dove un altro segmento li attraversa.
+
+    Gli estremi restano aperti di proposito: un box chiuso a 4 muri
+    (draw_corridor) ribloccherebbe la porta appena tagliata nel muro della
+    stanza all'estremita del corridoio (TASK-19)."""
+    channels = list(corridors)
+    walls, patterns = [], []
+    for corridor in channels:
+        patterns.append(add_pattern(level, ids, corridor, palette.floor))
+        for side in _long_sides(corridor):
+            for p1, p2 in _channel_wall_pieces(corridor, side, channels):
+                walls.append(add_wall(level, ids, [p1, p2], palette.wall))
+    return {"walls": walls, "patterns": patterns}
+
+
+_ROUTE_SCAN_STEP = 1.0  # quadretti fra due posizioni provate per l'asse di un canale
+_ROUTE_SCAN_MAX = 12  # posizioni provate per asse: oltre, la stanza e semplicemente troppo lontana
+
+
+def _overlap_area(rect: Rect, other: Rect) -> float:
+    """Area della sovrapposizione STRETTA fra due rettangoli. Zero se si
+    toccano soltanto lungo un bordo: un corridoio che si ferma sul muro
+    della stanza che collega la tocca, ed e esattamente quello che deve
+    fare."""
+    ox = min(rect.x2, other.x2) - max(rect.x1, other.x1)
+    oy = min(rect.y2, other.y2) - max(rect.y1, other.y1)
+    return ox * oy if ox > 0 and oy > 0 else 0.0
+
+
+def _centers_to_try(lo: float, hi: float, half: float, preferred: float) -> list[float]:
+    """Posizioni possibili per l'asse di un canale largo 2*half che deve
+    restare dentro [lo, hi], ordinate a partire da `preferred` e poi verso
+    l'esterno: la rotta preferita resta quella centrata, gli scostamenti
+    servono solo a scansare una stanza."""
+    low, high = lo + half, hi - half
+    if high < low:  # banda piu stretta del corridoio: resta solo il centro
+        return [(lo + hi) / 2]
+    base = min(max(preferred, low), high)
+    centers = [base]
+    offset = _ROUTE_SCAN_STEP
+    while len(centers) < _ROUTE_SCAN_MAX and (base - offset >= low or base + offset <= high):
+        for center in (base - offset, base + offset):
+            if low <= center <= high:
+                centers.append(center)
+        offset += _ROUTE_SCAN_STEP
+    return centers
+
+
+def _straight_route(rect_a: Rect, rect_b: Rect, half: float, center: float, *, horizontal: bool):
+    """Corridoio dritto fra due rettangoli che condividono una banda su un
+    asse. `center` e la quota dell'asse del canale."""
+    if horizontal:
+        side_a, side_b = (_RIGHT, _LEFT) if rect_a.x2 <= rect_b.x1 else (_LEFT, _RIGHT)
+        x1, x2 = (rect_a.x2, rect_b.x1) if side_a == _RIGHT else (rect_b.x2, rect_a.x1)
+        segment = Corridor(x1, center - half, x2, center + half, horizontal=True)
+        door_a = (side_a, (rect_a.x2 if side_a == _RIGHT else rect_a.x1, center))
+        door_b = (side_b, (rect_b.x1 if side_b == _LEFT else rect_b.x2, center))
+    else:
+        side_a, side_b = (_BOTTOM, _TOP) if rect_a.y2 <= rect_b.y1 else (_TOP, _BOTTOM)
+        y1, y2 = (rect_a.y2, rect_b.y1) if side_a == _BOTTOM else (rect_b.y2, rect_a.y1)
+        segment = Corridor(center - half, y1, center + half, y2, horizontal=False)
+        door_a = (side_a, (center, rect_a.y2 if side_a == _BOTTOM else rect_a.y1))
+        door_b = (side_b, (center, rect_b.y1 if side_b == _TOP else rect_b.y2))
+    return [segment], door_a, door_b
+
+
+def _elbow_route(rect_a: Rect, rect_b: Rect, half: float, cy: float, cx: float):
+    """L: esce da rect_a in orizzontale alla quota cy, gira sulla verticale
+    x=cx ed entra in rect_b dall'alto o dal basso. None se la piega cadrebbe
+    dentro uno dei due rettangoli.
+
+    I due bracci coprono ENTRAMBI il quadrato d'angolo: a lasciare aperto il
+    gomito e il taglio dei muri di _channel_wall_pieces, non un buco nella
+    geometria. Se il braccio si fermasse prima, il pavimento avrebbe un
+    tassello mancante proprio nella piega."""
+    if cx > rect_a.x2:
+        side_a, exit_x = _RIGHT, rect_a.x2
+    elif cx < rect_a.x1:
+        side_a, exit_x = _LEFT, rect_a.x1
+    else:
+        return None
+
+    if cy < rect_b.y1:
+        side_b, entry_y = _TOP, rect_b.y1
+    elif cy > rect_b.y2:
+        side_b, entry_y = _BOTTOM, rect_b.y2
+    else:
+        return None
+
+    leg_h = Corridor(
+        min(exit_x, cx - half), cy - half, max(exit_x, cx + half), cy + half, horizontal=True
+    )
+    leg_v = Corridor(
+        cx - half, min(cy - half, entry_y), cx + half, max(cy + half, entry_y), horizontal=False
+    )
+    return [leg_h, leg_v], (side_a, (exit_x, cy)), (side_b, (cx, entry_y))
+
+
+def _pairs_by_closeness(first: list, second: list):
+    """Coppie dalle due liste, che sono gia ordinate dal valore preferito in
+    fuori: si scorre per somma degli indici, cosi le rotte piu vicine a
+    quella centrata vengono provate per prime."""
+    for _, i, j in sorted(
+        (i + j, i, j) for i in range(len(first)) for j in range(len(second))
+    ):
+        yield first[i], second[j]
+
+
+def _candidate_routes(rect_a: Rect, rect_b: Rect, half: float):
+    """Rotte possibili in ordine di preferenza: prima il corridoio dritto
+    (quando le due stanze condividono una banda su un asse), poi le due L,
+    quella che esce in orizzontale e quella che esce in verticale."""
+    if max(rect_a.y1, rect_b.y1) < min(rect_a.y2, rect_b.y2):
+        lo, hi = max(rect_a.y1, rect_b.y1), min(rect_a.y2, rect_b.y2)
+        for cy in _centers_to_try(lo, hi, half, (lo + hi) / 2):
+            yield _straight_route(rect_a, rect_b, half, cy, horizontal=True)
+
+    if max(rect_a.x1, rect_b.x1) < min(rect_a.x2, rect_b.x2):
+        lo, hi = max(rect_a.x1, rect_b.x1), min(rect_a.x2, rect_b.x2)
+        for cx in _centers_to_try(lo, hi, half, (lo + hi) / 2):
+            yield _straight_route(rect_a, rect_b, half, cx, horizontal=False)
+
+    ys_a = _centers_to_try(rect_a.y1, rect_a.y2, half, rect_a.center()[1])
+    xs_b = _centers_to_try(rect_b.x1, rect_b.x2, half, rect_b.center()[0])
+    for cy, cx in _pairs_by_closeness(ys_a, xs_b):
+        route = _elbow_route(rect_a, rect_b, half, cy, cx)
+        if route is not None:
+            yield route
+
+    # Stessa L percorsa dall'altro capo: da rect_a esce in verticale.
+    ys_b = _centers_to_try(rect_b.y1, rect_b.y2, half, rect_b.center()[1])
+    xs_a = _centers_to_try(rect_a.x1, rect_a.x2, half, rect_a.center()[0])
+    for cy, cx in _pairs_by_closeness(ys_b, xs_a):
+        route = _elbow_route(rect_b, rect_a, half, cy, cx)
+        if route is not None:
+            segments, door_b, door_a = route
+            yield segments, door_a, door_b
+
+
+def plan_corridor(rect_a: Rect, rect_b: Rect, width: float = 1.0, obstacles=()):
     """Geometria pura (nessun accesso a level/ids) del corridoio fra due
     rettangoli NON adiacenti: usata sia da connect() per disegnare, sia dai
     generatori (TASK-21+) per popolare Blueprint.corridors/Room.doors prima
     che qualunque muro esista. Ritorna (segments, door_a, door_b) dove
-    segments e una lista di (Rect, horizontal) e door_a/door_b sono
-    (side, point_grid)."""
+    segments e una lista di Corridor e door_a/door_b sono (side, point_grid).
+
+    `obstacles` sono le altre stanze della mappa: fra le rotte candidate si
+    sceglie la prima che non entra in nessuna, e se sono tutte bloccate la
+    meno invadente. Senza questo controllo la rotta a L predefinita passa
+    dritta dentro le stanze che trova, com'e successo nel gate umano M3
+    (TASK-26: "il corridoio che le collega interseca altre stanze")."""
     half = width / 2
-    x_overlap = max(rect_a.x1, rect_b.x1) < min(rect_a.x2, rect_b.x2)
-    y_overlap = max(rect_a.y1, rect_b.y1) < min(rect_a.y2, rect_b.y2)
+    blockers = [rect_a, rect_b, *obstacles]
 
-    segments = []
+    best_route, best_cost = None, None
+    for route in _candidate_routes(rect_a, rect_b, half):
+        cost = sum(_overlap_area(segment, b) for segment in route[0] for b in blockers)
+        if cost == 0:
+            return route
+        if best_cost is None or cost < best_cost:
+            best_route, best_cost = route, cost
 
-    if y_overlap:
-        cy = (max(rect_a.y1, rect_b.y1) + min(rect_a.y2, rect_b.y2)) / 2
-        if rect_a.x2 <= rect_b.x1:
-            x1, x2 = rect_a.x2, rect_b.x1
-            side_a, side_b = _RIGHT, _LEFT
-        else:
-            x1, x2 = rect_b.x2, rect_a.x1
-            side_a, side_b = _LEFT, _RIGHT
-        segments.append((Rect(x1, cy - half, x2, cy + half), True))
-        door_a = (side_a, (rect_a.x2 if side_a == _RIGHT else rect_a.x1, cy))
-        door_b = (side_b, (rect_b.x1 if side_b == _LEFT else rect_b.x2, cy))
-
-    elif x_overlap:
-        cx = (max(rect_a.x1, rect_b.x1) + min(rect_a.x2, rect_b.x2)) / 2
-        if rect_a.y2 <= rect_b.y1:
-            y1, y2 = rect_a.y2, rect_b.y1
-            side_a, side_b = _BOTTOM, _TOP
-        else:
-            y1, y2 = rect_b.y2, rect_a.y1
-            side_a, side_b = _TOP, _BOTTOM
-        segments.append((Rect(cx - half, y1, cx + half, y2), False))
-        door_a = (side_a, (cx, rect_a.y2 if side_a == _BOTTOM else rect_a.y1))
-        door_b = (side_b, (cx, rect_b.y1 if side_b == _TOP else rect_b.y2))
-
-    else:
-        # L generale: nessun asse condiviso, quindi il centro dell'altra
-        # stanza cade sempre fuori dal proprio rettangolo (vedi TASK-19).
-        ax, ay = rect_a.center()
-        bx, by = rect_b.center()
-
-        side_a = _RIGHT if bx > rect_a.x2 else _LEFT
-        exit_a = (rect_a.x2 if side_a == _RIGHT else rect_a.x1, ay)
-        segments.append((Rect(min(exit_a[0], bx), ay - half, max(exit_a[0], bx), ay + half), True))
-        door_a = (side_a, exit_a)
-
-        side_b = _TOP if ay < rect_b.y1 else _BOTTOM
-        entry_b = (bx, rect_b.y1 if side_b == _TOP else rect_b.y2)
-        segments.append((Rect(bx - half, min(ay, entry_b[1]), bx + half, max(ay, entry_b[1])), False))
-        door_b = (side_b, entry_b)
-
-    return segments, door_a, door_b
+    if best_route is None:
+        raise ValueError(f"Nessuna rotta possibile fra {rect_a} e {rect_b}")
+    return best_route
 
 
-def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
-    segments, door_a, door_b = plan_corridor(room_a.rect, room_b.rect)
-
-    corridors = []
-    for rect, horizontal in segments:
-        _draw_corridor_channel(level, ids, rect, palette, horizontal=horizontal)
-        corridors.append(rect)
+def _connect_with_corridor(level, ids, room_a, room_b, palette, obstacles=()) -> dict:
+    segments, door_a, door_b = plan_corridor(room_a.rect, room_b.rect, obstacles=obstacles)
+    draw_corridor_network(level, ids, segments, palette)
 
     portals = []
     for room, (side, point) in ((room_a, door_a), (room_b, door_b)):
@@ -259,22 +415,24 @@ def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
         if portal is not None:
             portals.append(portal)
 
-    return {"portal": None, "corridors": corridors, "portals": portals}
+    return {"portal": None, "corridors": list(segments), "portals": portals}
 
 
-def connect(level, ids, room_a, room_b, palette) -> dict:
+def connect(level, ids, room_a, room_b, palette, obstacles=()) -> dict:
     """Trova il muro condiviso o genera un corridoio a L fra due stanze.
 
-    Ritorna sempre {'portal', 'corridors', 'portals'}: nel caso adiacente
-    'portal' e la singola porta creata (anche in 'portals'); nel caso a
-    corridoio 'portal' e None e 'portals' contiene le porte agli estremi.
+    `obstacles` sono i Rect delle altre stanze, da evitare quando serve un
+    corridoio. Ritorna sempre {'portal', 'corridors', 'portals'}: nel caso
+    adiacente 'portal' e la singola porta creata (anche in 'portals'); nel
+    caso a corridoio 'portal' e None e 'portals' contiene le porte agli
+    estremi.
     """
     shared = _shared_wall_segment(room_a.rect, room_b.rect)
     if shared is not None:
         side_a, side_b, midpoint = shared
         return _connect_adjacent(level, ids, room_a, room_b, palette, side_a, side_b, midpoint)
 
-    return _connect_with_corridor(level, ids, room_a, room_b, palette)
+    return _connect_with_corridor(level, ids, room_a, room_b, palette, obstacles)
 
 
 def _building_footprint(blueprint) -> Rect:
@@ -369,13 +527,13 @@ def draw_building(level_stack: dict, ids, blueprint, palette) -> None:
 def render_blueprint(level, ids, blueprint, palette) -> None:
     """Disegna un Blueprint intero in un livello gia preparato (TASK-24):
     ogni Room via draw_room (le porte sono gia decise dal generatore in
-    Room.doors) e ogni corridoio come canale aperto. L'orientamento del
-    canale e derivato da rect.w >= rect.h, vedi la nota in
-    generators/bsp.py sul perche e affidabile."""
+    Room.doors) e tutti i corridoi come un'unica rete di canali aperti.
+    La rete va disegnata in blocco, non un segmento alla volta: e cosi che
+    i muri di un braccio sanno di doversi fermare dove ne inizia un altro
+    (docs/format.md §9.3)."""
     for room in blueprint.rooms:
         draw_room(level, ids, room, palette)
-    for rect in blueprint.corridors:
-        _draw_corridor_channel(level, ids, rect, palette, horizontal=rect.w >= rect.h)
+    draw_corridor_network(level, ids, blueprint.corridors, palette)
 
 
 # ---------------------------------------------------------------------------

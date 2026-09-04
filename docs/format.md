@@ -594,6 +594,128 @@ almeno la build `1.0.1.3` fino alla `1.2.0.1` attuale — utile per sapere che
 il formato non e cambiato di recente, anche se i template da usare restano
 quelli dell'installazione corrente.
 
+## 9. Regole definitive di orientamento e allineamento (gate umani M1 e M3)
+
+Regole ricavate aprendo davvero i file generati in Dungeondraft, non dallo
+schema. Sono **codificate nel codice**, non solo scritte qui: accanto a
+ciascuna e indicato dove vive e quale test la protegge.
+
+### 9.1 Orientamento della porta: `direction` e la tangente del muro
+
+`portal.direction` **non** e la normale uscente dalla stanza, e la tangente
+del muro (parallela, dal primo all'ultimo punto), e
+`rotation = atan2(direction.y, direction.x)`.
+
+Trovata nel gate M1 (TASK-12): con la normale, la porta appariva ruotata di
+90° e visivamente spezzava il muro in due segmenti storti. Confermata sui
+campioni reali di `rich_reference` (§5): muro verticale
+`(8704,9216)→(8704,10496)` ha `direction` `(0,1)`; muro orizzontale
+`(8704,10496)→(9984,10496)` ha `(1,0)`.
+
+- Codice: `compose._wall_tangent` e `compose._rotation_for_direction`.
+- Test: `tests/test_compose.py`.
+
+### 9.2 L'orientamento di un corridoio e un dato, non si deduce
+
+Un corridoio e un **canale aperto**: si disegnano solo i due lati lunghi
+(paralleli alla direzione di marcia), mai le testate. Un box chiuso a 4
+muri ribloccherebbe la porta appena tagliata nel muro della stanza
+all'estremita (TASK-19).
+
+Quali siano i lati lunghi **va saputo, non indovinato**. Fino al gate M3 si
+derivava da `rect.w >= rect.h` ("piu largo che alto → orizzontale"), che
+sembrava sicuro perche un canale e sempre molto piu lungo che largo. Non lo
+e nel caso che conta: il segmento di raccordo fra due stanze separate da un
+solo quadretto e **1×1**, l'euristica lo dichiarava orizzontale anche quando
+era un passaggio verticale, e i muri finivano sulle testate **sigillando il
+passaggio**. E' il difetto che Jay ha visto in Dungeondraft come "i muri
+girati sui lati sbagliati" (TASK-26). Su 40 seed di prova, 102 segmenti
+ricadevano in questo caso ambiguo.
+
+- Codice: `model.Corridor.horizontal` (campo esplicito, popolato da
+  `compose.plan_corridor`) e `compose._long_sides`.
+- Test: `tests/test_corridor_routing.py::test_square_elbow_segment_keeps_its_real_orientation`.
+
+### 9.3 Il muro di un canale si ferma dove ne inizia un altro
+
+Nel gomito di una L i due bracci si sovrappongono sul quadrato d'angolo: il
+pavimento non ha buchi, ma il muro del braccio orizzontale attraverserebbe
+l'imbocco di quello verticale, murandolo a meta. Regola: **un muro di canale
+non viene disegnato nel tratto che cade dentro un altro canale** (bordo
+escluso: appoggiarsi al bordo dell'altro canale e proprio cio che chiude
+l'angolo esterno del gomito).
+
+Conseguenza operativa: i corridoi vanno disegnati **in blocco**, mai uno
+alla volta, perche ogni braccio deve sapere dove passano gli altri.
+
+- Codice: `compose._channel_wall_pieces`, usato solo da
+  `compose.draw_corridor_network`.
+- Test: `tests/test_corridor_routing.py::test_render_draws_the_long_sides_of_a_vertical_square_channel`.
+
+### 9.4 Un corridoio non attraversa mai una stanza
+
+La rotta fra due stanze si sceglie fra piu candidate (dritta con l'asse
+spostabile dentro la banda condivisa, L che esce in orizzontale, L che esce
+in verticale) prendendo la prima che non entra in nessun'altra stanza. La
+rotta a L predefinita, presa alla cieca, passava dritta dentro quello che
+trovava: nel gate M3 Jay ha segnalato un corridoio che "interseca altre
+stanze" e uno che "entra completamente" nella stanza in alto a sinistra
+(TASK-26). Su 40 seed di prova, 37 avevano almeno un attraversamento.
+
+Tre regole concorrono, e servono tutte e tre:
+
+1. **Rotta consapevole degli ostacoli** — `compose.plan_corridor(...,
+   obstacles=...)`. Da sola porta 37 seed su 40 a 14.
+2. **Collegare le stanze piu vicine** — le due meta di una partizione BSP si
+   collegano attraverso la coppia di stanze piu vicina al taglio, non
+   attraverso due rappresentanti a caso: cosi ogni corridoio resta locale.
+   Con il rappresentante casuale capitava che due stanze agli angoli opposti
+   della mappa si collegassero fra loro (`bsp._connect_subtree`).
+3. **I collegamenti facoltativi rinunciano** — anelli extra e porte segrete
+   sono un abbellimento: se la rotta migliore entra comunque in una terza
+   stanza, il collegamento non si fa (`_connect_rooms(require_clean=True)`).
+   La connettivita non ne soffre, la garantisce l'albero.
+
+In piu, l'ingrandimento della stanza boss tratta i corridoi gia tracciati
+come ostacoli quanto le stanze (`bsp._enlarge_room`): allargarsi sopra un
+corridoio produrrebbe lo stesso difetto dal lato opposto.
+
+- Test: `tests/test_corridor_routing.py::test_no_corridor_crosses_a_room_on_any_seed`
+  (40 seed) e `::test_m3_seed_1337_has_no_corridor_crossing_a_room` (il caso
+  esatto aperto da Jay).
+
+### 9.5 Nota sul falso positivo DDF102
+
+Da quando i bracci della L si uniscono davvero (§9.3), i loro muri
+condividono un estremo e formano un gruppo connesso senza porte: e
+esattamente il caso che `validate._check_ddf102_unreachable_rooms` non sa
+distinguere da una stanza irraggiungibile (il validatore non sa quali muri
+appartengano a un corridoio). Warning non bloccante, gia documentato nel
+validatore. Su una mappa vera non compare: `generated/dungeon_m3` valida
+senza nessun problema.
+
+### 9.6 Ingrandire una stanza deve riproiettare le sue porte
+
+`Door.t` e una frazione del muro su cui la porta e appoggiata: dipende dalla
+**lunghezza** di quel muro, non solo dalla sua posizione. `bsp._enlarge_room`
+(usata per la stanza boss) allarga solo i lati senza porte, ma allargare un
+lato PERPENDICOLARE allunga comunque il muro adiacente su cui una porta e
+gia appoggiata — la porta scivola via insieme a lui, anche se il lato che
+la porta, di per se, non si e mosso.
+
+Alla riapertura del gate M3, Jay ha trovato esattamente questo: la porta
+della stanza boss, allineata al corridoio esterno a x=31.0, era slittata a
+x=31.487 dopo l'ingrandimento, lasciando mezzo quadretto di muro in mezzo al
+passaggio. Regola: ogni ingrandimento di stanza con porte esistenti deve
+**riproiettare** ciascuna porta sul nuovo perimetro al punto assoluto che
+occupava prima, non lasciare `t` invariato.
+
+- Codice: `bsp._reproject_doors`, chiamata da `bsp._enlarge_room` subito
+  dopo aver sostituito `room.rect`.
+- Test: `tests/test_corridor_routing.py::test_enlarging_a_room_does_not_move_its_doors`
+  (caso minimo) e `::test_m3_seed_1337_has_no_door_offset_from_its_corridor`
+  (il caso esatto segnalato da Jay).
+
 ## 10. `data/assets.json` — provenienza (TASK-4)
 
 `rich_reference.dungeondraft_map` da solo ha troppo poche texture per

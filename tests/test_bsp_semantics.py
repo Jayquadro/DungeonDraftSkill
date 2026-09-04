@@ -153,12 +153,20 @@ def test_no_short_corridor_is_flagged_as_long():
             assert i not in flagged
 
 
-def test_long_corridors_exist_on_a_large_sparse_map():
-    """Su una mappa grande con poche stanze (quindi corridoi lunghi), deve
-    comparire almeno un corridoio oltre soglia."""
+def test_long_corridors_exist_on_a_large_map_with_small_rooms():
+    """Il marcatore non deve essere codice morto: su una mappa grande con
+    stanze piccole (quindi spazio vuoto fra una e l'altra) deve comparire
+    almeno un corridoio oltre soglia.
+
+    Nota di taratura, dal gate umano M3 (TASK-26): questo test usava 5
+    stanze su 100x100, e passava per il motivo sbagliato. Con poche stanze
+    le foglie BSP sono enormi e le stanze inscritte si toccano quasi tutte,
+    quindi corridoi lunghi non ne servono: quelli che comparivano erano
+    l'effetto del difetto poi corretto (due stanze scelte a caso agli angoli
+    opposti della mappa). Servono tante stanze piccole, non poche grandi."""
     found = False
-    for seed in range(10):
-        bp = bsp.generate(width=100, height=100, seed=seed, rooms=5, min_room=3, max_room=6)
+    for seed in range(20):
+        bp = bsp.generate(width=100, height=100, seed=seed, rooms=16, min_room=3, max_room=6)
         if bp.long_corridor_indices:
             found = True
             break

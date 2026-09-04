@@ -98,7 +98,7 @@ def _connect_floor_rooms(rooms: list[Room], corridors: list[Rect], corridor_widt
                 if best_dist is None or dist < best_dist:
                     best_dist, best_pair = dist, (i, j)
         i, j = best_pair
-        _connect_rooms(rooms[i], rooms[j], corridors, corridor_width)
+        _connect_rooms(rooms, i, j, corridors, corridor_width)
         graph[i].append(j)
         graph[j].append(i)
         connected.append(j)

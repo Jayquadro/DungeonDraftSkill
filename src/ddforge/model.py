@@ -10,19 +10,24 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Rect:
-    """Rettangolo in coordinate-quadretto. x2/y2 esclusivi."""
+    """Rettangolo in coordinate-quadretto. x2/y2 esclusivi.
 
-    x1: int
-    y1: int
-    x2: int
-    y2: int
+    I bordi delle stanze cadono su quadretti interi, ma un corridoio di
+    larghezza dispari ha l'asse a meta quadretto: i lati sono float, non
+    int (Dungeondraft lavora in pixel, 256 per quadretto, e le mezze
+    coordinate sono legittime)."""
+
+    x1: float
+    y1: float
+    x2: float
+    y2: float
 
     @property
-    def w(self) -> int:
+    def w(self) -> float:
         return self.x2 - self.x1
 
     @property
-    def h(self) -> int:
+    def h(self) -> float:
         return self.y2 - self.y1
 
     def center(self) -> tuple[float, float]:
@@ -39,6 +44,21 @@ class Rect:
 
     def shrink(self, n: int) -> "Rect":
         return Rect(self.x1 + n, self.y1 + n, self.x2 - n, self.y2 - n)
+
+
+@dataclass(frozen=True)
+class Corridor(Rect):
+    """Segmento di corridoio: un Rect con l'orientamento del canale esplicito.
+
+    `horizontal` dice quali sono i due lati lunghi, cioe dove vanno i muri:
+    TOP/BOTTOM se True, LEFT/RIGHT se False. Non e derivabile da `w >= h`:
+    il gomito fra due stanze separate da un solo quadretto e un segmento
+    1x1, e indovinarlo al contrario mura le testate del canale sigillando
+    il passaggio. E' il difetto che Jay ha visto in Dungeondraft nel gate
+    umano M3 ("i muri girati sui lati sbagliati", TASK-26).
+    """
+
+    horizontal: bool = True
 
 
 @dataclass
@@ -70,7 +90,7 @@ class Blueprint:
     width: int
     height: int
     rooms: list[Room]
-    corridors: list[Rect]
+    corridors: list[Corridor]
     graph: dict[int, list[int]]
     seed: int
     style: str
