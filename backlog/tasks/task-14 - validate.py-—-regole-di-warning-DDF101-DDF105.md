@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@jayquadro'
 created_date: '2026-09-03 11:28'
-updated_date: '2026-09-04 06:05'
+updated_date: '2026-09-04 06:27'
 labels: []
 milestone: m-2
 dependencies:
@@ -42,6 +42,8 @@ DDF101 (fuori canvas): per ogni tipo di elemento, controllare le coordinate asso
 
 <!-- SECTION:NOTES:BEGIN -->
 Implementate le 5 regole di warning. DDF101 (fuori canvas) controlla le coordinate assolute pertinenti per tipo: points per walls/patterns/roofs, position per objects/lights/texts, position+edit_points sommati per paths. DDF102 (stanza irraggiungibile) e un'euristica esplicita, non geometria esatta: componenti connesse sui muri via union-find su endpoint condivisi, warning se nessun muro del gruppo ha una porta annidata — documentato nel codice che un muro isolato senza porta puo essere decorativo, non necessariamente un errore, da cui la severity warning. Verificato con smoke test sui file reali (blank_80x80, rich_reference, demo_m1): zero warning spuri; costruito anche un caso deliberatamente rotto (stanza a 4 muri senza porta) per confermare che DDF102 scatta quando deve. 15 test nuovi in tests/test_validate.py. Suite completa: 128 test verdi.
+
+Correzione post-chiusura (scoperta durante TASK-19): un canale-corridoio aperto (compose.connect) e fatto di muri paralleli isolati che non condividono estremi ne fra loro ne con le stanze che collegano. Un singolo muro non loopato, isolato (gruppo di 1 nell'union-find), non forma mai un perimetro chiuso: due segmenti rettilinei scollegati non delimitano un'area, quindi non puo essere 'la stanza a cui manca la porta'. Aggiunta un'eccezione esplicita in _check_ddf102_unreachable_rooms: i gruppi di un solo muro senza loop=True vengono saltati (un muro loopato resta invece un perimetro chiuso a se stante e continua a essere segnalato). Senza questa correzione, ogni corridoio generato da connect() avrebbe prodotto falsi positivi DDF102 sistematici. Due nuovi test di regressione in tests/test_validate.py.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

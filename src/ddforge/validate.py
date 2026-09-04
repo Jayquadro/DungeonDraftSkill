@@ -444,6 +444,14 @@ def _check_ddf102_unreachable_rooms(walls: list, base_path: str, issues: list[Is
         groups.setdefault(find(i), []).append(i)
 
     for indices in groups.values():
+        if len(indices) == 1 and not walls[indices[0]].get("loop"):
+            # Un singolo muro non loopato non e mai un perimetro chiuso (due
+            # rette non collegate fra loro non delimitano un'area): non puo
+            # essere "la stanza" a cui manca la porta. Tipicamente e uno dei
+            # due lati lunghi di un canale-corridoio aperto alle estremita
+            # (TASK-19 compose.connect), che per costruzione non condivide
+            # estremi ne con le stanze ne con l'altro lato del canale.
+            continue
         has_portal = any(
             isinstance(walls[i].get("portals"), list) and walls[i]["portals"]
             for i in indices

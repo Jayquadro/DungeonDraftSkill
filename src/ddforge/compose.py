@@ -8,7 +8,12 @@ import math
 
 from ddforge.build import add_light, add_pattern, add_portal, add_wall
 from ddforge.godot import grid_to_px, parse_pv2
-from ddforge.model import Room
+from ddforge.model import Rect, Room
+
+# Indici di lato coerenti con l'ordine di _draw_perimeter: 0=top, 1=right,
+# 2=bottom, 3=left (percorrendo i 4 vertici di Rect in senso orario a
+# partire da x1,y1).
+_TOP, _RIGHT, _BOTTOM, _LEFT = 0, 1, 2, 3
 
 
 def _outward_normal(wall: dict, room_center_grid: tuple[float, float]) -> tuple[float, float]:
@@ -89,9 +94,178 @@ def draw_corridor(level, ids, rect, palette) -> dict:
     return _draw_perimeter(level, ids, corridor_room, palette, add_doors=False)
 
 
+def _side_corners(rect: Rect, side: int) -> tuple[tuple[float, float], tuple[float, float]]:
+    """Estremi (in quadretti) del lato `side` di rect, stesso ordine di _draw_perimeter."""
+    corners = [
+        (rect.x1, rect.y1), (rect.x2, rect.y1),
+        (rect.x2, rect.y2), (rect.x1, rect.y2),
+    ]
+    return corners[side], corners[(side + 1) % 4]
+
+
+def _wall_for_side(level: dict, rect: Rect, side: int) -> dict | None:
+    """Trova in level['walls'] il muro i cui estremi coincidono esattamente
+    (in px) con quelli attesi per quel lato di rect. Nessuna euristica: match
+    esatto, cosi non c'e ambiguita fra muri di stanze diverse."""
+    p1, p2 = _side_corners(rect, side)
+    expected = {(grid_to_px(p1[0]), grid_to_px(p1[1])), (grid_to_px(p2[0]), grid_to_px(p2[1]))}
+    for wall in level.get("walls", []):
+        try:
+            points = parse_pv2(wall["points"])
+        except (KeyError, ValueError):
+            continue
+        if len(points) < 2:
+            continue
+        if {points[0], points[-1]} == expected:
+            return wall
+    return None
+
+
+def _t_along_wall(wall_points_px: list[tuple[float, float]], point_px: tuple[float, float]) -> float:
+    """Proiezione di point_px sulla polilinea (primo-ultimo punto) del muro,
+    come frazione 0..1. Gestisce qualunque verso di percorrenza."""
+    (x0, y0), (x1, y1) = wall_points_px[0], wall_points_px[-1]
+    dx, dy = x1 - x0, y1 - y0
+    length_sq = dx * dx + dy * dy
+    if length_sq == 0:
+        return 0.0
+    px, py = point_px
+    t = ((px - x0) * dx + (py - y0) * dy) / length_sq
+    return min(max(t, 0.0), 1.0)
+
+
+def _add_door_at_point(level, ids, room, point_grid: tuple[float, float], palette, side: int) -> dict | None:
+    wall = _wall_for_side(level, room.rect, side)
+    if wall is None:
+        return None
+    point_px = (grid_to_px(point_grid[0]), grid_to_px(point_grid[1]))
+    t = _t_along_wall(parse_pv2(wall["points"]), point_px)
+    direction = _outward_normal(wall, room.rect.center())
+    rotation = _rotation_for_direction(direction)
+    return add_portal(wall, ids, t=t, direction=direction, rotation=rotation, texture=palette.door)
+
+
+def _shared_wall_segment(rect_a: Rect, rect_b: Rect):
+    """Ritorna (side_a, side_b, midpoint_grid) del segmento condiviso fra
+    due rettangoli adiacenti (bordi coincidenti + overlap non nullo
+    sull'asse libero), o None se non adiacenti."""
+    if rect_a.x2 == rect_b.x1 or rect_b.x2 == rect_a.x1:
+        y1, y2 = max(rect_a.y1, rect_b.y1), min(rect_a.y2, rect_b.y2)
+        if y2 > y1:
+            mid = ((y1 + y2) / 2,)
+            if rect_a.x2 == rect_b.x1:
+                return (_RIGHT, _LEFT, (rect_a.x2, mid[0]))
+            return (_LEFT, _RIGHT, (rect_a.x1, mid[0]))
+    if rect_a.y2 == rect_b.y1 or rect_b.y2 == rect_a.y1:
+        x1, x2 = max(rect_a.x1, rect_b.x1), min(rect_a.x2, rect_b.x2)
+        if x2 > x1:
+            mid = ((x1 + x2) / 2,)
+            if rect_a.y2 == rect_b.y1:
+                return (_BOTTOM, _TOP, (mid[0], rect_a.y2))
+            return (_TOP, _BOTTOM, (mid[0], rect_a.y1))
+    return None
+
+
+def _connect_adjacent(level, ids, room_a, room_b, palette, side_a, side_b, midpoint) -> dict:
+    portal = _add_door_at_point(level, ids, room_a, midpoint, palette, side_a)
+    room = room_a
+    if portal is None:
+        portal = _add_door_at_point(level, ids, room_b, midpoint, palette, side_b)
+        room = room_b
+    if portal is None:
+        raise ValueError(
+            "Nessun muro trovato per collegare le stanze: sono gia state "
+            "disegnate con draw_room prima di chiamare connect()?"
+        )
+    return {"portal": portal, "corridors": [], "portals": [portal], "room": room}
+
+
+def _draw_corridor_channel(level, ids, rect: Rect, palette, *, horizontal: bool) -> dict:
+    """Segmento di corridoio usato da connect(): disegna solo i due lati
+    lunghi (paralleli alla direzione di marcia), lasciando gli estremi
+    aperti. Un box chiuso a 4 muri (draw_corridor) ribloccherebbe la porta
+    appena tagliata nel muro della stanza all'estremita del corridoio."""
+    pattern = add_pattern(level, ids, rect, palette.floor)
+    sides = (_TOP, _BOTTOM) if horizontal else (_LEFT, _RIGHT)
+    walls = [add_wall(level, ids, list(_side_corners(rect, side)), palette.wall) for side in sides]
+    return {"walls": walls, "pattern": pattern}
+
+
+def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
+    rect_a, rect_b = room_a.rect, room_b.rect
+    x_overlap = max(rect_a.x1, rect_b.x1) < min(rect_a.x2, rect_b.x2)
+    y_overlap = max(rect_a.y1, rect_b.y1) < min(rect_a.y2, rect_b.y2)
+
+    segments = []  # (rect, horizontal)
+    doors = []
+
+    if y_overlap:
+        cy = (max(rect_a.y1, rect_b.y1) + min(rect_a.y2, rect_b.y2)) / 2
+        if rect_a.x2 <= rect_b.x1:
+            x1, x2 = rect_a.x2, rect_b.x1
+            side_a, side_b = _RIGHT, _LEFT
+        else:
+            x1, x2 = rect_b.x2, rect_a.x1
+            side_a, side_b = _LEFT, _RIGHT
+        segments.append((Rect(x1, cy - 0.5, x2, cy + 0.5), True))
+        doors.append((room_a, (rect_a.x2 if side_a == _RIGHT else rect_a.x1, cy), side_a))
+        doors.append((room_b, (rect_b.x1 if side_b == _LEFT else rect_b.x2, cy), side_b))
+
+    elif x_overlap:
+        cx = (max(rect_a.x1, rect_b.x1) + min(rect_a.x2, rect_b.x2)) / 2
+        if rect_a.y2 <= rect_b.y1:
+            y1, y2 = rect_a.y2, rect_b.y1
+            side_a, side_b = _BOTTOM, _TOP
+        else:
+            y1, y2 = rect_b.y2, rect_a.y1
+            side_a, side_b = _TOP, _BOTTOM
+        segments.append((Rect(cx - 0.5, y1, cx + 0.5, y2), False))
+        doors.append((room_a, (cx, rect_a.y2 if side_a == _BOTTOM else rect_a.y1), side_a))
+        doors.append((room_b, (cx, rect_b.y1 if side_b == _TOP else rect_b.y2), side_b))
+
+    else:
+        # L generale: nessun asse condiviso, quindi il centro dell'altra
+        # stanza cade sempre fuori dal proprio rettangolo (vedi TASK-19).
+        ax, ay = rect_a.center()
+        bx, by = rect_b.center()
+
+        side_a = _RIGHT if bx > rect_a.x2 else _LEFT
+        exit_a = (rect_a.x2 if side_a == _RIGHT else rect_a.x1, ay)
+        segments.append((Rect(min(exit_a[0], bx), ay - 0.5, max(exit_a[0], bx), ay + 0.5), True))
+        doors.append((room_a, exit_a, side_a))
+
+        side_b = _TOP if ay < rect_b.y1 else _BOTTOM
+        entry_b = (bx, rect_b.y1 if side_b == _TOP else rect_b.y2)
+        segments.append((Rect(bx - 0.5, min(ay, entry_b[1]), bx + 0.5, max(ay, entry_b[1])), False))
+        doors.append((room_b, entry_b, side_b))
+
+    corridors = []
+    for rect, horizontal in segments:
+        _draw_corridor_channel(level, ids, rect, palette, horizontal=horizontal)
+        corridors.append(rect)
+
+    portals = []
+    for room, point, side in doors:
+        portal = _add_door_at_point(level, ids, room, point, palette, side)
+        if portal is not None:
+            portals.append(portal)
+
+    return {"portal": None, "corridors": corridors, "portals": portals}
+
+
 def connect(level, ids, room_a, room_b, palette) -> dict:
-    """Trova il muro condiviso o genera un corridoio a L fra due stanze."""
-    raise NotImplementedError
+    """Trova il muro condiviso o genera un corridoio a L fra due stanze.
+
+    Ritorna sempre {'portal', 'corridors', 'portals'}: nel caso adiacente
+    'portal' e la singola porta creata (anche in 'portals'); nel caso a
+    corridoio 'portal' e None e 'portals' contiene le porte agli estremi.
+    """
+    shared = _shared_wall_segment(room_a.rect, room_b.rect)
+    if shared is not None:
+        side_a, side_b, midpoint = shared
+        return _connect_adjacent(level, ids, room_a, room_b, palette, side_a, side_b, midpoint)
+
+    return _connect_with_corridor(level, ids, room_a, room_b, palette)
 
 
 def draw_building(level_stack, ids, blueprint, palette) -> None:

@@ -365,6 +365,39 @@ def test_ddf102_no_warning_when_group_has_a_door():
     assert "DDF102" not in _warning_codes(_base_doc())  # il muro base ha gia una porta
 
 
+def test_ddf102_no_warning_on_lone_non_looped_wall_without_door():
+    """Scoperto in TASK-19: un canale-corridoio (compose.connect) e fatto
+    di muri paralleli isolati (nessun estremo condiviso ne fra loro ne con
+    le stanze). Un singolo muro non loopato non forma mai un perimetro
+    chiuso, quindi non deve essere trattato come una stanza senza porta."""
+    doc = _base_doc()
+    level = doc["world"]["levels"]["0"]
+    level["walls"] = [
+        {
+            "points": "PoolVector2Array( 0, 0, 512, 0 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff", "loop": False, "type": 1, "joint": 0,
+            "normalize_uv": True, "shadow": True, "node_id": "1", "portals": [],
+        },
+    ]
+    assert "DDF102" not in _warning_codes(doc)
+
+
+def test_ddf102_warns_on_lone_looped_wall_without_door():
+    """Un singolo muro loopato E un perimetro chiuso a se stante."""
+    doc = _base_doc()
+    level = doc["world"]["levels"]["0"]
+    level["walls"] = [
+        {
+            "points": "PoolVector2Array( 0, 0, 512, 0, 512, 512, 0, 512 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff", "loop": True, "type": 1, "joint": 0,
+            "normalize_uv": True, "shadow": True, "node_id": "1", "portals": [],
+        },
+    ]
+    assert "DDF102" in _warning_codes(doc)
+
+
 def test_ddf103_wall_with_single_point():
     doc = _base_doc()
     doc["world"]["levels"]["0"]["walls"][0]["points"] = "PoolVector2Array( 0, 0 )"

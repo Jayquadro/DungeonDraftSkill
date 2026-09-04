@@ -225,6 +225,11 @@ def test_ddf101_light_position_outside_canvas(reference_8x8_doc):
 def test_ddf102_wall_group_without_any_door(reference_8x8_doc):
     doc = _valid_doc(reference_8x8_doc)
     _wall0(doc)["portals"] = []
+    # Un singolo muro non loopato non basta a formare un perimetro chiuso
+    # (TASK-19, validate.py._check_ddf102_unreachable_rooms): con loop=True
+    # e invece un poligono chiuso a se stante, quindi resta un candidato
+    # valido per l'euristica "nessuna porta".
+    _wall0(doc)["loop"] = True
     found = _find(validate(doc), "DDF102")
     assert found is not None and found.severity == "warning"
 
