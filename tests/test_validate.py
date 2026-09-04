@@ -70,6 +70,7 @@ def _base_doc():
                             "range": 3.0,
                             "color": "aabbcc",
                             "intensity": 0.7,
+                            "texture": "res://textures/lights/soft.png",
                             "shadows": True,
                             "node_id": "3",
                         }
@@ -461,3 +462,26 @@ def test_warnings_do_not_block_an_otherwise_valid_document():
     doc["world"]["next_node_id"] = "51"
     assert "DDF101" in _warning_codes(doc)
     assert _errors(doc) == []
+
+
+def test_light_without_texture_is_an_error():
+    """TASK-42: e il difetto che manda Dungeondraft in loop infinito al
+    caricamento. Senza questa regola il validatore dava via libera a un file
+    che il programma non riesce ad aprire."""
+    base_doc = _base_doc()
+    del base_doc["world"]["levels"]["0"]["lights"][0]["texture"]
+    issues = validate(base_doc)
+    ddf016 = [i for i in issues if i.code == "DDF016"]
+    assert len(ddf016) == 1
+    assert ddf016[0].severity == "error"
+    assert ddf016[0].path == "world.levels.0.lights[0]"
+
+
+def test_light_color_accepted_both_as_rgb6_and_argb8():
+    """Entrambi i formati sono osservati su file che Dungeondraft riapre: la
+    presenza di `texture` non implica 8 cifre (ipotesi di TASK-3 smentita da
+    diag_m2, che si apre con 6 cifre e texture)."""
+    base_doc = _base_doc()
+    for value in ("efc05c", "ffeccd8b"):
+        base_doc["world"]["levels"]["0"]["lights"][0]["color"] = value
+        assert [i for i in validate(base_doc) if i.code == "DDF009"] == []

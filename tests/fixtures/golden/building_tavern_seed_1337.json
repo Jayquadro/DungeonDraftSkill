@@ -7593,25 +7593,31 @@
         "lights": [
           {
             "position": "Vector2( 5376, 7680 )",
+            "rotation": 0.0,
             "range": 3.0,
-            "color": "ffffff",
-            "intensity": 0.7,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
             "shadows": true,
             "node_id": "a4"
           },
           {
             "position": "Vector2( 3456, 2816 )",
+            "rotation": 0.0,
             "range": 3.0,
-            "color": "ffffff",
-            "intensity": 0.7,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
             "shadows": true,
             "node_id": "a5"
           },
           {
             "position": "Vector2( 8064, 2816 )",
+            "rotation": 0.0,
             "range": 3.0,
-            "color": "ffffff",
-            "intensity": 0.7,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
             "shadows": true,
             "node_id": "a6"
           }
@@ -15014,25 +15020,31 @@
         "lights": [
           {
             "position": "Vector2( 5376, 3072 )",
+            "rotation": 0.0,
             "range": 3.0,
-            "color": "ffffff",
-            "intensity": 0.7,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
             "shadows": true,
             "node_id": "a7"
           },
           {
             "position": "Vector2( 2560, 7936 )",
+            "rotation": 0.0,
             "range": 3.0,
-            "color": "ffffff",
-            "intensity": 0.7,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
             "shadows": true,
             "node_id": "a8"
           },
           {
             "position": "Vector2( 7168, 7936 )",
+            "rotation": 0.0,
             "range": 3.0,
-            "color": "ffffff",
-            "intensity": 0.7,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
             "shadows": true,
             "node_id": "a9"
           }

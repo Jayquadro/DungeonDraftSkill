@@ -163,3 +163,23 @@ def test_generate_missing_template_gives_clear_error(tmp_path):
     assert result.returncode == 1
     assert not out.exists()
     assert "Traceback" not in result.stderr
+
+
+def test_generated_lights_always_have_a_texture(tmp_path):
+    """TASK-42: una luce priva di `texture` manda Dungeondraft in loop
+    infinito al caricamento. Il bug era arrivato fino ai file dei gate umani
+    perche' nessun test guardava dentro le luci prodotte dalla CLI."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "dungeon",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "60", "--height", "60", "--rooms", "6", "--seed", "3",
+        "--lights",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    lights = json.loads(out.read_text(encoding="utf-8"))["world"]["levels"]["0"]["lights"]
+    assert lights, "il file di prova deve contenere almeno una luce"
+    for light in lights:
+        assert light["texture"] == "res://textures/lights/soft.png"
+        assert "rotation" in light

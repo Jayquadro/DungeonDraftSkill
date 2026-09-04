@@ -132,3 +132,23 @@ def test_generate_building_default_style_uses_the_building_type_palette(tmp_path
     doc = json.loads(out.read_text(encoding="utf-8"))
     textures = {o["texture"] for o in doc["world"]["levels"]["0"]["objects"]}
     assert any("crate" in t.lower() or "barrel" in t.lower() for t in textures)
+
+
+def test_generated_building_lights_always_have_a_texture(tmp_path):
+    """TASK-42, su tutti i piani: e' il difetto che bloccava building_m4."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "building",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "40", "--height", "40",
+        "--seed", "1337", "--building-type", "manor", "--lights",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    levels = json.loads(out.read_text(encoding="utf-8"))["world"]["levels"]
+    seen = 0
+    for level in levels.values():
+        for light in level["lights"]:
+            assert light["texture"] == "res://textures/lights/soft.png"
+            seen += 1
+    assert seen > 0

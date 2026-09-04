@@ -8,6 +8,13 @@ import math
 
 from ddforge.godot import grid_to_px, parse_pv2, pv2, v2
 
+# Default del Light2D.tscn interno di Dungeondraft (estratto da
+# Dungeondraft.pck): texture soft.png, colore Color(0.937255, 0.752941,
+# 0.360784) = efc05c, energy 0.75. Le uniche texture di luce esistenti sono
+# soft.png, point.png e fragments.png.
+LIGHT_TEXTURE = "res://textures/lights/soft.png"
+LIGHT_COLOR = "efc05c"
+
 
 def _point_along_polyline(points_px, t: float) -> tuple[float, float]:
     """Punto alla frazione `t` (0..1) lungo la spezzata, per lunghezza d'arco."""
@@ -195,26 +202,27 @@ def add_roof(level, ids, points_grid, texture, *, width=512, roof_type=0) -> dic
 
 
 def add_light(level, ids, x, y, *,
-              light_range=3.0, color="ffffff", intensity=0.7, shadows=True,
-              rotation=None, texture=None) -> dict:
-    """Variante 'puntiforme' di default (docs/format.md §4, 82 campioni reali):
+              light_range=3.0, color=LIGHT_COLOR, intensity=0.75, shadows=True,
+              rotation=0.0, texture=LIGHT_TEXTURE) -> dict:
+    """`rotation` e `texture` sono OBBLIGATORI: una luce che ne e priva manda
+    Dungeondraft 1.2.0.1 in loop infinito al caricamento (TASK-42, verificato
+    con Jay su due file identici a meno di questi due campi).
 
-    niente `rotation`/`texture`, colore a 6 cifre RGB (non passare per
-    `godot.argb()`). Passa `rotation`/`texture` esplicitamente solo per la
-    variante con sprite (1 solo campione osservato, meno affidabile).
+    docs/format.md §4 li dava per opzionali sulla base di 82 campioni: erano
+    tutti presi da mappe di Jay che non si riaprono. L'unico campione che si
+    apre davvero (rich_reference) li ha entrambi. Default di colore,
+    intensita e texture presi dal Light2D.tscn interno di Dungeondraft.
     """
     light = {
         "position": v2(grid_to_px(x), grid_to_px(y)),
+        "rotation": rotation,
         "range": light_range,
         "color": color,
         "intensity": intensity,
+        "texture": texture,
         "shadows": shadows,
         "node_id": ids.next(),
     }
-    if rotation is not None:
-        light["rotation"] = rotation
-    if texture is not None:
-        light["texture"] = texture
     level["lights"].append(light)
     return light
 

@@ -72,6 +72,7 @@ def _light():
         "range": 3.0,
         "color": "aabbcc",
         "intensity": 0.7,
+        "texture": "res://textures/lights/soft.png",
         "shadows": True,
         "node_id": LIGHT_ID,
     }

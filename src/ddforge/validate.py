@@ -68,12 +68,13 @@ def _check_argb_color(value, path: str, issues: list[Issue]) -> None:
         _add(issues, "error", "DDF009", f"Atteso un colore a 8 cifre esadecimali ARGB, trovato: {value!r}", path)
 
 
-def _check_rgb6_color(value, path: str, issues: list[Issue]) -> None:
-    """Le luci osservate (docs/format.md §4) usano 6 cifre RGB, non ARGB."""
-    if not isinstance(value, str) or not _HEX6_RE.match(value):
+def _check_light_color(value, path: str, issues: list[Issue]) -> None:
+    """Le luci usano 6 cifre RGB oppure 8 cifre ARGB: entrambe osservate su
+    file che Dungeondraft riapre (docs/format.md §4)."""
+    if not isinstance(value, str) or not (_HEX6_RE.match(value) or _HEX8_RE.match(value)):
         _add(
             issues, "error", "DDF009",
-            f"Atteso un colore a 6 cifre esadecimali RGB per le luci, trovato: {value!r}",
+            f"Atteso un colore a 6 cifre RGB o 8 cifre ARGB per le luci, trovato: {value!r}",
             path,
         )
 
@@ -124,10 +125,13 @@ def _check_generic_element(el, path: str, issues: list[Issue], known_pack_ids: s
 
 
 def _check_light_element(el, path: str, issues: list[Issue], known_pack_ids: set) -> None:
-    """Due varianti osservate (docs/format.md §4): 'puntiforme' (6 cifre RGB,
-    82 campioni reali, niente rotation/texture) e 'con sprite' (8 cifre
-    ARGB, rotation+texture, 1 solo campione). Distinta per presenza di
-    texture, il segnale piu affidabile fra i due osservati."""
+    """`texture` e obbligatorio: una luce che ne e priva manda Dungeondraft
+    1.2.0.1 in loop infinito al caricamento (DDF016, TASK-42).
+
+    Il formato del colore NON dipende dalla presenza di `texture`: sono
+    accettate sia 6 cifre RGB sia 8 cifre ARGB, entrambe osservate su file
+    che si aprono.
+    """
     if not isinstance(el, dict):
         _add(issues, "error", "DDF004", "L'elemento non e un oggetto", path)
         return
@@ -136,12 +140,17 @@ def _check_light_element(el, path: str, issues: list[Issue], known_pack_ids: set
     if "rotation" in el:
         _check_finite_rotation(el["rotation"], f"{path}.rotation", issues)
     if "color" in el:
-        if "texture" in el:
-            _check_argb_color(el["color"], f"{path}.color", issues)
-        else:
-            _check_rgb6_color(el["color"], f"{path}.color", issues)
-    if "texture" in el and isinstance(el["texture"], str):
-        _check_pack_reference(el["texture"], known_pack_ids, f"{path}.texture", issues)
+        _check_light_color(el["color"], f"{path}.color", issues)
+    texture = el.get("texture")
+    if texture is None:
+        _add(
+            issues, "error", "DDF016",
+            "Luce senza 'texture': Dungeondraft resta in caricamento all'infinito "
+            "su un file che la contiene (verificato su 1.2.0.1)",
+            path,
+        )
+    elif isinstance(texture, str):
+        _check_pack_reference(texture, known_pack_ids, f"{path}.texture", issues)
 
 
 # ---------------------------------------------------------------------------

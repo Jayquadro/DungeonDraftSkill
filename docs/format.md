@@ -127,48 +127,47 @@ Il template ricco contiene sia una luce sia un testo: si procede senza fermarsi.
 Questi due schemi **non erano verificati** in SPEC.md §13. Oltre al campione
 di `rich_reference.dungeondraft_map` (TASK-2), sono state ispezionate le
 mappe reali della campagna di Jay in `NovaMistralis/`, che contengono luci
-in quantita (fino a 41 per mappa): **82 luci reali** aggiuntive confermano
-i campi comuni e rivelano che `rich_reference` mostra una **variante
-diversa** dalla maggioranza. Per `text` non e stato trovato nessun altro
+in quantita (fino a 41 per mappa). **Attenzione: quella derivazione ha
+prodotto una conclusione sbagliata sulle luci, corretta in TASK-42 — vedi
+sotto.** Per `text` non e stato trovato nessun altro
 campione: resta **un solo esemplare** in tutto il progetto (verificato
 anche nelle mappe di terze parti in `dungeondraft_maps/crosshead_style/`,
 che non ne contengono nessuno).
 
-### `light` — due varianti osservate, non una
+### `light` — `texture` e obbligatoria (corretto in TASK-42)
 
-**Variante A — "luce puntiforme", 82/83 campioni osservati** (mappe reali
-`NovaMistralis/Mappe/*.dungeondraft_map` e
-`.../Da espandere/Bozze - Atto 1/Carcere/*.dungeondraft_map`):
+> **Questa sezione e stata riscritta.** La derivazione originale di TASK-3
+> concludeva che esistessero due varianti e che quella *senza*
+> `rotation`/`texture` fosse la forma normale, perche osservata su 82
+> campioni contro 1. **Quella conclusione era sbagliata**: i campioni
+> venivano da file che Dungeondraft non riesce a riaprire.
 
-```json
-{
-  "position": "Vector2( 1971, 2739 )",
-  "range": 3.5,
-  "color": "aaccff",
-  "intensity": 0.8,
-  "shadows": true,
-  "node_id": "6"
-}
-```
+**Una `light` priva del campo `texture` manda Dungeondraft 1.2.0.1 in loop
+infinito al caricamento.** Il file non da errori e non fa crashare il
+programma: il JSON viene letto senza lamentele e il blocco avviene dopo,
+nella costruzione della scena. Basta **una sola** luce per bloccare la
+mappa; oggetti, muri, ombre, colore, ambient e numero di livelli sono
+irrilevanti.
 
-- `position`: Vector2, osservato.
-- `range`: float, osservato, valori fra 1.5 e 6.0 nel campione (raggio in
-  quadretti, non in pixel: coerente con range piccoli tipo torcia/braciere).
-- `color`: stringa esadecimale **a 6 cifre RGB, non 8 cifre ARGB** —
-  diverso dalla convenzione di `godot.argb()` usata per muri/pattern/testo.
-  Osservato su tutti gli 82 campioni, mai un valore a 8 cifre in questa
-  variante. **Da rispettare cosi com'e in `add_light`: non passare il
-  colore delle luci per `argb()`.**
-- `intensity`: float, osservato, valori fra 0.45 e 0.85.
-- `shadows`: bool, osservato **sempre `true`** sugli 82 campioni — non e
-  chiaro se `false` sia un valore valido mai usato da Jay o se il campo
-  venga omesso quando falso (come si e visto per `portal.locked`, TASK-2
-  §5). **Ipotizzato, non osservato:** che `shadows: false` sia comunque
-  accettato da Dungeondraft.
-- **Non ha `rotation` ne `texture`**: assenti su tutti gli 82 campioni.
+Verificato con Jay (TASK-42) su due file identici a meno di questi campi:
+`blank_80x80` piu una luce senza `texture` non si apre; lo stesso file con
+`rotation: 0` e `texture: res://textures/lights/fragments.png` si apre.
 
-**Variante B — "luce con sprite", 1/83 campioni osservato** (il campione di
-`rich_reference.dungeondraft_map`):
+#### Perche i "82 campioni" non valgono
+
+Le 82 luci senza `texture` provenivano tutte e sole da quattro mappe di
+Jay: `Carcere_Nova` (20), `Carcere_Nova_2` (20),
+`Carcere_Nova_Mistralis_PianoTerra` (21), `ProvaMappa` (21). Jay ha
+confermato che **`Carcere_Nova` e `Carcere_Nova_2` non si aprono** e li ha
+cancellati; le altre due sono quasi certamente rotte allo stesso modo.
+**Non vanno piu usate come evidenza sullo schema delle luci.** Restano
+valide come fonte per il catalogo texture (`data/assets.json`): i path che
+contengono sono reali, ed e verificato che una mappa generata con quelle
+texture si apre senza problemi.
+
+L'unico campione di luce che si apre davvero e quello di
+`templates/rich_reference.dungeondraft_map`, scritto da Dungeondraft
+1.2.0.1:
 
 ```json
 {
@@ -183,24 +182,43 @@ che non ne contengono nessuno).
 }
 ```
 
-Stessi campi base della variante A, piu `rotation` (float) e `texture`
-(path `res://`), e qui il colore **e** a 8 cifre ARGB. **Ipotesi piu
-plausibile (non confermata su piu campioni):** `rotation`/`texture` compaiono
-solo quando la luce ha uno sprite associato (es. un effetto di
-fiamma/particellare come `fragments.png`), mentre le luci "semplici" per
-illuminare un ambiente (variante A, la stragrande maggioranza nell'uso
-reale di Jay) li omettono. Se il colore a 8 vs 6 cifre sia legato alla
-stessa distinzione o sia un'inconsistenza fra build diverse **non e
-verificato**: `rich_reference` e in build 1.2.0.1 come le mappe reali, quindi
-non e una differenza di versione.
+#### Default reali, dagli asset interni del programma
 
-**Per `build.add_light` (TASK-10):** implementare la variante A come
-default (i campi base sono quelli confermati su 82 campioni); accettare
-`rotation`/`texture` opzionali per la variante B. Non forzare `color` a 8
-cifre.
+Estratti da `Light2D.tscn` dentro `Dungeondraft.pck`:
 
-In entrambe le varianti l'elemento non e annidato in nessun'altra
-struttura: e un elemento di primo livello in `level.lights`.
+```
+[ext_resource path="res://textures/lights/soft.png" type="Texture" id=1]
+[node name="Light2D" type="Light2D"]
+texture = ExtResource( 1 )
+texture_scale = 0.75
+color = Color( 0.937255, 0.752941, 0.360784, 1 )   # = efc05c
+energy = 0.75
+```
+
+Le uniche texture di luce esistenti nel programma sono `soft.png` (il
+default), `point.png` e `fragments.png` (decorativa).
+
+#### Campi
+
+- `position`: Vector2.
+- `rotation`: float. **Obbligatorio**, emesso sempre.
+- `texture`: path `res://`. **Obbligatorio**, emesso sempre; default
+  `res://textures/lights/soft.png`.
+- `range`: float, raggio in quadretti (non pixel). Valori osservati fra
+  1.5 e 6.0.
+- `color`: esadecimale a **6 cifre RGB oppure 8 cifre ARGB** — entrambi
+  accettati da Dungeondraft, verificato su file che si aprono. Non passare
+  comunque per `godot.argb()`: il default e `efc05c`, quello del programma.
+- `intensity`: float, default `0.75`. Valori osservati fra 0.45 e 1.0.
+- `shadows`: bool. **Ipotizzato, non osservato in un file scritto da
+  Dungeondraft:** che `false` sia accettato. E comunque irrilevante per il
+  caricamento: un file con `shadows: false` e senza `texture` si blocca
+  lo stesso.
+
+`validate` applica **DDF016** (errore) su ogni luce priva di `texture`.
+
+L'elemento non e annidato in nessun'altra struttura: e un elemento di primo
+livello in `level.lights`.
 
 ### `text` (osservato, 1 solo campione in tutto il progetto)
 

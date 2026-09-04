@@ -500,6 +500,7 @@ def validate(doc: dict) -> list[Issue]: ...
 | DDF013 | Ogni `portal.wall_distance` ∈ [0, 1] |
 | DDF014 | Ogni texture `res://packs/<ID>/...` ha `<ID>` in `header.asset_manifest` |
 | DDF015 | Ogni `rotation` è un numero finito (non NaN, non stringa) |
+| DDF016 | Ogni `light` ha `texture`: senza, Dungeondraft resta in caricamento all'infinito (TASK-42) |
 
 ### Warning (severity = warning)
 

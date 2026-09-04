@@ -156,14 +156,17 @@ def test_add_roof_goes_into_roofs_roofs_list():
     assert "roofs" not in level or "roof" not in level  # niente lista di primo livello
 
 
-def test_add_light_default_variant_has_no_rotation_or_texture():
+def test_add_light_always_emits_rotation_and_texture():
+    """TASK-42: una luce senza `texture` manda Dungeondraft in loop infinito
+    al caricamento. I default vengono dal Light2D.tscn interno del programma."""
     level = _empty_level()
     ids = IdAllocator()
     light = add_light(level, ids, 5, 5)
 
-    assert "rotation" not in light
-    assert "texture" not in light
-    assert light["color"] == "ffffff"
+    assert light["rotation"] == 0.0
+    assert light["texture"] == "res://textures/lights/soft.png"
+    assert light["color"] == "efc05c"
+    assert light["intensity"] == 0.75
     assert light in level["lights"]
 
 
