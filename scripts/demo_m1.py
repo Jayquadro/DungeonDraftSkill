@@ -45,11 +45,12 @@ def build_demo() -> dict:
     )
 
     # NOTA PER IL GATE UMANO (TASK-12): compose.draw_room deriva
-    # direction/rotation dalla normale uscente del muro e dalla formula
-    # rotation = atan2(direction.y, direction.x), evidence-based su 3
-    # campioni reali (docs/format.md §5). Resta da confermare aprendo
-    # questo file in Dungeondraft che la porta appaia sul muro inferiore
-    # della stanza, non fluttui, e si apra verso l'esterno.
+    # direction/rotation dalla TANGENTE del muro (non dalla normale,
+    # ipotesi iniziale errata, vedi compose._wall_tangent) e dalla formula
+    # rotation = atan2(direction.y, direction.x), calibrata sui campioni
+    # reali (docs/format.md §5). Resta da confermare aprendo questo file
+    # in Dungeondraft che la porta appaia sul muro inferiore della
+    # stanza, non fluttui, e si apra verso l'esterno.
     draw_room(level, ids, room, DEMO_PALETTE)
 
     finalize(prepared, ids)
