@@ -360,6 +360,24 @@ _DOOR_CLEARANCE = 1.5
 _TACTICAL_COVER_KEYS = ("column", "crate", "barrel")
 _TACTICAL_SPACING_MIN, _TACTICAL_SPACING_MAX = 3.0, 4.0
 
+# Chiavi di Palette.accents (non texture: vedi assets._STYLE_DEFINITIONS) da
+# preferire per ciascun room.kind di generators/building.py (TASK-29,
+# SPEC.md §9.5 "rispettano il kind della stanza"). Se il kind non compare
+# qui, o nessuna delle chiavi mappate e presente nella palette, _furnish_room
+# ricade su tutti gli accents disponibili (comportamento originale di
+# TASK-23, cosi dungeon/crypt/sewer/cave restano invariati).
+_KIND_ACCENT_HINTS = {
+    "sala_comune": ("table", "chair", "bench"),
+    "cucina": ("oven", "crate", "barrel"),
+    "retro": ("crate", "barrel"),
+    "camera": ("bed",),
+    "rappresentanza": ("table", "rug"),
+    "privato": ("bed", "desk", "bookshelf"),
+    "servitu": ("cupboard", "barrel"),
+    "magazzino": ("crate", "barrel", "keg"),
+    "soppalco": ("crate", "barrel"),
+}
+
 
 def _door_point_grid(rect: Rect, door) -> tuple[float, float]:
     (x0, y0), (x1, y1) = _side_corners(rect, door.wall_index)
@@ -387,7 +405,10 @@ def _furnish_room(level, ids, room: Room, palette, rng, density: str) -> None:
         return
 
     door_points = [_door_point_grid(room.rect, d) for d in room.doors]
-    textures = list(palette.accents.values())
+    hint_keys = _KIND_ACCENT_HINTS.get(room.kind, ())
+    textures = [palette.accents[k] for k in hint_keys if k in palette.accents]
+    if not textures:
+        textures = list(palette.accents.values())
 
     placed = 0
     attempts = 0

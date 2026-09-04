@@ -182,11 +182,24 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
     },
     "tavern": {
         "wall": "wood_04", "floor": "wood_planks", "door": "door_wood_single",
-        "accents": {"table_round": "table_round", "chair": "chair", "barrel": "barrel", "bench": "bench_wood_01"},
+        # "table_round"/"chair" (chiavi TASK-17) puntavano a texture del pack
+        # WFWMFRDX, assente da templates/blank_80x80.dungeondraft_map: DDF014
+        # su ogni mappa generata da quel template. Sostituite con le varianti
+        # equivalenti senza pack (TASK-29, trovato dal test end-to-end).
+        "accents": {
+            "table": "table_wood_rectangular_small_01", "chair": "chair_wood_01", "barrel": "barrel",
+            "bench": "bench_wood_01", "bed": "bed", "oven": "oven_brick_red_a2_2x2",
+        },
     },
     "manor": {
         "wall": "battlements", "floor": "wooden_flooring_m_light", "door": "door_wood_double",
-        "accents": {"table_round": "table_round", "bookshelf": "bookshelf", "rug": "rug_01", "statue": "statue_male_mage_alt_03_a"},
+        # "statue" (TASK-17, statue_male_mage_alt_03_a) e solo su WFWMFRDX,
+        # senza equivalente senza pack nel catalogo osservato: rimossa invece
+        # di lasciare una palette che rompe DDF014 contro il template reale.
+        "accents": {
+            "table": "table_corner_wood_01", "bookshelf": "bookshelf", "rug": "rug_01",
+            "bed": "bed_wood_single_01", "desk": "desk_wood_01", "cupboard": "cupboard_wood_light_d_2x1",
+        },
     },
     "warehouse": {
         "wall": "concrete", "floor": "cobblestone", "door": "door_02",
