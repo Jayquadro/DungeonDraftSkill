@@ -1,4 +1,4 @@
-"""Test per ddforge.validate: le 15 regole di errore DDF001-DDF015."""
+"""Test per ddforge.validate: DDF001-DDF015 (errori) e DDF101-DDF105 (warning)."""
 
 import copy
 
@@ -301,3 +301,130 @@ def test_validate_does_not_mutate_input_document():
     before = copy.deepcopy(doc)
     validate(doc)
     assert doc == before
+
+
+# ---------------------------------------------------------------------------
+# DDF101-105: warning
+# ---------------------------------------------------------------------------
+
+def _warnings(doc):
+    return [i for i in validate(doc) if i.severity == "warning"]
+
+
+def _warning_codes(doc):
+    return {i.code for i in _warnings(doc)}
+
+
+def test_base_doc_has_no_warnings():
+    assert _warnings(_base_doc()) == []
+
+
+def test_ddf101_object_position_outside_canvas():
+    doc = _base_doc()  # canvas 2x2 quadretti = 512x512 px
+    doc["world"]["levels"]["0"]["objects"].append(
+        {
+            "position": "Vector2( 9999, 9999 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": False,
+            "texture": "res://textures/objects/x.png",
+            "layer": 100,
+            "shadow": True,
+            "block_light": False,
+            "node_id": "50",
+        }
+    )
+    assert "DDF101" in _warning_codes(doc)
+
+
+def test_ddf101_wall_points_inside_canvas_no_warning():
+    assert "DDF101" not in _warning_codes(_base_doc())
+
+
+def test_ddf102_room_with_two_connected_walls_and_no_door():
+    doc = _base_doc()
+    level = doc["world"]["levels"]["0"]
+    level["walls"] = [
+        {
+            "points": "PoolVector2Array( 0, 0, 512, 0 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff", "loop": False, "type": 1, "joint": 0,
+            "normalize_uv": True, "shadow": True, "node_id": "1", "portals": [],
+        },
+        {
+            "points": "PoolVector2Array( 512, 0, 512, 512 )",
+            "texture": "res://textures/walls/stone.png",
+            "color": "ffffffff", "loop": False, "type": 1, "joint": 0,
+            "normalize_uv": True, "shadow": True, "node_id": "4", "portals": [],
+        },
+    ]
+    assert "DDF102" in _warning_codes(doc)
+
+
+def test_ddf102_no_warning_when_group_has_a_door():
+    assert "DDF102" not in _warning_codes(_base_doc())  # il muro base ha gia una porta
+
+
+def test_ddf103_wall_with_single_point():
+    doc = _base_doc()
+    doc["world"]["levels"]["0"]["walls"][0]["points"] = "PoolVector2Array( 0, 0 )"
+    doc["world"]["levels"]["0"]["walls"][0]["portals"] = []
+    assert "DDF103" in _warning_codes(doc)
+
+
+def test_ddf104_pattern_with_two_points():
+    doc = _base_doc()
+    doc["world"]["levels"]["0"]["patterns"].append(
+        {
+            "position": "Vector2( 0, 0 )", "shape_rotation": 0, "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 0, 0, 100, 100 )",
+            "layer": -400, "color": "ffffffff", "outline": False,
+            "texture": "res://textures/patterns/x.png", "node_id": "60",
+        }
+    )
+    assert "DDF104" in _warning_codes(doc)
+
+
+def test_ddf105_two_portals_too_close_on_same_wall():
+    doc = _base_doc()
+    wall = doc["world"]["levels"]["0"]["walls"][0]
+    second_portal = copy.deepcopy(wall["portals"][0])
+    second_portal["node_id"] = "5"
+    second_portal["wall_distance"] = 0.52  # a 0.02 dalla prima (0.5): < 0.05
+    wall["portals"].append(second_portal)
+    doc["world"]["next_node_id"] = "10"
+    assert "DDF105" in _warning_codes(doc)
+
+
+def test_ddf105_no_warning_when_portals_far_apart():
+    doc = _base_doc()
+    wall = doc["world"]["levels"]["0"]["walls"][0]
+    second_portal = copy.deepcopy(wall["portals"][0])
+    second_portal["node_id"] = "5"
+    second_portal["wall_distance"] = 0.9
+    wall["portals"].append(second_portal)
+    doc["world"]["next_node_id"] = "10"
+    assert "DDF105" not in _warning_codes(doc)
+
+
+def test_warnings_do_not_block_an_otherwise_valid_document():
+    """I warning non alzano la severity a error: un documento valido con
+    warning resta senza errori."""
+    doc = _base_doc()
+    doc["world"]["levels"]["0"]["objects"].append(
+        {
+            "position": "Vector2( 9999, 9999 )",
+            "rotation": 0.0,
+            "scale": "Vector2( 1, 1 )",
+            "mirror": False,
+            "texture": "res://textures/objects/x.png",
+            "layer": 100,
+            "shadow": True,
+            "block_light": False,
+            "node_id": "50",
+        }
+    )
+    doc["world"]["next_node_id"] = "51"
+    assert "DDF101" in _warning_codes(doc)
+    assert _errors(doc) == []

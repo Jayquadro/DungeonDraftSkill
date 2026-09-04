@@ -10,7 +10,7 @@ import math
 import re
 from dataclasses import dataclass
 
-from ddforge.godot import parse_pv2
+from ddforge.godot import GRID, parse_pv2
 from ddforge.template import DRAWABLE_LISTS, LEVEL_KEYS
 
 _VECTOR2_RE = re.compile(r"^Vector2\(\s*[^,()]+,\s*[^,()]+\s*\)$")
@@ -309,6 +309,204 @@ def _check_nested_portals_coherence(walls: list, base_path: str, issues: list[Is
 
 
 # ---------------------------------------------------------------------------
+# DDF101-105: warning
+# ---------------------------------------------------------------------------
+
+def _parse_v2(value) -> tuple[float, float] | None:
+    """Estrae (x, y) da una stringa 'Vector2( x, y )' gia validata da DDF008."""
+    if not isinstance(value, str):
+        return None
+    match = re.match(r"^Vector2\(\s*([^,()]+),\s*([^,()]+)\s*\)$", value)
+    if not match:
+        return None
+    try:
+        return float(match.group(1)), float(match.group(2))
+    except ValueError:
+        return None
+
+
+def _check_point_in_canvas(x: float, y: float, width_px: float, height_px: float, path: str, issues: list[Issue]) -> None:
+    if not (0 <= x <= width_px and 0 <= y <= height_px):
+        _add(
+            issues, "warning", "DDF101",
+            f"Coordinate ({x:g}, {y:g}) fuori dal canvas (0..{width_px:g} x 0..{height_px:g} px)",
+            path,
+        )
+
+
+def _check_ddf101_canvas(level: dict, width_px: float, height_px: float, base_path: str, issues: list[Issue]) -> None:
+    for list_name, has_points, has_position in (
+        ("walls", True, False),
+        ("patterns", True, False),
+        ("objects", False, True),
+        ("lights", False, True),
+        ("texts", False, True),
+    ):
+        items = level.get(list_name)
+        if not isinstance(items, list):
+            continue
+        for i, el in enumerate(items):
+            if not isinstance(el, dict):
+                continue
+            path = f"{base_path}.{list_name}[{i}]"
+            if has_points and isinstance(el.get("points"), str):
+                try:
+                    points = parse_pv2(el["points"])
+                except ValueError:
+                    continue
+                for x, y in points:
+                    _check_point_in_canvas(x, y, width_px, height_px, path, issues)
+            if has_position:
+                point = _parse_v2(el.get("position"))
+                if point is not None:
+                    _check_point_in_canvas(point[0], point[1], width_px, height_px, path, issues)
+
+    paths = level.get("paths")
+    if isinstance(paths, list):
+        for i, el in enumerate(paths):
+            if not isinstance(el, dict):
+                continue
+            origin = _parse_v2(el.get("position"))
+            if origin is None or not isinstance(el.get("edit_points"), str):
+                continue
+            try:
+                edit_points = parse_pv2(el["edit_points"])
+            except ValueError:
+                continue
+            path = f"{base_path}.paths[{i}]"
+            for ex, ey in edit_points:
+                _check_point_in_canvas(origin[0] + ex, origin[1] + ey, width_px, height_px, path, issues)
+
+    roofs = level.get("roofs")
+    if isinstance(roofs, dict) and isinstance(roofs.get("roofs"), list):
+        for i, roof in enumerate(roofs["roofs"]):
+            if not isinstance(roof, dict) or not isinstance(roof.get("points"), str):
+                continue
+            try:
+                points = parse_pv2(roof["points"])
+            except ValueError:
+                continue
+            path = f"{base_path}.roofs.roofs[{i}]"
+            for x, y in points:
+                _check_point_in_canvas(x, y, width_px, height_px, path, issues)
+
+
+def _check_ddf102_unreachable_rooms(walls: list, base_path: str, issues: list[Issue]) -> None:
+    """Euristica, non geometria esatta: raggruppa i muri per componenti
+    connesse (endpoint condivisi) e segnala i gruppi senza nessuna porta.
+
+    Un muro isolato senza porta puo essere un elemento decorativo, non
+    necessariamente una stanza: e un warning, non un errore, proprio per
+    questo. Serve da rete di sicurezza ai generatori (SPEC.md §7)."""
+    n = len(walls)
+    if n == 0:
+        return
+    parent = list(range(n))
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: int, b: int) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    endpoints: list[tuple[tuple[float, float], tuple[float, float]] | None] = []
+    for wall in walls:
+        if not isinstance(wall, dict) or not isinstance(wall.get("points"), str):
+            endpoints.append(None)
+            continue
+        try:
+            points = parse_pv2(wall["points"])
+        except ValueError:
+            endpoints.append(None)
+            continue
+        endpoints.append((points[0], points[-1]) if len(points) >= 2 else None)
+
+    for i in range(n):
+        ei = endpoints[i]
+        if ei is None:
+            continue
+        for j in range(i + 1, n):
+            ej = endpoints[j]
+            if ej is None:
+                continue
+            if {ei[0], ei[1]} & {ej[0], ej[1]}:
+                union(i, j)
+
+    groups: dict[int, list[int]] = {}
+    for i in range(n):
+        if endpoints[i] is None:
+            continue
+        groups.setdefault(find(i), []).append(i)
+
+    for indices in groups.values():
+        has_portal = any(
+            isinstance(walls[i].get("portals"), list) and walls[i]["portals"]
+            for i in indices
+        )
+        if not has_portal:
+            _add(
+                issues, "warning", "DDF102",
+                "Gruppo di muri connessi senza alcuna porta: possibile stanza irraggiungibile",
+                f"{base_path}.walls[{indices[0]}]",
+            )
+
+
+def _check_ddf103_wall_points(walls: list, base_path: str, issues: list[Issue]) -> None:
+    for i, wall in enumerate(walls):
+        if not isinstance(wall, dict) or not isinstance(wall.get("points"), str):
+            continue
+        try:
+            points = parse_pv2(wall["points"])
+        except ValueError:
+            continue
+        if len(points) < 2:
+            _add(issues, "warning", "DDF103", f"Muro con meno di 2 punti ({len(points)})", f"{base_path}.walls[{i}]")
+
+
+def _check_ddf104_pattern_points(level: dict, base_path: str, issues: list[Issue]) -> None:
+    patterns = level.get("patterns")
+    if not isinstance(patterns, list):
+        return
+    for i, pattern in enumerate(patterns):
+        if not isinstance(pattern, dict) or not isinstance(pattern.get("points"), str):
+            continue
+        try:
+            points = parse_pv2(pattern["points"])
+        except ValueError:
+            continue
+        if len(points) < 3:
+            _add(issues, "warning", "DDF104", f"Pattern con meno di 3 punti ({len(points)})", f"{base_path}.patterns[{i}]")
+
+
+def _check_ddf105_close_portals(walls: list, base_path: str, issues: list[Issue]) -> None:
+    for wi, wall in enumerate(walls):
+        if not isinstance(wall, dict) or not isinstance(wall.get("portals"), list):
+            continue
+        portals = wall["portals"]
+        for a in range(len(portals)):
+            for b in range(a + 1, len(portals)):
+                pa, pb = portals[a], portals[b]
+                if not isinstance(pa, dict) or not isinstance(pb, dict):
+                    continue
+                da, db = pa.get("wall_distance"), pb.get("wall_distance")
+                if not isinstance(da, (int, float)) or not isinstance(db, (int, float)):
+                    continue
+                if isinstance(da, bool) or isinstance(db, bool):
+                    continue
+                if abs(da - db) < 0.05:
+                    _add(
+                        issues, "warning", "DDF105",
+                        f"Due porte sullo stesso muro a distanza {abs(da - db):.4f} (< 0.05)",
+                        f"{base_path}.walls[{wi}].portals[{b}]",
+                    )
+
+
+# ---------------------------------------------------------------------------
 # validate()
 # ---------------------------------------------------------------------------
 
@@ -320,17 +518,20 @@ def _validate_level(level, level_id, world, known_pack_ids, issues: list[Issue])
     _check_ddf004(level, base, issues)
 
     width, height = world.get("width"), world.get("height")
-    if (
+    valid_dims = (
         isinstance(width, int) and not isinstance(width, bool)
         and isinstance(height, int) and not isinstance(height, bool)
-    ):
+    )
+    if valid_dims:
         _check_blob_lengths(level, width, height, base, issues)
+        _check_ddf101_canvas(level, width * GRID, height * GRID, base, issues)
 
     for list_name in ("patterns", "objects", "texts", "paths", "portals"):
         items = level.get(list_name)
         if isinstance(items, list):
             for i, el in enumerate(items):
                 _check_generic_element(el, f"{base}.{list_name}[{i}]", issues, known_pack_ids)
+    _check_ddf104_pattern_points(level, base, issues)
 
     lights = level.get("lights")
     if isinstance(lights, list):
@@ -349,6 +550,9 @@ def _validate_level(level, level_id, world, known_pack_ids, issues: list[Issue])
                 for pi, portal in enumerate(nested_portals):
                     _check_generic_element(portal, f"{wpath}.portals[{pi}]", issues, known_pack_ids)
         _check_nested_portals_coherence(walls, base, issues)
+        _check_ddf103_wall_points(walls, base, issues)
+        _check_ddf102_unreachable_rooms(walls, base, issues)
+        _check_ddf105_close_portals(walls, base, issues)
 
     roofs = level.get("roofs")
     if isinstance(roofs, dict) and isinstance(roofs.get("roofs"), list):
