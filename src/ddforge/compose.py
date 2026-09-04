@@ -191,13 +191,18 @@ def _draw_corridor_channel(level, ids, rect: Rect, palette, *, horizontal: bool)
     return {"walls": walls, "pattern": pattern}
 
 
-def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
-    rect_a, rect_b = room_a.rect, room_b.rect
+def plan_corridor(rect_a: Rect, rect_b: Rect, width: float = 1.0):
+    """Geometria pura (nessun accesso a level/ids) del corridoio fra due
+    rettangoli NON adiacenti: usata sia da connect() per disegnare, sia dai
+    generatori (TASK-21+) per popolare Blueprint.corridors/Room.doors prima
+    che qualunque muro esista. Ritorna (segments, door_a, door_b) dove
+    segments e una lista di (Rect, horizontal) e door_a/door_b sono
+    (side, point_grid)."""
+    half = width / 2
     x_overlap = max(rect_a.x1, rect_b.x1) < min(rect_a.x2, rect_b.x2)
     y_overlap = max(rect_a.y1, rect_b.y1) < min(rect_a.y2, rect_b.y2)
 
-    segments = []  # (rect, horizontal)
-    doors = []
+    segments = []
 
     if y_overlap:
         cy = (max(rect_a.y1, rect_b.y1) + min(rect_a.y2, rect_b.y2)) / 2
@@ -207,9 +212,9 @@ def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
         else:
             x1, x2 = rect_b.x2, rect_a.x1
             side_a, side_b = _LEFT, _RIGHT
-        segments.append((Rect(x1, cy - 0.5, x2, cy + 0.5), True))
-        doors.append((room_a, (rect_a.x2 if side_a == _RIGHT else rect_a.x1, cy), side_a))
-        doors.append((room_b, (rect_b.x1 if side_b == _LEFT else rect_b.x2, cy), side_b))
+        segments.append((Rect(x1, cy - half, x2, cy + half), True))
+        door_a = (side_a, (rect_a.x2 if side_a == _RIGHT else rect_a.x1, cy))
+        door_b = (side_b, (rect_b.x1 if side_b == _LEFT else rect_b.x2, cy))
 
     elif x_overlap:
         cx = (max(rect_a.x1, rect_b.x1) + min(rect_a.x2, rect_b.x2)) / 2
@@ -219,9 +224,9 @@ def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
         else:
             y1, y2 = rect_b.y2, rect_a.y1
             side_a, side_b = _TOP, _BOTTOM
-        segments.append((Rect(cx - 0.5, y1, cx + 0.5, y2), False))
-        doors.append((room_a, (cx, rect_a.y2 if side_a == _BOTTOM else rect_a.y1), side_a))
-        doors.append((room_b, (cx, rect_b.y1 if side_b == _TOP else rect_b.y2), side_b))
+        segments.append((Rect(cx - half, y1, cx + half, y2), False))
+        door_a = (side_a, (cx, rect_a.y2 if side_a == _BOTTOM else rect_a.y1))
+        door_b = (side_b, (cx, rect_b.y1 if side_b == _TOP else rect_b.y2))
 
     else:
         # L generale: nessun asse condiviso, quindi il centro dell'altra
@@ -231,13 +236,19 @@ def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
 
         side_a = _RIGHT if bx > rect_a.x2 else _LEFT
         exit_a = (rect_a.x2 if side_a == _RIGHT else rect_a.x1, ay)
-        segments.append((Rect(min(exit_a[0], bx), ay - 0.5, max(exit_a[0], bx), ay + 0.5), True))
-        doors.append((room_a, exit_a, side_a))
+        segments.append((Rect(min(exit_a[0], bx), ay - half, max(exit_a[0], bx), ay + half), True))
+        door_a = (side_a, exit_a)
 
         side_b = _TOP if ay < rect_b.y1 else _BOTTOM
         entry_b = (bx, rect_b.y1 if side_b == _TOP else rect_b.y2)
-        segments.append((Rect(bx - 0.5, min(ay, entry_b[1]), bx + 0.5, max(ay, entry_b[1])), False))
-        doors.append((room_b, entry_b, side_b))
+        segments.append((Rect(bx - half, min(ay, entry_b[1]), bx + half, max(ay, entry_b[1])), False))
+        door_b = (side_b, entry_b)
+
+    return segments, door_a, door_b
+
+
+def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
+    segments, door_a, door_b = plan_corridor(room_a.rect, room_b.rect)
 
     corridors = []
     for rect, horizontal in segments:
@@ -245,7 +256,7 @@ def _connect_with_corridor(level, ids, room_a, room_b, palette) -> dict:
         corridors.append(rect)
 
     portals = []
-    for room, point, side in doors:
+    for room, (side, point) in ((room_a, door_a), (room_b, door_b)):
         portal = _add_door_at_point(level, ids, room, point, palette, side)
         if portal is not None:
             portals.append(portal)
