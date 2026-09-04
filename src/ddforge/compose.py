@@ -1,12 +1,14 @@
 """Composti: stanza, corridoio, edificio.
 
 Vedi docs/SPEC.md §6.6. draw_room/draw_corridor implementati in TASK-18;
-connect in TASK-19; draw_building in TASK-27.
+connect in TASK-19; furnish in TASK-23 (SPEC.md §9.5 non gli assegna un
+file dedicato: e un altro composto Blueprint -> JSON); draw_building in
+TASK-27.
 """
 
 import math
 
-from ddforge.build import add_light, add_pattern, add_portal, add_wall
+from ddforge.build import add_light, add_object, add_pattern, add_portal, add_wall
 from ddforge.godot import grid_to_px, parse_pv2
 from ddforge.model import Rect, Room
 
@@ -282,3 +284,94 @@ def connect(level, ids, room_a, room_b, palette) -> dict:
 def draw_building(level_stack, ids, blueprint, palette) -> None:
     """Edificio multi-piano: distribuisce le stanze, aggiunge scale e tetto."""
     raise NotImplementedError
+
+
+# ---------------------------------------------------------------------------
+# furnish (TASK-23)
+# ---------------------------------------------------------------------------
+
+_DENSITY_PER_TILE = {"none": 0.0, "light": 0.05, "medium": 0.12, "heavy": 0.25}
+_FURNISH_KIND_MULTIPLIER = {"boss": 1.5, "servizio": 0.5}
+_WALL_MARGIN = 0.5
+_DOOR_CLEARANCE = 1.5
+_TACTICAL_COVER_KEYS = ("column", "crate", "barrel")
+_TACTICAL_SPACING_MIN, _TACTICAL_SPACING_MAX = 3.0, 4.0
+
+
+def _door_point_grid(rect: Rect, door) -> tuple[float, float]:
+    (x0, y0), (x1, y1) = _side_corners(rect, door.wall_index)
+    return (x0 + (x1 - x0) * door.t, y0 + (y1 - y0) * door.t)
+
+
+def _is_clear_of_walls_and_doors(x: float, y: float, rect: Rect, door_points) -> bool:
+    if not (rect.x1 + _WALL_MARGIN <= x <= rect.x2 - _WALL_MARGIN):
+        return False
+    if not (rect.y1 + _WALL_MARGIN <= y <= rect.y2 - _WALL_MARGIN):
+        return False
+    return all(math.hypot(x - dx, y - dy) >= _DOOR_CLEARANCE for dx, dy in door_points)
+
+
+def _furnish_room(level, ids, room: Room, palette, rng, density: str) -> None:
+    if not palette.accents:
+        return
+    base_rate = _DENSITY_PER_TILE[density]
+    if base_rate == 0:
+        return
+    multiplier = _FURNISH_KIND_MULTIPLIER.get(room.kind, 1.0)
+    area = room.rect.w * room.rect.h
+    count = round(area * base_rate * multiplier)
+    if count <= 0:
+        return
+
+    door_points = [_door_point_grid(room.rect, d) for d in room.doors]
+    textures = list(palette.accents.values())
+
+    placed = 0
+    attempts = 0
+    max_attempts = max(count * 25, 50)
+    while placed < count and attempts < max_attempts:
+        attempts += 1
+        x = rng.uniform(room.rect.x1, room.rect.x2)
+        y = rng.uniform(room.rect.y1, room.rect.y2)
+        if not _is_clear_of_walls_and_doors(x, y, room.rect, door_points):
+            continue
+        texture = rng.choice(textures)
+        add_object(level, ids, x, y, texture, rotation=rng.uniform(0, 2 * math.pi))
+        placed += 1
+
+
+def _furnish_tactical_cover(level, ids, room: Room, palette, rng) -> None:
+    """Colonne/casse ogni 3-4 quadretti per i nodi tattici (SPEC.md §9.1/§9.5)."""
+    if not palette.accents:
+        return
+    cover_textures = [palette.accents[k] for k in _TACTICAL_COVER_KEYS if k in palette.accents]
+    if not cover_textures:
+        cover_textures = list(palette.accents.values())
+
+    door_points = [_door_point_grid(room.rect, d) for d in room.doors]
+    spacing = rng.uniform(_TACTICAL_SPACING_MIN, _TACTICAL_SPACING_MAX)
+
+    x = room.rect.x1 + _WALL_MARGIN + spacing / 2
+    while x < room.rect.x2 - _WALL_MARGIN:
+        y = room.rect.y1 + _WALL_MARGIN + spacing / 2
+        while y < room.rect.y2 - _WALL_MARGIN:
+            if _is_clear_of_walls_and_doors(x, y, room.rect, door_points):
+                add_object(level, ids, x, y, rng.choice(cover_textures))
+            y += spacing
+        x += spacing
+
+
+def furnish(level, ids, blueprint, palette, *, density: str = "medium", rng) -> None:
+    """Arredo trasversale applicato dopo la geometria (SPEC.md §9.5).
+
+    Non tocca mai i corridoi (blueprint.corridors non sono Room: restano
+    sempre vuoti). rng va passato dal chiamante, mai creato qui, per
+    riproducibilita a parita di seed."""
+    if density not in _DENSITY_PER_TILE:
+        raise ValueError(f"density sconosciuta: {density!r}. Valide: {sorted(_DENSITY_PER_TILE)}")
+
+    tactical = set(getattr(blueprint, "tactical_rooms", []))
+    for i, room in enumerate(blueprint.rooms):
+        _furnish_room(level, ids, room, palette, rng, density)
+        if i in tactical:
+            _furnish_tactical_cover(level, ids, room, palette, rng)
