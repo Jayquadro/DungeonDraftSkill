@@ -10,7 +10,7 @@ import math
 
 from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall
 from ddforge.godot import grid_to_px, parse_pv2
-from ddforge.model import Rect, Room
+from ddforge.model import Blueprint, Rect, Room
 
 # Indici di lato coerenti con l'ordine di _draw_perimeter: 0=top, 1=right,
 # 2=bottom, 3=left (percorrendo i 4 vertici di Rect in senso orario a
@@ -284,6 +284,35 @@ def _building_footprint(blueprint) -> Rect:
         min(r.x1 for r in rects), min(r.y1 for r in rects),
         max(r.x2 for r in rects), max(r.y2 for r in rects),
     )
+
+
+def rooms_by_level(blueprint) -> dict[int, list[Room]]:
+    """Raggruppa blueprint.rooms per Room.level (TASK-27/28). Riusata da
+    draw_building, furnish_building e dal wiring CLI per la luce (TASK-30)."""
+    grouped: dict[int, list[Room]] = {}
+    for room in blueprint.rooms:
+        grouped.setdefault(room.level, []).append(room)
+    return grouped
+
+
+def floor_blueprint(blueprint, rooms: list[Room]) -> Blueprint:
+    """Blueprint sintetico con le sole stanze di un piano: furnish() (TASK-23)
+    ha un contratto a un solo livello, quindi va invocata una volta per
+    piano su un edificio multi-livello."""
+    return Blueprint(
+        width=blueprint.width, height=blueprint.height, rooms=rooms, corridors=[],
+        graph={i: [] for i in range(len(rooms))}, seed=blueprint.seed, style=blueprint.style,
+    )
+
+
+def furnish_building(level_stack: dict, ids, blueprint, palette, *, density: str = "medium", rng) -> None:
+    """Come furnish(), ma per un edificio multi-piano (TASK-30): ogni stanza
+    riceve arredo solo nel livello a cui appartiene."""
+    for level_key, floor_rooms in rooms_by_level(blueprint).items():
+        level = level_stack.get(str(level_key))
+        if level is None or not floor_rooms:
+            continue
+        furnish(level, ids, floor_blueprint(blueprint, floor_rooms), palette, density=density, rng=rng)
 
 
 def draw_building(level_stack: dict, ids, blueprint, palette) -> None:

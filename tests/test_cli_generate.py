@@ -141,7 +141,7 @@ def test_generate_lights_flag_adds_lights(tmp_path):
 def test_generate_unimplemented_style_gives_clear_error_not_traceback(tmp_path):
     out = tmp_path / "out.dungeondraft_map"
     result = _run(
-        "generate", "building",
+        "generate", "cave",
         "--template", "templates/blank_80x80.dungeondraft_map",
         "--out", str(out),
         "--width", "40", "--height", "40",

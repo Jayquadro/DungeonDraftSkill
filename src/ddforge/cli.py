@@ -16,8 +16,9 @@ _GENERATORS = {}  # popolato pigramente in _cmd_generate: import lazy per stile
 
 def _load_generators() -> dict:
     if not _GENERATORS:
-        from ddforge.generators import bsp
+        from ddforge.generators import bsp, building
         _GENERATORS["dungeon"] = bsp
+        _GENERATORS["building"] = building
     return _GENERATORS
 
 
@@ -35,11 +36,23 @@ def _add_lighting(level, ids, blueprint) -> None:
         add_light(level, ids, cx, cy)
 
 
+def _add_building_lighting(level_stack, ids, blueprint) -> None:
+    """Come _add_lighting, ma una volta per piano (TASK-30): ogni stanza
+    riceve la sua luce solo nel livello a cui appartiene (Room.level)."""
+    from ddforge.compose import floor_blueprint, rooms_by_level
+
+    for level_key, floor_rooms in rooms_by_level(blueprint).items():
+        level = level_stack.get(str(level_key))
+        if level is None or not floor_rooms:
+            continue
+        _add_lighting(level, ids, floor_blueprint(blueprint, floor_rooms))
+
+
 def _cmd_generate(args: argparse.Namespace) -> int:
     import random
 
     from ddforge.assets import load_catalog, palette_for
-    from ddforge.compose import furnish, render_blueprint
+    from ddforge.compose import draw_building, furnish, furnish_building, render_blueprint
     from ddforge.ids import IdAllocator
     from ddforge.template import TemplateError, finalize, load_template, prepare, save
     from ddforge.validate import validate
@@ -61,28 +74,41 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         print(f"Errore: {exc}", file=sys.stderr)
         return 1
 
-    style_name = args.style or args.algorithm
+    is_building = args.algorithm == "building"
+    style_name = args.style or (args.building_type if is_building else args.algorithm)
     try:
         palette = palette_for(style_name, catalog)
     except ValueError as exc:
         print(f"Errore: {exc}", file=sys.stderr)
         return 1
 
-    blueprint = generators[args.algorithm].generate(
-        width=args.width, height=args.height, seed=args.seed, rooms=args.rooms,
-    )
+    if is_building:
+        blueprint = generators[args.algorithm].generate(
+            width=args.width, height=args.height, seed=args.seed,
+            building_type=args.building_type, l_shaped=args.l_shaped,
+        )
+    else:
+        blueprint = generators[args.algorithm].generate(
+            width=args.width, height=args.height, seed=args.seed, rooms=args.rooms,
+        )
 
-    prepared = prepare(doc, levels=1)
-    level = prepared["world"]["levels"]["0"]
+    prepared = prepare(doc, levels=blueprint.levels)
     ids = IdAllocator.from_document(prepared)
 
-    render_blueprint(level, ids, blueprint, palette)
-
-    if args.furnish != "none":
-        furnish(level, ids, blueprint, palette, density=args.furnish, rng=random.Random(args.seed))
-
-    if args.lights:
-        _add_lighting(level, ids, blueprint)
+    if is_building:
+        level_stack = prepared["world"]["levels"]
+        draw_building(level_stack, ids, blueprint, palette)
+        if args.furnish != "none":
+            furnish_building(level_stack, ids, blueprint, palette, density=args.furnish, rng=random.Random(args.seed))
+        if args.lights:
+            _add_building_lighting(level_stack, ids, blueprint)
+    else:
+        level = prepared["world"]["levels"]["0"]
+        render_blueprint(level, ids, blueprint, palette)
+        if args.furnish != "none":
+            furnish(level, ids, blueprint, palette, density=args.furnish, rng=random.Random(args.seed))
+        if args.lights:
+            _add_lighting(level, ids, blueprint)
 
     finalize(prepared, ids)
 
@@ -225,6 +251,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_generate.add_argument("--height", type=int, default=40)
     p_generate.add_argument("--rooms", type=int, default=8)
     p_generate.add_argument("--seed", type=int, default=0)
+    p_generate.add_argument(
+        "--building-type", choices=["tavern", "manor", "warehouse"], default="tavern",
+        help="tipologia dell'edificio (solo per l'algoritmo 'building')",
+    )
+    p_generate.add_argument(
+        "--l-shaped", action="store_true",
+        help="pianta a L invece che rettangolare (solo per l'algoritmo 'building')",
+    )
     p_generate.add_argument("--style", default=None, help="palette semantica, es. crypt, tavern, sewer")
     p_generate.add_argument("--lights", action="store_true")
     p_generate.add_argument("--furnish", choices=["none", "light", "medium", "heavy"], default="none")

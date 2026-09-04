@@ -190,6 +190,9 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
             "table": "table_wood_rectangular_small_01", "chair": "chair_wood_01", "barrel": "barrel",
             "bench": "bench_wood_01", "bed": "bed", "oven": "oven_brick_red_a2_2x2",
         },
+        # roof/wall_load_bearing (TASK-30): draw_building li usa solo se
+        # presenti (Palette.roof/wall_load_bearing di default None, TASK-27).
+        "roof": "tiles", "wall_load_bearing": "stone",
     },
     "manor": {
         "wall": "battlements", "floor": "wooden_flooring_m_light", "door": "door_wood_double",
@@ -200,10 +203,12 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
             "table": "table_corner_wood_01", "bookshelf": "bookshelf", "rug": "rug_01",
             "bed": "bed_wood_single_01", "desk": "desk_wood_01", "cupboard": "cupboard_wood_light_d_2x1",
         },
+        "roof": "tiles", "wall_load_bearing": "stone_09",
     },
     "warehouse": {
         "wall": "concrete", "floor": "cobblestone", "door": "door_02",
         "accents": {"crate": "crate", "barrel": "barrel", "keg": "keg_wood_light_h_1x1"},
+        "roof": "tiles", "wall_load_bearing": "stone",
     },
     "city": {
         "wall": "cobble", "floor": "cobblestone", "door": "threshold_01",
@@ -232,7 +237,11 @@ def palette_for(style: str, catalog: dict) -> Palette:
     floor = _lookup(catalog, "floors", definition["floor"])
     door = _lookup(catalog, "portals", definition["door"])
     accents = {name: _lookup(catalog, "objects", key) for name, key in definition["accents"].items()}
-    return Palette(wall=wall, floor=floor, door=door, accents=accents)
+    roof = _lookup(catalog, "roofs", definition["roof"]) if "roof" in definition else None
+    wall_load_bearing = (
+        _lookup(catalog, "walls", definition["wall_load_bearing"]) if "wall_load_bearing" in definition else None
+    )
+    return Palette(wall=wall, floor=floor, door=door, accents=accents, roof=roof, wall_load_bearing=wall_load_bearing)
 
 
 def required_packs(doc: dict) -> set:

@@ -139,9 +139,13 @@ def generate(*, width: int, height: int, seed: int,
     footprint = Rect(1, 1, width - 1, height - 1)
 
     # Striscia riservata al vano scale: esclusa dal footprint di
-    # generazione stanze su OGNI piano, mai sovrapposta per costruzione.
+    # generazione stanze su OGNI piano, mai sovrapposta per costruzione
+    # (Rect.overlaps con margin=0 tratta il touch esatto come non-overlap).
+    # Adiacente senza margine di distacco: un margine qui lascerebbe una
+    # striscia vuota, senza pavimento ne muri, dentro il perimetro portante
+    # (trovato con smoke test prima del gate umano di TASK-30).
     stairs_rect = Rect(footprint.x1, footprint.y1, footprint.x1 + _STAIRS_WIDTH, footprint.y1 + _STAIRS_WIDTH)
-    generation_footprint = Rect(footprint.x1 + _STAIRS_WIDTH + 1, footprint.y1, footprint.x2, footprint.y2)
+    generation_footprint = Rect(footprint.x1 + _STAIRS_WIDTH, footprint.y1, footprint.x2, footprint.y2)
     parts = _footprint_parts(generation_footprint, l_shaped)
 
     floors_spec = _BUILDING_TYPES[building_type]
