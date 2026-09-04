@@ -140,7 +140,8 @@ def build_catalog(*docs: dict) -> dict:
 
 
 def load_catalog(path="data/assets.json") -> dict:
-    """Legge il catalogo asset da file. Solleva FileNotFoundError se manca."""
+    """Legge il catalogo asset da file. Fallisce con messaggio esplicito
+    se il file manca o non e JSON valido."""
     catalog_path = Path(path)
     if not catalog_path.exists():
         raise FileNotFoundError(
@@ -148,14 +149,81 @@ def load_catalog(path="data/assets.json") -> dict:
             "Generalo con `ddforge catalog --from <template>`."
         )
     with open(catalog_path, encoding="utf-8") as f:
-        return json.load(f)
+        try:
+            return json.load(f)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Catalogo asset non e JSON valido: {catalog_path} ({exc})") from exc
+
+
+# Ogni voce e (categoria, chiave) dentro il catalogo di data/assets.json,
+# verificate a mano contro le chiavi realmente presenti (TASK-4): mai
+# inventare una chiave che potrebbe non esistere in una rigenerazione futura
+# del catalogo, in tal caso palette_for fallisce esplicitamente (AC5).
+_STYLE_DEFINITIONS: dict[str, dict] = {
+    "dungeon": {
+        "wall": "stone", "floor": "stone_floor", "door": "door_iron",
+        "accents": {"brazier": "brazier", "crate": "crate", "barrel": "barrel"},
+    },
+    "crypt": {
+        "wall": "stone_09", "floor": "stone_floor", "door": "door_secret",
+        "accents": {"skeleton": "skeleton_04", "grave": "skeleton_grave_02", "brazier": "brazier"},
+    },
+    "sewer": {
+        "wall": "concrete", "floor": "cobblestone", "door": "portcullis",
+        "accents": {"barrel": "barrel", "cage": "cage_04"},
+    },
+    "cave": {
+        "wall": "stone", "floor": "stone_floor", "door": "archway",
+        "accents": {},
+    },
+    "tavern": {
+        "wall": "wood_04", "floor": "wood_planks", "door": "door_wood_single",
+        "accents": {"table_round": "table_round", "chair": "chair", "barrel": "barrel", "bench": "bench_wood_01"},
+    },
+    "manor": {
+        "wall": "battlements", "floor": "wooden_flooring_m_light", "door": "door_wood_double",
+        "accents": {"table_round": "table_round", "bookshelf": "bookshelf", "rug": "rug_01", "statue": "statue_male_mage_alt_03_a"},
+    },
+    "warehouse": {
+        "wall": "concrete", "floor": "cobblestone", "door": "door_02",
+        "accents": {"crate": "crate", "barrel": "barrel", "keg": "keg_wood_light_h_1x1"},
+    },
+    "city": {
+        "wall": "cobble", "floor": "cobblestone", "door": "threshold_01",
+        "accents": {"fountain": "fountain_stone_01"},
+    },
+}
+
+
+def _lookup(catalog: dict, category: str, key: str) -> str:
+    bucket = catalog.get(category)
+    if not isinstance(bucket, dict) or key not in bucket:
+        raise ValueError(
+            f"Chiave {key!r} assente da catalog[{category!r}]: rigenera data/assets.json "
+            "con `ddforge catalog` includendo un documento che la contenga"
+        )
+    return bucket[key]
 
 
 def palette_for(style: str, catalog: dict) -> Palette:
     """style in {dungeon, crypt, sewer, cave, tavern, manor, warehouse, city}."""
-    raise NotImplementedError
+    definition = _STYLE_DEFINITIONS.get(style)
+    if definition is None:
+        raise ValueError(f"Stile sconosciuto: {style!r}. Stili validi: {sorted(_STYLE_DEFINITIONS)}")
+
+    wall = _lookup(catalog, "walls", definition["wall"])
+    floor = _lookup(catalog, "floors", definition["floor"])
+    door = _lookup(catalog, "portals", definition["door"])
+    accents = {name: _lookup(catalog, "objects", key) for name, key in definition["accents"].items()}
+    return Palette(wall=wall, floor=floor, door=door, accents=accents)
 
 
 def required_packs(doc: dict) -> set:
     """Estrae gli ID pack referenziati dalle texture usate nel documento."""
-    raise NotImplementedError
+    ids = set()
+    for texture in _iter_textures(doc):
+        if texture.startswith("res://packs/"):
+            parts = texture.split("/")
+            if len(parts) >= 4:
+                ids.add(parts[3])
+    return ids

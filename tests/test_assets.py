@@ -6,7 +6,13 @@ import sys
 
 import pytest
 
-from ddforge.assets import build_catalog, load_catalog
+from ddforge.assets import (
+    _STYLE_DEFINITIONS,
+    build_catalog,
+    load_catalog,
+    palette_for,
+    required_packs,
+)
 
 
 def _doc(*, packs=(), walls=(), portals=(), patterns=(), objects=(), roofs=()):
@@ -154,3 +160,65 @@ def test_cli_catalog_merges_repeated_from(tmp_path):
 
     written = json.loads(out.read_text(encoding="utf-8"))
     assert set(written["walls"]) == {"stone", "concrete"}
+
+
+# ---------------------------------------------------------------------------
+# palette_for / required_packs (TASK-17)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def real_catalog():
+    return load_catalog("data/assets.json")
+
+
+@pytest.mark.parametrize("style", sorted(_STYLE_DEFINITIONS))
+def test_palette_for_produces_valid_palette_for_every_style(style, real_catalog):
+    palette = palette_for(style, real_catalog)
+    assert palette.wall.startswith("res://")
+    assert palette.floor.startswith("res://")
+    assert palette.door.startswith("res://")
+    assert all(v.startswith("res://") for v in palette.accents.values())
+
+
+def test_palette_for_unknown_style_raises_explicit_error(real_catalog):
+    with pytest.raises(ValueError, match="Stile sconosciuto"):
+        palette_for("stile_a_caso", real_catalog)
+
+
+def test_palette_for_missing_catalog_key_raises_explicit_error():
+    catalog = {"walls": {}, "floors": {}, "portals": {}, "objects": {}}
+    with pytest.raises(ValueError, match="stone"):
+        palette_for("dungeon", catalog)
+
+
+@pytest.mark.parametrize("style", sorted(_STYLE_DEFINITIONS))
+def test_palette_textures_only_reference_packs_in_manifest(style, real_catalog):
+    known_pack_ids = {p["id"] for p in real_catalog["packs"]}
+    palette = palette_for(style, real_catalog)
+    for texture in [palette.wall, palette.floor, palette.door, *palette.accents.values()]:
+        if texture.startswith("res://packs/"):
+            pack_id = texture.split("/")[3]
+            assert pack_id in known_pack_ids
+
+
+def test_required_packs_extracts_ids_from_document():
+    doc = {
+        "header": {},
+        "world": {
+            "levels": {
+                "0": {
+                    "walls": [{"texture": "res://packs/AAA111/textures/walls/x.png", "portals": []}],
+                    "objects": [{"texture": "res://textures/objects/default.png"}],
+                }
+            }
+        },
+    }
+    assert required_packs(doc) == {"AAA111"}
+
+
+def test_required_packs_on_real_rich_reference_matches_manifest_subset():
+    with open("templates/rich_reference.dungeondraft_map", encoding="utf-8") as f:
+        doc = json.load(f)
+    manifest_ids = {m["id"] for m in doc["header"]["asset_manifest"]}
+    used = required_packs(doc)
+    assert used.issubset(manifest_ids)
