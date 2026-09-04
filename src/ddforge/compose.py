@@ -282,6 +282,18 @@ def draw_building(level_stack, ids, blueprint, palette) -> None:
     raise NotImplementedError
 
 
+def render_blueprint(level, ids, blueprint, palette) -> None:
+    """Disegna un Blueprint intero in un livello gia preparato (TASK-24):
+    ogni Room via draw_room (le porte sono gia decise dal generatore in
+    Room.doors) e ogni corridoio come canale aperto. L'orientamento del
+    canale e derivato da rect.w >= rect.h, vedi la nota in
+    generators/bsp.py sul perche e affidabile."""
+    for room in blueprint.rooms:
+        draw_room(level, ids, room, palette)
+    for rect in blueprint.corridors:
+        _draw_corridor_channel(level, ids, rect, palette, horizontal=rect.w >= rect.h)
+
+
 # ---------------------------------------------------------------------------
 # furnish (TASK-23)
 # ---------------------------------------------------------------------------

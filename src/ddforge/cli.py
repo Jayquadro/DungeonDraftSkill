@@ -11,8 +11,96 @@ import sys
 from pathlib import Path
 
 
+_GENERATORS = {}  # popolato pigramente in _cmd_generate: import lazy per stile
+
+
+def _load_generators() -> dict:
+    if not _GENERATORS:
+        from ddforge.generators import bsp
+        _GENERATORS["dungeon"] = bsp
+    return _GENERATORS
+
+
+def _add_lighting(level, ids, blueprint) -> None:
+    """Una luce al centro di ogni stanza e al centro di ogni corridoio
+    lungo (SPEC.md §9.1: 'furnish ci mette una fonte di luce a meta')."""
+    from ddforge.build import add_light
+
+    for room in blueprint.rooms:
+        cx, cy = room.rect.center()
+        add_light(level, ids, cx, cy)
+    for i in blueprint.long_corridor_indices:
+        rect = blueprint.corridors[i]
+        cx, cy = rect.center()
+        add_light(level, ids, cx, cy)
+
+
 def _cmd_generate(args: argparse.Namespace) -> int:
-    raise NotImplementedError("ddforge generate: implementato in TASK-24")
+    import random
+
+    from ddforge.assets import load_catalog, palette_for
+    from ddforge.compose import furnish, render_blueprint
+    from ddforge.ids import IdAllocator
+    from ddforge.template import TemplateError, finalize, load_template, prepare, save
+    from ddforge.validate import validate
+
+    generators = _load_generators()
+    if args.algorithm not in generators:
+        print(f"Errore: lo stile '{args.algorithm}' non e ancora implementato.", file=sys.stderr)
+        return 1
+
+    try:
+        doc = load_template(args.template)
+    except TemplateError as exc:
+        print(f"Errore: {exc}", file=sys.stderr)
+        return 1
+
+    try:
+        catalog = load_catalog()
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"Errore: {exc}", file=sys.stderr)
+        return 1
+
+    style_name = args.style or args.algorithm
+    try:
+        palette = palette_for(style_name, catalog)
+    except ValueError as exc:
+        print(f"Errore: {exc}", file=sys.stderr)
+        return 1
+
+    blueprint = generators[args.algorithm].generate(
+        width=args.width, height=args.height, seed=args.seed, rooms=args.rooms,
+    )
+
+    prepared = prepare(doc, levels=1)
+    level = prepared["world"]["levels"]["0"]
+    ids = IdAllocator.from_document(prepared)
+
+    render_blueprint(level, ids, blueprint, palette)
+
+    if args.furnish != "none":
+        furnish(level, ids, blueprint, palette, density=args.furnish, rng=random.Random(args.seed))
+
+    if args.lights:
+        _add_lighting(level, ids, blueprint)
+
+    finalize(prepared, ids)
+
+    issues = validate(prepared)
+    for issue in issues:
+        marker = "ERRORE" if issue.severity == "error" else "AVVISO"
+        print(f"[{marker}] {issue.code} {issue.path}: {issue.message}")
+
+    errors = [i for i in issues if i.severity == "error"]
+    if errors:
+        print(f"\n{len(errors)} errori di validazione: {args.out} NON scritto.", file=sys.stderr)
+        return 1
+
+    save(prepared, args.out)
+    warnings = [i for i in issues if i.severity == "warning"]
+    suffix = f" ({len(warnings)} avvisi)" if warnings else ""
+    print(f"\nScritto {args.out}{suffix}")
+    return 0
 
 
 def _load_document(path) -> dict | None:

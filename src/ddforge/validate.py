@@ -397,7 +397,15 @@ def _check_ddf102_unreachable_rooms(walls: list, base_path: str, issues: list[Is
 
     Un muro isolato senza porta puo essere un elemento decorativo, non
     necessariamente una stanza: e un warning, non un errore, proprio per
-    questo. Serve da rete di sicurezza ai generatori (SPEC.md §7)."""
+    questo. Serve da rete di sicurezza ai generatori (SPEC.md §7).
+
+    Limite noto (osservato in TASK-24 su generate reale): due segmenti di
+    canale-corridoio che si toccano in una piega a L (generators/bsp.py)
+    formano un gruppo connesso senza mai avere una porta, perche il canale
+    non ne ha bisogno per essere attraversabile. Produce un DDF102 non
+    bloccante ma non realmente utile in quel caso: non c'e modo di
+    distinguerlo da qui (il validatore non sa quali muri appartengono a un
+    corridoio piuttosto che a una stanza)."""
     n = len(walls)
     if n == 0:
         return
