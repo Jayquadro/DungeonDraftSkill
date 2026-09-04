@@ -290,26 +290,30 @@ Esiste anche un secondo tipo di `portal`, non annidato e con schema
 completamente diverso, usato per porte posizionate liberamente: **il
 generatore di questo progetto non lo produce mai** (§7).
 
-**Relazione `rotation`/`direction` (TASK-18, derivazione evidence-based,
-non ancora confermata dal gate umano):** sui 3 campioni osservati finora
-(l'esempio sopra da SPEC.md §13, e i due portali reali di
-`rich_reference.dungeondraft_map`) vale esattamente
-`rotation = atan2(direction.y, direction.x)`:
+**`direction` e la TANGENTE del muro, non la normale — CALIBRATO dal gate
+umano TASK-12 (screenshot `task12.png`, `task12_zoom.png`,
+`task12_selected.png`).** La prima ipotesi (TASK-18: normale uscente dalla
+stanza, perpendicolare al muro) produceva una porta ruotata di 90 gradi:
+nello screenshot il muro col la porta appariva visivamente spezzato in due
+segmenti storti, con la porta (evidenziata in blu nello screenshot
+"selected") disegnata quasi verticale invece che distesa nel muro
+orizzontale. Confrontando di nuovo i 2 campioni reali di
+`rich_reference.dungeondraft_map`, `direction` risulta essere esattamente
+il vettore tangente del muro (dal primo punto all'ultimo), non la normale:
 
-| direction | rotation osservata | atan2(dy, dx) |
+| muro (`points`) | tangente (punto0->puntoN) | `direction` osservata |
 |---|---|---|
-| `(-1, 0)` (SPEC.md §13) | 3.141593 | 3.141592653589793 |
-| `(0, 1)` (door_00, rich_reference) | 1.570796 | 1.5707963267948966 |
-| `(1, 0)` (window_05, rich_reference) | 0 | 0.0 |
+| verticale `(8704,9216)->(8704,10496)` | `(0, 1)` | `(0, 1)` — combacia |
+| orizzontale `(8704,10496)->(9984,10496)` | `(1, 0)` | `(1, 0)` — combacia |
 
-`compose.draw_room` (TASK-18) calcola `direction` come normale uscente del
-muro rispetto al centro della stanza, e deriva `rotation` da questa
-formula invece di lasciarlo a 0 come placeholder. **Cio che resta da
-confermare al gate umano (TASK-12/TASK-26):** se "normale uscente dalla
-stanza" e davvero la convenzione giusta per `direction` (potrebbe invece
-essere legata al verso di apertura dell'anta, non alla normale geometrica
-del muro) — la formula rotation/direction sopra e solida, l'incognita e
-solo quale `direction` scegliere per una porta generata proceduralmente.
+`rotation = atan2(direction.y, direction.x)` resta corretta (era gia stata
+verificata su 3 campioni, docs/format.md §5 versione precedente): quello
+che era sbagliato era il calcolo di `direction` stesso, non la formula che
+ne deriva `rotation`. `compose._wall_tangent` (ex `_outward_normal`,
+rinominata dopo la correzione) ora restituisce semplicemente la tangente
+del muro. Rigenerato `generated/demo_m1.dungeondraft_map`: la porta ora ha
+`direction=(-1,0)`, `rotation=3.141593`, identico all'esempio verificato
+di SPEC.md §13. In attesa di una nuova conferma visiva da Jay.
 
 ### `pattern`
 

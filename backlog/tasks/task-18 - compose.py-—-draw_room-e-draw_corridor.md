@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@jayquadro'
 created_date: '2026-09-03 11:31'
-updated_date: '2026-09-04 06:18'
+updated_date: '2026-09-04 07:06'
 labels: []
 milestone: m-3
 dependencies:
@@ -44,6 +44,8 @@ Prima di implementare: derivata dai 3 campioni reali osservati (SPEC.md §13 + i
 
 <!-- SECTION:NOTES:BEGIN -->
 Prima di implementare: derivata dai 3 campioni reali osservati la relazione rotation = atan2(direction.y, direction.x), verificata esatta (differenza < 1e-6) su SPEC.md §13 e i 2 portali di rich_reference. Documentato in docs/format.md §5. draw_room/draw_corridor condividono un helper interno _draw_perimeter; _outward_normal calcola la normale del muro rivolta lontano dal centro della Room (in coordinate px), usata come portal.direction, con rotation derivata dalla formula sopra invece di un placeholder arbitrario. Aggiornato anche scripts/demo_m1.py per usare compose.draw_room invece di chiamare le primitive a mano (dogfooding), correggendo un'inconsistenza: il placeholder precedente aveva direction=(0,1) ma rotation=0.0, che non rispettava la formula ora nota — rigenerato generated/demo_m1.dungeondraft_map con rotation=1.5707963267948966 coerente. 11 test in tests/test_compose.py, incluso un test end-to-end che passa il risultato di draw_room a validate() (zero errori, esclusi DDF010/011 che richiedono blob binari reali non presenti nel documento sintetico del test). Suite completa: 188 test verdi.
+
+Correzione post-chiusura (gate umano TASK-12): _outward_normal era una perpendicolare al muro (normale uscente), ma lo screenshot reale mostrava la porta ruotata di 90 gradi col muro visivamente spezzato. Il vero significato di portal.direction, confermato sui 2 campioni reali di rich_reference, e la TANGENTE del muro (dal primo punto all'ultimo), non la normale. Rinominata in _wall_tangent, semplificata (non serve piu il centro della stanza per scegliere il verso 'uscente', la tangente e univocamente determinata dall'ordine dei punti del muro). Aggiornato docs/format.md §5. Tutti i 244 test restano verdi dopo la correzione (nessuno verificava un valore di rotazione specifico legato alla vecchia semantica).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

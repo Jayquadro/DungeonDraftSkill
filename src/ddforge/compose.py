@@ -18,29 +18,26 @@ from ddforge.model import Rect, Room
 _TOP, _RIGHT, _BOTTOM, _LEFT = 0, 1, 2, 3
 
 
-def _outward_normal(wall: dict, room_center_grid: tuple[float, float]) -> tuple[float, float]:
-    """Normale unitaria al muro, orientata verso l'esterno della stanza.
+def _wall_tangent(wall: dict) -> tuple[float, float]:
+    """Vettore tangente unitario del muro, dal primo punto all'ultimo.
 
-    Derivazione evidence-based (non ancora confermata dal gate umano,
-    docs/format.md §5): la normale "uscente" e la scelta piu plausibile
-    per portal.direction, ma la convenzione esatta di Dungeondraft resta
-    da verificare aprendo il file in Dungeondraft.
+    CALIBRATO dal gate umano TASK-12 (screenshot task12_zoom.png e
+    task12_selected.png): la prima ipotesi (normale uscente dalla stanza,
+    perpendicolare al muro) produceva una porta ruotata di 90 gradi, che
+    visivamente spezzava il muro in due segmenti storti. portal.direction
+    e in realta la TANGENTE del muro stesso (parallela, non perpendicolare),
+    confermato esattamente sui 2 campioni reali di rich_reference:
+    muro verticale (8704,9216)->(8704,10496): tangente (0,1) == direction
+    osservata; muro orizzontale (8704,10496)->(9984,10496): tangente (1,0)
+    == direction osservata. Vedi docs/format.md §5.
     """
     points = parse_pv2(wall["points"])
     (ax, ay), (bx, by) = points[0], points[-1]
     dx, dy = bx - ax, by - ay
     length = math.hypot(dx, dy)
     if length == 0:
-        return (0.0, 1.0)
-    nx, ny = -dy / length, dx / length
-
-    mid_x, mid_y = (ax + bx) / 2, (ay + by) / 2
-    center_x, center_y = grid_to_px(room_center_grid[0]), grid_to_px(room_center_grid[1])
-    to_center_x, to_center_y = center_x - mid_x, center_y - mid_y
-
-    if nx * to_center_x + ny * to_center_y > 0:
-        nx, ny = -nx, -ny
-    return (nx, ny)
+        return (1.0, 0.0)
+    return (dx / length, dy / length)
 
 
 def _rotation_for_direction(direction: tuple[float, float]) -> float:
@@ -66,10 +63,9 @@ def _draw_perimeter(level, ids, room, palette, *, add_doors: bool) -> dict:
 
     portals = []
     if add_doors:
-        center = rect.center()
         for door in room.doors:
             wall = walls[door.wall_index]
-            direction = _outward_normal(wall, center)
+            direction = _wall_tangent(wall)
             rotation = _rotation_for_direction(direction)
             portal = add_portal(
                 wall, ids,
@@ -142,7 +138,7 @@ def _add_door_at_point(level, ids, room, point_grid: tuple[float, float], palett
         return None
     point_px = (grid_to_px(point_grid[0]), grid_to_px(point_grid[1]))
     t = _t_along_wall(parse_pv2(wall["points"]), point_px)
-    direction = _outward_normal(wall, room.rect.center())
+    direction = _wall_tangent(wall)
     rotation = _rotation_for_direction(direction)
     return add_portal(wall, ids, t=t, direction=direction, rotation=rotation, texture=palette.door)
 

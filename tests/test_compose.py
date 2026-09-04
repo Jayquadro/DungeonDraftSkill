@@ -3,7 +3,7 @@
 import pytest
 
 from ddforge.assets import Palette
-from ddforge.compose import _outward_normal, _rotation_for_direction, draw_corridor, draw_room
+from ddforge.compose import _rotation_for_direction, _wall_tangent, draw_corridor, draw_room
 from ddforge.godot import parse_pv2
 from ddforge.ids import IdAllocator
 from ddforge.model import Door, Rect, Room
@@ -156,9 +156,14 @@ def test_draw_corridor_still_produces_floor_and_walls():
     assert len(result["walls"]) == 4
 
 
-def test_outward_normal_points_away_from_room_center():
-    # muro superiore di una stanza 0,0 - 10,10: da (0,0) a (10,0)
-    wall = {"points": "PoolVector2Array( 0, 0, 2560, 0 )"}
-    normal = _outward_normal(wall, (5, 5))
-    # il centro e "sotto" il muro (y maggiore): l'uscita e verso y minore
-    assert normal[1] < 0
+def test_wall_tangent_matches_direction_from_first_to_last_point():
+    """Calibrato dal gate umano TASK-12: direction e la tangente del muro
+    (primo punto -> ultimo), non la normale perpendicolare."""
+    wall = {"points": "PoolVector2Array( 0, 0, 2560, 0 )"}  # orizzontale, x crescente
+    assert _wall_tangent(wall) == pytest.approx((1.0, 0.0))
+
+    wall_v = {"points": "PoolVector2Array( 0, 0, 0, 2560 )"}  # verticale, y crescente
+    assert _wall_tangent(wall_v) == pytest.approx((0.0, 1.0))
+
+    wall_reverse = {"points": "PoolVector2Array( 2560, 0, 0, 0 )"}  # orizzontale, x decrescente
+    assert _wall_tangent(wall_reverse) == pytest.approx((-1.0, 0.0))
