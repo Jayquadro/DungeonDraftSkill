@@ -57,6 +57,10 @@ class Room:
     doors: list[Door] = field(default_factory=list)
     floor: str | None = None
     lights: list[tuple[float, float]] = field(default_factory=list)
+    # Piano dell'edificio a cui appartiene la stanza (TASK-27/§9.2): 0 per
+    # un dungeon a un livello. generators/building.py (TASK-28) lo popola;
+    # opzionale e retrocompatibile, i generatori a un piano lo ignorano.
+    level: int = 0
 
 
 @dataclass
@@ -79,3 +83,7 @@ class Blueprint:
     # da bsp.py possono ignorarli.
     tactical_rooms: list[int] = field(default_factory=list)
     long_corridor_indices: list[int] = field(default_factory=list)
+    # Vano scale di un edificio multi-piano (TASK-27/§9.2): stesso Rect su
+    # ogni piano per costruzione, altrimenti la mappa non si legge al
+    # tavolo. None per un dungeon a un livello senza scale.
+    stairs_rect: Rect | None = None

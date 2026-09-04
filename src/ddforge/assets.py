@@ -36,6 +36,10 @@ class Palette:
     floor: str
     door: str
     accents: dict = field(default_factory=dict)
+    # Opzionali (TASK-27): non tutti gli stili hanno un tetto (un dungeon
+    # sotterraneo non ne ha) o un muro portante distinto dai tramezzi.
+    roof: str | None = None
+    wall_load_bearing: str | None = None
 
 
 def _slug(texture_path: str) -> str:

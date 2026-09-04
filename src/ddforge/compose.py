@@ -8,7 +8,7 @@ TASK-27.
 
 import math
 
-from ddforge.build import add_light, add_object, add_pattern, add_portal, add_wall
+from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall
 from ddforge.godot import grid_to_px, parse_pv2
 from ddforge.model import Rect, Room
 
@@ -277,9 +277,64 @@ def connect(level, ids, room_a, room_b, palette) -> dict:
     return _connect_with_corridor(level, ids, room_a, room_b, palette)
 
 
-def draw_building(level_stack, ids, blueprint, palette) -> None:
-    """Edificio multi-piano: distribuisce le stanze, aggiunge scale e tetto."""
-    raise NotImplementedError
+def _building_footprint(blueprint) -> Rect:
+    """Bounding box di tutte le stanze: perimetro portante e sagoma del tetto."""
+    rects = [room.rect for room in blueprint.rooms]
+    return Rect(
+        min(r.x1 for r in rects), min(r.y1 for r in rects),
+        max(r.x2 for r in rects), max(r.y2 for r in rects),
+    )
+
+
+def draw_building(level_stack: dict, ids, blueprint, palette) -> None:
+    """Edificio multi-piano (SPEC.md §6.6/§9.2): distribuisce le stanze sui
+    livelli (Room.level), aggiunge il vano scale (blueprint.stairs_rect,
+    stesso Rect su ogni piano per costruzione) e il tetto solo sull'ultimo
+    piano. level_stack e nella stessa forma di prepared['world']['levels']
+    (dict con chiavi stringa '0'..'N-1', da template.prepare)."""
+    load_bearing = palette.wall_load_bearing or palette.wall
+    footprint = _building_footprint(blueprint)
+    footprint_corners = [
+        (footprint.x1, footprint.y1), (footprint.x2, footprint.y1),
+        (footprint.x2, footprint.y2), (footprint.x1, footprint.y2),
+    ]
+
+    rooms_by_level: dict[int, list[Room]] = {}
+    for room in blueprint.rooms:
+        rooms_by_level.setdefault(room.level, []).append(room)
+
+    level_keys = sorted(level_stack.keys(), key=int)
+    top_level_key = level_keys[-1] if level_keys else None
+
+    for level_key in level_keys:
+        level = level_stack[level_key]
+        floor_index = int(level_key)
+
+        # Perimetro portante: stesso footprint su ogni piano.
+        for i in range(4):
+            add_wall(level, ids, [footprint_corners[i], footprint_corners[(i + 1) % 4]], load_bearing)
+
+        # Tramezzi e porte delle stanze di questo piano.
+        for room in rooms_by_level.get(floor_index, []):
+            draw_room(level, ids, room, palette)
+
+        # Vano scale: stesso Rect su ogni piano, per costruzione.
+        if blueprint.stairs_rect is not None:
+            add_pattern(level, ids, blueprint.stairs_rect, palette.floor)
+            stair_corners = [
+                (blueprint.stairs_rect.x1, blueprint.stairs_rect.y1),
+                (blueprint.stairs_rect.x2, blueprint.stairs_rect.y1),
+                (blueprint.stairs_rect.x2, blueprint.stairs_rect.y2),
+                (blueprint.stairs_rect.x1, blueprint.stairs_rect.y2),
+            ]
+            for i in range(4):
+                add_wall(level, ids, [stair_corners[i], stair_corners[(i + 1) % 4]], palette.wall)
+
+        # Tetto solo sull'ultimo piano. sun_direction non viene toccato:
+        # template.prepare duplica lo stesso livello sorgente su ogni
+        # piano, quindi e gia coerente su tutto l'edificio.
+        if level_key == top_level_key and palette.roof is not None:
+            add_roof(level, ids, footprint_corners, palette.roof)
 
 
 def render_blueprint(level, ids, blueprint, palette) -> None:
