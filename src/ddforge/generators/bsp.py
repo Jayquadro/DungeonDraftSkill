@@ -120,7 +120,7 @@ def _non_colliding_t(room: Room, wall_index: int, desired_t: float, min_gap: flo
     return t
 
 
-def _connect_rooms(room_a: Room, room_b: Room, corridors: list, corridor_width: float) -> None:
+def _connect_rooms(room_a: Room, room_b: Room, corridors: list, corridor_width: float, *, kind: str = "wood") -> None:
     """Decide come collegare due stanze e popola Room.doors/corridors,
     senza toccare nessun JSON: riusa la stessa geometria di compose.py."""
     shared = _shared_wall_segment(room_a.rect, room_b.rect)
@@ -128,8 +128,8 @@ def _connect_rooms(room_a: Room, room_b: Room, corridors: list, corridor_width: 
         side_a, side_b, midpoint = shared
         t_a = _non_colliding_t(room_a, side_a, _t_on_side(room_a.rect, side_a, midpoint))
         t_b = _non_colliding_t(room_b, side_b, _t_on_side(room_b.rect, side_b, midpoint))
-        room_a.doors.append(Door(wall_index=side_a, t=t_a))
-        room_b.doors.append(Door(wall_index=side_b, t=t_b))
+        room_a.doors.append(Door(wall_index=side_a, t=t_a, kind=kind))
+        room_b.doors.append(Door(wall_index=side_b, t=t_b, kind=kind))
         return
 
     segments, door_a, door_b = plan_corridor(room_a.rect, room_b.rect, width=corridor_width)
@@ -138,8 +138,8 @@ def _connect_rooms(room_a: Room, room_b: Room, corridors: list, corridor_width: 
     side_b, point_b = door_b
     t_a = _non_colliding_t(room_a, side_a, _t_on_side(room_a.rect, side_a, point_a))
     t_b = _non_colliding_t(room_b, side_b, _t_on_side(room_b.rect, side_b, point_b))
-    room_a.doors.append(Door(wall_index=side_a, t=t_a))
-    room_b.doors.append(Door(wall_index=side_b, t=t_b))
+    room_a.doors.append(Door(wall_index=side_a, t=t_a, kind=kind))
+    room_b.doors.append(Door(wall_index=side_b, t=t_b, kind=kind))
 
 
 def _connect_subtree(node: _BSPNode, rng: random.Random, rooms: list, graph: dict, corridors: list, corridor_width: float) -> int:
@@ -184,6 +184,114 @@ def _add_loop_connections(rooms: list, graph: dict, corridors: list, rng: random
         graph[j].append(i)
 
 
+_TOP, _RIGHT, _BOTTOM, _LEFT = 0, 1, 2, 3
+_ENTRANCE_ROOM = 0  # convenzione: la prima stanza creata e l'ingresso
+_LONG_CORRIDOR_THRESHOLD = 12  # quadretti = 60 ft, oltre la scurovisione comune
+
+
+def _bfs_distances(graph: dict, start: int) -> dict:
+    dist = {start: 0}
+    queue = [start]
+    head = 0
+    while head < len(queue):
+        node = queue[head]
+        head += 1
+        for neighbor in graph.get(node, []):
+            if neighbor not in dist:
+                dist[neighbor] = dist[node] + 1
+                queue.append(neighbor)
+    return dist
+
+
+def _mark_tactical_rooms(blueprint: Blueprint) -> None:
+    """Stanze di grado >= 3: nodi tattici che furnish deve coprire con
+    colonne/casse (SPEC.md §9.1). Congelato SUBITO dopo albero+anelli,
+    prima delle porte segrete: una scorciatoia nascosta non deve far
+    scattare la copertura tattica su una stanza altrimenti lineare."""
+    blueprint.tactical_rooms = sorted(
+        i for i in range(len(blueprint.rooms)) if len(blueprint.graph.get(i, [])) >= 3
+    )
+
+
+def _enlarge_room(blueprint: Blueprint, room_index: int, margins=(3, 2, 1)) -> bool:
+    """Ingrandisce room_index solo sui lati SENZA porte (i lati con porte
+    non si toccano: la posizione assoluta della porta e gia stata
+    proiettata su corridoi/stanze vicine, spostare quel lato la
+    disallineerebbe). Prova margini decrescenti; se nessuno entra nel
+    canvas senza sovrapporsi ad altre stanze, lascia la stanza com'e."""
+    room = blueprint.rooms[room_index]
+    occupied = {d.wall_index for d in room.doors}
+    rect = room.rect
+
+    for margin in margins:
+        x1 = max(1, rect.x1 - (0 if _LEFT in occupied else margin))
+        y1 = max(1, rect.y1 - (0 if _TOP in occupied else margin))
+        x2 = min(blueprint.width - 1, rect.x2 + (0 if _RIGHT in occupied else margin))
+        y2 = min(blueprint.height - 1, rect.y2 + (0 if _BOTTOM in occupied else margin))
+        if x2 - x1 <= rect.w and y2 - y1 <= rect.h:
+            continue  # il clamp al canvas ha vanificato l'espansione
+        candidate = Rect(x1, y1, x2, y2)
+        collides = any(
+            i != room_index and candidate.overlaps(blueprint.rooms[i].rect, margin=1)
+            for i in range(len(blueprint.rooms))
+        )
+        if not collides:
+            room.rect = candidate
+            return True
+    return False
+
+
+def _assign_boss_room(blueprint: Blueprint) -> None:
+    """La stanza piu lontana dall'ingresso (grafo, non distanza euclidea)
+    diventa il boss: kind='boss' e dimensione maggiorata quando possibile."""
+    if not blueprint.rooms:
+        return
+    dist = _bfs_distances(blueprint.graph, _ENTRANCE_ROOM)
+    boss_index = max(
+        range(len(blueprint.rooms)),
+        key=lambda i: (dist.get(i, -1), -i),  # pareggio -> indice piu basso, riproducibile
+    )
+    blueprint.rooms[boss_index].kind = "boss"
+    _enlarge_room(blueprint, boss_index)
+
+
+def _add_secret_doors(blueprint: Blueprint, corridor_width: float) -> None:
+    """Le stanze di grado 1 (vicoli ciechi sul percorso principale)
+    ricevono una porta segreta verso la stanza libera piu vicina, cosi
+    diventano raggiungibili anche da un percorso diverso da quello
+    principale (SPEC.md §9.1)."""
+    rooms = blueprint.rooms
+    graph = blueprint.graph
+    n = len(rooms)
+    dead_ends = sorted(i for i in range(n) if len(graph.get(i, [])) == 1)
+
+    for i in dead_ends:
+        already_connected = set(graph.get(i, [])) | {i}
+        candidates = sorted(
+            (j for j in range(n) if j not in already_connected),
+            key=lambda j: (
+                math.hypot(*(c1 - c2 for c1, c2 in zip(rooms[i].rect.center(), rooms[j].rect.center()))),
+                j,
+            ),
+        )
+        if not candidates:
+            continue
+        j = candidates[0]
+        _connect_rooms(rooms[i], rooms[j], blueprint.corridors, corridor_width, kind="secret")
+        graph[i].append(j)
+        graph[j].append(i)
+
+
+def _mark_long_corridors(blueprint: Blueprint) -> None:
+    """Corridoi oltre 12 quadretti (60 ft, SPEC.md §9.1): furnish ci mette
+    una fonte di luce a meta. Calcolato per ultimo, dopo ogni passaggio che
+    puo aggiungere corridoi (porte segrete comprese)."""
+    blueprint.long_corridor_indices = [
+        i for i, rect in enumerate(blueprint.corridors)
+        if max(rect.w, rect.h) > _LONG_CORRIDOR_THRESHOLD
+    ]
+
+
 def generate(*, width: int, height: int, seed: int,
              rooms: int = 8, min_room: int = 3, max_room: int = 10,
              corridor_width: float = 1.0, loops: float = 0.15,
@@ -207,8 +315,19 @@ def generate(*, width: int, height: int, seed: int,
     _connect_subtree(tree_root, rng, blueprint_rooms, graph, corridors, corridor_width)
     _add_loop_connections(blueprint_rooms, graph, corridors, rng, loops, corridor_width)
 
-    return Blueprint(
+    blueprint = Blueprint(
         width=width, height=height,
         rooms=blueprint_rooms, corridors=corridors,
         graph=graph, seed=seed, style="dungeon",
     )
+
+    # Semantica D&D (TASK-22), in quest'ordine: i nodi tattici e il boss si
+    # basano sul grafo "visibile" prima delle scorciatoie segrete; i
+    # corridoi lunghi si scandiscono per ultimi perche le porte segrete
+    # possono aggiungerne altri.
+    _mark_tactical_rooms(blueprint)
+    _assign_boss_room(blueprint)
+    _add_secret_doors(blueprint, corridor_width)
+    _mark_long_corridors(blueprint)
+
+    return blueprint

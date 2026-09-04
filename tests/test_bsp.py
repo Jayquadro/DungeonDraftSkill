@@ -67,10 +67,16 @@ def test_loops_produce_at_least_one_cycle_on_large_map():
     assert found_cycle
 
 
-def test_zero_loops_produces_a_tree():
+def test_zero_loops_produces_a_tree_plus_secret_doors():
+    """loops=0.0 disattiva solo il passaggio 'anelli extra fra stanze
+    vicine': le porte segrete (TASK-22) sono un meccanismo separato e
+    possono comunque aggiungere archi ai vicoli ciechi (grado 1)."""
     bp = bsp.generate(width=50, height=50, seed=3, rooms=8, loops=0.0)
     n_edges = sum(len(neighbors) for neighbors in bp.graph.values()) // 2
-    assert n_edges == len(bp.rooms) - 1
+    n_secret_edges = sum(
+        1 for room in bp.rooms for door in room.doors if door.kind == "secret"
+    ) // 2
+    assert n_edges - n_secret_edges == len(bp.rooms) - 1
 
 
 def test_same_seed_produces_identical_blueprint():

@@ -71,3 +71,11 @@ class Blueprint:
     seed: int
     style: str
     levels: int = 1
+    # Semantica D&D del BSP (TASK-22): indici in `rooms`/`corridors`, non
+    # derivati al volo da furnish perche il criterio va congelato nel
+    # momento in cui il grafo e ancora quello "visibile" (prima di
+    # eventuali scorciatoie segrete che non devono contare come snodi
+    # tattici). Campi opzionali e retrocompatibili: i generatori diversi
+    # da bsp.py possono ignorarli.
+    tactical_rooms: list[int] = field(default_factory=list)
+    long_corridor_indices: list[int] = field(default_factory=list)
