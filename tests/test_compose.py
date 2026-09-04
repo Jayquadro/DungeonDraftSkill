@@ -4,7 +4,7 @@ import pytest
 
 from ddforge.assets import Palette
 from ddforge.compose import _rotation_for_direction, _wall_tangent, draw_corridor, draw_room
-from ddforge.godot import parse_pv2
+from ddforge.godot import parse_pv2, v2
 from ddforge.ids import IdAllocator
 from ddforge.model import Door, Rect, Room
 from ddforge.validate import validate
@@ -103,6 +103,31 @@ def test_draw_room_multiple_doors_on_different_walls():
     assert len(result["portals"]) == 2
     assert len(result["walls"][0]["portals"]) == 1
     assert len(result["walls"][2]["portals"]) == 1
+
+
+@pytest.mark.parametrize(
+    "wall_index,expected_direction,expected_rotation",
+    [
+        (0, (1.0, 0.0), 0.0),  # top: (x1,y1)->(x2,y1)
+        (1, (0.0, 1.0), 1.570796),  # right: (x2,y1)->(x2,y2)
+        (2, (-1.0, 0.0), 3.141593),  # bottom: (x2,y2)->(x1,y2)
+        (3, (0.0, -1.0), -1.570796),  # left: (x1,y2)->(x1,y1)
+    ],
+)
+def test_draw_room_door_direction_and_rotation_for_all_four_wall_orientations(
+    wall_index, expected_direction, expected_rotation
+):
+    """TASK-12: direction/rotation calibrati sul gate umano per ciascuno dei
+    4 lati del perimetro (docs/format.md §5)."""
+    level = _empty_level()
+    ids = IdAllocator()
+    room = Room(rect=Rect(0, 0, 10, 10), kind="sala", doors=[Door(wall_index=wall_index, t=0.5)])
+
+    result = draw_room(level, ids, room, PALETTE)
+    portal = result["portals"][0]
+
+    assert portal["direction"] == v2(*expected_direction)
+    assert portal["rotation"] == pytest.approx(expected_rotation, abs=1e-5)
 
 
 def test_draw_room_lights_are_added():

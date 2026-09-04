@@ -1,11 +1,11 @@
 ---
 id: TASK-12
 title: 'Gate umano M1: Jay apre il file demo in Dungeondraft'
-status: In Progress
+status: Done
 assignee:
   - '@jayquadro'
 created_date: '2026-09-03 11:28'
-updated_date: '2026-09-04 07:06'
+updated_date: '2026-09-04 07:46'
 labels: []
 milestone: m-1
 dependencies:
@@ -25,12 +25,18 @@ Passaggio manuale obbligatorio (SPEC.md §5). Nessuna documentazione cattura il 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A Jay e chiesto esplicitamente di verificare: la stanza appare, i muri sono chiusi, la porta e sul muro e non fluttua
-- [ ] #2 Il verso di portal.direction per ciascuno dei quattro orientamenti di muro e determinato e documentato
-- [ ] #3 Il segno e l'unita delle rotazioni delle porte sono determinati e documentati
-- [ ] #4 Le regole calibrate sono codificate in build.py o compose.py, non lasciate solo nella documentazione
-- [ ] #5 Jay conferma l'esito; se il file non si apre correttamente, il difetto e riprodotto in un test prima della correzione
+- [x] #1 A Jay e chiesto esplicitamente di verificare: la stanza appare, i muri sono chiusi, la porta e sul muro e non fluttua
+- [x] #2 Il verso di portal.direction per ciascuno dei quattro orientamenti di muro e determinato e documentato
+- [x] #3 Il segno e l'unita delle rotazioni delle porte sono determinati e documentati
+- [x] #4 Le regole calibrate sono codificate in build.py o compose.py, non lasciate solo nella documentazione
+- [x] #5 Jay conferma l'esito; se il file non si apre correttamente, il difetto e riprodotto in un test prima della correzione
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Aggiunto test parametrico test_draw_room_door_direction_and_rotation_for_all_four_wall_orientations (tests/test_compose.py) che copre esplicitamente i 4 lati del perimetro (top/right/bottom/left) con direction/rotation attesi dalla formula tangente. Suite completa: 282 test verdi (era 278).
+<!-- SECTION:NOTES:END -->
 
 ## Comments
 
@@ -52,4 +58,26 @@ created: 2026-09-04 07:06
 ---
 Applicata la correzione: direction e la tangente del muro (non la normale), confermata sui 2 campioni reali di rich_reference (vedi docs/format.md §5). compose._wall_tangent sostituisce _outward_normal. Rigenerato generated/demo_m1.dungeondraft_map: la porta ora ha direction=(-1,0) rotation=3.141593, identico all'esempio verificato di SPEC.md §13. Tutti i 244 test restano verdi. In attesa che Jay riapra il file e confermi visivamente che ora il muro e la porta sono corretti.
 ---
+
+author: @claude
+created: 2026-09-04 07:36
+---
+Verificati i timestamp: task12.png (06:49 UTC), task12_zoom.png (06:59 UTC) e task12_selected.png (07:00 UTC) sono TUTTI anteriori alla rigenerazione del file con il fix del commento #3 (generated/demo_m1.dungeondraft_map, 07:05 UTC, commit 4ba4182). Il file che Jay aveva aperto per questi screenshot era quindi ancora la versione pre-fix (direction=normale uscente), coerente con il muro inferiore spezzato in due segmenti storti e la porta ruotata male che si vede nelle immagini.
+
+Controllo diretto del file attuale su disco (post-fix): il muro inferiore e la retta (11520,11520)->(8960,11520), stesso y su entrambi gli estremi, nessuna spezzatura. Il portale ha direction=(-1,0) e rotation=3.141592653589793 (=pi), identico al campione verificato in SPEC.md §13. I dati sono geometricamente corretti.
+
+Richiesta a Jay: chiudere il file demo_m1 in Dungeondraft (se ancora aperto) e riaprirlo da capo (File > Open), poi rifare gli screenshot. Dungeondraft non ricarica automaticamente un file modificato su disco mentre e aperto nell'editor.
+---
+
+author: @jayquadro
+created: 2026-09-04 07:45
+---
+Jay ha riaperto il file rigenerato e conferma: muro chiuso, porta correttamente sul muro, nessuna spezzatura.
+---
 <!-- COMMENTS:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Bug: portal.direction era calcolata come normale uscente dal muro invece che come tangente, causando nello screenshot di Jay un muro visivamente spezzato e una porta ruotata di 90 gradi. Fix: compose._wall_tangent (ex _outward_normal) ora ritorna il vettore dal primo all'ultimo punto del muro, confermato sui 2 campioni reali di rich_reference.dungeondraft_map (docs/format.md §5). Verificato con: (1) test unitario che riproduce il bug (_wall_tangent su muri orizzontali/verticali/invertiti), (2) nuovo test parametrico sui 4 orientamenti del perimetro di draw_room, (3) rigenerazione di generated/demo_m1.dungeondraft_map con valori identici all'esempio verificato di SPEC.md §13, (4) conferma visiva di Jay dopo aver riaperto il file rigenerato in Dungeondraft. Le regole sono codificate in compose.py (_wall_tangent, _rotation_for_direction), non solo documentate.
+<!-- SECTION:FINAL_SUMMARY:END -->
