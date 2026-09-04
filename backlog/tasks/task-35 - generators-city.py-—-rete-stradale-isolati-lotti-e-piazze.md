@@ -4,8 +4,9 @@ title: 'generators/city.py — rete stradale, isolati, lotti e piazze'
 status: To Do
 assignee: []
 created_date: '2026-09-03 11:35'
+updated_date: '2026-09-04 07:23'
 labels: []
-milestone: m-5
+milestone: m-8
 dependencies:
   - TASK-34
   - TASK-28

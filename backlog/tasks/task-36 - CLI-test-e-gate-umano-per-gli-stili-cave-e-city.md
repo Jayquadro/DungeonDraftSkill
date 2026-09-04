@@ -4,8 +4,9 @@ title: 'CLI, test e gate umano per gli stili cave e city'
 status: To Do
 assignee: []
 created_date: '2026-09-03 11:35'
+updated_date: '2026-09-04 07:23'
 labels: []
-milestone: m-5
+milestone: m-8
 dependencies:
   - TASK-33
   - TASK-35

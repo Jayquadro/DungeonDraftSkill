@@ -4,8 +4,9 @@ title: Decisione sulla scala delle mappe cittadine
 status: To Do
 assignee: []
 created_date: '2026-09-03 11:34'
+updated_date: '2026-09-04 07:23'
 labels: []
-milestone: m-5
+milestone: m-8
 dependencies:
   - TASK-26
 documentation:
