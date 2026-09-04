@@ -15,12 +15,84 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     raise NotImplementedError("ddforge generate: implementato in TASK-24")
 
 
+def _load_document(path) -> dict | None:
+    """Carica un documento JSON, stampando un messaggio chiaro (non un
+    traceback) se il file manca o non e JSON valido."""
+    import json
+
+    p = Path(path)
+    if not p.exists():
+        print(f"Errore: file non trovato: {p}", file=sys.stderr)
+        return None
+    try:
+        with open(p, encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError as exc:
+        print(f"Errore: JSON non valido in {p}: {exc}", file=sys.stderr)
+        return None
+
+
 def _cmd_validate(args: argparse.Namespace) -> int:
-    raise NotImplementedError("ddforge validate: implementato in TASK-16")
+    from ddforge.validate import validate
+
+    doc = _load_document(args.file)
+    if doc is None:
+        return 1
+
+    issues = validate(doc)
+    if not issues:
+        print("Nessun problema trovato.")
+        return 0
+
+    for issue in issues:
+        marker = "ERRORE" if issue.severity == "error" else "AVVISO"
+        print(f"[{marker}] {issue.code} {issue.path}: {issue.message}")
+
+    n_errors = sum(1 for i in issues if i.severity == "error")
+    n_warnings = len(issues) - n_errors
+    print(f"\n{n_errors} errori, {n_warnings} avvisi.")
+    return 1 if n_errors else 0
 
 
 def _cmd_inspect(args: argparse.Namespace) -> int:
-    raise NotImplementedError("ddforge inspect: implementato in TASK-16")
+    doc = _load_document(args.file)
+    if doc is None:
+        return 1
+
+    header = doc.get("header", {}) if isinstance(doc.get("header"), dict) else {}
+    world = doc.get("world", {}) if isinstance(doc.get("world"), dict) else {}
+    levels = world.get("levels", {}) if isinstance(world.get("levels"), dict) else {}
+
+    print(f"File: {args.file}")
+    print(f"Dimensioni: {world.get('width')} x {world.get('height')} quadretti")
+    print(f"Format: {world.get('format')}")
+    print(f"Creation build: {header.get('creation_build')}")
+    print(f"Livelli: {len(levels)}")
+
+    manifest = header.get("asset_manifest") or []
+    print(f"Pack referenziati ({len(manifest)}):")
+    for m in manifest:
+        if isinstance(m, dict):
+            print(f"  - {m.get('id')}: {m.get('name')} ({m.get('author')}, v{m.get('version')})")
+
+    element_lists = ("patterns", "walls", "portals", "paths", "objects", "lights", "texts")
+    for level_id, level in levels.items():
+        if not isinstance(level, dict):
+            continue
+        print(f"\nLivello {level_id} ({level.get('label', '')!r}):")
+        for name in element_lists:
+            items = level.get(name)
+            n = len(items) if isinstance(items, list) else 0
+            print(f"  {name}: {n}")
+        walls = level.get("walls")
+        if isinstance(walls, list):
+            nested = sum(len(w.get("portals", [])) for w in walls if isinstance(w, dict))
+            print(f"  portali annidati nei muri: {nested}")
+        roofs = level.get("roofs")
+        if isinstance(roofs, dict):
+            print(f"  roofs.roofs: {len(roofs.get('roofs') or [])}")
+
+    return 0
 
 
 def _cmd_catalog(args: argparse.Namespace) -> int:
