@@ -1,7 +1,9 @@
 """Script demo M1 (TASK-11): 1 stanza + 1 porta a partire dal template vuoto.
 
 Chiude il ciclo template -> build -> save prima che esista qualunque
-generatore (criterio di completamento di M1, SPEC.md §5).
+generatore (criterio di completamento di M1, SPEC.md §5). Da TASK-18
+in poi usa compose.draw_room, la stessa funzione che useranno i
+generatori veri.
 
 Uso:
     python scripts/demo_m1.py [--out FILE]
@@ -10,18 +12,21 @@ Uso:
 import argparse
 from pathlib import Path
 
-from ddforge.build import add_pattern, add_portal, add_wall
+from ddforge.assets import Palette
+from ddforge.compose import draw_room
 from ddforge.ids import IdAllocator
-from ddforge.model import Rect
+from ddforge.model import Door, Rect, Room
 from ddforge.template import finalize, load_template, prepare, save
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO_ROOT / "templates" / "blank_80x80.dungeondraft_map"
 DEFAULT_OUT = REPO_ROOT / "generated" / "demo_m1.dungeondraft_map"
 
-FLOOR_TEXTURE = "res://textures/patterns/normal/stone_floor.png"
-WALL_TEXTURE = "res://textures/walls/stone.png"
-DOOR_TEXTURE = "res://textures/portals/door_00.png"
+DEMO_PALETTE = Palette(
+    wall="res://textures/walls/stone.png",
+    floor="res://textures/patterns/normal/stone_floor.png",
+    door="res://textures/portals/door_00.png",
+)
 
 
 def build_demo() -> dict:
@@ -31,33 +36,21 @@ def build_demo() -> dict:
     level = prepared["world"]["levels"]["0"]
     ids = IdAllocator.from_document(prepared)
 
-    room = Rect(35, 35, 45, 45)  # 10x10 quadretti, circa al centro di una mappa 80x80
-    add_pattern(level, ids, room, FLOOR_TEXTURE)
-
-    corners = [
-        (room.x1, room.y1),
-        (room.x2, room.y1),
-        (room.x2, room.y2),
-        (room.x1, room.y2),
-    ]
-    walls = [
-        add_wall(level, ids, [corners[i], corners[(i + 1) % 4]], WALL_TEXTURE)
-        for i in range(4)
-    ]
-
-    # NOTA PER IL GATE UMANO (TASK-12): direction e rotation sono
-    # placeholder. Il verso corretto di portal.direction e il segno delle
-    # rotazioni non sono documentati da nessuna parte e vanno calibrati
-    # aprendo questo file in Dungeondraft: la porta deve apparire sul muro
-    # inferiore della stanza, non fluttuare, e aprirsi verso l'esterno.
-    add_portal(
-        walls[2],  # muro inferiore (da corners[2] a corners[3])
-        ids,
-        t=0.5,
-        direction=(0, 1),
-        rotation=0.0,
-        texture=DOOR_TEXTURE,
+    # 10x10 quadretti, circa al centro di una mappa 80x80. La porta e sul
+    # muro inferiore (wall_index=2: da (x2,y2) a (x1,y2)).
+    room = Room(
+        rect=Rect(35, 35, 45, 45),
+        kind="sala",
+        doors=[Door(wall_index=2, t=0.5)],
     )
+
+    # NOTA PER IL GATE UMANO (TASK-12): compose.draw_room deriva
+    # direction/rotation dalla normale uscente del muro e dalla formula
+    # rotation = atan2(direction.y, direction.x), evidence-based su 3
+    # campioni reali (docs/format.md §5). Resta da confermare aprendo
+    # questo file in Dungeondraft che la porta appaia sul muro inferiore
+    # della stanza, non fluttui, e si apra verso l'esterno.
+    draw_room(level, ids, room, DEMO_PALETTE)
 
     finalize(prepared, ids)
     return prepared

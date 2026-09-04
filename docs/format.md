@@ -290,6 +290,27 @@ Esiste anche un secondo tipo di `portal`, non annidato e con schema
 completamente diverso, usato per porte posizionate liberamente: **il
 generatore di questo progetto non lo produce mai** (§7).
 
+**Relazione `rotation`/`direction` (TASK-18, derivazione evidence-based,
+non ancora confermata dal gate umano):** sui 3 campioni osservati finora
+(l'esempio sopra da SPEC.md §13, e i due portali reali di
+`rich_reference.dungeondraft_map`) vale esattamente
+`rotation = atan2(direction.y, direction.x)`:
+
+| direction | rotation osservata | atan2(dy, dx) |
+|---|---|---|
+| `(-1, 0)` (SPEC.md §13) | 3.141593 | 3.141592653589793 |
+| `(0, 1)` (door_00, rich_reference) | 1.570796 | 1.5707963267948966 |
+| `(1, 0)` (window_05, rich_reference) | 0 | 0.0 |
+
+`compose.draw_room` (TASK-18) calcola `direction` come normale uscente del
+muro rispetto al centro della stanza, e deriva `rotation` da questa
+formula invece di lasciarlo a 0 come placeholder. **Cio che resta da
+confermare al gate umano (TASK-12/TASK-26):** se "normale uscente dalla
+stanza" e davvero la convenzione giusta per `direction` (potrebbe invece
+essere legata al verso di apertura dell'anta, non alla normale geometrica
+del muro) — la formula rotation/direction sopra e solida, l'incognita e
+solo quale `direction` scegliere per una porta generata proceduralmente.
+
 ### `pattern`
 
 ```json
