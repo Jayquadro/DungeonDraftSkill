@@ -46,10 +46,50 @@ def test_rooms_are_distributed_to_the_correct_level():
     bp = _two_floor_blueprint()
     draw_building(level_stack, ids, bp, PALETTE)
 
-    # 2 stanze + perimetro portante = 2*4 + 4 = 12 muri al piano 0
-    assert len(level_stack["0"]["walls"]) == 12
-    # 1 stanza + perimetro portante = 4 + 4 = 8 muri al piano 1
-    assert len(level_stack["1"]["walls"]) == 8
+    # Le due stanze del piano 0 tassellano il footprint (0,0)-(20,10): tutti
+    # i loro lati esterni stanno sul perimetro portante e non vengono
+    # ridisegnati, resta solo il tramezzo in mezzo. Perimetro (4) + tramezzo
+    # di ciascuna stanza (1+1) = 6.
+    assert len(level_stack["0"]["walls"]) == 6
+    # Il piano 1 ha una stanza sola, che copre meta footprint: perimetro (4)
+    # piu il suo unico lato interno = 5.
+    assert len(level_stack["1"]["walls"]) == 5
+    assert [p["texture"] for p in level_stack["0"]["patterns"]].count(PALETTE.floor) == 2
+
+
+def test_nothing_is_drawn_on_top_of_the_load_bearing_perimeter():
+    """Un muro di stanza ridisegnato sopra il muro portante tappa la porta
+    che ci sta dentro: nel gate umano M4 l'ingresso e la porta del vano scale
+    erano murati esattamente cosi (TASK-30).
+
+    Fra due stanze i muri restano invece volutamente sdoppiati — ciascuna
+    disegna il proprio tramezzo — perche la porta viene bucata su entrambi
+    (convenzione di _connect_rooms) e i due segmenti coincidono."""
+    level_stack = _empty_level_stack(2)
+    ids = IdAllocator()
+    bp = _two_floor_blueprint(stairs_rect=Rect(0, 10, 20, 14))
+    draw_building(level_stack, ids, bp, PALETTE)
+
+    # Footprint: bounding box di stanze + vano scale, cioe (0,0)-(20,14) in
+    # quadretti, (0,0)-(5120,3584) in pixel.
+    x1, y1, x2, y2 = 0.0, 0.0, 5120.0, 3584.0
+
+    def on_perimeter(segment):
+        (ax, ay), (bx, by) = segment
+        return (
+            (ax == bx and ax in (x1, x2)) or (ay == by and ay in (y1, y2))
+        )
+
+    for level_key, level in level_stack.items():
+        on_boundary = [
+            w for w in level["walls"] if on_perimeter(tuple(sorted(parse_pv2(w["points"]))))
+        ]
+        assert len(on_boundary) == 4, (
+            f"piano {level_key}: {len(on_boundary)} muri sul perimetro invece di 4"
+        )
+        assert all(w["texture"] == PALETTE.wall_load_bearing for w in on_boundary), (
+            f"piano {level_key}: un tramezzo e stato disegnato sopra il muro portante"
+        )
 
 
 def test_stairs_occupy_the_identical_rect_on_every_level():

@@ -60,9 +60,16 @@ def test_furnish_gives_beds_to_bedrooms_and_not_to_common_rooms():
 
     bed_texture = palette.accents["bed"]
     common_texture = palette.accents["table"]
-    objects = first_floor["objects"]
+    # La scala del vano scale la disegna draw_building, non furnish: non e
+    # arredo di stanza e non deve entrare nel conteggio (TASK-30).
+    objects = [o for o in first_floor["objects"] if o["texture"] != palette.stairs]
     assert objects, "il piano delle camere deve avere arredo"
-    assert all(o["texture"] == bed_texture for o in objects)
+    assert any(o["texture"] == bed_texture for o in objects), "nessun letto nelle camere"
+    # Una camera non e arredata solo di letti (difetto 6 del gate M4), ma
+    # nemmeno di tavoli da sala comune: gli accents ammessi sono quelli che
+    # _KIND_ACCENT_HINTS mappa su "camera".
+    allowed = {palette.accents[k] for k in ("bed", "cupboard")}
+    assert all(o["texture"] in allowed for o in objects)
     assert not any(o["texture"] == common_texture for o in objects)
 
 
@@ -102,7 +109,7 @@ def test_furnish_gives_crates_and_barrels_to_warehouse_rooms():
     furnish(ground_floor, ids, _floor_blueprint(bp, 0), palette, density="heavy", rng=random.Random(1))
 
     allowed = set(palette.accents.values())  # crate, barrel, keg: gia tutti ammessi per magazzino
-    objects = ground_floor["objects"]
+    objects = [o for o in ground_floor["objects"] if o["texture"] != palette.stairs]
     assert objects
     assert all(o["texture"] in allowed for o in objects)
 
@@ -136,6 +143,9 @@ def test_unmapped_room_kind_falls_back_to_full_accent_set():
 
 
 def test_no_furniture_ever_falls_inside_the_stairs_rect():
+    """Il vano scale contiene la scala e nient'altro: un barile in mezzo alle
+    scale e un ostacolo, non arredo. La scala stessa la piazza draw_building
+    ed e l'unica cosa ammessa li dentro (TASK-30)."""
     for building_type in ("tavern", "manor", "warehouse"):
         palette = palette_for(building_type, CATALOG)
         bp = building.generate(width=40, height=40, seed=3, building_type=building_type)
@@ -150,6 +160,8 @@ def test_no_furniture_ever_falls_inside_the_stairs_rect():
         stairs = bp.stairs_rect
         for level in prepared["world"]["levels"].values():
             for obj in level["objects"]:
+                if obj["texture"] == palette.stairs:
+                    continue
                 x, y = _obj_grid_pos(obj)
                 inside_stairs = stairs.x1 < x < stairs.x2 and stairs.y1 < y < stairs.y2
                 assert not inside_stairs, f"{building_type}: oggetto dentro il vano scale ({x}, {y})"

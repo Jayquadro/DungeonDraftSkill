@@ -40,6 +40,12 @@ class Palette:
     # sotterraneo non ne ha) o un muro portante distinto dai tramezzi.
     roof: str | None = None
     wall_load_bearing: str | None = None
+    # Oggetto scala del vano scale (TASK-30). Campo dedicato e non una voce
+    # di `accents`: gli accents sono il materiale che furnish sparge nelle
+    # stanze a caso, e una scala sbucata in mezzo a una camera da letto e
+    # peggio di nessuna scala. Nel gate umano M4 il vano scale era vuoto e
+    # Jay non lo riconosceva.
+    stairs: str | None = None
 
 
 def _slug(texture_path: str) -> str:
@@ -189,10 +195,15 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         "accents": {
             "table": "table_wood_rectangular_small_01", "chair": "chair_wood_01", "barrel": "barrel",
             "bench": "bench_wood_01", "bed": "bed", "oven": "oven_brick_red_a2_2x2",
+            # Il retro di una taverna e una dispensa: senza casse e botti
+            # riceveva SOLO barili, ed e il "non ci sono arredi se non
+            # barili" del gate umano M4 (TASK-30).
+            "crate": "crate", "keg": "keg_wood_light_h_1x1",
+            "cupboard": "cupboard_wood_light_d_2x1",
         },
         # roof/wall_load_bearing (TASK-30): draw_building li usa solo se
         # presenti (Palette.roof/wall_load_bearing di default None, TASK-27).
-        "roof": "tiles", "wall_load_bearing": "stone",
+        "roof": "tiles", "wall_load_bearing": "stone", "stairs": "stairs_round_08",
     },
     "manor": {
         "wall": "battlements", "floor": "wooden_flooring_m_light", "door": "door_wood_double",
@@ -203,12 +214,15 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
             "table": "table_corner_wood_01", "bookshelf": "bookshelf", "rug": "rug_01",
             "bed": "bed_wood_single_01", "desk": "desk_wood_01", "cupboard": "cupboard_wood_light_d_2x1",
         },
-        "roof": "tiles", "wall_load_bearing": "stone_09",
+        "roof": "tiles", "wall_load_bearing": "stone_09", "stairs": "stairs_round_08",
     },
     "warehouse": {
         "wall": "concrete", "floor": "cobblestone", "door": "door_02",
-        "accents": {"crate": "crate", "barrel": "barrel", "keg": "keg_wood_light_h_1x1"},
-        "roof": "tiles", "wall_load_bearing": "stone",
+        "accents": {
+            "crate": "crate", "barrel": "barrel", "keg": "keg_wood_light_h_1x1",
+            "cupboard": "cupboard_wood_light_d_2x1",
+        },
+        "roof": "tiles", "wall_load_bearing": "stone", "stairs": "stairs_round_04",
     },
     "city": {
         "wall": "cobble", "floor": "cobblestone", "door": "threshold_01",
@@ -241,7 +255,11 @@ def palette_for(style: str, catalog: dict) -> Palette:
     wall_load_bearing = (
         _lookup(catalog, "walls", definition["wall_load_bearing"]) if "wall_load_bearing" in definition else None
     )
-    return Palette(wall=wall, floor=floor, door=door, accents=accents, roof=roof, wall_load_bearing=wall_load_bearing)
+    stairs = _lookup(catalog, "objects", definition["stairs"]) if "stairs" in definition else None
+    return Palette(
+        wall=wall, floor=floor, door=door, accents=accents, roof=roof,
+        wall_load_bearing=wall_load_bearing, stairs=stairs,
+    )
 
 
 def required_packs(doc: dict) -> set:

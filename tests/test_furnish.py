@@ -81,17 +81,39 @@ def test_density_none_places_nothing():
     assert level["objects"] == []
 
 
-@pytest.mark.parametrize("density,expected_rate", [("light", 0.05), ("medium", 0.12), ("heavy", 0.25)])
-def test_density_respects_target_rate_within_tolerance(density, expected_rate):
+def _furnish_count(density: str, rect=Rect(0, 0, 20, 20)) -> int:
     level = _empty_level()
     ids = IdAllocator()
-    room = Room(rect=Rect(0, 0, 20, 20), kind="sala")  # nessuna porta: nessun rifiuto per clearance
+    room = Room(rect=rect, kind="sala")  # nessuna porta: nessun rifiuto per clearance
     draw_room(level, ids, room, PALETTE)
     furnish(level, ids, _blueprint([room]), PALETTE, density=density, rng=random.Random(7))
+    return len(level["objects"])
 
-    area = room.rect.w * room.rect.h
-    expected = area * expected_rate
-    assert expected * 0.7 <= len(level["objects"]) <= expected * 1.05
+
+def test_density_orders_the_three_levels_from_light_to_heavy():
+    """`density` non e piu un tasso per quadretto ma un moltiplicatore sulle
+    quote per-accent di _ACCENT_QUOTA (TASK-30): il contratto che resta e
+    l'ordinamento, non un numero esatto di oggetti."""
+    light, medium, heavy = (_furnish_count(d) for d in ("light", "medium", "heavy"))
+    assert 0 < light < medium <= heavy
+
+
+def test_furnishing_suggests_the_room_function_without_carpeting_it():
+    """Il vecchio contratto era 'heavy = 0.25 oggetti per quadretto', cioe
+    100 pezzi in una stanza 20x20. Nel gate umano M4 Jay ha aperto proprio
+    quelle stanze e ha visto solo 'una stanza piena di botti': l'arredo deve
+    restare leggibile, quindi qualche pezzo per accent con un tetto, non una
+    quantita proporzionale all'area."""
+    for rect in (Rect(0, 0, 12, 12), Rect(0, 0, 20, 20), Rect(0, 0, 34, 18)):
+        count = _furnish_count("heavy", rect)
+        area = rect.w * rect.h
+        # Un pezzo ogni 15 quadretti, con un minimo di 20 per le stanze
+        # piccole. Piu larga della soglia del gate (che vale per density
+        # 'medium', tests/test_building_gate.py) perche qui si misura la
+        # densita massima; i conteggi del round 1 la superano lo stesso.
+        limit = max(20, area // 15)
+        assert count > 0, f"{rect}: stanza vuota"
+        assert count <= limit, f"{rect}: {count} oggetti su {area} quadretti, la stanza e tappezzata"
 
 
 def test_unknown_density_raises_explicit_error():

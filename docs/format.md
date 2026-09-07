@@ -716,6 +716,89 @@ occupava prima, non lasciare `t` invariato.
   (caso minimo) e `::test_m3_seed_1337_has_no_door_offset_from_its_corridor`
   (il caso esatto segnalato da Jay).
 
+### 9.7 Due muri sovrapposti: quello senza porta tappa quello con la porta
+
+Scoperta al gate umano M4 (TASK-30). In un edificio le stanze condividono i
+tramezzi e il muro esterno: se il perimetro portante viene disegnato come
+quattro muri interi E ogni stanza ridisegna anche i propri lati esterni, ogni
+tratto di muro esterno esiste due volte. Dungeondraft li rende come un muro
+solo, quindi la duplicazione non si vede � ma un `portal` appartiene a UN
+muro, e il gemello cieco che gli sta sopra lo richiude. Nel file del gate
+l'ingresso della taverna e la porta del vano scale erano murati esattamente
+cosi.
+
+Regole:
+
+1. Ogni segmento sul perimetro portante va disegnato **una volta sola**, dal
+   muro portante. Una stanza che appoggia un lato sul perimetro salta quel
+   lato (`draw_room(..., skip_sides=...)`) e riporta la sua eventuale porta
+   sul muro portante.
+2. Fra due ambienti interni i muri restano invece volutamente sdoppiati �
+   ciascuno disegna il proprio tramezzo � perche la porta viene bucata su
+   **entrambi** (convenzione di `_connect_rooms`). E la sovrapposizione
+   asimmetrica a fare danno, non la sovrapposizione in se.
+3. Ne segue che il vano scale non puo essere quattro muri ciechi disegnati a
+   mano: e un ambiente come gli altri e va trattato come tale, con le porte
+   delle stanze adiacenti rispecchiate sui suoi lati
+   (`compose._stairwell_room`).
+
+- Codice: `compose.draw_building`, `compose._sides_on_rect`,
+  `compose._stairwell_room`, `compose._draw_perimeter(skip_sides=...)`.
+- Test: `tests/test_draw_building.py::test_nothing_is_drawn_on_top_of_the_load_bearing_perimeter`,
+  `tests/test_building_gate.py::test_stairwell_is_reachable_from_a_room_on_every_floor`.
+
+### 9.8 Scala reale e orientamento degli sprite (gate umano M4 round 2)
+
+Un quadretto di Dungeondraft vale **1.5 m reali** (Jay). Tutto quello che
+riguarda dimensioni "da edificio vero" discende da questa costante, e
+ignorarla e il modo piu facile per generare una pianta che passa tutti i
+test e non sta in piedi: al round 2 una taverna 40x40 quadretti era un
+edificio di **60x60 metri** con stanze da 51x27 m.
+
+- Costanti: `building._TILE_METERS`, `_MAX_ROOM_SIDE_M` (12 m di lato
+  massimo per una stanza abitata), `_DEFAULT_SIZE` (ingombro realistico per
+  tipologia).
+- A guidare la suddivisione dev'essere la **dimensione** della stanza, non
+  il numero di stanze: `_build_tree` si ferma appena raggiunge
+  `rooms_target`, quindi passargli il numero di kind del piano produce
+  poche foglie enormi.
+
+**Rotazione di uno sprite addossato a un muro.** Vale
+`rotazione = lato * pi/2` con gli indici di lato di `_draw_perimeter`
+(0=top -> 0, 1=right -> pi/2, 2=bottom -> pi, 3=left -> 3pi/2). Equivale a
+dire che la faccia dello sprite, che a rotazione 0 guarda in giu (+y),
+finisce sempre rivolta **verso l'interno** della stanza. Calibrato sul
+campione reale del gate: Jay ha raddrizzato a mano i camini sul muro basso
+della cucina (y=21) portandoli da `rot=0` a `rot=+-pi`. La formula
+precedente — 0 per top E bottom, pi/2 per left E right — lasciava meta
+dell'arredo con la faccia contro il muro.
+
+**Compenetrazione.** Il centro di un pezzo addossato sta a **mezzo
+quadretto** dal muro (`compose._WALL_OFFSET`), non a uno: cosi uno sprite
+1x1 tocca il muro esatto e uno 2x2 (camino, madia) ci entra dentro per
+meta, che e come Dungeondraft si aspetta di vederli. Stessa misura di Jay:
+camino a y=20.5 con il muro a y=21.
+
+**Sovrapposizione.** Due pezzi non possono stare piu vicini della semisomma
+dei loro ingombri (`compose._is_free`, `_texture_size`). L'ingombro si legge
+dal nome file quando c'e (`Oven_..._2x2`, `Keg_..._1x1`), altrimenti da una
+tabella per nome semantico. Unica eccezione: una sedia attorno al suo
+tavolo, dove l'adiacenza stretta e voluta.
+
+**Sprite con asse proprio.** La formula sopra presuppone che a rotazione 0
+la faccia dello sprite guardi in giu, e per tutto il catalogo osservato e
+vero — con una sola eccezione confermata da Jay al round 3: la botte piccola
+(`Keg_..._H_...`, "H" per horizontal) e coricata sul fianco lungo l'asse
+orizzontale e parte gia ruotata di un quarto di giro. Non e una regola
+geometrica ma una proprieta del singolo sprite, quindi va **tabellata per
+texture** (`compose._TEXTURE_ROTATION_OFFSET`) e sommata all'angolo del lato,
+mai dedotta.
+
+- Test: `tests/test_building_gate.py::test_a_wall_slot_puts_the_piece_against_the_wall_facing_the_room`,
+  `::test_no_two_pieces_of_furniture_overlap`,
+  `::test_rooms_have_the_size_of_real_rooms`,
+  `::test_a_keg_is_rotated_a_quarter_turn_more_than_everything_else`.
+
 ## 10. `data/assets.json` — provenienza (TASK-4)
 
 `rich_reference.dungeondraft_map` da solo ha troppo poche texture per

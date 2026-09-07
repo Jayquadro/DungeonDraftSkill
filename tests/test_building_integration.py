@@ -64,9 +64,14 @@ def test_building_integration_rooms_on_the_same_floor_are_all_reachable():
 
 def _generate_full_document(seed: int) -> dict:
     doc = load_template("templates/blank_80x80.dungeondraft_map")
-    bp = building.generate(width=40, height=40, seed=seed, building_type="tavern")
+    # Taglia di default della tipologia, la stessa che usa il CLI senza
+    # --width/--height: il golden deve congelare cio che Jay apre davvero.
+    width, height = building.default_size("tavern")
+    bp = building.generate(width=width, height=height, seed=seed, building_type="tavern")
 
-    prepared = prepare(doc, levels=bp.levels)
+    # labels come le passa il CLI: il golden deve congelare anche il nome dei
+    # piani, che nel gate umano M4 era "Ground" su tutti (TASK-30).
+    prepared = prepare(doc, levels=bp.levels, labels=building.floor_labels(bp.levels))
     ids = IdAllocator.from_document(prepared)
     catalog = load_catalog()
     palette = palette_for("tavern", catalog)

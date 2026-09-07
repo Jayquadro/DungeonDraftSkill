@@ -39,6 +39,7 @@ def _add_lighting(level, ids, blueprint) -> None:
 def _add_building_lighting(level_stack, ids, blueprint) -> None:
     """Come _add_lighting, ma una volta per piano (TASK-30): ogni stanza
     riceve la sua luce solo nel livello a cui appartiene (Room.level)."""
+    from ddforge.build import add_light
     from ddforge.compose import floor_blueprint, rooms_by_level
 
     for level_key, floor_rooms in rooms_by_level(blueprint).items():
@@ -46,6 +47,11 @@ def _add_building_lighting(level_stack, ids, blueprint) -> None:
         if level is None or not floor_rooms:
             continue
         _add_lighting(level, ids, floor_blueprint(blueprint, floor_rooms))
+        # Il vano scale non e in blueprint.rooms, ma e un ambiente illuminato
+        # come gli altri: senza la sua luce resta un pozzo nero in mezzo a un
+        # edificio acceso, proprio dove Jay deve riconoscere la scala.
+        if blueprint.stairs_rect is not None:
+            add_light(level, ids, *blueprint.stairs_rect.center())
 
 
 def _cmd_generate(args: argparse.Namespace) -> int:
@@ -53,6 +59,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
     from ddforge.assets import load_catalog, palette_for
     from ddforge.compose import draw_building, furnish, furnish_building, render_blueprint
+    from ddforge.generators.building import floor_labels as building_labels
     from ddforge.ids import IdAllocator
     from ddforge.template import TemplateError, finalize, load_template, prepare, save
     from ddforge.validate import validate
@@ -83,16 +90,30 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
 
     if is_building:
+        # Senza --width/--height esplicite, ogni tipologia ha il suo ingombro
+        # realistico: a 1.5 m per quadretto il default generico di 40x40 vale
+        # 60x60 METRI, cioe un isolato e non una taverna (TASK-30).
+        from ddforge.generators.building import default_size
+
+        default_w, default_h = default_size(args.building_type)
         blueprint = generators[args.algorithm].generate(
-            width=args.width, height=args.height, seed=args.seed,
+            width=args.width if args.width is not None else default_w,
+            height=args.height if args.height is not None else default_h,
+            seed=args.seed,
             building_type=args.building_type, l_shaped=args.l_shaped,
         )
     else:
         blueprint = generators[args.algorithm].generate(
-            width=args.width, height=args.height, seed=args.seed, rooms=args.rooms,
+            width=args.width if args.width is not None else 40,
+            height=args.height if args.height is not None else 40,
+            seed=args.seed, rooms=args.rooms,
         )
 
-    prepared = prepare(doc, levels=blueprint.levels)
+    # Ogni piano riceve un nome proprio: senza, ereditano tutti la label del
+    # template ("Ground") e in Dungeondraft non si distingue un piano
+    # dall'altro (gate umano M4, TASK-30).
+    labels = building_labels(blueprint.levels) if is_building else None
+    prepared = prepare(doc, levels=blueprint.levels, labels=labels)
     ids = IdAllocator.from_document(prepared)
 
     if is_building:
@@ -247,8 +268,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_generate.add_argument("algorithm", choices=["dungeon", "building", "cave", "city"])
     p_generate.add_argument("--template", required=True, help="template .dungeondraft_map di partenza")
     p_generate.add_argument("--out", required=True, help="percorso del file da scrivere")
-    p_generate.add_argument("--width", type=int, default=40)
-    p_generate.add_argument("--height", type=int, default=40)
+    p_generate.add_argument(
+        "--width", type=int, default=None,
+        help="larghezza in quadretti (1 quadretto = 1.5 m); default 40, "
+             "o l'ingombro realistico della tipologia per 'building'",
+    )
+    p_generate.add_argument("--height", type=int, default=None, help="altezza in quadretti; vedi --width")
     p_generate.add_argument("--rooms", type=int, default=8)
     p_generate.add_argument("--seed", type=int, default=0)
     p_generate.add_argument(

@@ -140,7 +140,7 @@
     "format": 3,
     "width": 80,
     "height": 80,
-    "next_node_id": "aa",
+    "next_node_id": "74",
     "next_prefab_id": "0",
     "msi": {
       "offset_map_size": 512,
@@ -159,7 +159,7 @@
     "embedded": {},
     "levels": {
       "0": {
-        "label": "Ground",
+        "label": "Piano terra",
         "environment": {
           "baked_lighting": true,
           "ambient_light": "ffffffff"
@@ -6620,7 +6620,7 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1024, 5632, 9728, 5632, 9728, 9728, 1024, 9728 )",
+            "points": "PoolVector2Array( 768, 256, 2560, 256, 2560, 2048, 768, 2048 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -6632,7 +6632,7 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1280, 512, 5632, 512, 5632, 5120, 1280, 5120 )",
+            "points": "PoolVector2Array( 768, 2048, 2560, 2048, 2560, 3328, 768, 3328 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -6644,29 +6644,41 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 6400, 512, 9728, 512, 9728, 5120, 6400, 5120 )",
+            "points": "PoolVector2Array( 2560, 256, 4352, 256, 4352, 1792, 2560, 1792 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/wood_planks.png",
-            "node_id": "13"
+            "node_id": "12"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 256, 256, 768, 256, 768, 768, 256, 768 )",
+            "points": "PoolVector2Array( 2560, 1792, 4352, 1792, 4352, 3328, 2560, 3328 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/wood_planks.png",
-            "node_id": "19"
+            "node_id": "17"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 256, 256, 768, 256, 768, 3328, 256, 3328 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "node_id": "1b"
           }
         ],
         "walls": [
           {
-            "points": "PoolVector2Array( 768, 512, 9728, 512 )",
+            "points": "PoolVector2Array( 256, 256, 4352, 256 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6678,7 +6690,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 9728, 512, 9728, 9728 )",
+            "points": "PoolVector2Array( 4352, 256, 4352, 3328 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6690,7 +6702,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 9728, 9728, 768, 9728 )",
+            "points": "PoolVector2Array( 4352, 3328, 256, 3328 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6699,10 +6711,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "3",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 1664, 3328 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "3",
+                "wall_distance": 0.65625,
+                "closed": true,
+                "node_id": "11"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 768, 9728, 768, 512 )",
+            "points": "PoolVector2Array( 256, 3328, 256, 256 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -6714,7 +6739,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 1024, 5632, 9728, 5632 )",
+            "points": "PoolVector2Array( 2560, 256, 2560, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6725,21 +6750,21 @@
             "node_id": "6",
             "portals": [
               {
-                "position": "Vector2( 3456, 5632 )",
-                "rotation": 0.0,
+                "position": "Vector2( 2560, 1024 )",
+                "rotation": 1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
+                "direction": "Vector2( 0, 1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
                 "wall_id": "6",
-                "wall_distance": 0.27941176470588236,
+                "wall_distance": 0.42857142857142855,
                 "closed": true,
                 "node_id": "a"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 9728, 5632, 9728, 9728 )",
+            "points": "PoolVector2Array( 2560, 2048, 768, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6748,10 +6773,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "7",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 1664, 2048 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "7",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "9"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 9728, 9728, 1024, 9728 )",
+            "points": "PoolVector2Array( 768, 2048, 768, 256 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6762,10 +6800,10 @@
             "node_id": "8",
             "portals": [
               {
-                "position": "Vector2( 5376, 9728 )",
-                "rotation": 3.141592653589793,
+                "position": "Vector2( 768, 1152 )",
+                "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
+                "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
                 "wall_id": "8",
@@ -6776,19 +6814,7 @@
             ]
           },
           {
-            "points": "PoolVector2Array( 1024, 9728, 1024, 5632 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "9",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 1280, 512, 5632, 512 )",
+            "points": "PoolVector2Array( 768, 2048, 2560, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6797,10 +6823,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "d",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 1664, 2048 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "d",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "10"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 5632, 512, 5632, 5120 )",
+            "points": "PoolVector2Array( 2560, 2048, 2560, 3328 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6809,23 +6848,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "e",
-            "portals": [
-              {
-                "position": "Vector2( 5632, 2816 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/door_wood_single.png",
-                "radius": 128,
-                "wall_id": "e",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "12"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 5632, 5120, 1280, 5120 )",
+            "points": "PoolVector2Array( 768, 3328, 768, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6834,23 +6860,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "f",
-            "portals": [
-              {
-                "position": "Vector2( 3456, 5120 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/door_wood_single.png",
-                "radius": 128,
-                "wall_id": "f",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "11"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 1280, 5120, 1280, 512 )",
+            "points": "PoolVector2Array( 4352, 1792, 2560, 1792 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6858,11 +6871,24 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "10",
-            "portals": []
+            "node_id": "13",
+            "portals": [
+              {
+                "position": "Vector2( 3456, 1792 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "13",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "16"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 6400, 512, 9728, 512 )",
+            "points": "PoolVector2Array( 2560, 1792, 2560, 256 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6871,59 +6897,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "14",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 9728, 512, 9728, 5120 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "15",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 9728, 5120, 6400, 5120 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "16",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 6400, 5120, 6400, 512 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "17",
             "portals": [
               {
-                "position": "Vector2( 6400, 2816 )",
+                "position": "Vector2( 2560, 1024 )",
                 "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
-                "wall_id": "17",
+                "wall_id": "14",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "18"
+                "node_id": "15"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 256, 256, 768, 256 )",
+            "points": "PoolVector2Array( 2560, 1792, 4352, 1792 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6931,11 +6921,24 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "1a",
-            "portals": []
+            "node_id": "18",
+            "portals": [
+              {
+                "position": "Vector2( 3456, 1792 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "18",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "1a"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 768, 256, 768, 768 )",
+            "points": "PoolVector2Array( 2560, 3328, 2560, 1792 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6943,11 +6946,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "1b",
+            "node_id": "19",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 768, 768, 256, 768 )",
+            "points": "PoolVector2Array( 768, 256, 768, 3328 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -6956,19 +6959,20 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "1c",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 256, 768, 256, 256 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "1d",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 768, 1152 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "1c",
+                "wall_distance": 0.2916666666666667,
+                "closed": true,
+                "node_id": "1d"
+              }
+            ]
           }
         ],
         "portals": [],
@@ -6996,195 +7000,52 @@
         "paths": [],
         "objects": [
           {
-            "position": "Vector2( 6400.920866905601, 7816.255789486084 )",
-            "rotation": 3.5875667450737723,
+            "position": "Vector2( 512, 1792 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
+            "texture": "res://textures/objects/structures/stairs/stairs_round_08.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "3b"
+            "node_id": "1e"
           },
           {
-            "position": "Vector2( 7394.412596956954, 8807.217676525077 )",
-            "rotation": 2.4108884157789507,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "3c"
-          },
-          {
-            "position": "Vector2( 7896.790028066143, 9407.391784535079 )",
-            "rotation": 2.4601896612342906,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "3d"
-          },
-          {
-            "position": "Vector2( 7091.731744705513, 8751.252736092458 )",
-            "rotation": 0.686679254179173,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "3e"
-          },
-          {
-            "position": "Vector2( 8165.089129632405, 7265.235165409134 )",
-            "rotation": 3.1754780822419924,
+            "position": "Vector2( 1748.4052478628141, 1175.8447631600648 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "3f"
-          },
-          {
-            "position": "Vector2( 6839.3351513585385, 9270.604290880967 )",
-            "rotation": 5.036680174688686,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "40"
-          },
-          {
-            "position": "Vector2( 7987.766911638071, 8350.71542412798 )",
-            "rotation": 3.735082279655261,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "41"
-          },
-          {
-            "position": "Vector2( 7949.949170995279, 6917.02947019234 )",
-            "rotation": 5.791680921686216,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "42"
-          },
-          {
-            "position": "Vector2( 6286.3701201312215, 8103.58591506519 )",
-            "rotation": 3.4416621531421785,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "43"
-          },
-          {
-            "position": "Vector2( 9464.948344475028, 8800.277650264905 )",
-            "rotation": 2.560209532768318,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "44"
-          },
-          {
-            "position": "Vector2( 6707.039735153635, 8170.477754328371 )",
-            "rotation": 0.10769706266581783,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "45"
-          },
-          {
-            "position": "Vector2( 2737.119138143062, 6060.401833646418 )",
-            "rotation": 2.8420619206165907,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "46"
-          },
-          {
-            "position": "Vector2( 9001.484237648507, 8901.586229512886 )",
-            "rotation": 0.07832303273142333,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/chair_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "47"
-          },
-          {
-            "position": "Vector2( 9178.505506071033, 6998.392713384055 )",
-            "rotation": 4.966403111186387,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "48"
-          },
-          {
-            "position": "Vector2( 5807.798861614813, 8810.483001057608 )",
-            "rotation": 4.564994700810111,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "49"
           },
           {
-            "position": "Vector2( 3698.7283722812904, 9283.215124928298 )",
-            "rotation": 6.122719072082893,
+            "position": "Vector2( 1748.4052478628141, 868.6447631600647 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
+            "texture": "res://textures/objects/tables/chair_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "4a"
           },
           {
-            "position": "Vector2( 5629.075809303797, 7796.52341262779 )",
-            "rotation": 0.31688756527455064,
+            "position": "Vector2( 2055.605247862814, 1175.8447631600648 )",
+            "rotation": 4.71238898038469,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
+            "texture": "res://textures/objects/tables/chair_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "4b"
           },
           {
-            "position": "Vector2( 5329.516837928272, 8648.699328117676 )",
-            "rotation": 6.116027273673008,
+            "position": "Vector2( 1748.4052478628141, 1483.0447631600648 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/chair_wood_01.png",
@@ -7194,19 +7055,19 @@
             "node_id": "4c"
           },
           {
-            "position": "Vector2( 1237.803728808645, 7771.338058092875 )",
-            "rotation": 4.726092550868985,
+            "position": "Vector2( 1441.205247862814, 1175.8447631600648 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
+            "texture": "res://textures/objects/tables/chair_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "4d"
           },
           {
-            "position": "Vector2( 7368.091388171162, 7076.286216268931 )",
-            "rotation": 5.016457770350569,
+            "position": "Vector2( 2432, 1504.2555239140866 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bench_wood_01.png",
@@ -7216,85 +7077,85 @@
             "node_id": "4e"
           },
           {
-            "position": "Vector2( 6635.166730399666, 6704.248323571417 )",
-            "rotation": 0.8198960163068363,
+            "position": "Vector2( 1544.1433896529645, 2757.0554496368895 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
+            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "4f"
           },
           {
-            "position": "Vector2( 1536.6636366337466, 6328.792123902735 )",
-            "rotation": 1.2055264413011408,
+            "position": "Vector2( 1544.1433896529645, 2449.8554496368897 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
+            "texture": "res://textures/objects/tables/chair_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "50"
           },
           {
-            "position": "Vector2( 9316.009888409904, 9046.12244424585 )",
-            "rotation": 3.484248287466422,
+            "position": "Vector2( 1851.3433896529646, 2757.0554496368895 )",
+            "rotation": 4.71238898038469,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
+            "texture": "res://textures/objects/tables/chair_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "51"
           },
           {
-            "position": "Vector2( 4741.092590090722, 8115.784933989477 )",
-            "rotation": 2.7014213085106573,
+            "position": "Vector2( 2432, 2888.859888017336 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
+            "texture": "res://textures/objects/tables/bench_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "52"
           },
           {
-            "position": "Vector2( 7474.377447175492, 6269.191865721303 )",
-            "rotation": 2.8985487968837997,
+            "position": "Vector2( 2955.8891489552275, 1664 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "53"
           },
           {
-            "position": "Vector2( 4335.377491618947, 6485.673930432787 )",
-            "rotation": 4.2528567153273364,
+            "position": "Vector2( 3953.0638409003022, 1664 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bench_wood_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "54"
           },
           {
-            "position": "Vector2( 6254.760278634226, 8570.378607597431 )",
-            "rotation": 0.8553450041725397,
+            "position": "Vector2( 4224, 1326.8175495288565 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "55"
           },
           {
-            "position": "Vector2( 2985.443970535138, 2491.575706388062 )",
-            "rotation": 1.0035901348378173,
+            "position": "Vector2( 2908.4643555399894, 384 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -7304,30 +7165,30 @@
             "node_id": "56"
           },
           {
-            "position": "Vector2( 4376.000747400314, 4395.058944716484 )",
-            "rotation": 3.92300925462266,
+            "position": "Vector2( 4224, 2249.750580631945 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "57"
           },
           {
-            "position": "Vector2( 4770.200918133556, 4925.012953277926 )",
-            "rotation": 5.870742035143443,
+            "position": "Vector2( 3067.61570980385, 3200 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://textures/objects/containers/crate_wood_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "58"
           },
           {
-            "position": "Vector2( 4404.334993317741, 3378.0650683551576 )",
-            "rotation": 0.24739335219297534,
+            "position": "Vector2( 3369.175950738038, 3200 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
@@ -7337,289 +7198,78 @@
             "node_id": "59"
           },
           {
-            "position": "Vector2( 3629.9308284742087, 1397.2892599935735 )",
-            "rotation": 1.9285611945574892,
+            "position": "Vector2( 4224, 2610.799866072331 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Keg_Wood_Light_H_1x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "5a"
           },
           {
-            "position": "Vector2( 4678.047773057435, 4539.375695145599 )",
-            "rotation": 5.763284272225139,
+            "position": "Vector2( 3901.9901608601563, 3200 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
             "node_id": "5b"
-          },
-          {
-            "position": "Vector2( 5161.440916979051, 3185.2783104382024 )",
-            "rotation": 0.9052142729683031,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "5c"
-          },
-          {
-            "position": "Vector2( 4850.163171168819, 4026.034857622678 )",
-            "rotation": 2.4216786738086546,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "5d"
-          },
-          {
-            "position": "Vector2( 4362.772158544791, 2635.2436494687013 )",
-            "rotation": 2.15198021213803,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "5e"
-          },
-          {
-            "position": "Vector2( 4941.168256454357, 1780.1664635678108 )",
-            "rotation": 6.261073669747514,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "5f"
-          },
-          {
-            "position": "Vector2( 1441.6601421361388, 4858.489324716562 )",
-            "rotation": 1.2287176111388722,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "60"
-          },
-          {
-            "position": "Vector2( 3213.6474436428575, 3585.5211226929905 )",
-            "rotation": 0.32831310739609026,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "61"
-          },
-          {
-            "position": "Vector2( 4721.595854165474, 1491.0585563693876 )",
-            "rotation": 5.836647388930199,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "62"
-          },
-          {
-            "position": "Vector2( 3804.0274056962694, 986.4567570740332 )",
-            "rotation": 3.178172429572971,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "63"
-          },
-          {
-            "position": "Vector2( 3851.8491047232233, 3480.6267104683366 )",
-            "rotation": 1.8614790393411784,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "64"
-          },
-          {
-            "position": "Vector2( 6894.818330623111, 2658.919402313527 )",
-            "rotation": 5.750402567814874,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "65"
-          },
-          {
-            "position": "Vector2( 8560.882473999005, 3347.1568809519513 )",
-            "rotation": 4.619334222956567,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "66"
-          },
-          {
-            "position": "Vector2( 6940.217191851862, 3976.3965835777444 )",
-            "rotation": 4.4664743065969255,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "67"
-          },
-          {
-            "position": "Vector2( 9059.816157776884, 2636.097940114255 )",
-            "rotation": 4.230022584723633,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "68"
-          },
-          {
-            "position": "Vector2( 7818.6625243948965, 4162.533766449402 )",
-            "rotation": 4.932209212344393,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "69"
-          },
-          {
-            "position": "Vector2( 7395.9493888717025, 3551.583758277743 )",
-            "rotation": 0.9859762015087737,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "6a"
-          },
-          {
-            "position": "Vector2( 7055.106047411015, 872.7557961851555 )",
-            "rotation": 3.6283851091897863,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "6b"
-          },
-          {
-            "position": "Vector2( 7217.126373289193, 4725.270668228218 )",
-            "rotation": 2.70571919516819,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "6c"
-          },
-          {
-            "position": "Vector2( 8664.937719812908, 2427.5480993449746 )",
-            "rotation": 2.972473225929401,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "6d"
-          },
-          {
-            "position": "Vector2( 7046.213153763548, 851.9468635891216 )",
-            "rotation": 2.267630706415817,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "6e"
-          },
-          {
-            "position": "Vector2( 9518.708272002423, 3641.2933090797183 )",
-            "rotation": 0.3719448169185214,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "6f"
-          },
-          {
-            "position": "Vector2( 8231.098602549619, 1042.2233642815027 )",
-            "rotation": 6.022218945272741,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "70"
           }
         ],
         "lights": [
           {
-            "position": "Vector2( 5376, 7680 )",
+            "position": "Vector2( 1664, 1152 )",
             "rotation": 0.0,
             "range": 3.0,
             "color": "efc05c",
             "intensity": 0.75,
             "texture": "res://textures/lights/soft.png",
             "shadows": true,
-            "node_id": "a4"
+            "node_id": "68"
           },
           {
-            "position": "Vector2( 3456, 2816 )",
+            "position": "Vector2( 1664, 2688 )",
             "rotation": 0.0,
             "range": 3.0,
             "color": "efc05c",
             "intensity": 0.75,
             "texture": "res://textures/lights/soft.png",
             "shadows": true,
-            "node_id": "a5"
+            "node_id": "69"
           },
           {
-            "position": "Vector2( 8064, 2816 )",
+            "position": "Vector2( 3456, 1024 )",
             "rotation": 0.0,
             "range": 3.0,
             "color": "efc05c",
             "intensity": 0.75,
             "texture": "res://textures/lights/soft.png",
             "shadows": true,
-            "node_id": "a6"
+            "node_id": "6a"
+          },
+          {
+            "position": "Vector2( 3456, 2560 )",
+            "rotation": 0.0,
+            "range": 3.0,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
+            "shadows": true,
+            "node_id": "6b"
+          },
+          {
+            "position": "Vector2( 512, 1792 )",
+            "rotation": 0.0,
+            "range": 3.0,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
+            "shadows": true,
+            "node_id": "6c"
           }
         ],
         "roofs": {
@@ -7632,7 +7282,7 @@
         "texts_vis": true
       },
       "1": {
-        "label": "Ground",
+        "label": "Primo piano",
         "environment": {
           "baked_lighting": true,
           "ambient_light": "ffffffff"
@@ -14093,19 +13743,19 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1280, 512, 9472, 512, 9472, 5632, 1280, 5632 )",
+            "points": "PoolVector2Array( 3072, 256, 4352, 256, 4352, 1792, 3072, 1792 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/wood_planks.png",
-            "node_id": "22"
+            "node_id": "23"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 768, 6400, 4352, 6400, 4352, 9472, 768, 9472 )",
+            "points": "PoolVector2Array( 3072, 1792, 4352, 1792, 4352, 3328, 3072, 3328 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -14117,41 +13767,65 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 4864, 6400, 9472, 6400, 9472, 9472, 4864, 9472 )",
+            "points": "PoolVector2Array( 768, 2048, 1536, 2048, 1536, 3328, 768, 3328 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/wood_planks.png",
-            "node_id": "2e"
+            "node_id": "2d"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 256, 256, 768, 256, 768, 768, 256, 768 )",
+            "points": "PoolVector2Array( 1536, 2048, 3072, 2048, 3072, 3328, 1536, 3328 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/wood_planks.png",
-            "node_id": "35"
+            "node_id": "32"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 768, 256, 2304, 256, 2304, 2048, 768, 2048 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "node_id": "38"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 2304, 256, 3072, 256, 3072, 2048, 2304, 2048 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "node_id": "3e"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 256, 256, 768, 256, 768, 3328, 256, 3328 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "node_id": "44"
           }
         ],
         "walls": [
           {
-            "points": "PoolVector2Array( 768, 512, 9728, 512 )",
-            "texture": "res://textures/walls/stone.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "1e",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 9728, 512, 9728, 9728 )",
+            "points": "PoolVector2Array( 256, 256, 4352, 256 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -14163,7 +13837,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 9728, 9728, 768, 9728 )",
+            "points": "PoolVector2Array( 4352, 256, 4352, 3328 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -14175,7 +13849,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 768, 9728, 768, 512 )",
+            "points": "PoolVector2Array( 4352, 3328, 256, 3328 )",
             "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
@@ -14187,19 +13861,19 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 1280, 512, 9472, 512 )",
-            "texture": "res://textures/walls/wood_04.png",
+            "points": "PoolVector2Array( 256, 3328, 256, 256 )",
+            "texture": "res://textures/walls/stone.png",
             "color": "ffffffff",
             "loop": false,
             "type": 1,
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "23",
+            "node_id": "22",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 9472, 512, 9472, 5632 )",
+            "points": "PoolVector2Array( 4352, 1792, 3072, 1792 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14208,10 +13882,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "24",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 3712, 1792 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "24",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "27"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 9472, 5632, 1280, 5632 )",
+            "points": "PoolVector2Array( 3072, 1792, 3072, 256 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14222,33 +13909,21 @@
             "node_id": "25",
             "portals": [
               {
-                "position": "Vector2( 7168, 5632 )",
-                "rotation": 3.141592653589793,
+                "position": "Vector2( 3072, 1024 )",
+                "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
+                "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
                 "wall_id": "25",
-                "wall_distance": 0.28125,
+                "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "27"
+                "node_id": "26"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 1280, 5632, 1280, 512 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "26",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 768, 6400, 4352, 6400 )",
+            "points": "PoolVector2Array( 3072, 1792, 4352, 1792 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14257,10 +13932,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "29",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 3712, 1792 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "29",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "2b"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 4352, 6400, 4352, 9472 )",
+            "points": "PoolVector2Array( 3072, 3328, 3072, 1792 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14271,21 +13959,21 @@
             "node_id": "2a",
             "portals": [
               {
-                "position": "Vector2( 4352, 7936 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 3072, 2688 )",
+                "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
                 "wall_id": "2a",
-                "wall_distance": 0.5,
+                "wall_distance": 0.4166666666666667,
                 "closed": true,
-                "node_id": "2d"
+                "node_id": "2c"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 4352, 9472, 768, 9472 )",
+            "points": "PoolVector2Array( 768, 2048, 1536, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14293,23 +13981,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "2b",
+            "node_id": "2e",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 768, 9472, 768, 6400 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "2c",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 4864, 6400, 9472, 6400 )",
+            "points": "PoolVector2Array( 1536, 2048, 1536, 3328 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14320,21 +13996,21 @@
             "node_id": "2f",
             "portals": [
               {
-                "position": "Vector2( 7168, 6400 )",
-                "rotation": 0.0,
+                "position": "Vector2( 1536, 2688 )",
+                "rotation": 1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
+                "direction": "Vector2( 0, 1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
                 "wall_id": "2f",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "33"
+                "node_id": "31"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 9472, 6400, 9472, 9472 )",
+            "points": "PoolVector2Array( 768, 3328, 768, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14346,7 +14022,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 9472, 9472, 4864, 9472 )",
+            "points": "PoolVector2Array( 1536, 2048, 3072, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14354,11 +14030,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "31",
+            "node_id": "33",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 4864, 9472, 4864, 6400 )",
+            "points": "PoolVector2Array( 3072, 2048, 3072, 3328 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14366,60 +14042,49 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "32",
+            "node_id": "34",
             "portals": [
               {
-                "position": "Vector2( 4864, 7936 )",
+                "position": "Vector2( 3072, 2688 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "34",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "36"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 1536, 3328, 1536, 2048 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "35",
+            "portals": [
+              {
+                "position": "Vector2( 1536, 2688 )",
                 "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/door_wood_single.png",
                 "radius": 128,
-                "wall_id": "32",
+                "wall_id": "35",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "34"
+                "node_id": "37"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 256, 256, 768, 256 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "36",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 768, 256, 768, 768 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "37",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 768, 768, 256, 768 )",
-            "texture": "res://textures/walls/wood_04.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "38",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 256, 768, 256, 256 )",
+            "points": "PoolVector2Array( 2304, 256, 2304, 2048 )",
             "texture": "res://textures/walls/wood_04.png",
             "color": "ffffffff",
             "loop": false,
@@ -14428,7 +14093,144 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "39",
+            "portals": [
+              {
+                "position": "Vector2( 2304, 1152 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "39",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "3c"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 2304, 2048, 768, 2048 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "3a",
             "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 768, 2048, 768, 256 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "3b",
+            "portals": [
+              {
+                "position": "Vector2( 768, 1152 )",
+                "rotation": -1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, -1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "3b",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "3d"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 3072, 256, 3072, 2048 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "3f",
+            "portals": [
+              {
+                "position": "Vector2( 3072, 1024 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "3f",
+                "wall_distance": 0.42857142857142855,
+                "closed": true,
+                "node_id": "42"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 3072, 2048, 2304, 2048 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "40",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 2304, 2048, 2304, 256 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "41",
+            "portals": [
+              {
+                "position": "Vector2( 2304, 1152 )",
+                "rotation": -1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, -1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "41",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "43"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 768, 256, 768, 3328 )",
+            "texture": "res://textures/walls/wood_04.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "45",
+            "portals": [
+              {
+                "position": "Vector2( 768, 1152 )",
+                "rotation": 1.5707963267948966,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 0, 1 )",
+                "texture": "res://textures/portals/door_wood_single.png",
+                "radius": 128,
+                "wall_id": "45",
+                "wall_distance": 0.2916666666666667,
+                "closed": true,
+                "node_id": "46"
+              }
+            ]
           }
         ],
         "portals": [],
@@ -14456,597 +14258,219 @@
         "paths": [],
         "objects": [
           {
-            "position": "Vector2( 5556.7068214212395, 5204.949038965742 )",
-            "rotation": 4.332369626145287,
+            "position": "Vector2( 512, 1792 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://textures/objects/structures/stairs/stairs_round_08.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "71"
+            "node_id": "47"
           },
           {
-            "position": "Vector2( 3732.600127332121, 2414.4906173199656 )",
-            "rotation": 0.08099345325591104,
+            "position": "Vector2( 4224, 1138.0768964726335 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bed_wood_single_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "72"
+            "node_id": "5c"
           },
           {
-            "position": "Vector2( 6218.430850620894, 968.7127517497056 )",
-            "rotation": 5.153364909310496,
+            "position": "Vector2( 3901.207426994283, 384 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "73"
+            "node_id": "5d"
           },
           {
-            "position": "Vector2( 4344.519519098071, 2744.5491952198618 )",
-            "rotation": 2.4956224958942568,
+            "position": "Vector2( 3892.249867773322, 3200 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bed_wood_single_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "74"
+            "node_id": "5e"
           },
           {
-            "position": "Vector2( 2703.1846931162972, 3055.2930361737235 )",
-            "rotation": 1.190777541566814,
+            "position": "Vector2( 4224, 2371.6298814390575 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "75"
+            "node_id": "5f"
           },
           {
-            "position": "Vector2( 4762.068615055888, 963.2321077866187 )",
-            "rotation": 2.625692098816191,
+            "position": "Vector2( 1073.117565993231, 2176 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bed_wood_single_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "76"
+            "node_id": "60"
           },
           {
-            "position": "Vector2( 8529.720312680925, 4812.13325044367 )",
-            "rotation": 3.1507330212721016,
+            "position": "Vector2( 1248.6612301896093, 3200 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "77"
+            "node_id": "61"
           },
           {
-            "position": "Vector2( 4858.459046653526, 2688.700056450313 )",
-            "rotation": 0.6553034433556651,
+            "position": "Vector2( 2232.263223934205, 2176 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bed_wood_single_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "78"
+            "node_id": "62"
           },
           {
-            "position": "Vector2( 8852.660011770835, 2157.577212582324 )",
-            "rotation": 6.26293153217284,
+            "position": "Vector2( 2526.594651899358, 3200 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "79"
+            "node_id": "63"
           },
           {
-            "position": "Vector2( 8467.236724278497, 2389.954133121421 )",
-            "rotation": 0.1552876903826528,
+            "position": "Vector2( 2176, 686.2494533926624 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bed_wood_single_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7a"
+            "node_id": "64"
           },
           {
-            "position": "Vector2( 4235.511022002444, 3539.837918494133 )",
-            "rotation": 0.6502550035030411,
+            "position": "Vector2( 2176, 1538.5296818039872 )",
+            "rotation": 1.5707963267948966,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7b"
+            "node_id": "65"
           },
           {
-            "position": "Vector2( 5691.607423538938, 4079.6295070582 )",
-            "rotation": 2.5269712253943424,
+            "position": "Vector2( 2755.3896216258545, 1920 )",
+            "rotation": 3.141592653589793,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
             "texture": "res://textures/objects/tables/bed_wood_single_01.png",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7c"
+            "node_id": "66"
           },
           {
-            "position": "Vector2( 6555.7576318898045, 3985.0808111042106 )",
-            "rotation": 4.530067136596581,
+            "position": "Vector2( 2677.957980526039, 384 )",
+            "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
+            "texture": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "7d"
-          },
-          {
-            "position": "Vector2( 1954.9718623070976, 2157.431579480414 )",
-            "rotation": 3.5280627242541236,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "7e"
-          },
-          {
-            "position": "Vector2( 9115.149854320221, 970.2850440745779 )",
-            "rotation": 4.684051689426637,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "7f"
-          },
-          {
-            "position": "Vector2( 1544.6261074649246, 1260.2960551337294 )",
-            "rotation": 5.040532863464174,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "80"
-          },
-          {
-            "position": "Vector2( 4628.33460472442, 1207.454643300908 )",
-            "rotation": 2.42796443119204,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "81"
-          },
-          {
-            "position": "Vector2( 4055.658085330959, 2423.673760160383 )",
-            "rotation": 1.0272869548342933,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "82"
-          },
-          {
-            "position": "Vector2( 6195.896171746241, 2930.2417399874043 )",
-            "rotation": 4.236224450225254,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "83"
-          },
-          {
-            "position": "Vector2( 3581.9022512431648, 1826.2128429897643 )",
-            "rotation": 4.798159244978632,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "84"
-          },
-          {
-            "position": "Vector2( 8448.304132058809, 1255.419635943452 )",
-            "rotation": 0.9543587433533322,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "85"
-          },
-          {
-            "position": "Vector2( 6692.321838517261, 796.7040648369119 )",
-            "rotation": 0.7769550573931111,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "86"
-          },
-          {
-            "position": "Vector2( 2912.130472210253, 834.3038379941187 )",
-            "rotation": 3.9048250813389918,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "87"
-          },
-          {
-            "position": "Vector2( 5967.956049994861, 2450.0101291848205 )",
-            "rotation": 0.5693648233651876,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "88"
-          },
-          {
-            "position": "Vector2( 7932.053844302813, 4181.478867815882 )",
-            "rotation": 4.48211721162452,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "89"
-          },
-          {
-            "position": "Vector2( 9006.263043299656, 3227.220298528927 )",
-            "rotation": 4.549326697166638,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "8a"
-          },
-          {
-            "position": "Vector2( 3265.986151149482, 2027.7271406534846 )",
-            "rotation": 1.7992528384911586,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "8b"
-          },
-          {
-            "position": "Vector2( 8452.425860037823, 5197.183641177851 )",
-            "rotation": 2.641883212596322,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "8c"
-          },
-          {
-            "position": "Vector2( 4067.840007859105, 967.1117951297113 )",
-            "rotation": 3.367550311672196,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "8d"
-          },
-          {
-            "position": "Vector2( 1562.9122848751113, 2163.736979887385 )",
-            "rotation": 5.874397410091172,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "8e"
-          },
-          {
-            "position": "Vector2( 4787.914947321614, 5051.139499613203 )",
-            "rotation": 1.0633754715381922,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "8f"
-          },
-          {
-            "position": "Vector2( 4357.195432931689, 3161.063516945602 )",
-            "rotation": 2.7643754150089133,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "90"
-          },
-          {
-            "position": "Vector2( 2862.711900051848, 9096.184990570748 )",
-            "rotation": 4.629746248100757,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "91"
-          },
-          {
-            "position": "Vector2( 1512.4456846599824, 8012.689960239847 )",
-            "rotation": 3.5352806422989382,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "92"
-          },
-          {
-            "position": "Vector2( 2171.0448595045764, 8692.163270297273 )",
-            "rotation": 0.47905863575944013,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "93"
-          },
-          {
-            "position": "Vector2( 1953.3623539154355, 7173.066153943581 )",
-            "rotation": 4.4750747149620125,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "94"
-          },
-          {
-            "position": "Vector2( 1665.7097081831578, 6708.442801415697 )",
-            "rotation": 0.8215462534475098,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "95"
-          },
-          {
-            "position": "Vector2( 3199.6057582483904, 6796.3465388091445 )",
-            "rotation": 4.115548090875076,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "96"
-          },
-          {
-            "position": "Vector2( 2575.3191326590963, 8546.99534540569 )",
-            "rotation": 4.202846394533457,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "97"
-          },
-          {
-            "position": "Vector2( 2743.0135083104246, 8783.938169930705 )",
-            "rotation": 0.5859332570475329,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "98"
-          },
-          {
-            "position": "Vector2( 8210.663869831344, 8316.150059054882 )",
-            "rotation": 4.820536312642117,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "99"
-          },
-          {
-            "position": "Vector2( 5335.603105782397, 9271.845296572741 )",
-            "rotation": 4.862705388451354,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "9a"
-          },
-          {
-            "position": "Vector2( 5931.034234248721, 6608.267083169258 )",
-            "rotation": 4.619870389386232,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "9b"
-          },
-          {
-            "position": "Vector2( 9225.555992121106, 6570.2365625196735 )",
-            "rotation": 3.671200407940866,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "9c"
-          },
-          {
-            "position": "Vector2( 8067.284717022519, 7375.645006748506 )",
-            "rotation": 3.8751864217738174,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "9d"
-          },
-          {
-            "position": "Vector2( 6446.308182619169, 7313.7511656376055 )",
-            "rotation": 5.891778946193933,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "9e"
-          },
-          {
-            "position": "Vector2( 6684.240414743494, 8738.405044673842 )",
-            "rotation": 0.19913449366525815,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "9f"
-          },
-          {
-            "position": "Vector2( 7694.275157371129, 9063.012979023675 )",
-            "rotation": 2.746683532108593,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "a0"
-          },
-          {
-            "position": "Vector2( 6703.986603026444, 7773.894182522917 )",
-            "rotation": 1.4676629898898625,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "a1"
-          },
-          {
-            "position": "Vector2( 8119.452226510221, 7990.237125783797 )",
-            "rotation": 1.6754490272501403,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "a2"
-          },
-          {
-            "position": "Vector2( 7602.32785146658, 7446.21647466942 )",
-            "rotation": 1.1109679402445047,
-            "scale": "Vector2( 1, 1 )",
-            "mirror": false,
-            "texture": "res://textures/objects/tables/bed_wood_single_01.png",
-            "layer": 100,
-            "shadow": true,
-            "block_light": false,
-            "node_id": "a3"
+            "node_id": "67"
           }
         ],
         "lights": [
           {
-            "position": "Vector2( 5376, 3072 )",
+            "position": "Vector2( 3712, 1024 )",
             "rotation": 0.0,
             "range": 3.0,
             "color": "efc05c",
             "intensity": 0.75,
             "texture": "res://textures/lights/soft.png",
             "shadows": true,
-            "node_id": "a7"
+            "node_id": "6d"
           },
           {
-            "position": "Vector2( 2560, 7936 )",
+            "position": "Vector2( 3712, 2560 )",
             "rotation": 0.0,
             "range": 3.0,
             "color": "efc05c",
             "intensity": 0.75,
             "texture": "res://textures/lights/soft.png",
             "shadows": true,
-            "node_id": "a8"
+            "node_id": "6e"
           },
           {
-            "position": "Vector2( 7168, 7936 )",
+            "position": "Vector2( 1152, 2688 )",
             "rotation": 0.0,
             "range": 3.0,
             "color": "efc05c",
             "intensity": 0.75,
             "texture": "res://textures/lights/soft.png",
             "shadows": true,
-            "node_id": "a9"
+            "node_id": "6f"
+          },
+          {
+            "position": "Vector2( 2304, 2688 )",
+            "rotation": 0.0,
+            "range": 3.0,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
+            "shadows": true,
+            "node_id": "70"
+          },
+          {
+            "position": "Vector2( 1536, 1152 )",
+            "rotation": 0.0,
+            "range": 3.0,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
+            "shadows": true,
+            "node_id": "71"
+          },
+          {
+            "position": "Vector2( 2688, 1152 )",
+            "rotation": 0.0,
+            "range": 3.0,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
+            "shadows": true,
+            "node_id": "72"
+          },
+          {
+            "position": "Vector2( 512, 1792 )",
+            "rotation": 0.0,
+            "range": 3.0,
+            "color": "efc05c",
+            "intensity": 0.75,
+            "texture": "res://textures/lights/soft.png",
+            "shadows": true,
+            "node_id": "73"
           }
         ],
         "roofs": {
@@ -15058,11 +14482,11 @@
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 768, 512, 9728, 512, 9728, 9728, 768, 9728 )",
+              "points": "PoolVector2Array( 256, 256, 4352, 256, 4352, 3328, 256, 3328 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "3a"
+              "node_id": "48"
             }
           ]
         },

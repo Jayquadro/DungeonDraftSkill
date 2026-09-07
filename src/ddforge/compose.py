@@ -7,10 +7,11 @@ TASK-27.
 """
 
 import math
+import re
 
 from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall
-from ddforge.godot import grid_to_px, parse_pv2
-from ddforge.model import Blueprint, Corridor, Rect, Room
+from ddforge.godot import GRID, grid_to_px, parse_pv2
+from ddforge.model import Blueprint, Corridor, Door, Rect, Room
 
 # Indici di lato coerenti con l'ordine di _draw_perimeter: 0=top, 1=right,
 # 2=bottom, 3=left (percorrendo i 4 vertici di Rect in senso orario a
@@ -46,7 +47,7 @@ def _rotation_for_direction(direction: tuple[float, float]) -> float:
     return math.atan2(direction[1], direction[0])
 
 
-def _draw_perimeter(level, ids, room, palette, *, add_doors: bool) -> dict:
+def _draw_perimeter(level, ids, room, palette, *, add_doors: bool, skip_sides=()) -> dict:
     rect = room.rect
     pattern = add_pattern(level, ids, rect, room.floor or palette.floor)
 
@@ -56,8 +57,14 @@ def _draw_perimeter(level, ids, room, palette, *, add_doors: bool) -> dict:
         (rect.x2, rect.y2),
         (rect.x1, rect.y2),
     ]
+    # `skip_sides`: lati che qualcun altro ha gia disegnato (il muro portante
+    # di un edificio, TASK-30). Ridisegnarli sopra significa sovrapporre due
+    # muri, e quello di sotto tappa la porta dell'altro: nel gate umano M4
+    # l'ingresso e la porta del vano scale erano murati proprio cosi. La
+    # porta di un lato saltato la riporta il chiamante sul muro che resta.
     walls = [
-        add_wall(level, ids, [corners[i], corners[(i + 1) % 4]], palette.wall)
+        None if i in skip_sides
+        else add_wall(level, ids, [corners[i], corners[(i + 1) % 4]], palette.wall)
         for i in range(4)
     ]
 
@@ -65,6 +72,8 @@ def _draw_perimeter(level, ids, room, palette, *, add_doors: bool) -> dict:
     if add_doors:
         for door in room.doors:
             wall = walls[door.wall_index]
+            if wall is None:
+                continue
             direction = _wall_tangent(wall)
             rotation = _rotation_for_direction(direction)
             portal = add_portal(
@@ -80,10 +89,11 @@ def _draw_perimeter(level, ids, room, palette, *, add_doors: bool) -> dict:
     return {"walls": walls, "pattern": pattern, "portals": portals}
 
 
-def draw_room(level, ids, room, palette) -> dict:
+def draw_room(level, ids, room, palette, *, skip_sides=()) -> dict:
     """Pavimento + muri perimetrali + porte + luci. Restituisce
-    {'walls': [...], 'pattern': ..., 'portals': [...]}."""
-    return _draw_perimeter(level, ids, room, palette, add_doors=True)
+    {'walls': [...], 'pattern': ..., 'portals': [...]}; le voci di 'walls'
+    corrispondenti a `skip_sides` sono None."""
+    return _draw_perimeter(level, ids, room, palette, add_doors=True, skip_sides=skip_sides)
 
 
 def draw_corridor(level, ids, rect, palette) -> dict:
@@ -132,15 +142,47 @@ def _t_along_wall(wall_points_px: list[tuple[float, float]], point_px: tuple[flo
     return min(max(t, 0.0), 1.0)
 
 
-def _add_door_at_point(level, ids, room, point_grid: tuple[float, float], palette, side: int) -> dict | None:
-    wall = _wall_for_side(level, room.rect, side)
-    if wall is None:
-        return None
+def _add_door_to_wall(wall: dict, ids, point_grid: tuple[float, float], palette, *, locked: bool = False) -> dict:
+    """Apre una porta su un muro gia disegnato, nel punto indicato."""
     point_px = (grid_to_px(point_grid[0]), grid_to_px(point_grid[1]))
     t = _t_along_wall(parse_pv2(wall["points"]), point_px)
     direction = _wall_tangent(wall)
     rotation = _rotation_for_direction(direction)
-    return add_portal(wall, ids, t=t, direction=direction, rotation=rotation, texture=palette.door)
+    return add_portal(wall, ids, t=t, direction=direction, rotation=rotation, texture=palette.door, locked=locked)
+
+
+def _add_door_at_point(level, ids, room, point_grid: tuple[float, float], palette, side: int) -> dict | None:
+    wall = _wall_for_side(level, room.rect, side)
+    if wall is None:
+        return None
+    return _add_door_to_wall(wall, ids, point_grid, palette)
+
+
+def _side_of_point(rect: Rect, x: float, y: float) -> int | None:
+    """Il lato di `rect` su cui cade il punto, o None se il punto non sta sul
+    suo perimetro. Tolleranza stretta: le coordinate qui sono calcolate, non
+    misurate, e un punto o e sul bordo o non c'e."""
+    eps = 1e-9
+    if abs(y - rect.y1) < eps and rect.x1 - eps <= x <= rect.x2 + eps:
+        return _TOP
+    if abs(y - rect.y2) < eps and rect.x1 - eps <= x <= rect.x2 + eps:
+        return _BOTTOM
+    if abs(x - rect.x1) < eps and rect.y1 - eps <= y <= rect.y2 + eps:
+        return _LEFT
+    if abs(x - rect.x2) < eps and rect.y1 - eps <= y <= rect.y2 + eps:
+        return _RIGHT
+    return None
+
+
+def _t_on_rect_side(rect: Rect, side: int, point: tuple[float, float]) -> float:
+    """Posizione del punto lungo il lato `side` di rect, come frazione 0..1."""
+    (x0, y0), (x1, y1) = _side_corners(rect, side)
+    dx, dy = x1 - x0, y1 - y0
+    length_sq = dx * dx + dy * dy
+    if length_sq == 0:
+        return 0.0
+    t = ((point[0] - x0) * dx + (point[1] - y0) * dy) / length_sq
+    return min(max(t, 0.0), 1.0)
 
 
 def _shared_wall_segment(rect_a: Rect, rect_b: Rect):
@@ -436,8 +478,17 @@ def connect(level, ids, room_a, room_b, palette, obstacles=()) -> dict:
 
 
 def _building_footprint(blueprint) -> Rect:
-    """Bounding box di tutte le stanze: perimetro portante e sagoma del tetto."""
+    """Bounding box di tutte le stanze PIU il vano scale: perimetro portante
+    e sagoma del tetto.
+
+    Il vano scale va incluso: e un ambiente dell'edificio come gli altri, e
+    lasciarlo fuori dal bounding box significa disegnargli il muro portante
+    addosso e mettere il tetto solo su meta pianta. Nel gate umano M4 il vano
+    scale cadeva proprio fuori dal perimetro e Jay non lo riconosceva
+    (TASK-30)."""
     rects = [room.rect for room in blueprint.rooms]
+    if blueprint.stairs_rect is not None:
+        rects.append(blueprint.stairs_rect)
     return Rect(
         min(r.x1 for r in rects), min(r.y1 for r in rects),
         max(r.x2 for r in rects), max(r.y2 for r in rects),
@@ -473,6 +524,45 @@ def furnish_building(level_stack: dict, ids, blueprint, palette, *, density: str
         furnish(level, ids, floor_blueprint(blueprint, floor_rooms), palette, density=density, rng=rng)
 
 
+def _sides_on_rect(rect: Rect, outer: Rect) -> set[int]:
+    """I lati di `rect` che giacciono su un lato di `outer` (tipicamente il
+    perimetro portante dell'edificio)."""
+    sides = set()
+    if rect.y1 == outer.y1:
+        sides.add(_TOP)
+    if rect.x2 == outer.x2:
+        sides.add(_RIGHT)
+    if rect.y2 == outer.y2:
+        sides.add(_BOTTOM)
+    if rect.x1 == outer.x1:
+        sides.add(_LEFT)
+    return sides
+
+
+def _stairwell_room(stairs: Rect, floor_rooms: list[Room]) -> Room:
+    """Il vano scale come Room, con le porte che le stanze adiacenti gli
+    aprono gia rispecchiate sui suoi lati.
+
+    Una porta fra due ambienti sta su due muri sovrapposti — quello di chi
+    apre e quello di chi riceve — e va bucata su entrambi: e la stessa
+    convenzione che _connect_rooms usa fra due stanze. Prima del gate umano
+    M4 il vano scale veniva disegnato come quattro muri ciechi, che
+    tappavano da dentro la porta appena aperta dalla stanza accanto
+    (TASK-30)."""
+    room = Room(rect=stairs, kind="vano_scale")
+    for neighbour in floor_rooms:
+        for door in neighbour.doors:
+            point = _door_point_grid(neighbour.rect, door)
+            side = _side_of_point(stairs, point[0], point[1])
+            if side is None:
+                continue
+            room.doors.append(Door(
+                wall_index=side, t=_t_on_rect_side(stairs, side, point),
+                kind=door.kind, locked=door.locked,
+            ))
+    return room
+
+
 def draw_building(level_stack: dict, ids, blueprint, palette) -> None:
     """Edificio multi-piano (SPEC.md §6.6/§9.2): distribuisce le stanze sui
     livelli (Room.level), aggiunge il vano scale (blueprint.stairs_rect,
@@ -496,26 +586,42 @@ def draw_building(level_stack: dict, ids, blueprint, palette) -> None:
     for level_key in level_keys:
         level = level_stack[level_key]
         floor_index = int(level_key)
+        floor_rooms = rooms_by_level.get(floor_index, [])
 
-        # Perimetro portante: stesso footprint su ogni piano.
-        for i in range(4):
+        # Perimetro portante: stesso footprint su ogni piano. Va disegnato per
+        # primo perche le stanze che ci si appoggiano contro possano saltare
+        # quel lato invece di raddoppiarlo.
+        perimeter_walls = [
             add_wall(level, ids, [footprint_corners[i], footprint_corners[(i + 1) % 4]], load_bearing)
+            for i in range(4)
+        ]
 
-        # Tramezzi e porte delle stanze di questo piano.
-        for room in rooms_by_level.get(floor_index, []):
-            draw_room(level, ids, room, palette)
-
-        # Vano scale: stesso Rect su ogni piano, per costruzione.
+        # Tramezzi e porte delle stanze di questo piano, piu il vano scale,
+        # che e un ambiente come gli altri: stesso Rect su ogni piano per
+        # costruzione, e le porte che gli aprono le stanze adiacenti gli
+        # vanno rispecchiate addosso, altrimenti il suo muro le tappa.
+        drawn = list(floor_rooms)
         if blueprint.stairs_rect is not None:
-            add_pattern(level, ids, blueprint.stairs_rect, palette.floor)
-            stair_corners = [
-                (blueprint.stairs_rect.x1, blueprint.stairs_rect.y1),
-                (blueprint.stairs_rect.x2, blueprint.stairs_rect.y1),
-                (blueprint.stairs_rect.x2, blueprint.stairs_rect.y2),
-                (blueprint.stairs_rect.x1, blueprint.stairs_rect.y2),
-            ]
-            for i in range(4):
-                add_wall(level, ids, [stair_corners[i], stair_corners[(i + 1) % 4]], palette.wall)
+            drawn.append(_stairwell_room(blueprint.stairs_rect, floor_rooms))
+
+        for room in drawn:
+            skip_sides = _sides_on_rect(room.rect, footprint)
+            draw_room(level, ids, room, palette, skip_sides=skip_sides)
+            # Le porte dei lati saltati finiscono sul muro portante: e li che
+            # devono stare, o restano murate sotto di esso (gate umano M4).
+            for door in room.doors:
+                if door.wall_index in skip_sides:
+                    point = _door_point_grid(room.rect, door)
+                    side = _side_of_point(footprint, point[0], point[1])
+                    if side is not None:
+                        _add_door_to_wall(perimeter_walls[side], ids, point, palette, locked=door.locked)
+
+        # Una scala visibile al centro del vano: senza, il vano scale e
+        # una stanzetta vuota indistinguibile da un ripostiglio (gate
+        # umano M4, TASK-30).
+        if blueprint.stairs_rect is not None and palette.stairs is not None:
+            stairs_x, stairs_y = blueprint.stairs_rect.center()
+            add_object(level, ids, stairs_x, stairs_y, palette.stairs)
 
         # Tetto solo sull'ultimo piano. sun_direction non viene toccato:
         # template.prepare duplica lo stesso livello sorgente su ogni
@@ -540,10 +646,38 @@ def render_blueprint(level, ids, blueprint, palette) -> None:
 # furnish (TASK-23)
 # ---------------------------------------------------------------------------
 
-_DENSITY_PER_TILE = {"none": 0.0, "light": 0.05, "medium": 0.12, "heavy": 0.25}
 _FURNISH_KIND_MULTIPLIER = {"boss": 1.5, "servizio": 0.5}
 _WALL_MARGIN = 0.5
 _DOOR_CLEARANCE = 1.5
+
+# Distanza fra il centro di un pezzo addossato e il muro. Mezzo quadretto,
+# non uno: cosi uno sprite 1x1 tocca il muro esatto e uno 2x2 (camino,
+# madia) ci entra dentro per meta. Al gate M4 round 2 Jay ha corretto a mano
+# i camini della cucina, portandoli da y=20.0 a y=20.5 col muro a y=21: e
+# questa la misura (TASK-30).
+_WALL_OFFSET = 0.5
+
+# Ingombro in quadretti degli sprite il cui nome file non lo dichiara.
+# Le texture dei pack recenti lo scrivono (Oven_..._2x2, Cupboard_..._2x1,
+# Keg_..._1x1) e quello vince sempre; le png del FA Starter Pack no.
+_TEXTURE_SIZE_HINTS = {
+    "table": 2.0, "bed": 2.0, "oven": 2.0, "cupboard": 2.0, "bookshelf": 2.0,
+    "desk": 2.0, "rug": 2.0, "bench": 2.0, "fountain": 2.0, "sarcophag": 2.0,
+    "altar": 2.0, "stairs": 2.0, "cage": 2.0,
+}
+_TEXTURE_SIZE_DEFAULT = 1.0
+
+# Sprite che a rotazione 0 NON hanno la faccia rivolta in giu, e a cui la
+# regola generale `rotazione = lato * pi/2` va corretta di un offset fisso.
+# Non e una regola geometrica ma una proprieta del singolo sprite, quindi si
+# tabella per texture invece di dedurla.
+#
+# La botte piccola (Keg_..._H_..., "H" per horizontal) e coricata sul fianco
+# lungo l'asse orizzontale: il suo asse parte gia ruotato di un quarto di
+# giro. Misura del gate M4 round 3, Jay: "le botti piccole vanno ancora
+# girate a destra di 90 gradi. Tutti gli altri vanno bene" — cioe il resto
+# del catalogo la faccia in giu ce l'ha davvero.
+_TEXTURE_ROTATION_OFFSET = {"keg": math.pi / 2}
 _TACTICAL_COVER_KEYS = ("column", "crate", "barrel")
 _TACTICAL_SPACING_MIN, _TACTICAL_SPACING_MAX = 3.0, 4.0
 
@@ -556,14 +690,59 @@ _TACTICAL_SPACING_MIN, _TACTICAL_SPACING_MAX = 3.0, 4.0
 _KIND_ACCENT_HINTS = {
     "sala_comune": ("table", "chair", "bench"),
     "cucina": ("oven", "crate", "barrel"),
-    "retro": ("crate", "barrel"),
-    "camera": ("bed",),
-    "rappresentanza": ("table", "rug"),
-    "privato": ("bed", "desk", "bookshelf"),
-    "servitu": ("cupboard", "barrel"),
+    "retro": ("crate", "barrel", "keg", "cupboard"),
+    "camera": ("bed", "cupboard", "desk", "bookshelf"),
+    "rappresentanza": ("table", "rug", "chair", "bookshelf"),
+    "privato": ("bed", "desk", "bookshelf", "cupboard"),
+    "servitu": ("cupboard", "barrel", "bed", "crate"),
     "magazzino": ("crate", "barrel", "keg"),
-    "soppalco": ("crate", "barrel"),
+    "soppalco": ("crate", "barrel", "keg"),
 }
+
+# Come si dispone ciascun accent dentro la stanza (TASK-30, gate umano M4).
+# _WALL: addossato a una parete, parallelo a essa. _CENTER: nella fascia
+# centrale. _AROUND: attorno all'ultimo pezzo _CENTER piazzato (le sedie
+# intorno al tavolo). Le chiavi non elencate ricadono su _WALL: quasi tutto
+# l'arredo di un ambiente abitato sta contro un muro, non in mezzo al
+# pavimento.
+_WALL, _CENTER, _AROUND = "wall", "center", "around"
+_ACCENT_PLACEMENT = {
+    "table": _CENTER,
+    "chair": _AROUND,
+    "rug": _CENTER,
+    "fountain": _CENTER,
+    "brazier": _CENTER,
+}
+
+# Quanti pezzi per accent, in funzione dell'area: (quadretti per pezzo,
+# massimo). Un arredo deve far capire a cosa serve la stanza, non
+# ricoprirne il pavimento: nel gate M4 la densita per-quadretto senza tetto
+# produceva 77 letti in una camera e Jay ha visto solo "stanze piene di
+# botti".
+#
+# Tarate su stanze VERE: a 1.5 m per quadretto una camera sta in 20-30
+# quadretti e una sala comune in 50. La prima taratura (90 quadretti per
+# tavolo, 110 per letto) valeva per le stanze da 600 quadretti del round 1 e
+# su una stanza vera dava un pezzo per tipo e basta.
+_ACCENT_QUOTA = {
+    "table": (18, 4),
+    "chair": (6, 8),
+    "bench": (22, 4),
+    "bed": (16, 3),
+    "crate": (14, 5),
+    "barrel": (16, 5),
+    "keg": (20, 3),
+    "cupboard": (22, 3),
+    "desk": (30, 2),
+    "bookshelf": (20, 4),
+    "oven": (40, 2),
+    "rug": (30, 2),
+}
+_ACCENT_QUOTA_DEFAULT = (20, 3)
+
+# Moltiplicatore per densita richiesta dal CLI: 'medium' e la taratura di
+# riferimento delle quote qui sopra.
+_DENSITY_SCALE = {"none": 0.0, "light": 0.5, "medium": 1.0, "heavy": 1.5}
 
 
 def _door_point_grid(rect: Rect, door) -> tuple[float, float]:
@@ -579,39 +758,172 @@ def _is_clear_of_walls_and_doors(x: float, y: float, rect: Rect, door_points) ->
     return all(math.hypot(x - dx, y - dy) >= _DOOR_CLEARANCE for dx, dy in door_points)
 
 
-def _furnish_room(level, ids, room: Room, palette, rng, density: str) -> None:
+def _texture_size(texture: str) -> float:
+    """Ingombro di uno sprite in quadretti (il lato maggiore).
+
+    Serve a non piazzare due pezzi uno sopra l'altro. Il nome file e la
+    fonte migliore quando lo dichiara — Oven_Brick_Red_A2_2x2,
+    Cupboard_Wood_Light_D_2x1, Keg_Wood_Light_H_1x1 — e in quel caso vince
+    su tutto; per le png del FA Starter Pack, che non lo scrivono, resta una
+    tabella di ripiego per nome semantico."""
+    name = texture.rsplit("/", 1)[-1].lower()
+    match = re.search(r"(\d+)x(\d+)", name)
+    if match:
+        return float(max(int(match.group(1)), int(match.group(2))))
+    for hint, size in _TEXTURE_SIZE_HINTS.items():
+        if hint in name:
+            return size
+    return _TEXTURE_SIZE_DEFAULT
+
+
+def _rotation_offset(texture: str) -> float:
+    """Quarto di giro (o zero) da sommare alla rotazione dettata dal lato,
+    per gli sprite il cui asse non parte rivolto in giu. Vedi
+    _TEXTURE_ROTATION_OFFSET."""
+    name = texture.rsplit("/", 1)[-1].lower()
+    for hint, offset in _TEXTURE_ROTATION_OFFSET.items():
+        if hint in name:
+            return offset
+    return 0.0
+
+
+def _oriented(texture: str, rotation: float) -> float:
+    """La rotazione da scrivere davvero per questo sprite, normalizzata in
+    [0, 2pi)."""
+    return (rotation + _rotation_offset(texture)) % (2 * math.pi)
+
+
+def _is_free(x: float, y: float, size: float, placed, ignore: int | None = None) -> bool:
+    """True se il pezzo non si sovrappone a nessuno di quelli gia piazzati.
+
+    Due pezzi non possono stare piu vicini della semisomma dei loro
+    ingombri. `ignore` esclude un indice: e il tavolo attorno a cui una
+    sedia sta girando, dove l'adiacenza stretta e voluta."""
+    for index, (px, py, psize) in enumerate(placed):
+        if index == ignore:
+            continue
+        if math.hypot(x - px, y - py) < (size + psize) / 2:
+            return False
+    return True
+
+
+def _wall_slot(rect: Rect, rng) -> tuple[float, float, float]:
+    """Un punto addossato a una parete, con la faccia rivolta VERSO L'INTERNO
+    della stanza.
+
+    La rotazione dipende dal lato e da nient'altro: top 0, right pi/2,
+    bottom pi, left 3pi/2, cioe `lato * pi/2` con gli indici di
+    _draw_perimeter. Prima del gate M4 round 2 i lati alto e basso avevano
+    entrambi rotazione 0 e i lati destro e sinistro entrambi pi/2: meta
+    dell'arredo finiva con la faccia contro il muro, ed e quello che Jay ha
+    visto ('i camini sono girati', 'l'armadio a sinistra e girato', 'molti
+    degli sprite guardano il muro'). La misura che fissa la convenzione e il
+    camino che ha raddrizzato lui sul muro basso della cucina: pi, non 0."""
+    side = rng.choice((_TOP, _RIGHT, _BOTTOM, _LEFT))
+    rotation = side * math.pi / 2
+    if side in (_TOP, _BOTTOM):
+        x = rng.uniform(rect.x1 + 1.0, rect.x2 - 1.0)
+        y = rect.y1 + _WALL_OFFSET if side == _TOP else rect.y2 - _WALL_OFFSET
+        return x, y, rotation
+    y = rng.uniform(rect.y1 + 1.0, rect.y2 - 1.0)
+    x = rect.x1 + _WALL_OFFSET if side == _LEFT else rect.x2 - _WALL_OFFSET
+    return x, y, rotation
+
+
+def _center_slot(rect: Rect, rng) -> tuple[float, float, float]:
+    """Un punto nella fascia centrale della stanza (tavoli, tappeti)."""
+    x = rng.uniform(rect.x1 + rect.w * 0.3, rect.x2 - rect.w * 0.3)
+    y = rng.uniform(rect.y1 + rect.h * 0.3, rect.y2 - rect.h * 0.3)
+    return x, y, rng.choice((0.0, math.pi / 2))
+
+
+def _around_slot(anchor: tuple[float, float], index: int) -> tuple[float, float, float]:
+    """Il posto di una sedia attorno al tavolo `anchor`: i quattro lati in
+    ordine, ciascuno con la faccia rivolta al tavolo."""
+    dx, dy = ((0, -1.2), (1.2, 0), (0, 1.2), (-1.2, 0))[index % 4]
+    rotation = (math.pi, 3 * math.pi / 2, 0.0, math.pi / 2)[index % 4]
+    return anchor[0] + dx, anchor[1] + dy, rotation
+
+
+def _accent_count(key: str, area: float, scale: float) -> int:
+    """Quanti pezzi di questo accent, per una stanza di `area` quadretti.
+
+    `scale` moltiplica sia il tasso sia il TETTO. Se agisse solo sul tasso,
+    in una stanza abbastanza grande il tetto saturerebbe comunque e
+    density=light, medium e heavy darebbero lo stesso arredo — che e quel
+    che succedeva appena le quote sono state tarate su stanze vere."""
+    per_piece, cap = _ACCENT_QUOTA.get(key, _ACCENT_QUOTA_DEFAULT)
+    return min(max(1, round(cap * scale)), max(1, round(area / per_piece * scale)))
+
+
+def _furnish_room(level, ids, room: Room, palette, rng, density: str, placed: list) -> None:
+    """Arreda una stanza per ricetta, non per densita uniforme.
+
+    Ogni accent previsto dal kind riceve una quota propria (poche unita, con
+    un tetto) e una disposizione propria: addossato a un muro, al centro, o
+    attorno a un pezzo centrale. Fino al gate umano M4 si spargeva invece un
+    numero di oggetti proporzionale all'area, a caso e con rotazione
+    casuale: 65 pezzi nella sala comune, 77 letti in una camera, e stanze
+    che Jay ha descritto come "piene di botti" (TASK-30).
+
+    `placed` e la lista (x, y, ingombro) di tutto cio che sta gia sul piano,
+    condivisa fra le stanze: e cosi che due pezzi non si sovrappongono."""
     if not palette.accents:
         return
-    base_rate = _DENSITY_PER_TILE[density]
-    if base_rate == 0:
-        return
-    multiplier = _FURNISH_KIND_MULTIPLIER.get(room.kind, 1.0)
-    area = room.rect.w * room.rect.h
-    count = round(area * base_rate * multiplier)
-    if count <= 0:
+    # Il moltiplicatore del kind entra nella scala, non nell'area: deve
+    # muovere anche il tetto per pezzo, o la stanza del boss e lo sgabuzzino
+    # saturano lo stesso tetto e ricevono lo stesso arredo.
+    scale = _DENSITY_SCALE[density] * _FURNISH_KIND_MULTIPLIER.get(room.kind, 1.0)
+    if scale == 0:
         return
 
-    door_points = [_door_point_grid(room.rect, d) for d in room.doors]
     hint_keys = _KIND_ACCENT_HINTS.get(room.kind, ())
-    textures = [palette.accents[k] for k in hint_keys if k in palette.accents]
-    if not textures:
-        textures = list(palette.accents.values())
+    keys = [k for k in hint_keys if k in palette.accents] or sorted(palette.accents)
+    door_points = [_door_point_grid(room.rect, d) for d in room.doors]
+    area = room.rect.w * room.rect.h
 
-    placed = 0
-    attempts = 0
-    max_attempts = max(count * 25, 50)
-    while placed < count and attempts < max_attempts:
-        attempts += 1
-        x = rng.uniform(room.rect.x1, room.rect.x2)
-        y = rng.uniform(room.rect.y1, room.rect.y2)
-        if not _is_clear_of_walls_and_doors(x, y, room.rect, door_points):
-            continue
-        texture = rng.choice(textures)
-        add_object(level, ids, x, y, texture, rotation=rng.uniform(0, 2 * math.pi))
-        placed += 1
+    anchors: list[int] = []  # indici in `placed` dei pezzi _CENTER di questa stanza
+    for key in keys:
+        placement = _ACCENT_PLACEMENT.get(key, _WALL)
+        texture = palette.accents[key]
+        size = _texture_size(texture)
+        if placement == _AROUND and not anchors:
+            placement = _WALL  # niente tavolo in questa stanza: la sedia va al muro
+        for i in range(_accent_count(key, area, scale)):
+            anchor_index = None
+            if placement == _AROUND:
+                # Quattro sedie per tavolo, poi si passa al tavolo dopo. Con
+                # un solo indice `i % 4` e un'ancora sola le sedie oltre la
+                # quarta ricadevano sugli stessi quattro punti: sul file del
+                # round 1 c'erano quattro coppie di sedie sovrapposte.
+                if i // 4 >= len(anchors):
+                    break
+                anchor_index = anchors[i // 4]
+
+            for _ in range(24):  # qualche tentativo, poi si rinuncia al pezzo
+                if placement == _CENTER:
+                    x, y, rotation = _center_slot(room.rect, rng)
+                elif anchor_index is not None:
+                    ax, ay, _size = placed[anchor_index]
+                    x, y, rotation = _around_slot((ax, ay), i % 4)
+                else:
+                    x, y, rotation = _wall_slot(room.rect, rng)
+
+                free = (
+                    _is_clear_of_walls_and_doors(x, y, room.rect, door_points)
+                    and _is_free(x, y, size, placed, ignore=anchor_index)
+                )
+                if free:
+                    add_object(level, ids, x, y, texture, rotation=_oriented(texture, rotation))
+                    placed.append((x, y, size))
+                    if placement == _CENTER:
+                        anchors.append(len(placed) - 1)
+                    break
+                if anchor_index is not None:
+                    break  # il posto attorno al tavolo e quello, non se ne cerca un altro
 
 
-def _furnish_tactical_cover(level, ids, room: Room, palette, rng) -> None:
+def _furnish_tactical_cover(level, ids, room: Room, palette, rng, placed: list) -> None:
     """Colonne/casse ogni 3-4 quadretti per i nodi tattici (SPEC.md §9.1/§9.5)."""
     if not palette.accents:
         return
@@ -626,10 +938,29 @@ def _furnish_tactical_cover(level, ids, room: Room, palette, rng) -> None:
     while x < room.rect.x2 - _WALL_MARGIN:
         y = room.rect.y1 + _WALL_MARGIN + spacing / 2
         while y < room.rect.y2 - _WALL_MARGIN:
-            if _is_clear_of_walls_and_doors(x, y, room.rect, door_points):
-                add_object(level, ids, x, y, rng.choice(cover_textures))
+            texture = rng.choice(cover_textures)
+            size = _texture_size(texture)
+            if _is_clear_of_walls_and_doors(x, y, room.rect, door_points) and _is_free(x, y, size, placed):
+                add_object(level, ids, x, y, texture, rotation=_oriented(texture, 0.0))
+                placed.append((x, y, size))
             y += spacing
         x += spacing
+
+
+def _placed_from_level(level) -> list[tuple[float, float, float]]:
+    """Quel che sta gia sul livello, nella forma che serve a _is_free.
+
+    furnish() gira DOPO draw_building, che ha gia messo la scala nel vano:
+    senza contarla, un barile ci finirebbe sopra."""
+    placed = []
+    for obj in level.get("objects", []):
+        try:
+            inner = obj["position"][obj["position"].index("(") + 1 : obj["position"].index(")")]
+            x_str, y_str = inner.split(",")
+        except (KeyError, ValueError):
+            continue
+        placed.append((float(x_str) / GRID, float(y_str) / GRID, _texture_size(obj.get("texture", ""))))
+    return placed
 
 
 def furnish(level, ids, blueprint, palette, *, density: str = "medium", rng) -> None:
@@ -638,11 +969,12 @@ def furnish(level, ids, blueprint, palette, *, density: str = "medium", rng) -> 
     Non tocca mai i corridoi (blueprint.corridors non sono Room: restano
     sempre vuoti). rng va passato dal chiamante, mai creato qui, per
     riproducibilita a parita di seed."""
-    if density not in _DENSITY_PER_TILE:
-        raise ValueError(f"density sconosciuta: {density!r}. Valide: {sorted(_DENSITY_PER_TILE)}")
+    if density not in _DENSITY_SCALE:
+        raise ValueError(f"density sconosciuta: {density!r}. Valide: {sorted(_DENSITY_SCALE)}")
 
+    placed = _placed_from_level(level)
     tactical = set(getattr(blueprint, "tactical_rooms", []))
     for i, room in enumerate(blueprint.rooms):
-        _furnish_room(level, ids, room, palette, rng, density)
+        _furnish_room(level, ids, room, palette, rng, density, placed)
         if i in tactical:
-            _furnish_tactical_cover(level, ids, room, palette, rng)
+            _furnish_tactical_cover(level, ids, room, palette, rng, placed)
