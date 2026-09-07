@@ -9,7 +9,7 @@ TASK-27.
 import math
 import re
 
-from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall
+from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall, set_cave_bitmap
 from ddforge.godot import GRID, grid_to_px, parse_pv2
 from ddforge.model import Blueprint, Corridor, Door, Rect, Room
 
@@ -649,6 +649,17 @@ def render_blueprint(level, ids, blueprint, palette) -> None:
     for room in blueprint.rooms:
         draw_room(level, ids, room, palette)
     draw_corridor_network(level, ids, blueprint.corridors, palette)
+
+
+def render_cave_blueprint(level, blueprint) -> None:
+    """Scrive un Blueprint di grotta (TASK-32/decision-1) nel layer cave
+    nativo, invece di render_blueprint: una grotta non ha Room/Corridor
+    (blueprint.cave_grid al loro posto), quindi niente draw_room/muri/porte.
+    Nessun `palette`/`ids`: set_cave_bitmap non disegna elementi con
+    node_id, sovrascrive un blob gia dimensionato dal template."""
+    if blueprint.cave_grid is None:
+        raise ValueError("blueprint.cave_grid e None: non e un Blueprint di grotta")
+    set_cave_bitmap(level, blueprint.cave_grid, blueprint.width, blueprint.height)
 
 
 # ---------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 import json
 import subprocess
 import sys
+from pathlib import Path
 
 
 def _run(*args):
@@ -92,6 +93,26 @@ def test_generate_different_seed_changes_output(tmp_path):
     assert out1.read_text(encoding="utf-8") != out2.read_text(encoding="utf-8")
 
 
+def test_generate_cave_produces_a_valid_file_with_no_walls(tmp_path):
+    """La grotta scrive il layer cave nativo (TASK-32/decision-1): niente
+    stanze/muri, a differenza di dungeon/building."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "cave",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "80", "--height", "80",
+        "--seed", "1337",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    level = doc["world"]["levels"]["0"]
+    template_doc = json.loads(Path("templates/blank_80x80.dungeondraft_map").read_text(encoding="utf-8"))
+
+    assert level["walls"] == []
+    assert level["cave"]["bitmap"] != template_doc["world"]["levels"]["0"]["cave"]["bitmap"]
+
+
 def test_generate_furnish_adds_objects(tmp_path):
     out_none = tmp_path / "none.dungeondraft_map"
     out_heavy = tmp_path / "heavy.dungeondraft_map"
@@ -141,7 +162,7 @@ def test_generate_lights_flag_adds_lights(tmp_path):
 def test_generate_unimplemented_style_gives_clear_error_not_traceback(tmp_path):
     out = tmp_path / "out.dungeondraft_map"
     result = _run(
-        "generate", "cave",
+        "generate", "city",
         "--template", "templates/blank_80x80.dungeondraft_map",
         "--out", str(out),
         "--width", "40", "--height", "40",

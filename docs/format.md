@@ -1029,8 +1029,11 @@ poco per distinguerli.
 
 ### Codice
 
-Codec di riferimento (encode/decode/shape) in `scripts/cave_spike.py`,
-insieme ai tre modi `--mode walls|native|calib` usati per lo spike.
-**E' codice di spike, non di produzione**: TASK-32 lo portera in
-`src/ddforge/`. I test sopra importano da `scripts/` (stesso schema di
-`tests/test_demo_m1.py`) e vanno reindirizzati quando il codec si sposta.
+Codec in produzione da TASK-32: `ddforge.cave_bitmap` (`encode_cave_bitmap`,
+`decode_cave_bitmap`, `cave_grid_shape`), scritto tramite la primitiva
+`build.set_cave_bitmap`. `tests/test_cave_bitmap_format.py` importa da li.
+
+`scripts/cave_spike.py` (spike TASK-31) resta invariato con la sua stessa
+copia del codec e i tre modi `--mode walls|native|calib`: e' codice di
+spike, non piu l'unica implementazione, ma non e' stato rimosso da
+TASK-32.

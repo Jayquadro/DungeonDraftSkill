@@ -1,31 +1,23 @@
 """Blocca la codifica di `cave.bitmap` scoperta in TASK-31.
 
-Questi test NON coprono codice di produzione: il codec vive ancora in
-`scripts/cave_spike.py` (codice di spike). Servono a proteggere due cose che
-altrimenti si perderebbero in silenzio:
+Il codec e in produzione da TASK-32 (`ddforge.cave_bitmap`), portato da
+`scripts/cave_spike.py` (codice di spike, ora ridondante ma non rimosso da
+questo task). Questi test proteggono due cose che altrimenti si
+perderebbero in silenzio:
 
 1. i due campioni in `tests/fixtures/` sono l'unica evidenza reale del
    formato in tutto il progetto — se qualcuno li tocca o li sostituisce,
    questi test se ne accorgono;
 2. la codifica documentata in `docs/format.md` §14 e quella che i file veri
    usano davvero.
-
-TASK-32 portera il codec in `src/ddforge/` e potra riusare gli stessi
-campioni tramite le fixture `cave_rect_path` / `cave_freehand_path`.
 """
 
 import json
-import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from ddforge.cave_bitmap import cave_grid_shape, decode_cave_bitmap, encode_cave_bitmap
 
-from cave_spike import (  # noqa: E402
-    cave_grid_shape,
-    decode_cave_bitmap,
-    encode_cave_bitmap,
-)
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _load(path):

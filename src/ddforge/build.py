@@ -6,6 +6,7 @@ docs/SPEC.md §6.5 e docs/format.md §4-5 per gli schemi derivati.
 
 import math
 
+from ddforge.cave_bitmap import encode_cave_bitmap
 from ddforge.godot import grid_to_px, parse_pv2, pv2, v2
 
 # Default del Light2D.tscn interno di Dungeondraft (estratto da
@@ -225,6 +226,16 @@ def add_light(level, ids, x, y, *,
     }
     level["lights"].append(light)
     return light
+
+
+def set_cave_bitmap(level, grid: list[list[int]], width: int, height: int) -> None:
+    """Scrive il layer cave nativo (TASK-32, decision-1): non e un `add_*`
+    come le altre primitive, che aggiungono un elemento a una lista di
+    disegno. Qui si sovrascrive un blob di livello gia dimensionato dal
+    template (`template.blank_level` lo preserva). `ground_color`,
+    `wall_color` e `texture` restano quelli del template: bastano perche
+    Dungeondraft renda la grotta (docs/format.md §14)."""
+    level["cave"]["bitmap"] = encode_cave_bitmap(grid, width, height)
 
 
 def add_text(level, ids, x, y, content, *,

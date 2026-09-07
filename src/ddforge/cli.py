@@ -16,9 +16,10 @@ _GENERATORS = {}  # popolato pigramente in _cmd_generate: import lazy per stile
 
 def _load_generators() -> dict:
     if not _GENERATORS:
-        from ddforge.generators import bsp, building
+        from ddforge.generators import bsp, building, cave
         _GENERATORS["dungeon"] = bsp
         _GENERATORS["building"] = building
+        _GENERATORS["cave"] = cave
     return _GENERATORS
 
 
@@ -58,7 +59,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     import random
 
     from ddforge.assets import load_catalog, palette_for
-    from ddforge.compose import draw_building, furnish, furnish_building, render_blueprint
+    from ddforge.compose import draw_building, furnish, furnish_building, render_blueprint, render_cave_blueprint
     from ddforge.generators.building import floor_labels as building_labels
     from ddforge.ids import IdAllocator
     from ddforge.template import TemplateError, finalize, load_template, prepare, save
@@ -82,6 +83,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
 
     is_building = args.algorithm == "building"
+    is_cave = args.algorithm == "cave"
     style_name = args.style or (args.building_type if is_building else args.algorithm)
     try:
         palette = palette_for(style_name, catalog)
@@ -123,6 +125,11 @@ def _cmd_generate(args: argparse.Namespace) -> int:
             furnish_building(level_stack, ids, blueprint, palette, density=args.furnish, rng=random.Random(args.seed))
         if args.lights:
             _add_building_lighting(level_stack, ids, blueprint)
+    elif is_cave:
+        # Una grotta non ha Room/Corridor (blueprint.cave_grid al loro
+        # posto, decision-1): niente furnish/luci, che presumono stanze.
+        level = prepared["world"]["levels"]["0"]
+        render_cave_blueprint(level, blueprint)
     else:
         level = prepared["world"]["levels"]["0"]
         render_blueprint(level, ids, blueprint, palette)

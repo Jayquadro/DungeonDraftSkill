@@ -12,7 +12,9 @@ from ddforge.build import (
     add_roof,
     add_text,
     add_wall,
+    set_cave_bitmap,
 )
+from ddforge.cave_bitmap import cave_grid_shape, decode_cave_bitmap
 from ddforge.godot import parse_pv2
 from ddforge.ids import IdAllocator
 from ddforge.model import Rect
@@ -207,3 +209,15 @@ def test_all_node_ids_are_unique_across_a_scene():
                light["node_id"], text["node_id"], roof["node_id"], path["node_id"],
                pattern["node_id"]]
     assert len(all_ids) == len(set(all_ids))
+
+
+def test_set_cave_bitmap_writes_a_roundtrippable_blob():
+    level = {"cave": {"bitmap": "PoolByteArray(  )", "ground_color": "ffffffff"}}
+    width, height = 5, 4
+    grid_w, grid_h = cave_grid_shape(width, height)
+    grid = [[1 if (x + y) % 7 == 0 else 0 for x in range(grid_w)] for y in range(grid_h)]
+
+    set_cave_bitmap(level, grid, width, height)
+
+    assert decode_cave_bitmap(level["cave"]["bitmap"], width, height) == grid
+    assert level["cave"]["ground_color"] == "ffffffff"  # non toccato (decision-1)

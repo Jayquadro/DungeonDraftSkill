@@ -107,3 +107,9 @@ class Blueprint:
     # ogni piano per costruzione, altrimenti la mappa non si legge al
     # tavolo. None per un dungeon a un livello senza scale.
     stairs_rect: Rect | None = None
+    # Griglia booleana del layer cave nativo (TASK-32/decision-1), a
+    # risoluzione sotto-cella: (4*width+3) x (4*height+3) celle, 1=scavato.
+    # None per i generatori a stanze (bsp/building/city): una grotta non ha
+    # Room/Corridor rettangolari, quindi non si presta al modello a stanze
+    # e usa questo campo al loro posto (rooms/corridors restano []).
+    cave_grid: list[list[int]] | None = None
