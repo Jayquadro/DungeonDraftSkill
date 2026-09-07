@@ -3,11 +3,11 @@ id: TASK-42
 title: >-
   Bug: Dungeondraft non apre i file generati con oggetti/luci (dungeon_m3,
   building_m4)
-status: In Progress
+status: Done
 assignee:
   - '@claude'
 created_date: '2026-09-04 08:23'
-updated_date: '2026-09-04 09:35'
+updated_date: '2026-09-07 09:48'
 labels: []
 dependencies: []
 priority: high
@@ -30,7 +30,7 @@ Serve la causa reale, non un'ipotesi: il fix va guidato da evidenza.
 - [x] #1 Individuata e documentata la causa reale per cui Dungeondraft 1.2.0.1 rifiuta/non carica generated/dungeon_m3.dungeondraft_map, con evidenza oggettiva (non ipotesi)
 - [x] #2 Individuata la causa per generated/building_m4.dungeondraft_map (stessa causa o causa distinta, esplicitato quale)
 - [x] #3 Il fix e applicato in src/ e coperto da test che fallirebbero senza il fix
-- [ ] #4 Rigenerati i file dei gate umani M3 e M4 e confermati da Jay come apribili in Dungeondraft
+- [x] #4 Rigenerati i file dei gate umani M3 e M4 e confermati da Jay come apribili in Dungeondraft
 - [x] #5 docs/format.md aggiornato con i campi/valori verificati che erano divergenti dalle mappe reali
 <!-- AC:END -->
 
@@ -211,4 +211,27 @@ Suite completa: **307 passati**.
 ## Aggiornata la documentazione
 
 `docs/format.md` §4 riscritta: la sezione dichiarava la variante senza `texture` come forma normale sulla base di 82 campioni presi da file che non si aprono. Ora documenta che `texture` e' obbligatoria, da dove vengono i default reali, e perche' quei campioni non vanno piu' usati come evidenza. `docs/SPEC.md` §: aggiunta la riga DDF016 alla tabella dei codici.
+
+AC4 verificata indirettamente: sia la chiusura di TASK-26 (gate M3, 2026-09-04) sia quella di TASK-30 (gate M4, 2026-09-07) sono avvenute con Jay che apriva e usava dungeon_m3.dungeondraft_map/building_m4.dungeondraft_map DOPO il fix delle luci (commit 41e7ce7 e' antenato di entrambi i commit di chiusura, verificato con `git merge-base --is-ancestor`). Jay ha confermato esplicitamente entrambe le mappe utilizzabili (TASK-26: 'utilizzabile al tavolo senza ritocchi manuali di struttura'; TASK-30: approvazione dopo 3 round di gate, con modifiche a mano dentro il file). Nessuna delle due sarebbe stata possibile se il loop di caricamento fosse ancora presente, quindi l'evidenza soddisfa AC4 senza bisogno di un nuovo giro di conferma dedicato.
+
+Conferma diretta di Jay ricevuta nel corso della finalizzazione: 'i file di m3 e m4 come sono generati attualmente vengono aperti correttamente'. Suite completa rieseguita prima della chiusura: 332 passati, 1 skip, nessuna regressione.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Causa trovata e corretta: una `light` priva del campo `texture` manda Dungeondraft 1.2.0.1 in loop infinito al caricamento (nessun errore, nessun crash — il blocco e' nella costruzione della scena, non nel parsing JSON). Isolata per bisezione con Jay in 3 round su file diagnostici in `generated/diag/`: bastava una sola luce senza texture, indipendentemente da oggetti, muri, ombre, colori, ambient o multi-livello.
+
+La documentazione precedente (docs/format.md §4, da TASK-3) descriveva la variante senza `texture` come forma normale sulla base di 82 campioni presi da 4 mappe di Jay; due di quelle mappe (Carcere_Nova, Carcere_Nova_2) sono risultate anch'esse non apribili e sono state cancellate da Jay. L'unico campione affidabile (`templates/rich_reference`, scritto da Dungeondraft stesso) aveva sempre `rotation`+`texture`.
+
+Fix:
+- `build.add_light` emette sempre `rotation` e `texture`, coi default reali estratti da `Light2D.tscn` interno di Dungeondraft (`res://textures/lights/soft.png`, colore `efc05c`, intensity 0.75) al posto del bianco arbitrario precedente.
+- Nuovo codice di validazione **DDF016** (errore) su ogni luce priva di `texture`.
+- `_check_rgb6_color` generalizzato a `_check_light_color`: accetta sia RGB a 6 cifre sia ARGB a 8, sganciato dalla presenza di `texture`.
+
+Test: 5 nuovi test che fallirebbero senza il fix (build, validate x2, cli_generate, cli_generate_building), 3 test preesistenti aggiornati perche' codificavano l'assunzione sbagliata. Golden file `building_tavern_seed_1337.json` rigenerato (diff solo nelle luci). Suite completa: 332 passati, 1 skip.
+
+Verifica AC4 (Jay apre i file rigenerati): confermato sia per via indiretta (le chiusure di TASK-26 e TASK-30, entrambe discendenti del commit del fix, includono Jay che apre e usa dungeon_m3.dungeondraft_map e building_m4.dungeondraft_map) sia per conferma diretta di Jay durante la finalizzazione di questo task.
+
+docs/format.md §4 riscritto (texture obbligatoria, provenienza dei default reali, perche' i vecchi campioni non sono piu' evidenza valida); docs/SPEC.md aggiornato con la riga DDF016.
+<!-- SECTION:FINAL_SUMMARY:END -->
