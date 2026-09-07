@@ -877,6 +877,11 @@ coincidono esattamente con l'esempio verificato in SPEC.md §2:
 | `terrain.splat` | `width×height×64` = 4096 elementi | 4096 |
 | `cave.bitmap` | 154 byte (valore noto, non lineare) | 154 elementi |
 
+**Nota (TASK-31):** la colonna "non lineare" qui sopra riporta cio che
+SPEC.md §2 credeva. **Non e vero:** la lunghezza di `cave.bitmap` e
+`ceil((4w+3)(4h+3)/8)`, e i 154 byte dell'8×8 ne sono un caso particolare.
+Vedi §14.
+
 Il file e usato **solo** per verificare le formule dimensionali dei blob e
 il meccanismo di `template.blank_level`/`prepare` (TASK-8): non e la fonte
 di nessuno schema di elemento (quello resta `rich_reference.dungeondraft_map`
@@ -917,3 +922,115 @@ trovata nei documenti ispezionati finora.
 
 - **Gate umano M1/M3**: confermare il segno delle rotazioni delle porte e il
   significato di `direction`, aggiornando §6 di questo documento.
+
+## 14. `cave.bitmap` — codifica risolta (TASK-31)
+
+SPEC.md §2 dava la lunghezza di `cave.bitmap` per **non lineare e non
+ricavabile per interpolazione** (50×25→2614 B, 30×30→1892 B, 8×8→154 B), e
+su questa base SPEC.md §9.3 rimandava a M5 la scelta fra muri poligonali e
+layer nativo. **La codifica e stata risolta per intero** nello spike
+TASK-31, e la decisione conseguente e registrata nella decision
+`decision-1` (layer cave nativo).
+
+### La struttura
+
+`cave.bitmap` e una maschera booleana **bit-packed** su una griglia di
+
+```
+(4·width + 3) × (4·height + 3)   BIT
+```
+
+cioe **4 sotto-celle per quadretto** (risoluzione di un quarto di
+quadretto), piu 3 sotto-celle di margine per lato. Regole di
+serializzazione:
+
+- ordine **row-major** (riga per riga);
+- flusso di bit **continuo, NON allineato al byte**: una riga non
+  ricomincia su un confine di byte, quindi l'offset in byte della riga `k`
+  e `floor(k · larghezza_griglia / 8)`;
+- dentro ogni byte, **bit meno significativo per primo** (LSB-first):
+  il bit `i` del flusso sta in `data[i // 8] >> (i % 8) & 1`;
+- `1` = grotta scavata, `0` = roccia intatta;
+- lunghezza in byte = `ceil((4w+3)·(4h+3) / 8)`, che dipende **solo** dalle
+  dimensioni della mappa e **mai** dal contenuto disegnato (il template
+  vuoto ha gia la lunghezza finale, tutta a zero).
+
+`cave.entrance_bitmap` ha esattamente le stesse dimensioni e la stessa
+codifica (verificato: round-trip byte-esatto anche su quello). Gli altri
+campi di `cave` — `ground_color`, `wall_color`, `texture` — sono gia
+popolati nel template vuoto e **non vanno toccati**: scrivere il solo
+`bitmap` basta perche Dungeondraft renda la grotta.
+
+### Perche l'analisi precedente si era arenata
+
+Due trappole, entrambe evitabili solo conoscendo la struttura:
+
+1. **La lunghezza sembra irregolare** perche la griglia e a 4×: il termine
+   dominante e `2wh` byte, non `wh/8`, e la costante additiva dipende da
+   `w+h`. Interpolare fra tre punti non ci arriva.
+2. **Il passo fra le righe in byte non e costante** — nel campione 80×80 le
+   run di byte non nulli distano 40, 40, 41, 40, 40, 41, … proprio perche
+   una riga di 323 bit non e multipla di 8. Cercare una larghezza di riga
+   *in byte* (che e quello che si fa istintivamente) non puo funzionare, ed
+   e il motivo per cui i tentativi di reshape a 40/41/80/163 colonne
+   davano forme "quasi giuste" ma sporche di dither.
+
+Aggiunge rumore anche il fatto che i valori dei byte sono molti e
+apparentemente arbitrari (51 valori distinti nel campione a mano libera):
+non sono un enum, sono semplicemente gruppi di 8 sotto-celle adiacenti.
+
+### Verifica sperimentale
+
+Il formato non e stato dedotto ma **confermato**, su campioni prodotti da
+Jay disegnando nel layer cave con Dungeondraft 1.2.0.1 e risalvando:
+
+| Prova | Esito |
+|---|---|
+| Formula di lunghezza sui 4 campioni noti (8×8→154, 30×30→1892, 50×25→2614, 80×80→13042) | esatta su tutti e 4 |
+| Round-trip `decode`→`encode` sui blob reali di Jay (`bitmap` + `entrance_bitmap` di 2 file) | **byte-identico**, 4 blob su 4 |
+| Decodifica del campione controllato (Jay: «circa 20×3 quadretti, in alto a sinistra») | rettangolo di 21×3 quadretti con gli angoli arrotondati dal pennello, in alto a sinistra |
+| Decodifica del campione a mano libera | caverna organica con tunnel serpeggiante, palesemente disegnata a mano |
+| **Scrittura**: rettangolo generato da noi sui quadretti x 10–20, y 10–15 e riaperto da Jay | compare esattamente dove previsto |
+| **Scrittura**: grotta da cellular automata a risoluzione sotto-cella | approvata da Jay |
+
+L'ultima riga e quella che conta di piu: le prime confermano che sappiamo
+**leggere** il formato, solo le ultime due che sappiamo **scriverlo** e che
+Dungeondraft accetta cio che scriviamo.
+
+**Origine della griglia** (l'unico punto rimasto ambiguo dopo la sola
+lettura, perche la posizione dei campioni di Jay era descritta a parole):
+la sotto-cella `0` corrisponde al quadretto `0`, e le 3 sotto-celle di
+margine stanno **in coda**, non in testa. Risolto dal file di
+calibrazione: un rettangolo scritto sui quadretti 10–20 × 10–15 e apparso
+esattamente li, non spostato di 0.75 quadretti.
+
+### Campioni (fixture committate)
+
+I due file disegnati da Jay sono l'**unica evidenza reale** di questo
+formato in tutto il progetto: nessun altro `.dungeondraft_map` trovato sul
+suo sistema (§8) ha il layer cave popolato — in tutti, `cave.bitmap` e
+interamente a zero. Sono stati quindi promossi a fixture committate, perche
+`generated/` e gitignored e li si perderebbero:
+
+| Fixture | Contenuto | Ruolo |
+|---|---|---|
+| `tests/fixtures/cave_rect_80x80.dungeondraft_map` | rettangolo netto di 21×3 quadretti in alto a sinistra (Jay: «circa 20×3») | campione **controllato**, disegnato apposta con bordi netti: e quello che ha permesso di risolvere la codifica |
+| `tests/fixtures/cave_freehand_80x80.dungeondraft_map` | caverna organica con tunnel serpeggiante | campione **a mano libera**. Contiene anche 1 wall e 1 pattern, resti del prototipo a muri poligonali su cui Jay ha disegnato: e un file reale, non ripulito |
+
+Entrambi salvati da Dungeondraft 1.2.0.1, mappa 80×80, quindi
+`cave.bitmap` di 13042 byte.
+
+`tests/test_cave_bitmap_format.py` blocca quanto sopra: formula della
+lunghezza sui 4 campioni noti, round-trip byte-esatto sui blob reali
+(`bitmap` **e** `entrance_bitmap`), e forma decodificata dei due campioni.
+E' il round-trip a inchiodare l'ordine dei bit — la connettivita della
+macchia no: con MSB-first il rapporto scende solo da 0.993 a 0.941, troppo
+poco per distinguerli.
+
+### Codice
+
+Codec di riferimento (encode/decode/shape) in `scripts/cave_spike.py`,
+insieme ai tre modi `--mode walls|native|calib` usati per lo spike.
+**E' codice di spike, non di produzione**: TASK-32 lo portera in
+`src/ddforge/`. I test sopra importano da `scripts/` (stesso schema di
+`tests/test_demo_m1.py`) e vanno reindirizzati quando il codec si sposta.
