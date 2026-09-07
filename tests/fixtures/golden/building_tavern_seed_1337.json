@@ -6648,7 +6648,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://textures/patterns/normal/cobblestone.png",
             "node_id": "12"
           },
           {
@@ -6660,7 +6660,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://textures/tilesets/simple/tileset_cobble.png",
             "node_id": "17"
           },
           {
@@ -13747,7 +13747,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp",
             "node_id": "23"
           },
           {
@@ -13759,7 +13759,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp",
             "node_id": "28"
           },
           {
@@ -13771,7 +13771,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp",
             "node_id": "2d"
           },
           {
@@ -13783,7 +13783,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp",
             "node_id": "32"
           },
           {
@@ -13795,7 +13795,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp",
             "node_id": "38"
           },
           {
@@ -13807,7 +13807,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/wood_planks.png",
+            "texture": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp",
             "node_id": "3e"
           },
           {

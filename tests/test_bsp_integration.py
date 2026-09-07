@@ -80,6 +80,32 @@ def test_bsp_integration_rooms_all_reachable_and_no_overlap(reference_8x8_doc):
             assert not a.rect.overlaps(b.rect)
 
 
+def test_bsp_boss_room_gets_a_different_floor_than_regular_rooms(reference_8x8_doc):
+    """TASK-43: la stanza boss (bsp._assign_boss_room) prende il floor
+    kind-specifico della palette, diverso da quello delle sale normali.
+    render_blueprint disegna le stanze in ordine prima dei corridoi, quindi
+    level['patterns'][i] corrisponde a blueprint.rooms[i] (nessun altro
+    pattern si inserisce in mezzo)."""
+    doc = _patched_8x8_doc(reference_8x8_doc)
+    blueprint = bsp.generate(width=80, height=80, seed=1337, rooms=8)
+
+    prepared = prepare(doc, levels=1)
+    level = prepared["world"]["levels"]["0"]
+    ids = IdAllocator.from_document(prepared)
+    catalog = load_catalog()
+    palette = palette_for("dungeon", catalog)
+    render_blueprint(level, ids, blueprint, palette)
+
+    room_patterns = level["patterns"][: len(blueprint.rooms)]
+    boss_index = next(i for i, r in enumerate(blueprint.rooms) if r.kind == "boss")
+
+    assert room_patterns[boss_index]["texture"] == palette.floors["boss"]
+    assert room_patterns[boss_index]["texture"] != palette.floor
+    for i, room in enumerate(blueprint.rooms):
+        if room.kind != "boss":
+            assert room_patterns[i]["texture"] == palette.floor
+
+
 def _generate_full_document(seed: int) -> dict:
     from ddforge.template import load_template
 

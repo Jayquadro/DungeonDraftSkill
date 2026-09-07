@@ -79,6 +79,41 @@ def test_draw_room_floor_pattern_uses_palette_or_room_override():
     assert result2["pattern"]["texture"] == "res://textures/patterns/normal/wood_planks.png"
 
 
+def test_draw_room_floor_pattern_uses_kind_specific_palette_floor():
+    """TASK-43: un room.kind mappato in palette.floors prende quel floor."""
+    palette = Palette(
+        wall=PALETTE.wall, floor=PALETTE.floor, door=PALETTE.door,
+        floors={"boss": "res://textures/tilesets/simple/tileset_brick_basketweave.png"},
+    )
+    level = _empty_level()
+    ids = IdAllocator()
+
+    boss_room = Room(rect=Rect(0, 0, 4, 4), kind="boss")
+    result = draw_room(level, ids, boss_room, palette)
+    assert result["pattern"]["texture"] == palette.floors["boss"]
+
+    # Un kind non mappato ricade sul floor uniforme (comportamento invariato).
+    normal_room = Room(rect=Rect(0, 0, 4, 4), kind="sala")
+    result2 = draw_room(level, ids, normal_room, palette)
+    assert result2["pattern"]["texture"] == palette.floor
+
+
+def test_draw_room_floor_override_wins_over_kind_specific_palette_floor():
+    palette = Palette(
+        wall=PALETTE.wall, floor=PALETTE.floor, door=PALETTE.door,
+        floors={"boss": "res://textures/tilesets/simple/tileset_brick_basketweave.png"},
+    )
+    level = _empty_level()
+    ids = IdAllocator()
+
+    room = Room(
+        rect=Rect(0, 0, 4, 4), kind="boss",
+        floor="res://textures/patterns/normal/wood_planks.png",
+    )
+    result = draw_room(level, ids, room, palette)
+    assert result["pattern"]["texture"] == "res://textures/patterns/normal/wood_planks.png"
+
+
 def test_draw_room_door_is_nested_in_the_correct_wall():
     level = _empty_level()
     ids = IdAllocator()

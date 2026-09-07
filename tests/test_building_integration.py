@@ -62,6 +62,31 @@ def test_building_integration_rooms_on_the_same_floor_are_all_reachable():
         assert reachable == set(indices)
 
 
+def test_building_assigns_kind_specific_floors_to_each_room():
+    """TASK-43: draw_building disegna ogni stanza del piano (piu il vano
+    scale) in ordine con draw_room, quindi level['patterns'][:n] corrisponde
+    a floor_rooms nello stesso ordine di rooms_by_level (nessun altro
+    pattern si inserisce in mezzo)."""
+    catalog = load_catalog()
+    palette = palette_for("tavern", catalog)
+    bp = building.generate(width=40, height=40, seed=1337, building_type="tavern")
+
+    doc = load_template("templates/blank_80x80.dungeondraft_map")
+    prepared = prepare(doc, levels=bp.levels)
+    ids = IdAllocator.from_document(prepared)
+    draw_building(prepared["world"]["levels"], ids, bp, palette)
+
+    ground_floor = prepared["world"]["levels"]["0"]
+    floor_rooms = [r for r in bp.rooms if r.level == 0]
+    room_patterns = ground_floor["patterns"][: len(floor_rooms)]
+
+    textures_by_kind = {room.kind: pattern["texture"] for room, pattern in zip(floor_rooms, room_patterns)}
+    assert textures_by_kind["cucina"] == palette.floors["cucina"]
+    assert textures_by_kind["retro"] == palette.floors["retro"]
+    assert textures_by_kind["sala_comune"] == palette.floor
+    assert len({textures_by_kind["cucina"], textures_by_kind["retro"], textures_by_kind["sala_comune"]}) == 3
+
+
 def _generate_full_document(seed: int) -> dict:
     doc = load_template("templates/blank_80x80.dungeondraft_map")
     # Taglia di default della tipologia, la stessa che usa il CLI senza

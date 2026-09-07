@@ -6636,7 +6636,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/patterns/normal/stone_floor.png",
+            "texture": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
             "node_id": "8"
           },
           {

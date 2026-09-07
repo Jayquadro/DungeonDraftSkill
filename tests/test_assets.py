@@ -178,6 +178,7 @@ def test_palette_for_produces_valid_palette_for_every_style(style, real_catalog)
     assert palette.floor.startswith("res://")
     assert palette.door.startswith("res://")
     assert all(v.startswith("res://") for v in palette.accents.values())
+    assert all(v.startswith("res://") for v in palette.floors.values())
 
 
 def test_palette_for_unknown_style_raises_explicit_error(real_catalog):
@@ -195,10 +196,47 @@ def test_palette_for_missing_catalog_key_raises_explicit_error():
 def test_palette_textures_only_reference_packs_in_manifest(style, real_catalog):
     known_pack_ids = {p["id"] for p in real_catalog["packs"]}
     palette = palette_for(style, real_catalog)
-    for texture in [palette.wall, palette.floor, palette.door, *palette.accents.values()]:
+    textures = [
+        palette.wall, palette.floor, palette.door,
+        *palette.accents.values(), *palette.floors.values(),
+    ]
+    for texture in textures:
         if texture.startswith("res://packs/"):
             pack_id = texture.split("/")[3]
             assert pack_id in known_pack_ids
+
+
+# ---------------------------------------------------------------------------
+# palette.floors: pavimento kind-specifico (TASK-43)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize(
+    ("style", "kind"),
+    [
+        ("dungeon", "boss"),
+        ("tavern", "cucina"),
+        ("tavern", "retro"),
+        ("tavern", "camera"),
+        ("manor", "privato"),
+        ("manor", "servitu"),
+        ("warehouse", "soppalco"),
+    ],
+)
+def test_palette_for_maps_specific_kinds_to_a_floor_different_from_the_default(style, kind, real_catalog):
+    palette = palette_for(style, real_catalog)
+    assert kind in palette.floors
+    assert palette.floors[kind] != palette.floor
+
+
+def test_palette_for_leaves_unmapped_kinds_out_of_floors():
+    """Un kind non elencato in _STYLE_DEFINITIONS["floors"] non deve comparire
+    in palette.floors: e cosi che compose._room_floor ricade sul floor
+    uniforme per lui (fallback invariato, AC5)."""
+    catalog = load_catalog("data/assets.json")
+    palette = palette_for("dungeon", catalog)
+    assert "sala" not in palette.floors
+    assert "corridoio" not in palette.floors
+    assert "vano_scale" not in palette.floors
 
 
 def test_required_packs_extracts_ids_from_document():

@@ -36,6 +36,11 @@ class Palette:
     floor: str
     door: str
     accents: dict = field(default_factory=dict)
+    # Pavimento per room.kind (TASK-43), stesso meccanismo di _KIND_ACCENT_HINTS
+    # in compose.py: solo chiavi gia risolte dal catalogo, mai un path
+    # inventato. Un kind assente qui ricade su `floor` (comportamento
+    # invariato prima di TASK-43).
+    floors: dict = field(default_factory=dict)
     # Opzionali (TASK-27): non tutti gli stili hanno un tetto (un dungeon
     # sotterraneo non ne ha) o un muro portante distinto dai tramezzi.
     roof: str | None = None
@@ -173,6 +178,9 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
     "dungeon": {
         "wall": "stone", "floor": "stone_floor", "door": "door_iron",
         "accents": {"brazier": "brazier", "crate": "crate", "barrel": "barrel"},
+        # La stanza boss (bsp._assign_boss_room) si distingue anche a
+        # pavimento, non solo per dimensione (TASK-43, gate umano M3).
+        "floors": {"boss": "tileset_brick_basketweave"},
     },
     "crypt": {
         "wall": "stone_09", "floor": "stone_floor", "door": "door_secret",
@@ -204,6 +212,12 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         # roof/wall_load_bearing (TASK-30): draw_building li usa solo se
         # presenti (Palette.roof/wall_load_bearing di default None, TASK-27).
         "roof": "tiles", "wall_load_bearing": "stone", "stairs": "stairs_round_08",
+        # Cucina e retro sono ambienti di servizio (pavimento pratico, non il
+        # legno della sala comune); la camera ha un legno piu curato di
+        # quella (TASK-43, richiesto da Jay al gate M3, TASK-26).
+        "floors": {
+            "cucina": "cobblestone", "retro": "tileset_cobble", "camera": "wooden_flooring_m_light",
+        },
     },
     "manor": {
         "wall": "battlements", "floor": "wooden_flooring_m_light", "door": "door_wood_double",
@@ -215,6 +229,9 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
             "bed": "bed_wood_single_01", "desk": "desk_wood_01", "cupboard": "cupboard_wood_light_d_2x1",
         },
         "roof": "tiles", "wall_load_bearing": "stone_09", "stairs": "stairs_round_08",
+        # Le stanze private hanno un legno piu semplice della fascia di
+        # rappresentanza; la servitu' un pavimento utilitario (TASK-43).
+        "floors": {"privato": "wood_planks", "servitu": "tileset_cobble"},
     },
     "warehouse": {
         "wall": "concrete", "floor": "cobblestone", "door": "door_02",
@@ -223,6 +240,9 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
             "cupboard": "cupboard_wood_light_d_2x1",
         },
         "roof": "tiles", "wall_load_bearing": "stone", "stairs": "stairs_round_04",
+        # Il soppalco e in legno, sopra il pavimento in pietra del piano
+        # terra (TASK-43).
+        "floors": {"soppalco": "wood_planks"},
     },
     "city": {
         "wall": "cobble", "floor": "cobblestone", "door": "threshold_01",
@@ -251,13 +271,14 @@ def palette_for(style: str, catalog: dict) -> Palette:
     floor = _lookup(catalog, "floors", definition["floor"])
     door = _lookup(catalog, "portals", definition["door"])
     accents = {name: _lookup(catalog, "objects", key) for name, key in definition["accents"].items()}
+    floors = {kind: _lookup(catalog, "floors", key) for kind, key in definition.get("floors", {}).items()}
     roof = _lookup(catalog, "roofs", definition["roof"]) if "roof" in definition else None
     wall_load_bearing = (
         _lookup(catalog, "walls", definition["wall_load_bearing"]) if "wall_load_bearing" in definition else None
     )
     stairs = _lookup(catalog, "objects", definition["stairs"]) if "stairs" in definition else None
     return Palette(
-        wall=wall, floor=floor, door=door, accents=accents, roof=roof,
+        wall=wall, floor=floor, door=door, accents=accents, floors=floors, roof=roof,
         wall_load_bearing=wall_load_bearing, stairs=stairs,
     )
 

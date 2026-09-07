@@ -47,9 +47,18 @@ def _rotation_for_direction(direction: tuple[float, float]) -> float:
     return math.atan2(direction[1], direction[0])
 
 
+def _room_floor(room, palette) -> str:
+    """Texture di pavimento per una stanza: l'override esplicito di
+    Room.floor vince sempre, poi la mappatura kind->floor della palette
+    (TASK-43, stesso meccanismo di _KIND_ACCENT_HINTS), infine il floor
+    uniforme. Un kind assente da palette.floors ricade sul floor uniforme:
+    e cosi che corridoi e vano scale (kind non mappati) restano invariati."""
+    return room.floor or palette.floors.get(room.kind) or palette.floor
+
+
 def _draw_perimeter(level, ids, room, palette, *, add_doors: bool, skip_sides=()) -> dict:
     rect = room.rect
-    pattern = add_pattern(level, ids, rect, room.floor or palette.floor)
+    pattern = add_pattern(level, ids, rect, _room_floor(room, palette))
 
     corners = [
         (rect.x1, rect.y1),

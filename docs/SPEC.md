@@ -451,6 +451,7 @@ class Palette:
     """Set coerente di texture per un tipo di ambiente."""
     wall: str; floor: str; door: str
     accents: dict[str, str]
+    floors: dict[str, str]  # room.kind -> floor, es. {"boss": "..."} (TASK-43)
 
 def load_catalog(path="data/assets.json") -> dict: ...
 def palette_for(style: str, catalog: dict) -> Palette:
@@ -658,6 +659,11 @@ Regole: gli oggetti non toccano i muri (margine 0.5 quadretti); non ostruiscono
 le porte (raggio libero di 1.5 quadretti davanti a ogni porta); rispettano il
 `kind` della stanza; densità `light`/`medium`/`heavy` = circa 0.05/0.12/0.25
 oggetti per quadretto.
+
+Il pavimento rispetta il `kind` della stanza allo stesso modo: `draw_room`
+sceglie `room.floor` (override esplicito) o `palette.floors[room.kind]` (se
+mappato) prima di ricadere su `palette.floor` (TASK-43). Corridoi e vano
+scale non hanno un `kind` mappato e restano sempre sul floor uniforme.
 
 ---
 
