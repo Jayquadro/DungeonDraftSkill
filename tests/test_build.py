@@ -12,6 +12,7 @@ from ddforge.build import (
     add_roof,
     add_text,
     add_wall,
+    add_water_polygon,
     set_cave_bitmap,
 )
 from ddforge.cave_bitmap import cave_grid_shape, decode_cave_bitmap
@@ -221,3 +222,52 @@ def test_set_cave_bitmap_writes_a_roundtrippable_blob():
 
     assert decode_cave_bitmap(level["cave"]["bitmap"], width, height) == grid
     assert level["cave"]["ground_color"] == "ffffffff"  # non toccato (decision-1)
+
+
+def test_add_water_polygon_creates_tree_on_first_use():
+    # blank_80x80 parte senza 'tree' (solo disable_border, TASK-33).
+    level: dict = {"water": {"disable_border": False}}
+    ids = IdAllocator()
+
+    polygon = add_water_polygon(level, ids, [(0, 0), (4, 0), (4, 2), (0, 2)])
+
+    tree = level["water"]["tree"]
+    assert tree["children"] == [polygon]
+    assert tree["polygon"] == "PoolVector2Array(  )"  # nodo contenitore, vuoto
+    assert tree["deep_color"] == "00000000"
+    assert parse_pv2(polygon["polygon"]) == [(0, 0), (1024, 0), (1024, 512), (0, 512)]
+
+
+def test_add_water_polygon_appends_to_existing_tree():
+    level: dict = {"water": {"disable_border": False}}
+    ids = IdAllocator()
+
+    first = add_water_polygon(level, ids, [(0, 0), (2, 0), (2, 2)])
+    second = add_water_polygon(level, ids, [(5, 5), (7, 5), (7, 7)])
+
+    assert level["water"]["tree"]["children"] == [first, second]
+
+
+def test_add_water_polygon_refs_are_unique_and_use_the_shared_allocator():
+    level: dict = {"water": {"disable_border": False}}
+    ids = IdAllocator()
+
+    polygon = add_water_polygon(level, ids, [(0, 0), (1, 0), (1, 1)])
+
+    tree = level["water"]["tree"]
+    assert tree["ref"] != polygon["ref"]
+    assert isinstance(polygon["ref"], int)
+
+
+def test_add_water_polygon_custom_colors():
+    level: dict = {"water": {"disable_border": False}}
+    ids = IdAllocator()
+
+    polygon = add_water_polygon(
+        level, ids, [(0, 0), (1, 0), (1, 1)],
+        deep_color="ff112233", shallow_color="ff445566", blend_distance=2.0,
+    )
+
+    assert polygon["deep_color"] == "ff112233"
+    assert polygon["shallow_color"] == "ff445566"
+    assert polygon["blend_distance"] == 2.0

@@ -1,12 +1,25 @@
 """Test per ddforge.compose: draw_room, draw_corridor."""
 
+import math
+
 import pytest
 
 from ddforge.assets import Palette
-from ddforge.compose import _rotation_for_direction, _wall_tangent, draw_corridor, draw_room
+from ddforge.compose import (
+    _chamber_circle_points,
+    _chamber_gap_depth,
+    _chamber_gap_edge_points,
+    _chamber_wall_arcs,
+    _rotation_for_direction,
+    _wall_tangent,
+    draw_chamber,
+    draw_corridor,
+    draw_room,
+    render_sewer_blueprint,
+)
 from ddforge.godot import parse_pv2, v2
 from ddforge.ids import IdAllocator
-from ddforge.model import Door, Rect, Room
+from ddforge.model import Chamber, Corridor, Door, Rect, Room
 from ddforge.validate import validate
 
 PALETTE = Palette(
@@ -25,6 +38,7 @@ def _empty_level():
         "paths": [],
         "lights": [],
         "texts": [],
+        "water": {"disable_border": False},
         "roofs": {"shade": True, "shade_contrast": 0.5, "sun_direction": 45, "roofs": []},
     }
 
@@ -227,3 +241,147 @@ def test_wall_tangent_matches_direction_from_first_to_last_point():
 
     wall_reverse = {"points": "PoolVector2Array( 2560, 0, 0, 0 )"}  # orizzontale, x decrescente
     assert _wall_tangent(wall_reverse) == pytest.approx((-1.0, 0.0))
+
+
+# --- camere di giunzione circolari (TASK-33) -------------------------------
+
+_SEWER_PALETTE = Palette(
+    wall="res://textures/walls/concrete.png",
+    floor="res://textures/patterns/normal/cobblestone.png",
+    door="res://textures/portals/portcullis.png",
+)
+
+
+def test_chamber_gap_depth_is_the_circle_chord_for_the_canal_width():
+    radius, canal_width = 2.5, 2.0
+    depth = _chamber_gap_depth(radius, canal_width)
+    assert depth == pytest.approx(math.sqrt(radius**2 - (canal_width / 2) ** 2))
+    # Per costruzione, il punto (depth, half_w) sta esattamente sul cerchio.
+    assert depth**2 + (canal_width / 2) ** 2 == pytest.approx(radius**2)
+
+
+def test_chamber_gap_depth_rejects_a_canal_wider_than_the_chamber():
+    with pytest.raises(ValueError):
+        _chamber_gap_depth(radius=1.0, canal_width=3.0)
+
+
+def test_chamber_circle_points_are_all_at_radius_from_center():
+    chamber = Chamber(center=(10.0, 10.0), radius=1.5)
+    points = _chamber_circle_points(chamber)
+    assert len(points) == 16
+    for x, y in points:
+        assert math.hypot(x - 10.0, y - 10.0) == pytest.approx(1.5)
+
+
+def test_chamber_gap_edge_points_lie_on_the_circle():
+    chamber = Chamber(center=(5.0, 5.0), radius=1.5)
+    for direction in ("N", "E", "S", "W"):
+        before, after = _chamber_gap_edge_points(chamber, direction, canal_width=2.0)
+        for x, y in (before, after):
+            assert math.hypot(x - 5.0, y - 5.0) == pytest.approx(1.5)
+
+
+def test_chamber_wall_arcs_no_connections_is_a_single_closed_ring():
+    chamber = Chamber(center=(0.0, 0.0), radius=1.5, connected=frozenset())
+    arcs = _chamber_wall_arcs(chamber, canal_width=2.0)
+    assert len(arcs) == 1
+    assert arcs[0] == _chamber_circle_points(chamber)
+
+
+def test_chamber_wall_arcs_all_four_sides_connected_is_no_walls_at_all():
+    chamber = Chamber(center=(0.0, 0.0), radius=1.5, connected=frozenset({"N", "E", "S", "W"}))
+    assert _chamber_wall_arcs(chamber, canal_width=2.0) == []
+
+
+def test_chamber_wall_arcs_single_gap_starts_and_ends_exactly_on_the_gap_edges():
+    chamber = Chamber(center=(0.0, 0.0), radius=1.5, connected=frozenset({"E"}))
+    before, after = _chamber_gap_edge_points(chamber, "E", canal_width=2.0)
+    arcs = _chamber_wall_arcs(chamber, canal_width=2.0)
+    assert len(arcs) == 1
+    arc = arcs[0]
+    assert arc[0] == pytest.approx(after)
+    assert arc[-1] == pytest.approx(before)
+
+
+def test_chamber_wall_arcs_two_gaps_produce_two_disjoint_arcs():
+    chamber = Chamber(center=(0.0, 0.0), radius=1.5, connected=frozenset({"E", "N"}))
+    arcs = _chamber_wall_arcs(chamber, canal_width=2.0)
+    assert len(arcs) == 2
+    # nessun punto ripetuto fra i due archi (varchi distinti)
+    assert set(arcs[0]).isdisjoint(arcs[1])
+
+
+def test_draw_chamber_produces_a_closed_loop_wall_when_isolated():
+    level = _empty_level()
+    ids = IdAllocator()
+    chamber = Chamber(center=(10.0, 10.0), radius=1.5, connected=frozenset())
+
+    result = draw_chamber(level, ids, chamber, _SEWER_PALETTE, canal_width=2.0)
+
+    assert len(result["walls"]) == 1
+    assert result["walls"][0]["loop"] is True
+    assert result["walls"][0]["texture"] == _SEWER_PALETTE.wall
+    assert result["pattern"]["texture"] == _SEWER_PALETTE.floor
+    assert result["portals"] == []
+
+
+def test_draw_chamber_opens_a_gap_for_each_connected_canal():
+    level = _empty_level()
+    ids = IdAllocator()
+    chamber = Chamber(center=(10.0, 10.0), radius=1.5, connected=frozenset({"E", "S"}))
+
+    result = draw_chamber(level, ids, chamber, _SEWER_PALETTE, canal_width=2.0)
+
+    assert len(result["walls"]) == 2
+    for wall in result["walls"]:
+        assert wall["loop"] is False
+
+
+def test_draw_chamber_entrance_gets_a_door_on_a_free_arc():
+    level = _empty_level()
+    ids = IdAllocator()
+    chamber = Chamber(center=(10.0, 10.0), radius=1.5, connected=frozenset({"E"}), door=True)
+
+    result = draw_chamber(level, ids, chamber, _SEWER_PALETTE, canal_width=2.0)
+
+    assert len(result["portals"]) == 1
+    assert result["portals"][0]["texture"] == _SEWER_PALETTE.door
+
+
+def test_draw_chamber_no_door_when_no_free_arc_exists():
+    """Incrocio a 4 vie: niente muri, quindi niente porta anche se
+    chamber.door e True (nessun arco su cui metterla)."""
+    level = _empty_level()
+    ids = IdAllocator()
+    chamber = Chamber(
+        center=(10.0, 10.0), radius=1.5, connected=frozenset({"N", "E", "S", "W"}), door=True,
+    )
+
+    result = draw_chamber(level, ids, chamber, _SEWER_PALETTE, canal_width=2.0)
+
+    assert result["walls"] == []
+    assert result["portals"] == []
+
+
+def test_render_sewer_blueprint_water_footprint_matches_corridors_and_chambers():
+    """AC2: il layer water e popolato con un poligono per ogni canale e uno
+    per ogni camera, stessa impronta dei pavimenti (compose.render_sewer_blueprint)."""
+    level = _empty_level()
+    ids = IdAllocator()
+
+    class _Blueprint:
+        corridors = [Corridor(2.0, 4.0, 6.0, 6.0, horizontal=True)]
+        chambers = [
+            Chamber(center=(1.0, 5.0), radius=1.5, connected=frozenset({"E"})),
+            Chamber(center=(7.0, 5.0), radius=1.5, connected=frozenset({"W"})),
+        ]
+
+    render_sewer_blueprint(level, ids, _Blueprint(), _SEWER_PALETTE)
+
+    assert len(level["patterns"]) == 3  # 1 canale + 2 camere
+    water_children = level["water"]["tree"]["children"]
+    assert len(water_children) == 3
+    for wall in level["walls"]:
+        assert wall["texture"] == _SEWER_PALETTE.wall
+    for pattern in level["patterns"]:
+        assert pattern["texture"] == _SEWER_PALETTE.floor

@@ -70,6 +70,22 @@ class Door:
 
 
 @dataclass
+class Chamber:
+    """Camera di giunzione circolare della variante fognature (TASK-33,
+    SPEC.md §9.3). Qui resta solo la geometria astratta: compose.draw_chamber
+    la approssima con un poligono regolare, aprendo un varco angolare su
+    ogni lato di `connected` (dove entra un canale, TASK-33). `door=True`
+    sulla camera d'ingresso (convenzione bsp._ENTRANCE_ROOM: la prima
+    generata) apre una porta su un arco libero, l'unico punto in cui la
+    variante fognature usa `palette.door` (AC3)."""
+
+    center: tuple[float, float]
+    radius: float
+    connected: frozenset[str] = field(default_factory=frozenset)
+    door: bool = False
+
+
+@dataclass
 class Room:
     rect: Rect
     kind: str
@@ -113,9 +129,14 @@ class Blueprint:
     # Room/Corridor rettangolari, quindi non si presta al modello a stanze
     # e usa questo campo al loro posto (rooms/corridors restano []).
     cave_grid: list[list[int]] | None = None
-    # Campi dedicati al generatore cittadino (TASK-35/§9.4): come cave_grid,
-    # city.py non si presta al modello a stanze (rooms/corridors restano
-    # []). Un isolato/piazza e un semplice Rect; ogni edificio e un
+    # Camere di giunzione della variante fognature (TASK-33): None/[] per
+    # gli altri generatori. I canali ortogonali non hanno un campo proprio,
+    # sono Corridor come qualunque altro canale (rooms resta [], corridors
+    # li contiene tutti).
+    chambers: list[Chamber] = field(default_factory=list)
+    # Campi dedicati al generatore cittadino (TASK-35/§9.4): come cave_grid
+    # e chambers, city.py non si presta al modello a stanze (rooms/corridors
+    # restano []). Un isolato/piazza e un semplice Rect; ogni edificio e un
     # Blueprint completo (con le sue Room, il suo stairs_rect) gia tradotto
     # in coordinate assolute della mappa cittadina, cosi compose.py puo
     # disegnarlo con draw_building() esattamente come farebbe per un edificio

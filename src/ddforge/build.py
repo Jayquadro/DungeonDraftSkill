@@ -228,6 +228,50 @@ def add_light(level, ids, x, y, *,
     return light
 
 
+def add_water_polygon(level, ids, points_grid, *,
+                       deep_color="ff3c8ab8", shallow_color="ff54c1da", blend_distance=1.5) -> dict:
+    """Aggiunge un poligono al layer water nativo (TASK-33). Schema
+    decodificato da un campione reale (templates/rich_reference.dungeondraft_map,
+    che Dungeondraft riapre), non documentato altrove prima di questo task:
+    vedi docs/format.md §16.
+
+    `level['water']['tree']` e un nodo contenitore (poligono vuoto, colori
+    trasparenti, MAI disegnato lui stesso) i cui `children` sono i poligoni
+    d'acqua veri. blank_80x80 parte senza 'tree' (solo 'disable_border'):
+    lo creiamo al primo utilizzo, non e nel template.
+
+    Colori di default presi dallo stesso campione reale (acqua blu-verde
+    standard); `ref` viene dallo stesso IdAllocator dei node_id, cosi resta
+    univoco nel documento anche se validate() non lo controlla (nessun
+    DDFxxx osserva 'ref', e una chiave interna dell'editor Godot, non un
+    node_id)."""
+    tree = level["water"].setdefault("tree", {
+        "ref": int(ids.next(), 16),
+        "polygon": pv2([]),
+        "join": 0,
+        "end": 0,
+        "is_open": False,
+        "deep_color": "00000000",
+        "shallow_color": "00000000",
+        "blend_distance": 0,
+        "children": [],
+    })
+    points_px = [(grid_to_px(x), grid_to_px(y)) for x, y in points_grid]
+    polygon = {
+        "ref": int(ids.next(), 16),
+        "polygon": pv2(points_px),
+        "join": 0,
+        "end": 0,
+        "is_open": False,
+        "deep_color": deep_color,
+        "shallow_color": shallow_color,
+        "blend_distance": blend_distance,
+        "children": [],
+    }
+    tree["children"].append(polygon)
+    return polygon
+
+
 def set_cave_bitmap(level, grid: list[list[int]], width: int, height: int) -> None:
     """Scrive il layer cave nativo (TASK-32, decision-1): non e un `add_*`
     come le altre primitive, che aggiungono un elemento a una lista di

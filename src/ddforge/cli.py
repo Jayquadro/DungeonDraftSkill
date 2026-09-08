@@ -16,10 +16,11 @@ _GENERATORS = {}  # popolato pigramente in _cmd_generate: import lazy per stile
 
 def _load_generators() -> dict:
     if not _GENERATORS:
-        from ddforge.generators import bsp, building, cave, city
+        from ddforge.generators import bsp, building, cave, city, sewer
         _GENERATORS["dungeon"] = bsp
         _GENERATORS["building"] = building
         _GENERATORS["cave"] = cave
+        _GENERATORS["sewer"] = sewer
         _GENERATORS["city"] = city
     return _GENERATORS
 
@@ -62,7 +63,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     from ddforge.assets import load_catalog, palette_for
     from ddforge.compose import (
         draw_building, furnish, furnish_building, render_blueprint, render_cave_blueprint,
-        render_city_blueprint,
+        render_city_blueprint, render_sewer_blueprint,
     )
     from ddforge.generators.building import floor_labels as building_labels
     from ddforge.ids import IdAllocator
@@ -88,6 +89,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
     is_building = args.algorithm == "building"
     is_cave = args.algorithm == "cave"
+    is_sewer = args.algorithm == "sewer"
     is_city = args.algorithm == "city"
     style_name = args.style or (args.building_type if is_building else args.algorithm)
     try:
@@ -135,6 +137,11 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         # posto, decision-1): niente furnish/luci, che presumono stanze.
         level = prepared["world"]["levels"]["0"]
         render_cave_blueprint(level, blueprint)
+    elif is_sewer:
+        # Le camere di giunzione non sono Room (blueprint.chambers al loro
+        # posto, TASK-33): niente furnish/luci, stesso motivo di is_cave.
+        level = prepared["world"]["levels"]["0"]
+        render_sewer_blueprint(level, ids, blueprint, palette)
     elif is_city:
         # Le stanze vive sono quelle di ogni blueprint.buildings, non
         # blueprint.rooms (TASK-35): niente furnish/luci qui, che
@@ -283,7 +290,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     p_generate = subparsers.add_parser("generate", help="genera una nuova mappa")
-    p_generate.add_argument("algorithm", choices=["dungeon", "building", "cave", "city"])
+    p_generate.add_argument("algorithm", choices=["dungeon", "building", "cave", "city", "sewer"])
     p_generate.add_argument("--template", required=True, help="template .dungeondraft_map di partenza")
     p_generate.add_argument("--out", required=True, help="percorso del file da scrivere")
     p_generate.add_argument(

@@ -113,6 +113,47 @@ def test_generate_cave_produces_a_valid_file_with_no_walls(tmp_path):
     assert level["cave"]["bitmap"] != template_doc["world"]["levels"]["0"]["cave"]["bitmap"]
 
 
+def test_generate_sewer_produces_a_valid_file_with_sewer_palette(tmp_path):
+    """La variante fognature disegna muri/pavimenti/porte veri con la
+    palette sewer (TASK-33/AC3), a differenza della grotta nativa."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "sewer",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "40", "--height", "40",
+        "--seed", "1337",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    level = doc["world"]["levels"]["0"]
+
+    assert len(level["walls"]) > 0
+    assert all(w["texture"] == "res://textures/walls/concrete.png" for w in level["walls"])
+    assert all(p["texture"] == "res://textures/patterns/normal/cobblestone.png" for p in level["patterns"])
+    doors = [portal for wall in level["walls"] for portal in wall.get("portals", [])]
+    assert len(doors) == 1
+    assert doors[0]["texture"] == "res://textures/portals/portcullis.png"
+
+    water_children = level["water"]["tree"]["children"]
+    assert len(water_children) == len(level["patterns"])
+
+
+def test_generate_sewer_same_seed_is_reproducible(tmp_path):
+    out1 = tmp_path / "out1.dungeondraft_map"
+    out2 = tmp_path / "out2.dungeondraft_map"
+    for out in (out1, out2):
+        result = _run(
+            "generate", "sewer",
+            "--template", "templates/blank_80x80.dungeondraft_map",
+            "--out", str(out),
+            "--width", "40", "--height", "40",
+            "--seed", "42",
+        )
+        assert result.returncode == 0
+    assert out1.read_text(encoding="utf-8") == out2.read_text(encoding="utf-8")
+
+
 def test_generate_furnish_adds_objects(tmp_path):
     out_none = tmp_path / "none.dungeondraft_map"
     out_heavy = tmp_path / "heavy.dungeondraft_map"

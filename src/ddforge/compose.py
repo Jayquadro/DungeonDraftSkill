@@ -10,10 +10,11 @@ import math
 import re
 
 from ddforge.build import (
-    add_light, add_object, add_path, add_pattern, add_portal, add_roof, add_wall, set_cave_bitmap,
+    add_light, add_object, add_path, add_pattern, add_polygon_pattern, add_portal, add_roof,
+    add_wall, add_water_polygon, set_cave_bitmap,
 )
 from ddforge.godot import GRID, grid_to_px, parse_pv2
-from ddforge.model import Blueprint, Corridor, Door, Rect, Room
+from ddforge.model import Blueprint, Chamber, Corridor, Door, Rect, Room
 
 # Indici di lato coerenti con l'ordine di _draw_perimeter: 0=top, 1=right,
 # 2=bottom, 3=left (percorrendo i 4 vertici di Rect in senso orario a
@@ -711,6 +712,154 @@ def render_cave_blueprint(level, blueprint) -> None:
     if blueprint.cave_grid is None:
         raise ValueError("blueprint.cave_grid e None: non e un Blueprint di grotta")
     set_cave_bitmap(level, blueprint.cave_grid, blueprint.width, blueprint.height)
+
+
+# ---------------------------------------------------------------------------
+# fognature: camere di giunzione circolari (TASK-33)
+# ---------------------------------------------------------------------------
+
+_CHAMBER_SIDES = 16
+# Angolo (in radianti, convenzione standard x=cos/y=sin) di ciascun lato
+# cardinale sul poligono che approssima il cerchio: E=0 e l'origine da cui
+# partono gli indici del poligono in _chamber_circle_points, gli altri sono
+# multipli di sides/4 (16 e divisibile per 4 apposta, cosi i cardinali
+# cadono esattamente su un indice intero del poligono, mai fra due campioni).
+_CARDINAL_ANGLE = {"E": 0.0, "S": math.pi / 2, "W": math.pi, "N": 3 * math.pi / 2}
+
+
+def _chamber_gap_depth(radius: float, canal_width: float) -> float:
+    """Distanza dal centro della camera al punto in cui il muro si
+    interrompe per un canale (TASK-33): geometria a corda del cerchio, cosi
+    il canale (largo `canal_width`, centrato sul lato cardinale) incontra il
+    poligono esattamente ai due estremi del varco, senza sovrapposizioni ne
+    fessure fra i due elementi."""
+    half_w = canal_width / 2
+    if half_w >= radius:
+        raise ValueError(
+            f"canal_width ({canal_width}) troppo largo per chamber_radius ({radius}): il varco non ci sta nel cerchio"
+        )
+    return math.sqrt(radius * radius - half_w * half_w)
+
+
+def _chamber_circle_points(chamber: Chamber, sides: int = _CHAMBER_SIDES) -> list[tuple[float, float]]:
+    """Poligono regolare senza varchi, per pavimento e acqua: non hanno
+    bisogno di aperture, come il pavimento rettangolare di una stanza copre
+    tutto il rettangolo anche dove i muri hanno una porta (_room_floor)."""
+    cx, cy = chamber.center
+    return [
+        (
+            cx + chamber.radius * math.cos(2 * math.pi * k / sides),
+            cy + chamber.radius * math.sin(2 * math.pi * k / sides),
+        )
+        for k in range(sides)
+    ]
+
+
+def _chamber_gap_edge_points(chamber: Chamber, direction: str, canal_width: float) -> tuple[tuple, tuple]:
+    """I due punti (quadretti) dove il muro si interrompe per il canale in
+    `direction`: 'before'/'after' nel verso di angolo crescente (lo stesso
+    verso di _chamber_circle_points), cosi inserirli al posto del campione
+    cardinale mantiene il poligono in ordine. Calcolati dalla tangente al
+    cerchio nel punto cardinale, non da un'approssimazione angolare: cosi
+    coincidono esattamente con gli estremi del canale costruito con la
+    stessa `_chamber_gap_depth` (generators/sewer.py)."""
+    cx, cy = chamber.center
+    theta = _CARDINAL_ANGLE[direction]
+    depth = _chamber_gap_depth(chamber.radius, canal_width)
+    half_w = canal_width / 2
+    ux, uy = math.cos(theta), math.sin(theta)
+    tx, ty = -math.sin(theta), math.cos(theta)  # tangente nel verso di angolo crescente
+    before = (cx + depth * ux - half_w * tx, cy + depth * uy - half_w * ty)
+    after = (cx + depth * ux + half_w * tx, cy + depth * uy + half_w * ty)
+    return before, after
+
+
+def _chamber_wall_arcs(chamber: Chamber, canal_width: float, sides: int = _CHAMBER_SIDES) -> list[list[tuple]]:
+    """Punti dei muri della camera, gia spezzati sui varchi verso i canali
+    collegati: un arco (lista di punti) per ogni tratto ininterrotto di
+    parete. Lista vuota se tutti e 4 i lati cardinali sono collegati
+    (incrocio completamente aperto: niente da murare, resta solo
+    pavimento/acqua). Un solo arco (l'intero poligono) se la camera non e
+    collegata a nessun canale: un anello chiuso, non spezzato."""
+    if len(chamber.connected) == 4:
+        return []
+    if not chamber.connected:
+        return [_chamber_circle_points(chamber, sides)]
+
+    cx, cy = chamber.center
+    step = 2 * math.pi / sides
+    cardinal_index = {"E": 0, "S": sides // 4, "W": sides // 2, "N": 3 * sides // 4}
+    gap_at = {cardinal_index[d]: d for d in chamber.connected}
+
+    points: list[tuple] = []
+    gap_after_positions: list[int] = []  # indice del punto 'after' (inizio di un arco)
+    gap_before_positions: list[int] = []  # indice del punto 'before' (fine di un arco)
+    for k in range(sides):
+        if k in gap_at:
+            before, after = _chamber_gap_edge_points(chamber, gap_at[k], canal_width)
+            gap_before_positions.append(len(points))
+            points.append(before)
+            gap_after_positions.append(len(points))
+            points.append(after)
+        else:
+            theta = step * k
+            points.append((cx + chamber.radius * math.cos(theta), cy + chamber.radius * math.sin(theta)))
+
+    n = len(points)
+    arcs = []
+    for start in gap_after_positions:
+        end = min(gap_before_positions, key=lambda p: (p - start) % n)
+        length = (end - start) % n
+        arcs.append([points[(start + i) % n] for i in range(length + 1)])
+    return arcs
+
+
+def draw_chamber(level, ids, chamber: Chamber, palette, *, canal_width: float) -> dict:
+    """Pavimento pieno + muri ad arco (spezzati sui varchi verso i canali
+    collegati) + porta sulla camera d'ingresso (`chamber.door`, stessa
+    convenzione di bsp._ENTRANCE_ROOM: la prima camera generata). Nessuna
+    porta se la camera non ha nemmeno un arco libero (crocevia a 4 vie)."""
+    pattern = add_polygon_pattern(level, ids, _chamber_circle_points(chamber), palette.floor)
+
+    arcs = _chamber_wall_arcs(chamber, canal_width)
+    walls = [
+        add_wall(level, ids, arc, palette.wall, loop=(len(arcs) == 1 and not chamber.connected))
+        for arc in arcs
+    ]
+
+    portals = []
+    if chamber.door and walls:
+        wall = walls[0]
+        direction = _wall_tangent(wall)
+        rotation = _rotation_for_direction(direction)
+        portals.append(add_portal(wall, ids, t=0.5, direction=direction, rotation=rotation, texture=palette.door))
+
+    return {"walls": walls, "pattern": pattern, "portals": portals}
+
+
+def render_sewer_blueprint(level, ids, blueprint, palette) -> None:
+    """Disegna la variante fognature (TASK-33, SPEC.md §9.3): i canali sono
+    Corridor come qualunque altro canale (draw_corridor_network, invariato),
+    le camere di giunzione sono draw_chamber. Un poligono d'acqua per ogni
+    canale e ogni camera, stessa impronta dei rispettivi pavimenti (AC2)."""
+    draw_corridor_network(level, ids, blueprint.corridors, palette)
+    for corridor in blueprint.corridors:
+        add_water_polygon(level, ids, [
+            (corridor.x1, corridor.y1), (corridor.x2, corridor.y1),
+            (corridor.x2, corridor.y2), (corridor.x1, corridor.y2),
+        ])
+
+    # canal_width e un parametro del generatore, non del Blueprint (nessun
+    # campo dedicato): tutti i canali lo condividono per costruzione
+    # (generators/sewer.py), quindi si ricava da un corridoio qualunque.
+    canal_width = None
+    if blueprint.corridors:
+        first = blueprint.corridors[0]
+        canal_width = first.h if first.horizontal else first.w
+
+    for chamber in blueprint.chambers:
+        draw_chamber(level, ids, chamber, palette, canal_width=canal_width or 0.0)
+        add_water_polygon(level, ids, _chamber_circle_points(chamber))
 
 
 # ---------------------------------------------------------------------------

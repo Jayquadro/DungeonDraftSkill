@@ -1037,3 +1037,62 @@ Codec in produzione da TASK-32: `ddforge.cave_bitmap` (`encode_cave_bitmap`,
 copia del codec e i tre modi `--mode walls|native|calib`: e' codice di
 spike, non piu l'unica implementazione, ma non e' stato rimosso da
 TASK-32.
+
+## 15. `water.tree` — schema del layer acqua nativo (TASK-33)
+
+Mai documentato prima: nessun task precedente aveva bisogno del layer
+`water`. Decodificato direttamente da `templates/rich_reference.dungeondraft_map`
+(campione che Dungeondraft riapre), non da uno spike a parte come per
+`cave.bitmap` (qui non c'e' un blob binario da decifrare, e' JSON puro,
+autoesplicativo dal campione).
+
+### La struttura
+
+`level['water']` in `blank_80x80` (il template usato in produzione) e'
+`{"disable_border": false}`: **niente chiave `tree`**. La chiave compare
+solo quando c'e' davvero dell'acqua disegnata (osservato in
+`rich_reference`, che ne ha).
+
+`water.tree` e' un albero binario-poligonale (verosimilmente lo stesso
+meccanismo CSG che Dungeondraft usa per `terrain`/`shapes`): un nodo
+contenitore alla radice, con `children` che sono i poligoni d'acqua veri.
+Ogni nodo, contenitore o poligono, ha lo stesso schema:
+
+```json
+{"ref": -1716689034, "polygon": "PoolVector2Array(  )", "join": 0, "end": 0,
+ "is_open": false, "deep_color": "00000000", "shallow_color": "00000000",
+ "blend_distance": 0, "children": [...]}
+```
+
+- `ref`: intero, positivo o negativo, univoco nel documento osservato.
+  Nessun controllo di validate.py lo riguarda (DDF005/006 controllano solo
+  `node_id`, mai `ref`): probabilmente un id interno dell'editor Godot, non
+  un requisito del formato file. `build.add_water_polygon` gli assegna
+  comunque un valore univoco (dallo stesso `IdAllocator` dei `node_id`),
+  per prudenza.
+- `polygon`: `PoolVector2Array` di coordinate **assolute** in pixel (non
+  relative a una `position`, a differenza di `path.edit_points`, §5).
+- `join`/`end`: sempre `0` in tutti i nodi osservati, significato non
+  investigato (probabilmente parametri dell'operazione booleana CSG che
+  qui non serve mai: ogni figlio e' un poligono indipendente, mai unito o
+  sottratto a un altro).
+- `is_open`: sempre `false` osservato, poligono chiuso.
+- `deep_color`/`shallow_color`: colori ARGB a 8 cifre. Sul nodo contenitore
+  sono sempre `00000000` (trasparente: il contenitore non viene mai
+  disegnato lui stesso). Sui poligoni figli sono i colori veri dell'acqua
+  (`ff3c8ab8`/`ff54c1da` nel campione osservato: blu-verde standard).
+- `blend_distance`: `0` sul contenitore, `1.5` sul poligono figlio nel
+  campione osservato (probabilmente la sfumatura fra `deep_color` e
+  `shallow_color` verso il bordo, in quadretti).
+- `children`: lista di nodi con lo stesso schema, ricorsiva. Nel campione
+  osservato il contenitore ha un solo figlio con `children: []` (nessuna
+  annidatura piu' profonda osservata).
+
+### Codice
+
+`build.add_water_polygon(level, ids, points_grid, *, deep_color, shallow_color,
+blend_distance)` (TASK-33): crea `level['water']['tree']` come nodo
+contenitore vuoto al primo utilizzo (se il template non ce l'ha, come
+`blank_80x80`), poi appende un figlio per ogni poligono passato. Usato da
+`compose.render_sewer_blueprint` per disegnare un poligono d'acqua per ogni
+canale e ogni camera della variante fognature.
