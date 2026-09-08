@@ -1,6 +1,8 @@
 """Test per generators/cave.py (TASK-32): cellular automata a risoluzione
 sotto-cella, tunnel verso le componenti secondarie, layer cave nativo."""
 
+import copy
+import json
 import random
 from pathlib import Path
 
@@ -22,6 +24,7 @@ from ddforge.validate import validate
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO_ROOT / "templates" / "blank_80x80.dungeondraft_map"
+GOLDEN_DIR = REPO_ROOT / "tests" / "fixtures" / "golden"
 
 
 def _open_components(grid, width, height):
@@ -180,3 +183,43 @@ def test_generated_document_passes_validate_with_no_errors(seed):
     issues = validate(prepared)
     errors = [i for i in issues if i.severity == "error"]
     assert errors == [], errors
+
+
+# --- AC2 (TASK-36): golden file, stessa alberatura di test_bsp_integration.py ----
+
+
+def _generate_full_document(seed: int) -> dict:
+    doc = load_template(TEMPLATE)
+    prepared = prepare(doc, levels=1)
+    level = prepared["world"]["levels"]["0"]
+    ids = IdAllocator.from_document(prepared)
+
+    blueprint = cave.generate(width=80, height=80, seed=seed)
+    render_cave_blueprint(level, blueprint)
+    finalize(prepared, ids)
+    return prepared
+
+
+def _normalize_for_golden(doc: dict) -> dict:
+    doc = copy.deepcopy(doc)
+    header = doc.get("header")
+    if isinstance(header, dict) and "creation_date" in header:
+        header["creation_date"] = "NORMALIZZATO-PER-IL-CONFRONTO-GOLDEN"
+    return doc
+
+
+@pytest.mark.slow
+def test_cave_golden_file_matches_reference_for_fixed_seed():
+    """Per il seed 1337, alla scala di produzione (80x80, quella usata dal
+    CLI senza --width/--height), il documento generato deve combaciare
+    esattamente (a meno di creation_date) con
+    tests/fixtures/golden/cave_seed_1337.json. Se questo test fallisce dopo
+    una modifica intenzionale al generatore, rigenerare il golden con lo
+    script in questo stesso file (_generate_full_document) e verificare a
+    mano il diff prima di sovrascrivere."""
+    golden_path = GOLDEN_DIR / "cave_seed_1337.json"
+    actual = _normalize_for_golden(_generate_full_document(seed=1337))
+
+    assert golden_path.exists(), f"Golden file mancante: {golden_path}"
+    expected = json.loads(golden_path.read_text(encoding="utf-8"))
+    assert actual == expected

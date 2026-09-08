@@ -1,6 +1,8 @@
 """Test per generators/city.py (TASK-35): rete stradale, isolati, lotti,
 edifici e piazze (SPEC.md §9.4)."""
 
+import copy
+import json
 import random
 from pathlib import Path
 
@@ -16,6 +18,7 @@ from ddforge.validate import validate
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO_ROOT / "templates" / "blank_80x80.dungeondraft_map"
+GOLDEN_DIR = REPO_ROOT / "tests" / "fixtures" / "golden"
 
 
 # --- protocollo Generator ---------------------------------------------------
@@ -195,3 +198,44 @@ def test_plaza_pattern_uses_a_different_texture_than_buildings_and_has_a_fountai
 
     fountains = [o for o in level["objects"] if o["texture"] == palette.accents["fountain"]]
     assert len(fountains) == len(blueprint.plazas)
+
+
+# --- AC2 (TASK-36): golden file, stessa alberatura di test_bsp_integration.py ----
+
+
+def _generate_full_document(seed: int) -> dict:
+    doc = load_template(TEMPLATE)
+    prepared = prepare(doc, levels=1)
+    ids = IdAllocator.from_document(prepared)
+    catalog = load_catalog()
+    palette = palette_for("city", catalog)
+
+    blueprint = city.generate(width=70, height=70, seed=seed)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    finalize(prepared, ids)
+    return prepared
+
+
+def _normalize_for_golden(doc: dict) -> dict:
+    doc = copy.deepcopy(doc)
+    header = doc.get("header")
+    if isinstance(header, dict) and "creation_date" in header:
+        header["creation_date"] = "NORMALIZZATO-PER-IL-CONFRONTO-GOLDEN"
+    return doc
+
+
+@pytest.mark.slow
+def test_city_golden_file_matches_reference_for_fixed_seed():
+    """Per il seed 1337 (70x70, la stessa scala usata dagli altri test di
+    questo file), il documento generato deve combaciare esattamente (a meno
+    di creation_date) con tests/fixtures/golden/city_seed_1337.json. Se
+    questo test fallisce dopo una modifica intenzionale al generatore,
+    rigenerare il golden con lo script in questo stesso file
+    (_generate_full_document) e verificare a mano il diff prima di
+    sovrascrivere."""
+    golden_path = GOLDEN_DIR / "city_seed_1337.json"
+    actual = _normalize_for_golden(_generate_full_document(seed=1337))
+
+    assert golden_path.exists(), f"Golden file mancante: {golden_path}"
+    expected = json.loads(golden_path.read_text(encoding="utf-8"))
+    assert actual == expected
