@@ -201,8 +201,13 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         # su ogni mappa generata da quel template. Sostituite con le varianti
         # equivalenti senza pack (TASK-29, trovato dal test end-to-end).
         "accents": {
+            # "bed" e la chiave letterale (non l'alias "bed"): dopo TASK-45
+            # l'alias semantico "bed" puo risolvere a texture di pack diversi
+            # a seconda dell'ordine dei --from (il primo file con "bed" nel
+            # nome vince), quindi non e piu stabile per una palette gia
+            # approvata al gate umano.
             "table": "table_wood_rectangular_small_01", "chair": "chair_wood_01", "barrel": "barrel",
-            "bench": "bench_wood_01", "bed": "bed", "oven": "oven_brick_red_a2_2x2",
+            "bench": "bench_wood_01", "bed": "bed_wood_single_01", "oven": "oven_brick_red_a2_2x2",
             # Il retro di una taverna e una dispensa: senza casse e botti
             # riceveva SOLO barili, ed e il "non ci sono arredi se non
             # barili" del gate umano M4 (TASK-30).
@@ -225,7 +230,10 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         # senza equivalente senza pack nel catalogo osservato: rimossa invece
         # di lasciare una palette che rompe DDF014 contro il template reale.
         "accents": {
-            "table": "table_corner_wood_01", "bookshelf": "bookshelf", "rug": "rug_01",
+            # "bookshelf" e la chiave letterale per lo stesso motivo di "bed"
+            # in tavern qui sopra: l'alias "bookshelf" non e piu stabile
+            # dopo TASK-45.
+            "table": "table_corner_wood_01", "bookshelf": "bookshelf_wood_01", "rug": "rug_01",
             "bed": "bed_wood_single_01", "desk": "desk_wood_01", "cupboard": "cupboard_wood_light_d_2x1",
         },
         "roof": "tiles", "wall_load_bearing": "stone_09", "stairs": "stairs_round_08",

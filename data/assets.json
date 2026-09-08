@@ -13,6 +13,12 @@
       "version": "1"
     },
     {
+      "name": "GW Inn tables and kitchens",
+      "id": "2usYTHKD",
+      "author": "",
+      "version": "1"
+    },
+    {
       "name": "BB RiversRunnin Colored",
       "id": "4MPa6ax6",
       "author": "BluBerrey",
@@ -23,6 +29,18 @@
       "id": "566ki5wO",
       "author": "Nexoness",
       "version": "1,1"
+    },
+    {
+      "name": "BB 51 Assets Houses1",
+      "id": "6VxwaRdj",
+      "author": "BluBerrey",
+      "version": "1"
+    },
+    {
+      "name": "Dellos - Vol. 2",
+      "id": "6v1aRL4R",
+      "author": "Innozoom",
+      "version": "1"
     },
     {
       "name": "GoGots-Water",
@@ -47,6 +65,18 @@
       "id": "CJYX8Yjo",
       "author": "Tyger_purr",
       "version": "1"
+    },
+    {
+      "name": "DnDungeon Overhaul for Dungeondraft - Core (DEMO)",
+      "id": "DnDgCORE",
+      "author": "Cyclopean",
+      "version": "1.0"
+    },
+    {
+      "name": "DEMO - DnDungeon - Whimsical Artisan's Workshop Assets (1.0)",
+      "id": "DnDgWAWA",
+      "author": "Cyclopean",
+      "version": "1.0"
     },
     {
       "name": "Benthic Botany",
@@ -121,6 +151,12 @@
       "version": "1.1"
     },
     {
+      "name": "5 wood - Furniture Pack",
+      "id": "OfL7DytA",
+      "author": "HoodedGrot",
+      "version": "1"
+    },
+    {
       "name": "Maelstrom Maps Free Simple Castle Asset Pack",
       "id": "P5JygHfx",
       "author": "Maelstrom Maps",
@@ -151,6 +187,12 @@
       "version": "1"
     },
     {
+      "name": "Hooded Wood Table and Chair Pack",
+      "id": "REqnHQfW",
+      "author": "HoodedGrot",
+      "version": "1"
+    },
+    {
       "name": "City Terrain",
       "id": "RchUgE31",
       "author": "Clay Robeson",
@@ -160,6 +202,12 @@
       "name": "WFW 5th Anniversary Free Megapack",
       "id": "WFWMFRDX",
       "author": "White Fox Works",
+      "version": "1"
+    },
+    {
+      "name": "DQ_Pack_Theme_27 Alchemy II FREE",
+      "id": "XJdI4mDJ",
+      "author": "DungeonQuill",
       "version": "1"
     },
     {
@@ -185,12 +233,6 @@
       "id": "hA8yMy2D",
       "author": "Skront",
       "version": "1.1"
-    },
-    {
-      "name": "[ADA]#28 - a day at the city center [FREE]",
-      "id": "iVabeBCC",
-      "author": "a day at",
-      "version": "1"
     },
     {
       "name": "Skront's Alchemy",
@@ -241,15 +283,15 @@
       "version": "2.1"
     },
     {
+      "name": "2MT Typical Tavern",
+      "id": "sWxkyx98",
+      "author": "2-Minute Tabletop",
+      "version": "2.2"
+    },
+    {
       "name": "Stained Glass Windows",
       "id": "u492rwJO",
       "author": "Olooriel",
-      "version": "1"
-    },
-    {
-      "name": "[ADA]#25- a day at the resort [FREE]",
-      "id": "uZflDG7o",
-      "author": "a day at",
       "version": "1"
     },
     {
@@ -303,19 +345,26 @@
   },
   "paths": {},
   "objects": {
+    "alchemy_potion_colorable_12": "res://packs/DnDgWAWA/textures/objects/[DnD] Tool/Colorable/alchemy_potion_colorable_12.webp",
     "animal_cage_top_02_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Cage_Top_02_A.webp",
     "animal_dish_dented_full": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Dish_Dented_Full.webp",
     "barrel": "res://textures/objects/dwarven_set/barrel_forge_01.png",
     "barrel_01": "res://textures/objects/containers/barrel_01.png",
     "barrel_forge_01": "res://textures/objects/dwarven_set/barrel_forge_01.png",
-    "bed": "res://textures/objects/tables/bed_wood_single_01.png",
+    "bb_houses1_house10": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House10.png",
+    "bb_houses1_house12": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House12.png",
+    "bb_houses1_house28": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House28.png",
+    "bb_houses1_roof7": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof7.png",
+    "bed": "res://packs/sWxkyx98/textures/objects/Bunk Bed 4 - Colorable.png",
     "bed_wood_single_01": "res://textures/objects/tables/bed_wood_single_01.png",
     "bench_wood_01": "res://textures/objects/tables/bench_wood_01.png",
-    "bookshelf": "res://textures/objects/tables/bookshelf_wood_01.png",
+    "bookshelf": "res://packs/OfL7DytA/textures/objects/bookshelf 4 v3.png",
+    "bookshelf_4_v3": "res://packs/OfL7DytA/textures/objects/bookshelf 4 v3.png",
     "bookshelf_wood_01": "res://textures/objects/tables/bookshelf_wood_01.png",
     "bowl_berries_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Food/[WFW] Food - Readymade Dishes/Bowl_Berries_01_A.webp",
     "brazier": "res://textures/objects/light/brazier_01.png",
     "brazier_01": "res://textures/objects/light/brazier_01.png",
+    "bunk_bed_4_colorable": "res://packs/sWxkyx98/textures/objects/Bunk Bed 4 - Colorable.png",
     "cage_04": "res://textures/objects/supplies/cages/cage_04.png",
     "campfire_07": "res://textures/objects/camp/campfire_07.png",
     "campfire_lit_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Camping/Campfire_Lit_01_A.webp",
@@ -327,7 +376,10 @@
     "cupboard_wood_light_d_2x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
     "cupboard_wood_light_h2_2x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_H2_2x1.webp",
     "desk_wood_01": "res://textures/objects/tables/desk_wood_01.png",
+    "dq_alchemy_ingredient_prefab_09": "res://packs/XJdI4mDJ/textures/objects/[DQ] Alchemy Ingredients FREE/DQ_alchemy_ingredient_prefab_09.png",
     "fountain_stone_01": "res://textures/objects/decor/fountain_stone_01.png",
+    "gw_bakery_table_2": "res://packs/2usYTHKD/textures/objects/GW Bakery/gw bakery table 2.png",
+    "hat_witch_marisa": "res://packs/DnDgCORE/textures/objects/[DnD] Clothing/hat_witch_marisa.webp",
     "keg_wood_light_h_1x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Keg_Wood_Light_H_1x1.webp",
     "latrine_multiple_01_a_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Latrines/Latrine_Multiple_01_A_Ashen.webp",
     "magic_circle_01": "res://textures/objects/decor/magic_circle_01.png",
@@ -345,9 +397,12 @@
     "stairs_round_04": "res://textures/objects/structures/stairs/stairs_round_04.png",
     "stairs_round_08": "res://textures/objects/structures/stairs/stairs_round_08.png",
     "statue_male_mage_alt_03_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Ornaments and Decoration/[WFW] Statues/Statue_Male_Mage_Alt_03_A.webp",
+    "table_3_v4": "res://packs/REqnHQfW/textures/objects/table 3 v4.png",
     "table_corner_wood_01": "res://textures/objects/furniture/tables/table_corner_wood_01.png",
     "table_round": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Tables/Table_Round_02_Ashen.webp",
     "table_round_02_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Tables/Table_Round_02_Ashen.webp",
-    "table_wood_rectangular_small_01": "res://textures/objects/tables/table_wood_rectangular_small_01.png"
+    "table_wood_rectangular_small_01": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
+    "trough_barn_04": "res://textures/objects/stable/trough_barn_04.png",
+    "worker_3": "res://packs/6v1aRL4R/textures/objects/Human/Active/Colorable/Worker (3).png"
   }
 }

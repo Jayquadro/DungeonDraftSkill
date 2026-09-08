@@ -14,6 +14,314 @@
 		"uses_default_assets": true,
 		"asset_manifest": [
 			{
+				"name": "[DQ] 2Y_Anniversary_Pack",
+				"id": "qTwZcByF",
+				"version": "1.1",
+				"author": "DungeonQuill",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "2MT Typical Tavern",
+				"id": "sWxkyx98",
+				"version": "2.2",
+				"author": "2-Minute Tabletop",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "5 wood - Furniture Pack",
+				"id": "OfL7DytA",
+				"version": "1",
+				"author": "HoodedGrot",
+				"keywords": "",
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB 51 Assets Houses1",
+				"id": "6VxwaRdj",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB BaseCity Colored",
+				"id": "2VHJB262",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB BasePackRemade Colored",
+				"id": "2fXlBwjR",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB KeepsAndCastles Colored",
+				"id": "KtpqsMIX",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB RiversRunnin Colored",
+				"id": "4MPa6ax6",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB RugsNRiches Colored",
+				"id": "a8D9WX4I",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "BB SeasAndShores Colored",
+				"id": "QofNvPQx",
+				"version": "1",
+				"author": "BluBerrey",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "Benthic Botany",
+				"id": "E0ZgzvXT",
+				"version": "1",
+				"author": "Stovetop",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "CH - Worldmap",
+				"id": "Prdr1WET",
+				"version": "0,5",
+				"author": "Crosshead",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "CHR - Town Maps",
+				"id": "Bp03igMq",
+				"version": "0,2",
+				"author": "Crosshead",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "City Terrain",
+				"id": "RchUgE31",
+				"version": "1",
+				"author": "Clay Robeson",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Crosshead's Ghibli Pack",
+				"id": "eMSwy6B7",
+				"version": "1",
+				"author": "Crosshead",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "CSA - Community Suggested Assets",
+				"id": "566ki5wO",
+				"version": "1,1",
+				"author": "Nexoness",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Dellos - Vol. 2",
+				"id": "6v1aRL4R",
+				"version": "1",
+				"author": "Innozoom",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "DEMO - DnDungeon - Whimsical Artisan's Workshop Assets (1.0)",
+				"id": "DnDgWAWA",
+				"version": "1.0",
+				"author": "Cyclopean",
+				"keywords": "dndungeon",
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": true,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.05
+				}
+			},
+			{
+				"name": "DnDungeon Overhaul for Dungeondraft - Core (DEMO)",
+				"id": "DnDgCORE",
+				"version": "1.0",
+				"author": "Cyclopean",
+				"keywords": "dndungeon",
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": true,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.05
+				}
+			},
+			{
+				"name": "DQ_Pack_Theme_16 Arcane Laboratory FREE",
+				"id": "LPjlqz9Q",
+				"version": "1",
+				"author": "DungeonQuill",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "DQ_Pack_Theme_27 Alchemy II FREE",
+				"id": "XJdI4mDJ",
+				"version": "1",
+				"author": "DungeonQuill",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Expanded Nature Vol. 1",
+				"id": "JoOKLIJc",
+				"version": "1",
+				"author": "Scott Avery",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
 				"name": "FA_Starter_Pack_v3.0",
 				"id": "FA30DDXY",
 				"version": "3.0",
@@ -24,6 +332,412 @@
 					"enabled": true,
 					"min_redness": 0.001,
 					"min_saturation": 1,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "GF Colorable Furniture and Stairs",
+				"id": "QzahaP3O",
+				"version": "1",
+				"author": "Gnome Factory",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "GoGots-Forest",
+				"id": "HJANrMeL",
+				"version": "1,2",
+				"author": "GoGots",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "GoGots-Forest Add",
+				"id": "vpUPLad1",
+				"version": "1",
+				"author": "GoGots",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "GoGots-Mushroom",
+				"id": "FjQPhftV",
+				"version": "1",
+				"author": "GoGots",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "GoGots-Water",
+				"id": "74SaGFcV",
+				"version": "1",
+				"author": "GoGots",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "GW Inn tables and kitchens",
+				"id": "2usYTHKD",
+				"version": "1",
+				"author": "",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Hooded Wood Table and Chair Pack",
+				"id": "REqnHQfW",
+				"version": "1",
+				"author": "HoodedGrot",
+				"keywords": "",
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "IC_Apothecary",
+				"id": "MKedRBxF",
+				"version": "1",
+				"author": "InsightCheque",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Lost Lands Castles",
+				"id": "0vMF1pHo",
+				"version": "1",
+				"author": "Lost Lands",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Lost Lands Hamlets",
+				"id": "roSIrsHG",
+				"version": "1",
+				"author": "Lost Lands",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Maelstrom Maps Free Simple Castle Asset Pack",
+				"id": "P5JygHfx",
+				"version": "1",
+				"author": "Maelstrom Maps",
+				"keywords": "",
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "Skront's Alchemy",
+				"id": "kNUrZPY0",
+				"version": "1",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Skront's Alchemy Mk2",
+				"id": "dS0IUhwf",
+				"version": "1",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Skront's Books",
+				"id": "MiS6cyNC",
+				"version": "1.1",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Skront's Farm and Field",
+				"id": "hA8yMy2D",
+				"version": "1.1",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Skront's Rocks and Bricks",
+				"id": "o4K03ljk",
+				"version": "1",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Skront's Treasure",
+				"id": "PGz110gg",
+				"version": "1",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Skront's Wooden Stuff",
+				"id": "8LR9chxF",
+				"version": "1.3",
+				"author": "Skront",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Spacious Stable",
+				"id": "pkqBedwn",
+				"version": "1.1",
+				"author": "InsightCheque",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Stained Glass Windows",
+				"id": "u492rwJO",
+				"version": "1",
+				"author": "Olooriel",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "T23's Royal Furniture",
+				"id": "LLmsOZ4X",
+				"version": "1",
+				"author": "Toblakai23",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "TygerBar",
+				"id": "H2ndnvOE",
+				"version": "1.1",
+				"author": "Tyger_purr",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "TygerLibrary",
+				"id": "MJQ9gdYx",
+				"version": "1",
+				"author": "Tyger_purr",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "TygerMusic",
+				"id": "pMI97nEl",
+				"version": "1.1",
+				"author": "Tyger_purr",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "TygerNautical",
+				"id": "sI3jbFGs",
+				"version": "2.1",
+				"author": "Tyger_purr",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "TygerWagons",
+				"id": "CJYX8Yjo",
+				"version": "1",
+				"author": "Tyger_purr",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "Unofficial Jonathan Roberts Free Pack",
+				"id": "s7XNt1yd",
+				"version": "1",
+				"author": "",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
+					"red_tolerance": 0
+				}
+			},
+			{
+				"name": "WFW 5th Anniversary Free Megapack",
+				"id": "WFWMFRDX",
+				"version": "1",
+				"author": "White Fox Works",
+				"keywords": "",
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0.1,
+					"min_saturation": 0,
+					"red_tolerance": 0.04
+				}
+			},
+			{
+				"name": "WFW Sample Pack",
+				"id": "ygxXFHkC",
+				"version": "1",
+				"author": "White Fox Works",
+				"keywords": null,
+				"allow_3rd_party_mapping_software_to_read": false,
+				"custom_color_overrides": {
+					"enabled": false,
+					"min_redness": 0,
+					"min_saturation": 0,
 					"red_tolerance": 0
 				}
 			}
@@ -6604,32 +7318,32 @@
 					"lookup": {
 						"0": "res://textures/tilesets/smart/tileset_wood_vertical.png",
 						"1": "res://textures/tilesets/smart_double/tileset_stone.png",
-						"2": "res://textures/tilesets/simple/tileset_concrete_large.png",
-						"3": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
+						"2": "res://textures/tilesets/simple/tileset_brick_running.png",
+						"3": "res://textures/tilesets/simple/tileset_concrete_large.png",
 						"4": "res://textures/tilesets/simple/tileset_cobble.png",
-						"5": "res://textures/tilesets/simple/tileset_brick_running.png",
-						"6": "res://textures/tilesets/simple/tileset_cave.png",
-						"7": "res://textures/tilesets/simple/tileset_concrete.png",
-						"8": "res://textures/tilesets/simple/tileset_brick_worn.png",
-						"9": "res://textures/tilesets/simple/tileset_carpet.png",
-						"10": "res://textures/tilesets/simple/tileset_concrete_slab.png",
-						"11": "res://textures/tilesets/simple/tileset_herringbone.png",
+						"5": "res://textures/tilesets/simple/tileset_cave.png",
+						"6": "res://textures/tilesets/simple/tileset_brick_worn.png",
+						"7": "res://textures/tilesets/simple/tileset_concrete_slab.png",
+						"8": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
+						"9": "res://textures/tilesets/simple/tileset_concrete.png",
+						"10": "res://textures/tilesets/simple/tileset_carpet.png",
+						"11": "res://textures/tilesets/simple/tileset_ornate.png",
 						"12": "res://textures/tilesets/simple/tileset_diamond_2.png",
 						"13": "res://textures/tilesets/simple/tileset_cut_stone.png",
-						"14": "res://textures/tilesets/simple/tileset_roman_tiles.png",
-						"15": "res://textures/tilesets/simple/tileset_ornate.png",
-						"16": "res://textures/tilesets/simple/tileset_sewers.png",
-						"17": "res://textures/tilesets/simple/tileset_diamond.png",
-						"18": "res://textures/tilesets/simple/tileset_roman_worn.png",
-						"19": "res://textures/tilesets/simple/tileset_plank_45.png",
-						"20": "res://textures/tilesets/simple/tileset_straw.png",
-						"21": "res://textures/tilesets/simple/tileset_worn_cobble.png",
-						"22": "res://textures/tilesets/simple/tileset_wood_damaged.png",
-						"23": "res://textures/tilesets/simple/tileset_wood_interlaced.png",
-						"24": "res://packs/FA30DDXY/textures/tilesets/simple/Stone_Tiles_A_03.webp",
-						"25": "res://packs/FA30DDXY/textures/tilesets/simple/Stone_Square_Tiles_01_A.webp",
-						"26": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_H_Light.webp",
-						"27": "res://packs/FA30DDXY/textures/tilesets/simple/Stone_Tiles_Cracked_A1_03.webp",
+						"14": "res://textures/tilesets/simple/tileset_herringbone.png",
+						"15": "res://textures/tilesets/simple/tileset_roman_worn.png",
+						"16": "res://textures/tilesets/simple/tileset_roman_tiles.png",
+						"17": "res://textures/tilesets/simple/tileset_plank_45.png",
+						"18": "res://textures/tilesets/simple/tileset_diamond.png",
+						"19": "res://textures/tilesets/simple/tileset_sewers.png",
+						"20": "res://textures/tilesets/simple/tileset_wood_interlaced.png",
+						"21": "res://textures/tilesets/simple/tileset_wood_damaged.png",
+						"22": "res://textures/tilesets/simple/tileset_straw.png",
+						"23": "res://textures/tilesets/simple/tileset_worn_cobble.png",
+						"24": "res://packs/FA30DDXY/textures/tilesets/simple/Stone_Square_Tiles_01_A.webp",
+						"25": "res://packs/FA30DDXY/textures/tilesets/simple/Stone_Tiles_Cracked_A1_03.webp",
+						"26": "res://packs/FA30DDXY/textures/tilesets/simple/Stone_Tiles_A_03.webp",
+						"27": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_H_Light.webp",
 						"28": "res://packs/FA30DDXY/textures/tilesets/simple/Wooden_Flooring_M_Light.webp"
 					}
 				},

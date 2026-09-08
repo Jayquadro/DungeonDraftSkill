@@ -25,8 +25,8 @@ Lo schema di §13 e stato verificato quasi interamente compatibile (vedi
 
 | Ruolo | File in `templates/` | Sorgente originale | Dimensione mappa | Note |
 |---|---|---|---|---|
-| Template vuoto (skeleton di produzione) | `blank_80x80.dungeondraft_map` | `Desktop/ddraft_examples/template_80x80.dungeondraft_map` | 80×80 quadretti | 0 elementi disegnabili, un solo pack (`FA30DDXY`, cioe gli asset di default) |
-| Template ricco (un esemplare per tipo) | `rich_reference.dungeondraft_map` | `Desktop/ddraft_examples/template_ricco.dungeondraft_map` (identico byte-per-byte a `mappa_ricca.dungeondraft_map` nella stessa cartella, SHA-256 `eda0a71f...`) | 80×80 quadretti | 42 pack nel manifest, 1 esemplare di quasi ogni tipo di elemento |
+| Template vuoto (skeleton di produzione) | `blank_80x80.dungeondraft_map` | `Desktop/ddraft_examples/template_80x80.dungeondraft_map` | 80×80 quadretti | 0 elementi disegnabili, 52 pack nel manifest dopo TASK-45 (prima: un solo pack, `FA30DDXY`, cioe gli asset di default) |
+| Template ricco (un esemplare per tipo) | `rich_reference.dungeondraft_map` | Originariamente `Desktop/ddraft_examples/template_ricco.dungeondraft_map` (identico byte-per-byte a `mappa_ricca.dungeondraft_map` nella stessa cartella, SHA-256 `eda0a71f...`); **non piu identico dopo TASK-45** (vedi sotto) | 80×80 quadretti | 51 pack nel manifest dopo TASK-45 (prima: 42), esemplari aggiuntivi per i pack nuovi (vedi §10) |
 
 **Nota sul nome del template vuoto:** SPEC.md §4 usa `blank_40x40.dungeondraft_map`
 come *esempio* illustrativo ("es. 40×40" in §3). Nessun template 40×40 esiste
@@ -37,10 +37,20 @@ Se in futuro servisse un template piu piccolo per velocizzare i test, va
 esportato esplicitamente da Jay (la fixture di test usera comunque un
 8×8 dedicato, TASK-5).
 
-Entrambi i file sono impostati **read-only** (attributo filesystem Windows,
+Entrambi i file erano impostati **read-only** (attributo filesystem Windows,
 `chmod 444`) per rispettare la regola di SPEC.md §14: "un `.dungeondraft_map`
 malformato puo in rari casi far crashare Dungeondraft, lavora sempre su
 copie". Nessun modulo del codice deve scrivere in `templates/`.
+
+**Eccezione TASK-45:** Jay ha riaperto entrambi i template in Dungeondraft
+(rimuovendo l'attributo read-only) per abilitare i nuovi pack e disegnare
+esemplari delle loro texture in `rich_reference.dungeondraft_map` (necessario
+perche `ddforge catalog` estrae le texture dai documenti, non dal solo
+manifest — vedi §10). Questa e una modifica manuale fatta da Jay in
+Dungeondraft, non una scrittura di codice: la regola "nessun modulo del
+codice scrive in templates/" resta valida. `rich_reference.dungeondraft_map`
+non e piu byte-identico alla sua sorgente originale su Desktop; e diventato
+esso stesso la nuova sorgente canonica.
 
 ## 2. Costanti derivate
 
@@ -50,58 +60,73 @@ copie". Nessun modulo del codice deve scrivere in `templates/`.
 | `header.creation_build` | `"1.2.0.1 opulent kirin"` | `templates/*.dungeondraft_map` |
 | `header.uses_default_assets` | `true` in entrambi i template scelti | — |
 
-### Pack ID del template ricco (`header.asset_manifest`, 42 voci)
+### Pack ID del template ricco (`header.asset_manifest`, 51 voci — TASK-45)
 
 Elenco completo id/nome/autore/versione salvato per riferimento (usato da
-TASK-4 per generare `data/assets.json`; qui solo la fonte):
+TASK-4 per generare `data/assets.json`; qui solo la fonte). Aggiornato in
+TASK-45 (10 pack nuovi installati da Jay, poi ridotti a 9 perche
+`BasePackRemade Colored` e stato scartato su sua richiesta — vedi §10):
 
 ```
-qTwZcByF  [DQ] 2Y_Anniversary_Pack                         DungeonQuill              1.1
-2VHJB262  BB BaseCity Colored                               BluBerrey                 1
-KtpqsMIX  BB KeepsAndCastles Colored                        BluBerrey                 1
-4MPa6ax6  BB RiversRunnin Colored                            BluBerrey                 1
-a8D9WX4I  BB RugsNRiches Colored                             BluBerrey                 1
-QofNvPQx  BB SeasAndShores Colored                           BluBerrey                 1
-E0ZgzvXT  Benthic Botany                                      Stovetop                  1
-Prdr1WET  CH - Worldmap                                       Crosshead                 0,5
-Bp03igMq  CHR - Town Maps                                     Crosshead                 0,2
-RchUgE31  City Terrain                                        Clay Robeson              1
-eMSwy6B7  Crosshead's Ghibli Pack                             Crosshead                 1
-566ki5wO  CSA - Community Suggested Assets                    Nexoness                  1,1
-LPjlqz9Q  DQ_Pack_Theme_16 Arcane Laboratory FREE              DungeonQuill              1
-JoOKLIJc  Expanded Nature Vol. 1                               Scott Avery               1
-FA30DDXY  FA_Starter_Pack_v3.0                                 Forgotten Adventures      3.0
-QzahaP3O  GF Colorable Furniture and Stairs                    Gnome Factory             1
-HJANrMeL  GoGots-Forest                                        GoGots                    1,2
-vpUPLad1  GoGots-Forest Add                                    GoGots                    1
-FjQPhftV  GoGots-Mushroom                                      GoGots                    1
-74SaGFcV  GoGots-Water                                         GoGots                    1
-MKedRBxF  IC_Apothecary                                        InsightCheque             1
-0vMF1pHo  Lost Lands Castles                                   Lost Lands                1
-roSIrsHG  Lost Lands Hamlets                                   Lost Lands                1
-P5JygHfx  Maelstrom Maps Free Simple Castle Asset Pack         Maelstrom Maps            1
-kNUrZPY0  Skront's Alchemy                                     Skront                    1
-dS0IUhwf  Skront's Alchemy Mk2                                 Skront                    1
-MiS6cyNC  Skront's Books                                       Skront                    1.1
-hA8yMy2D  Skront's Farm and Field                              Skront                    1.1
-o4K03ljk  Skront's Rocks and Bricks                            Skront                    1
-PGz110gg  Skront's Treasure                                    Skront                    1
-8LR9chxF  Skront's Wooden Stuff                                Skront                    1.3
-pkqBedwn  Spacious Stable                                      InsightCheque             1.1
-u492rwJO  Stained Glass Windows                                Olooriel                  1
-LLmsOZ4X  T23's Royal Furniture                                Toblakai23                1
-H2ndnvOE  TygerBar                                             Tyger_purr                1.1
-MJQ9gdYx  TygerLibrary                                         Tyger_purr                1
-pMI97nEl  TygerMusic                                           Tyger_purr                1.1
-sI3jbFGs  TygerNautical                                        Tyger_purr                2.1
-CJYX8Yjo  TygerWagons                                          Tyger_purr                1
-s7XNt1yd  Unofficial Jonathan Roberts Free Pack                (nessuno)                  1
-WFWMFRDX  WFW 5th Anniversary Free Megapack                    White Fox Works           1
-ygxXFHkC  WFW Sample Pack                                      White Fox Works           1
+sWxkyx98  2MT Typical Tavern                              2-Minute Tabletop         2.2
+OfL7DytA  5 wood - Furniture Pack                         HoodedGrot                1
+qTwZcByF  [DQ] 2Y_Anniversary_Pack                        DungeonQuill              1.1
+6VxwaRdj  BB 51 Assets Houses1                            BluBerrey                 1
+2VHJB262  BB BaseCity Colored                             BluBerrey                 1
+KtpqsMIX  BB KeepsAndCastles Colored                      BluBerrey                 1
+4MPa6ax6  BB RiversRunnin Colored                         BluBerrey                 1
+a8D9WX4I  BB RugsNRiches Colored                          BluBerrey                 1
+QofNvPQx  BB SeasAndShores Colored                        BluBerrey                 1
+E0ZgzvXT  Benthic Botany                                  Stovetop                  1
+Prdr1WET  CH - Worldmap                                   Crosshead                 0,5
+Bp03igMq  CHR - Town Maps                                 Crosshead                 0,2
+RchUgE31  City Terrain                                    Clay Robeson              1
+eMSwy6B7  Crosshead's Ghibli Pack                         Crosshead                 1
+566ki5wO  CSA - Community Suggested Assets                Nexoness                  1,1
+6v1aRL4R  Dellos - Vol. 2                                 Innozoom                  1
+DnDgWAWA  DEMO - DnDungeon - Whimsical Artisan's Workshop Assets (1.0) Cyclopean                 1.0
+DnDgCORE  DnDungeon Overhaul for Dungeondraft - Core (DEMO) Cyclopean                 1.0
+LPjlqz9Q  DQ_Pack_Theme_16 Arcane Laboratory FREE         DungeonQuill              1
+XJdI4mDJ  DQ_Pack_Theme_27 Alchemy II FREE                DungeonQuill              1
+JoOKLIJc  Expanded Nature Vol. 1                          Scott Avery               1
+FA30DDXY  FA_Starter_Pack_v3.0                            Forgotten Adventures      3.0
+QzahaP3O  GF Colorable Furniture and Stairs               Gnome Factory             1
+HJANrMeL  GoGots-Forest                                   GoGots                    1,2
+vpUPLad1  GoGots-Forest Add                               GoGots                    1
+FjQPhftV  GoGots-Mushroom                                 GoGots                    1
+74SaGFcV  GoGots-Water                                    GoGots                    1
+2usYTHKD  GW Inn tables and kitchens                      (nessuno)                 1
+REqnHQfW  Hooded Wood Table and Chair Pack                HoodedGrot                1
+MKedRBxF  IC_Apothecary                                   InsightCheque             1
+0vMF1pHo  Lost Lands Castles                              Lost Lands                1
+roSIrsHG  Lost Lands Hamlets                               Lost Lands                1
+P5JygHfx  Maelstrom Maps Free Simple Castle Asset Pack    Maelstrom Maps            1
+kNUrZPY0  Skront's Alchemy                                Skront                    1
+dS0IUhwf  Skront's Alchemy Mk2                            Skront                    1
+MiS6cyNC  Skront's Books                                  Skront                    1.1
+hA8yMy2D  Skront's Farm and Field                         Skront                    1.1
+o4K03ljk  Skront's Rocks and Bricks                       Skront                    1
+PGz110gg  Skront's Treasure                               Skront                    1
+8LR9chxF  Skront's Wooden Stuff                           Skront                    1.3
+pkqBedwn  Spacious Stable                                 InsightCheque             1.1
+u492rwJO  Stained Glass Windows                           Olooriel                  1
+LLmsOZ4X  T23's Royal Furniture                           Toblakai23                1
+H2ndnvOE  TygerBar                                        Tyger_purr                1.1
+MJQ9gdYx  TygerLibrary                                    Tyger_purr                1
+pMI97nEl  TygerMusic                                      Tyger_purr                1.1
+sI3jbFGs  TygerNautical                                   Tyger_purr                2.1
+CJYX8Yjo  TygerWagons                                     Tyger_purr                1
+s7XNt1yd  Unofficial Jonathan Roberts Free Pack           (nessuno)                 1
+WFWMFRDX  WFW 5th Anniversary Free Megapack               White Fox Works           1
+ygxXFHkC  WFW Sample Pack                                 White Fox Works           1
 ```
 
-Il template vuoto referenzia un solo pack: `FA30DDXY` (`FA_Starter_Pack_v3.0`,
-Forgotten Adventures) — quello incluso di default con l'installazione.
+Il template vuoto referenzia 52 pack (TASK-45: allineato a rich_reference
+piu `BasePackRemade Colored`, presente nel manifest ma senza controparte
+disegnata in nessun documento reale — innocuo, un pack in piu nel manifest
+non referenziato da nessuna texture non genera DDF014). Prima di TASK-45
+referenziava un solo pack: `FA30DDXY` (`FA_Starter_Pack_v3.0`, Forgotten
+Adventures), quello incluso di default con l'installazione.
 
 ## 3. Contenuto del template ricco: cosa c'e e cosa manca
 
@@ -855,6 +880,97 @@ con quel file incluso fra i `--from` — mai inventare un path a mano.
 trovata): `table_round`, `chair`, `bed`, `crate`, `barrel`, `bookshelf`,
 `brazier`. `paths` resta vuota: nessuna mappa reale di Jay usa un elemento
 `path`, coerente con quanto gia notato in §3 per `rich_reference`.
+
+### 10.1 Aggiornamento TASK-45: nuovi pack di Jay
+
+Jay ha installato 10 pack DungeonDraft nuovi rispetto ai 42 di TASK-4 e ha
+disegnato in `rich_reference.dungeondraft_map` un esemplare di ciascuno
+(elenco completo id/nome/autore/versione in §2). Un pack (`2fXlBwjR`, "BB
+BasePackRemade Colored") e stato scartato su richiesta di Jay dopo il primo
+giro — resta abilitato nel manifest di `blank_80x80.dungeondraft_map` (Jay
+lo aveva gia salvato li prima di scartarlo) ma non ha controparte disegnata
+in nessun documento reale, quindi non compare nel catalogo. I 9 pack
+restanti sono tutti rappresentati da almeno un `object` reale in
+`rich_reference.dungeondraft_map`.
+
+**Rigenerazione:** stessi 11 file sorgente di TASK-4 (`rich_reference` +
+10 mappe NovaMistralis), con un'unica differenza — durante il lavoro, 2 dei
+file NovaMistralis (`Carcere_Nova.dungeondraft_map`,
+`Carcere_Nova_2.dungeondraft_map`) risultavano cancellati nella working tree
+del repo `NovaMistralis` (lavoro di campagna in corso di Jay, non collegato
+a questo progetto). Erano pero ancora nell'ultimo commit di quel repo
+(`fda264f`): estratti con `git show fda264f:"Mappe/Carcere_Nova.dungeondraft_map"`
+(idem per `_2`) invece di essere omessi, perche senza di loro il catalogo
+perde chiavi tuttora usate da `palette_for` per 7 stili su 8 (`brazier`,
+`archway`, `wood_planks`, `rug_01`, `crate`, `fountain_stone_01`,
+`bed_wood_single_01`, `desk_wood_01`...) — non e un dato inventato, e
+l'ultimo stato reale genuino di quei due file, letto dalla storia git invece
+che dal filesystem.
+
+```
+templates/rich_reference.dungeondraft_map
+NovaMistralis/Mappe/Carcere_celle.dungeondraft_map
+NovaMistralis/Mappe/Carcere_sotterraneo.dungeondraft_map
+NovaMistralis/Mappe/Carcere_torre.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere1.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere_Nova_Mistralis_PianoTerra.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova2.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova3.dungeondraft_map
+NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/ProvaMappa.dungeondraft_map
+Carcere_Nova.dungeondraft_map            (estratto da NovaMistralis@fda264f, "Mappe/Carcere_Nova.dungeondraft_map")
+Carcere_Nova_2.dungeondraft_map          (estratto da NovaMistralis@fda264f, "Mappe/Carcere_Nova_2.dungeondraft_map")
+```
+
+Comando (identico nella forma a TASK-4, stesso `--from` ripetibile):
+
+```
+ddforge catalog --from templates/rich_reference.dungeondraft_map \
+  --from ".../NovaMistralis/Mappe/Carcere_celle.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_sotterraneo.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_torre.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere1.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere_Nova_Mistralis_PianoTerra.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova2.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova3.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/ProvaMappa.dungeondraft_map" \
+  --from "<estratto git>/Carcere_Nova.dungeondraft_map" \
+  --from "<estratto git>/Carcere_Nova_2.dungeondraft_map" \
+  --out data/assets.json
+```
+
+Risultato: 51 pack, 6 walls, 6 floors, 15 portals, 1 roof, 0 paths, 59
+oggetti. Determinismo verificato (due generazioni identiche). Nessuna voce
+del catalogo referenzia un pack ID assente da nessun `header.asset_manifest`
+dei documenti sorgente. Diff col catalogo di TASK-4: solo aggiunte (13
+oggetti nuovi), nessuna chiave preesistente rimossa o modificata.
+
+**`palette_for` (assets.py) non aggiornato con le nuove texture per gli 8
+stili esistenti.** Nessuno dei 9 pack nuovi introduce una texture che
+colma un vuoto reale in una definizione di stile esistente (muro/pavimento/
+porta/tetto sono gia tutti popolati con texture approvate al gate umano); le
+uniche candidate immediate sono gli `object` casa di `6VxwaRdj` ("BB 51
+Assets Houses1": `BB_Houses1_House10/12/28.png`, `BB_Houses1_Roof7.png`),
+che pero non sono un "accent" da sparpagliare in una stanza — sono
+l'edificio intero da piazzare per lotto, esattamente lo scopo di TASK-46
+("Edifici cittadini come object da asset pack"), che le user rispettivamente
+sceglie. Restano quindi catalogate ma non referenziate da nessuna
+`_STYLE_DEFINITIONS`, in attesa che TASK-46 le usi.
+
+**Effetto collaterale scoperto e corretto:** gli alias semantici `bed` e
+`bookshelf` (vedi `OBJECT_ALIASES` in assets.py) assegnano la chiave
+all'*prima* texture osservata il cui filename la contiene, nell'ordine dei
+documenti passati a `--from`. Con `rich_reference.dungeondraft_map` come
+primo `--from` e i nuovi oggetti `Bunk Bed 4 - Colorable.png` (`sWxkyx98`) e
+`bookshelf 4 v3.png` (`OfL7DytA`) disegnati li, gli alias "bed"/"bookshelf"
+si sarebbero silenziosamente riassegnati a quelle texture nuove al posto di
+quelle di sempre — nessun errore (entrambi i pack finiscono comunque nel
+manifest di `blank_80x80.dungeondraft_map`), ma un cambio visivo non voluto
+su `tavern` e `manor`, gia approvati al gate umano. Stesso problema gia
+risolto una volta in TASK-29 per `table_round`/`chair`: `tavern.accents["bed"]`
+e `manor.accents["bookshelf"]` sono state ripuntate alla chiave letterale
+(`bed_wood_single_01`, `bookshelf_wood_01`) invece dell'alias ambiguo,
+cosi il risultato resta identico a prima indipendentemente da come si
+rimescola il catalogo in futuro.
 
 ## 11. `tests/fixtures/reference_8x8.dungeondraft_map` — provenienza (TASK-5)
 

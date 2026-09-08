@@ -52,7 +52,7 @@ def test_inspect_prints_dimensions_format_build_and_packs():
     assert "Format: 3" in result.stdout
     assert "1.2.0.1" in result.stdout
     assert "Livelli: 1" in result.stdout
-    assert "Pack referenziati (42)" in result.stdout
+    assert "Pack referenziati (51)" in result.stdout
 
 
 def test_inspect_prints_element_counts_per_level():
