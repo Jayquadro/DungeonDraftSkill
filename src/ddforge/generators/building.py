@@ -32,6 +32,13 @@ _BUILDING_TYPES = {
         (0, ["magazzino"]),
         (1, ["soppalco"]),
     ],
+    # Edificio generico a un solo piano, per i lotti di generators/city.py
+    # (TASK-35, SPEC.md §9.4): la spec non chiede una destinazione d'uso per
+    # gli edifici di contorno di una via, solo che ci sia "un edificio per
+    # lotto". Nessuna delle tipologie sopra e a un piano solo.
+    "house": [
+        (0, ["stanza", "stanza", "stanza"]),
+    ],
 }
 
 # Larghezza del vano scale: 2 quadretti, cioe 3 m. Una rampa sta in 1 m,

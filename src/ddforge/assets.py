@@ -247,6 +247,17 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
     "city": {
         "wall": "cobble", "floor": "cobblestone", "door": "threshold_01",
         "accents": {"fountain": "fountain_stone_01"},
+        # Serve a draw_building per gli edifici di generators/city.py
+        # (TASK-35): senza, palette_for("city").roof e None e nessun tetto
+        # verrebbe disegnato (SPEC.md §9.4 lo vuole su ogni edificio,
+        # "si vede dall'alto").
+        "roof": "tiles",
+        # "piazza" non e un Room.kind (le piazze non sono Room, TASK-35):
+        # riusa lo stesso meccanismo di Palette.floors con una chiave
+        # sintetica, cosi la piazza ha una pavimentazione diversa dal
+        # cobblestone di strade/edifici (SPEC.md §9.4 AC5) senza aggiungere
+        # un campo dedicato alla Palette.
+        "floors": {"piazza": "tileset_brick_basketweave"},
     },
 }
 

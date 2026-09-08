@@ -9,7 +9,9 @@ TASK-27.
 import math
 import re
 
-from ddforge.build import add_light, add_object, add_pattern, add_portal, add_roof, add_wall, set_cave_bitmap
+from ddforge.build import (
+    add_light, add_object, add_path, add_pattern, add_portal, add_roof, add_wall, set_cave_bitmap,
+)
 from ddforge.godot import GRID, grid_to_px, parse_pv2
 from ddforge.model import Blueprint, Corridor, Door, Rect, Room
 
@@ -649,6 +651,55 @@ def render_blueprint(level, ids, blueprint, palette) -> None:
     for room in blueprint.rooms:
         draw_room(level, ids, room, palette)
     draw_corridor_network(level, ids, blueprint.corridors, palette)
+
+
+# Texture base di Dungeondraft (non di un pack, quindi esente da DDF014) per
+# le strade di generators/city.py (TASK-35, SPEC.md §9.4 AC2). Nessun
+# template disponibile contiene un elemento 'path' da cui ricavarla via
+# assets.build_catalog (data/assets.json['paths'] e vuoto): verificata
+# cercando 'res://textures/paths/' dentro Dungeondraft.pck (installazione
+# locale), dove compare come texture base — stesso trattamento gia dato ai
+# base texture path di scripts/demo_m1.py (stone.png), mai passati dal
+# catalogo. Da confermare visivamente al gate umano di TASK-36.
+_STREET_TEXTURE = "res://textures/paths/cobble.png"
+
+
+def _street_path_points(street: Rect) -> tuple[list[tuple[float, float]], float]:
+    """Centro-linea e larghezza (in quadretti) di un segmento di strada:
+    city._split_with_gap produce Rect stretti e lunghi, mai quadrati (vedi
+    city._MIN_BLOCK), quindi il lato corto identifica sempre l'asse di
+    marcia senza ambiguita (a differenza di compose._long_sides, che per
+    questo ha bisogno del campo esplicito Corridor.horizontal)."""
+    if street.h >= street.w:
+        cx = (street.x1 + street.x2) / 2
+        return [(cx, street.y1), (cx, street.y2)], street.w
+    cy = (street.y1 + street.y2) / 2
+    return [(street.x1, cy), (street.x2, cy)], street.h
+
+
+def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
+    """Disegna un Blueprint di quartiere/citta (TASK-35, SPEC.md §9.4):
+    strade come add_path (AC2, mai come pattern), piazze come pavimento
+    diverso + elemento centrale (AC5), ed edifici delegati a draw_building,
+    una chiamata per edificio perche ognuno e un Blueprint a se (footprint e
+    tetto propri, TASK-35: "riusa building.py a un solo piano" vuol dire un
+    edificio per lotto, non tutti i lotti in un unico Blueprint)."""
+    level = level_stack["0"]
+
+    for street in blueprint.streets:
+        points, width = _street_path_points(street)
+        add_path(level, ids, points, _STREET_TEXTURE, width=int(grid_to_px(width)))
+
+    plaza_texture = palette.floors.get("piazza", palette.floor)
+    fountain = palette.accents.get("fountain")
+    for plaza in blueprint.plazas:
+        add_pattern(level, ids, plaza, plaza_texture)
+        if fountain is not None:
+            cx, cy = plaza.center()
+            add_object(level, ids, cx, cy, fountain)
+
+    for building_blueprint in blueprint.buildings:
+        draw_building(level_stack, ids, building_blueprint, palette)
 
 
 def render_cave_blueprint(level, blueprint) -> None:

@@ -113,3 +113,14 @@ class Blueprint:
     # Room/Corridor rettangolari, quindi non si presta al modello a stanze
     # e usa questo campo al loro posto (rooms/corridors restano []).
     cave_grid: list[list[int]] | None = None
+    # Campi dedicati al generatore cittadino (TASK-35/§9.4): come cave_grid,
+    # city.py non si presta al modello a stanze (rooms/corridors restano
+    # []). Un isolato/piazza e un semplice Rect; ogni edificio e un
+    # Blueprint completo (con le sue Room, il suo stairs_rect) gia tradotto
+    # in coordinate assolute della mappa cittadina, cosi compose.py puo
+    # disegnarlo con draw_building() esattamente come farebbe per un edificio
+    # a se stante: e cosi che si "riusa building.py a un solo piano" senza
+    # forzare piu edifici dentro un unico bounding box/tetto.
+    streets: list[Rect] = field(default_factory=list)
+    plazas: list[Rect] = field(default_factory=list)
+    buildings: list["Blueprint"] = field(default_factory=list)

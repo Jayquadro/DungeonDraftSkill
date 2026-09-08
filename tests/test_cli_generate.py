@@ -159,18 +159,56 @@ def test_generate_lights_flag_adds_lights(tmp_path):
     assert n_lights(out_lights) > 0
 
 
-def test_generate_unimplemented_style_gives_clear_error_not_traceback(tmp_path):
+def test_generate_city_produces_a_valid_file(tmp_path):
+    """TASK-35: 'city' e' l'ultimo stile delle choices del parser a essere
+    cablato in _load_generators (dungeon/building/cave/sewer lo erano
+    gia'). Sostituisce il vecchio test che verificava l'errore esplicito
+    'non ancora implementato' per questo stesso stile."""
     out = tmp_path / "out.dungeondraft_map"
     result = _run(
         "generate", "city",
         "--template", "templates/blank_80x80.dungeondraft_map",
         "--out", str(out),
-        "--width", "40", "--height", "40",
+        "--width", "70", "--height", "70",
+        "--seed", "1337",
     )
-    assert result.returncode == 1
-    assert not out.exists()
-    assert "Traceback" not in result.stderr
-    assert "non e ancora implementato" in (result.stdout + result.stderr)
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    level = doc["world"]["levels"]["0"]
+    assert len(level["paths"]) > 0
+    assert len(level["roofs"]["roofs"]) > 0
+
+
+def test_generate_city_same_seed_is_reproducible(tmp_path):
+    out1 = tmp_path / "out1.dungeondraft_map"
+    out2 = tmp_path / "out2.dungeondraft_map"
+    for out in (out1, out2):
+        result = _run(
+            "generate", "city",
+            "--template", "templates/blank_80x80.dungeondraft_map",
+            "--out", str(out),
+            "--width", "70", "--height", "70",
+            "--seed", "42",
+        )
+        assert result.returncode == 0
+    assert out1.read_text(encoding="utf-8") == out2.read_text(encoding="utf-8")
+
+
+def test_all_declared_algorithms_are_wired_to_a_generator():
+    """Nessuno stile fantasma nelle choices del parser (build_parser)
+    che poi fallisce silenziosamente in _cmd_generate: regressione diretta
+    del vecchio test 'city non e' ancora implementato', ora superato."""
+    import argparse
+
+    from ddforge.cli import _load_generators, build_parser
+
+    parser = build_parser()
+    subparsers_action = next(
+        a for a in parser._actions if isinstance(a, argparse._SubParsersAction)
+    )
+    generate_parser = subparsers_action.choices["generate"]
+    algorithm_action = next(a for a in generate_parser._actions if a.dest == "algorithm")
+    assert set(algorithm_action.choices) == set(_load_generators())
 
 
 def test_generate_missing_template_gives_clear_error(tmp_path):
