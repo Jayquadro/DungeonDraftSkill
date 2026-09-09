@@ -435,6 +435,46 @@ integralmente da SPEC.md §13, non riverificato qui.
 
 Contenitore: `{"shade": true, "shade_contrast": 0.5, "sun_direction": 45, "roofs": [...]}`.
 
+#### `points` e la linea di COLMO, `width` e la MEZZA larghezza (TASK-41)
+
+Un `roof` non e un poligono di ingombro: `points` e la polilinea del colmo
+e `width` e la distanza dal colmo alla gronda, cioe **meta** della larghezza
+totale del tetto. Non era mai stato verificato prima di TASK-41: sia il
+campione di `rich_reference` sia `Conyberry.dungeondraft_map` hanno un solo
+tetto isolato, senza niente sotto con cui confrontarlo, e
+`compose.draw_building` (TASK-27) passa invece i 4 vertici del footprint con
+la `width` di default.
+
+Prova, da un file scritto da Dungeondraft:
+`source/github/dungeondraft_maps/crosshead_style/tresendar_manor_full.dungeondraft_map`,
+che tiene gli 11 tetti su un livello dedicato (livello 1, zero muri) e la
+muratura degli edifici su un altro (livello 3):
+
+| tetto (livello 1) | `width` | muri attesi se `width` e la mezza larghezza | muro reale (livello 3) |
+|---|---|---|---|
+| colmo verticale x=2560, y 768→2560 | 768 | x=1792 e x=3328 | x=1790,5 e x=3325,9 |
+| colmo verticale x=5632, y 768→2560 | 768 | x=4864 e x=6400 | x=4864 (massimo x del livello) |
+
+Se `width` fosse la larghezza totale i muri dovrebbero stare a x=2176/2944 e
+x=5248/6016: nessuno di quei valori compare fra i muri.
+
+Conseguenza usata da `compose.add_ridge_roof`, il tetto di **entrambi** i
+preset di `generators/city.py`: il colmo corre lungo il lato lungo del
+footprint e `width` e meta del lato corto, cosi le due gronde cadono
+esattamente sui bordi dell'edificio.
+
+Conseguenza sull'altro tetto in circolazione: `compose.draw_building` passa
+invece i 4 vertici del footprint come poligono chiuso con la `width` di
+default (512 px). Con la semantica appena verificata quel tetto e una fascia
+larga 2 quadretti per lato **centrata sul perimetro**, quindi sborda 2
+quadretti oltre l'edificio su ogni lato — su una casa di citta da 5×5
+quadretti significa un tetto 9×9 che arriva in mezzo alla strada e si
+sovrappone a quello del vicino. Per questo `render_city_blueprint` chiama
+`draw_building(..., roof=False)` e disegna il tetto con `add_ridge_roof`.
+L'edificio singolo (`ddforge generate building`) usa ancora il tetto a
+poligono: e un output gia approvato da Jay al gate umano M4 e correggerlo
+richiede un nuovo riscontro visivo, tracciato in **TASK-47**.
+
 ### `light` e `text`
 
 Vedi §4 sopra: entrambi derivati per questo progetto, `light` ha due

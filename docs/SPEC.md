@@ -647,6 +647,23 @@ parametro `--scale` che permetta di generare a 1 quadretto = 1 edificio per le
 mappe di regione, contro 1 quadretto = 5 ft per il quartiere giocabile.
 Decidi in M5 se supportare entrambe o solo il quartiere.
 
+> **Deciso in M5** (`backlog/decisions/decision-2`, TASK-34): si supportano
+> **entrambi** i regimi come preset selezionabili, non uno solo. Implementato
+> in TASK-41 con due preset, `quartiere` (5 ft/quadretto) e `citta` (1
+> quadretto = 1 edificio). Al round 2 del gate umano Jay ha rivisto scala e
+> nomi e ha chiesto **tre** preset: `ddforge generate city --scale
+> isolato|quartiere|citta`, default `isolato`. `isolato` è il vecchio
+> `quartiere` rinominato (edifici a pianta completa); `quartiere` è il
+> vecchio `citta` rinominato (1 quadretto = 1 edificio); `citta` è nuovo, una
+> città intera capace di contenere una decina di quartieri (~10x gli edifici
+> del preset `quartiere` a parità di canvas). Nei preset `quartiere`/`citta`
+> un edificio non è una pianta a stanze ma il suo solo ingombro (pavimento +
+> tetto): `building.generate` pretende almeno 6-8 quadretti per lato, che a
+> queste scale il lotto non ha. Punti 1–6 di questa sezione valgono per tutti
+> e tre i preset; cambiano solo i valori numerici (SCALE_PRESETS in
+> `generators/city.py`). Differenza fra i preset e come scegliere:
+> `README.md` e `skill/references/styles.md`.
+
 ### 9.5 Arredo (`furnish`)
 
 Modulo trasversale, applicato dopo la geometria:

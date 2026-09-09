@@ -86,6 +86,30 @@ class Chamber:
 
 
 @dataclass
+class Street:
+    """Una via di generators/city.py: centro-linea e larghezza selciata.
+
+    La centro-linea e una polilinea, non un segmento: serpeggia dentro
+    l'ingombro che le e stato riservato, cosi la rete stradale non e una
+    griglia di rettangoli perfetti (TASK-41, richiesta di Jay al primo round
+    del gate). Le coordinate sono in quadretti, come Rect.
+
+    `corridor` e l'ingombro riservato dalla partizione degli isolati: la
+    centro-linea vi resta dentro per costruzione e nessun edificio vi entra.
+    E None per le vie oblique, che non nascono da un taglio e si fanno spazio
+    togliendo gli edifici che incontrano (vedi city._avenue).
+    """
+
+    points: list[tuple[float, float]]
+    width: float
+    corridor: "Rect | None" = None
+    # La via principale (il taglio di profondita 0): sempre piu larga delle
+    # secondarie (SPEC.md §9.4). Campo esplicito e non "quella piu larga"
+    # perche una via obliqua puo essere larga come lei.
+    main: bool = False
+
+
+@dataclass
 class Room:
     rect: Rect
     kind: str
@@ -136,12 +160,22 @@ class Blueprint:
     chambers: list[Chamber] = field(default_factory=list)
     # Campi dedicati al generatore cittadino (TASK-35/§9.4): come cave_grid
     # e chambers, city.py non si presta al modello a stanze (rooms/corridors
-    # restano []). Un isolato/piazza e un semplice Rect; ogni edificio e un
-    # Blueprint completo (con le sue Room, il suo stairs_rect) gia tradotto
-    # in coordinate assolute della mappa cittadina, cosi compose.py puo
+    # restano []). Una piazza e un semplice Rect; una via e una Street
+    # (polilinea + larghezza, vedi sopra); ogni edificio e un Blueprint
+    # completo (con le sue Room, il suo stairs_rect) gia tradotto in
+    # coordinate assolute della mappa cittadina, cosi compose.py puo
     # disegnarlo con draw_building() esattamente come farebbe per un edificio
-    # a se stante: e cosi che si "riusa building.py a un solo piano" senza
-    # forzare piu edifici dentro un unico bounding box/tetto.
-    streets: list[Rect] = field(default_factory=list)
+    # a se stante, senza forzare piu edifici dentro un unico bounding
+    # box/tetto.
+    streets: list[Street] = field(default_factory=list)
     plazas: list[Rect] = field(default_factory=list)
     buildings: list["Blueprint"] = field(default_factory=list)
+    # Edifici dei preset di scala astratti "quartiere"/"citta"
+    # (TASK-41/decision-2): un rettangolo di ingombro invece di un Blueprint
+    # completo. A quelle scale un lotto e piu piccolo di quanto
+    # building.generate pretenda per lato (stanza minima piu il suo
+    # margine): la geometria a stanze non e rappresentabile, ed e per questo
+    # che decision-2 prevede per questi preset una rappresentazione astratta.
+    # I due campi si escludono a vicenda: `buildings` e popolato dal preset
+    # "isolato", `building_footprints` dai preset "quartiere"/"citta".
+    building_footprints: list[Rect] = field(default_factory=list)

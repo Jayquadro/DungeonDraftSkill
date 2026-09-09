@@ -235,6 +235,79 @@ def test_generate_city_same_seed_is_reproducible(tmp_path):
     assert out1.read_text(encoding="utf-8") == out2.read_text(encoding="utf-8")
 
 
+def test_generate_city_scale_quartiere_produces_a_valid_file(tmp_path):
+    """TASK-41 AC1/AC3/AC7: --scale quartiere produce un file valido, con
+    molti piu edifici del preset isolato sullo stesso canvas e senza muri (a
+    1 quadretto = 1 edificio non c'e geometria di stanze)."""
+    out_isolato = tmp_path / "isolato.dungeondraft_map"
+    out_quartiere = tmp_path / "quartiere.dungeondraft_map"
+
+    for out, scale in ((out_isolato, "isolato"), (out_quartiere, "quartiere")):
+        result = _run(
+            "generate", "city",
+            "--template", "templates/blank_80x80.dungeondraft_map",
+            "--out", str(out),
+            "--width", "78", "--height", "78",
+            "--seed", "1337", "--scale", scale,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+
+    isolato = json.loads(out_isolato.read_text(encoding="utf-8"))["world"]["levels"]["0"]
+    quartiere = json.loads(out_quartiere.read_text(encoding="utf-8"))["world"]["levels"]["0"]
+
+    assert len(quartiere["roofs"]["roofs"]) > 5 * len(isolato["roofs"]["roofs"])
+    assert len(quartiere["paths"]) > len(isolato["paths"])
+    assert quartiere["walls"] == []
+    assert isolato["walls"] != []
+
+
+def test_generate_city_scale_citta_has_an_order_of_magnitude_more_buildings(tmp_path):
+    """AC4: la citta e' capace di contenere una decina di quartieri, cioe'
+    un ordine di grandezza in piu' di edifici del preset quartiere sullo
+    stesso canvas (vedi la stessa garanzia gia' verificata su city.generate()
+    in tests/test_generators_city.py, qui end-to-end via CLI)."""
+    out_quartiere = tmp_path / "quartiere.dungeondraft_map"
+    out_citta = tmp_path / "citta.dungeondraft_map"
+
+    for out, scale in ((out_quartiere, "quartiere"), (out_citta, "citta")):
+        result = _run(
+            "generate", "city",
+            "--template", "templates/blank_80x80.dungeondraft_map",
+            "--out", str(out),
+            "--width", "78", "--height", "78",
+            "--seed", "1337", "--scale", scale,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+
+    quartiere = json.loads(out_quartiere.read_text(encoding="utf-8"))["world"]["levels"]["0"]
+    citta = json.loads(out_citta.read_text(encoding="utf-8"))["world"]["levels"]["0"]
+
+    ratio = len(citta["roofs"]["roofs"]) / len(quartiere["roofs"]["roofs"])
+    assert 5.0 < ratio < 20.0, ratio
+    assert citta["walls"] == []
+
+
+def test_generate_city_scale_defaults_to_isolato(tmp_path):
+    """AC2: senza --scale il risultato deve essere identico a --scale
+    isolato, cioe' all'output di TASK-35 gia' esistente (rinominato da
+    "quartiere" a "isolato" al round 2 del gate)."""
+    outs = []
+    for name, args in (("implicito", []), ("esplicito", ["--scale", "isolato"])):
+        out = tmp_path / f"{name}.dungeondraft_map"
+        result = _run(
+            "generate", "city",
+            "--template", "templates/blank_80x80.dungeondraft_map",
+            "--out", str(out),
+            "--width", "70", "--height", "70",
+            "--seed", "1337", *args,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        doc = json.loads(out.read_text(encoding="utf-8"))
+        doc["header"].pop("creation_date", None)
+        outs.append(doc)
+    assert outs[0] == outs[1]
+
+
 def test_all_declared_algorithms_are_wired_to_a_generator():
     """Nessuno stile fantasma nelle choices del parser (build_parser)
     che poi fallisce silenziosamente in _cmd_generate: regressione diretta

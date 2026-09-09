@@ -48,6 +48,17 @@ def test_parse_pv2_rejects_invalid_string():
         parse_pv2("Vector2( 1, 2 )")
 
 
+@pytest.mark.parametrize("n", [8.567903932998888e-05, -0.0000000001, 5e-10])
+def test_pv2_never_emits_scientific_notation(n):
+    """repr() passa a 'e' sotto 1e-4 (osservato con coordinate vicine a zero
+    nel preset "citta" di generators/city.py, TASK-41): ne' il letterale
+    Godot ne' _PV2_RE/parse_pv2 la riconoscono (DDF007 in validate.py)."""
+    s = pv2([(0, 0), (n, 1.0)])
+    inner = s[s.index("(") + 1 : s.rindex(")")]
+    assert "e" not in inner and "E" not in inner
+    assert parse_pv2(s) == [(0.0, 0.0), (n, 1.0)]
+
+
 def test_argb_prepends_full_alpha_by_default():
     assert argb("aabbcc") == "ffaabbcc"
 

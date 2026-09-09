@@ -269,18 +269,29 @@ def generate(*, width: int, height: int, seed: int,
     # del gate M4 si riservava una colonna intera larga quanto il vano ma
     # alta quanto l'edificio: meta restava spazio morto e il vano scale
     # finiva fuori dai muri (TASK-30).
-    stairs_rect = _stairwell_rect(footprint)
-    generation_footprint = footprint
-    parts = _parts_around_stairwell(footprint, stairs_rect, l_shaped)
-
     floors_spec = _BUILDING_TYPES[building_type]
+    # Un edificio a un solo piano non ha scale da ospitare (TASK-41): il vano
+    # si mangiava una fascia larga _STAIRS_MIN_SIDE su tutta l'altezza, cioe
+    # un terzo di una casetta di citta, per portare da nessuna parte. Le case
+    # generate da city.py erano cosi: un ripostiglio murato piu una stanza.
+    single_floor = max(floor_index for floor_index, _ in floors_spec) == 0
+    stairs_rect = None if single_floor else _stairwell_rect(footprint)
+    generation_footprint = footprint
+    parts = (
+        _footprint_parts(footprint, l_shaped) if stairs_rect is None
+        else _parts_around_stairwell(footprint, stairs_rect, l_shaped)
+    )
+
     all_rooms: list[Room] = []
     all_graph: dict[int, list[int]] = {}
     corridors: list[Corridor] = []
 
     for floor_index, kinds in floors_spec:
         floor_parts = parts
-        if building_type == "warehouse" and floor_index == 1:
+        # `stairs_rect is not None` e implicito (un soppalco e un secondo
+        # piano, quindi l'edificio non e a piano unico), ma tenerlo esplicito
+        # evita di dipendere da quell'implicazione.
+        if building_type == "warehouse" and floor_index == 1 and stairs_rect is not None:
             # Soppalco: copre solo meta della pianta, non l'intero footprint.
             # Parte comunque dal bordo destro del vano scale, che resta
             # riservato su ogni piano.
@@ -311,7 +322,8 @@ def generate(*, width: int, height: int, seed: int,
             for index, rect in enumerate(room_rects)
         ]
         floor_graph = _connect_floor_rooms(floor_rooms, corridors, corridor_width)
-        _connect_stairwell(floor_rooms, stairs_rect)
+        if stairs_rect is not None:
+            _connect_stairwell(floor_rooms, stairs_rect)
         _ensure_entry(floor_rooms, generation_footprint, force=(floor_index == 0))
 
         offset = len(all_rooms)

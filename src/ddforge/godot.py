@@ -4,6 +4,7 @@ Unico modulo del progetto che costruisce le stringhe Vector2 / PoolVector2Array
 e i colori ARGB. Vedi docs/SPEC.md §6.1, base verificata in §12.
 """
 
+import decimal
 import re
 from typing import Sequence
 
@@ -14,10 +15,21 @@ _PV2_RE = re.compile(rf"^PoolVector2Array\(\s*((?:{_NUMBER}\s*,\s*)*{_NUMBER})?\
 
 
 def _fmt_number(n: float) -> str:
-    """Interi senza '.0', float con la rappresentazione minima di Python."""
+    """Interi senza '.0', float con la rappresentazione minima di Python.
+
+    repr() passa alla notazione scientifica sotto 1e-4 (es. '8.57e-05'), che
+    ne' il letterale Godot ne' _NUMBER/_PV2_RE sopra riconoscono: puo
+    capitare con coordinate vicine a zero per errore di arrotondamento
+    (osservato nel preset "citta" di generators/city.py, isolati/vie di
+    meno di un quadretto amplificano il rumore in virgola mobile). Se
+    succede, decimal.Decimal riespande le stesse cifre di repr() in
+    notazione posizionale, senza perdere precisione (round-trip esatto)."""
     if isinstance(n, int) or (isinstance(n, float) and n.is_integer()):
         return str(int(n))
-    return repr(float(n))
+    s = repr(float(n))
+    if "e" in s:
+        s = format(decimal.Decimal(s), "f")
+    return s
 
 
 def v2(x: float, y: float) -> str:

@@ -575,12 +575,17 @@ def _stairwell_room(stairs: Rect, floor_rooms: list[Room]) -> Room:
     return room
 
 
-def draw_building(level_stack: dict, ids, blueprint, palette) -> None:
+def draw_building(level_stack: dict, ids, blueprint, palette, *, roof: bool = True) -> None:
     """Edificio multi-piano (SPEC.md §6.6/§9.2): distribuisce le stanze sui
     livelli (Room.level), aggiunge il vano scale (blueprint.stairs_rect,
     stesso Rect su ogni piano per costruzione) e il tetto solo sull'ultimo
     piano. level_stack e nella stessa forma di prepared['world']['levels']
-    (dict con chiavi stringa '0'..'N-1', da template.prepare)."""
+    (dict con chiavi stringa '0'..'N-1', da template.prepare).
+
+    `roof=False` lascia l'edificio senza tetto, per il chiamante che vuole
+    disegnarlo diversamente: lo usa render_city_blueprint, dove il tetto va
+    costruito come linea di colmo (vedi _ridge_line e TASK-47) invece che col
+    poligono chiuso del footprint usato qui."""
     load_bearing = palette.wall_load_bearing or palette.wall
     footprint = _building_footprint(blueprint)
     footprint_corners = [
@@ -638,7 +643,7 @@ def draw_building(level_stack: dict, ids, blueprint, palette) -> None:
         # Tetto solo sull'ultimo piano. sun_direction non viene toccato:
         # template.prepare duplica lo stesso livello sorgente su ogni
         # piano, quindi e gia coerente su tutto l'edificio.
-        if level_key == top_level_key and palette.roof is not None:
+        if roof and level_key == top_level_key and palette.roof is not None:
             add_roof(level, ids, footprint_corners, palette.roof)
 
 
@@ -655,41 +660,116 @@ def render_blueprint(level, ids, blueprint, palette) -> None:
 
 
 # Texture base di Dungeondraft (non di un pack, quindi esente da DDF014) per
-# le strade di generators/city.py (TASK-35, SPEC.md §9.4 AC2). Nessun
-# template disponibile contiene un elemento 'path' da cui ricavarla via
-# assets.build_catalog (data/assets.json['paths'] e vuoto): verificata
-# cercando 'res://textures/paths/' dentro Dungeondraft.pck (installazione
-# locale), dove compare come texture base — stesso trattamento gia dato ai
-# base texture path di scripts/demo_m1.py (stone.png), mai passati dal
-# catalogo. Da confermare visivamente al gate umano di TASK-36.
-_STREET_TEXTURE = "res://textures/paths/cobble.png"
+# le strade di generators/city.py (SPEC.md §9.4 AC2). Nessun template
+# disponibile contiene un elemento 'path' da cui ricavarla via
+# assets.build_catalog (data/assets.json['paths'] e vuoto), quindi non passa
+# dal catalogo — stesso trattamento gia dato ai base texture path di
+# scripts/demo_m1.py (stone.png).
+#
+# TASK-35 aveva scelto `cobble.png` sul solo nome. Sbagliato, e Jay lo ha
+# bocciato al primo round del gate ("quella attuale e orribile"): estratte e
+# guardate tutte e 44 le texture di res://textures/paths/ dentro
+# Dungeondraft.pck (i .stex contengono un PNG/WebP incorporato), `cobble.png`
+# NON e una pavimentazione ma una texture da muretto — blocchi grigi con
+# contorno nero spesso, pensata per disegnare recinti e merlature come path.
+# Nella stessa famiglia stanno stone/stone_09/concrete/battlements/cliff/wood
+# e tutti i *_fence_*. Le uniche vere superfici stradali sono `wagon_trail`
+# (sterrato molto tenue) e i quattro `path_blender_0X`, tracciati con bordo
+# irregolare: 01/02 grigio-pietra, 03/04 sabbia-terra.
+#
+# Scelta la terra battuta: renderizzata sulla mappa vera, la variante grigia
+# (path_blender_01) si perde nel terreno del template, mentre questa stacca
+# sia dal terreno sia dai tetti e si legge come strada anche a mappa intera.
+# Il bordo irregolare della texture aiuta inoltre a non far leggere le vie
+# come rettangoli. L'alternativa grigio-pietra resta path_blender_01.png:
+# cambiarla e una riga.
+_STREET_TEXTURE = "res://textures/paths/path_blender_03.png"
 
 
-def _street_path_points(street: Rect) -> tuple[list[tuple[float, float]], float]:
-    """Centro-linea e larghezza (in quadretti) di un segmento di strada:
-    city._split_with_gap produce Rect stretti e lunghi, mai quadrati (vedi
-    city._MIN_BLOCK), quindi il lato corto identifica sempre l'asse di
-    marcia senza ambiguita (a differenza di compose._long_sides, che per
-    questo ha bisogno del campo esplicito Corridor.horizontal)."""
-    if street.h >= street.w:
-        cx = (street.x1 + street.x2) / 2
-        return [(cx, street.y1), (cx, street.y2)], street.w
-    cy = (street.y1 + street.y2) / 2
-    return [(street.x1, cy), (street.x2, cy)], street.h
+def _ridge_line(footprint: Rect) -> tuple[list[tuple[float, float]], float]:
+    """Linea di colmo di un tetto a due falde sopra `footprint`, e la sua
+    `width` nel senso di Dungeondraft.
+
+    Un `roof` di Dungeondraft NON e un poligono di ingombro: e una polilinea
+    di colmo piu una `width` che vale la MEZZA larghezza (dal colmo alla
+    gronda, non da gronda a gronda). Verificato su un file scritto da
+    Dungeondraft, `dungeondraft_maps/crosshead_style/tresendar_manor_full`
+    (11 roof su un livello dedicato): il colmo verticale a x=2560 con
+    width=768 ha i muri dell'edificio sottostante esattamente a x=1792 e
+    x=3328 (2560 -/+ 768), e quello a x=5632 con la stessa width ha il muro
+    a x=4864 (5632-768). Vedi docs/format.md §5.
+
+    Il colmo corre quindi lungo il lato lungo, e width e meta del lato
+    corto: cosi le due gronde cadono esattamente sui bordi del footprint."""
+    if footprint.h >= footprint.w:
+        cx = (footprint.x1 + footprint.x2) / 2
+        return [(cx, footprint.y1), (cx, footprint.y2)], footprint.w / 2
+    cy = (footprint.y1 + footprint.y2) / 2
+    return [(footprint.x1, cy), (footprint.x2, cy)], footprint.h / 2
+
+
+def add_ridge_roof(level, ids, footprint: Rect, palette) -> None:
+    """Tetto a due falde che copre esattamente `footprint`, come linea di
+    colmo (vedi _ridge_line).
+
+    E' il tetto che usano entrambi i preset di city.py. Il tetto di
+    draw_building, invece, passa i 4 vertici del footprint come poligono
+    chiuso con la `width` di default: con la semantica verificata in TASK-41
+    quel tetto e una fascia larga 2 quadretti per lato CENTRATA sul
+    perimetro, quindi sborda 2 quadretti oltre l'edificio su ogni lato. Su
+    una casa di citta da 5x5 quadretti vuol dire un tetto 9x9 che arriva in
+    mezzo alla strada e si sovrappone a quello del vicino. Vedi TASK-47: la
+    correzione di draw_building ha bisogno di un riscontro visivo di Jay
+    perche cambia un output gia approvato al gate M4, mentre qui il tetto
+    giusto serve subito."""
+    if palette.roof is None:
+        return
+    ridge, width = _ridge_line(footprint)
+    # int() invece di arrotondare: un pixel in meno tiene la gronda dentro
+    # il footprint, uno in piu la farebbe sbordare sulla strada.
+    add_roof(level, ids, ridge, palette.roof, width=int(grid_to_px(width)))
+
+
+def draw_city_footprint(level, ids, footprint: Rect, palette) -> None:
+    """Edificio dei preset di scala astratti "quartiere"/"citta" (TASK-41):
+    il pavimento del suo ingombro piu un tetto a due falde che lo copre
+    esattamente.
+
+    Non passa da draw_building: a questa scala non ci sono stanze da
+    disegnare (vedi generators/city.py), e il pavimento serve comunque,
+    perche in Dungeondraft i tetti si possono nascondere e sotto resterebbe
+    il vuoto."""
+    add_pattern(level, ids, footprint, palette.floor)
+    add_ridge_roof(level, ids, footprint, palette)
 
 
 def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
-    """Disegna un Blueprint di quartiere/citta (TASK-35, SPEC.md §9.4):
-    strade come add_path (AC2, mai come pattern), piazze come pavimento
-    diverso + elemento centrale (AC5), ed edifici delegati a draw_building,
-    una chiamata per edificio perche ognuno e un Blueprint a se (footprint e
-    tetto propri, TASK-35: "riusa building.py a un solo piano" vuol dire un
-    edificio per lotto, non tutti i lotti in un unico Blueprint)."""
+    """Disegna un Blueprint di isolato/quartiere/citta (TASK-35, SPEC.md
+    §9.4): strade come add_path (AC2, mai come pattern), piazze come
+    pavimento diverso + elemento centrale (AC5), ed edifici in una delle due
+    forme previste dal preset di scala (TASK-41, decision-2 e round 2 del
+    gate):
+
+    - `blueprint.buildings` (preset "isolato"): un Blueprint completo per
+      edificio, delegato a draw_building una chiamata per edificio perche
+      ognuno abbia footprint e tetto propri (TASK-35: "riusa building.py a
+      un solo piano" vuol dire un edificio per lotto, non tutti i lotti in
+      un unico Blueprint);
+    - `blueprint.building_footprints` (preset "quartiere"/"citta"): il solo
+      ingombro, via draw_city_footprint.
+
+    I due campi si escludono a vicenda, ma il rendering non lo pretende:
+    disegna quello che trova."""
     level = level_stack["0"]
 
+    # La centro-linea di una via e gia una polilinea serpeggiante decisa dal
+    # generatore (model.Street): qui non si calcola nulla, perche il
+    # tracciato deve dipendere dal seed e compose.py non ha un RNG.
     for street in blueprint.streets:
-        points, width = _street_path_points(street)
-        add_path(level, ids, points, _STREET_TEXTURE, width=int(grid_to_px(width)))
+        add_path(
+            level, ids, street.points, _STREET_TEXTURE,
+            width=int(grid_to_px(street.width)),
+        )
 
     plaza_texture = palette.floors.get("piazza", palette.floor)
     fountain = palette.accents.get("fountain")
@@ -700,7 +780,14 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
             add_object(level, ids, cx, cy, fountain)
 
     for building_blueprint in blueprint.buildings:
-        draw_building(level_stack, ids, building_blueprint, palette)
+        # Il tetto NON lo disegna draw_building: il suo sborda 2 quadretti
+        # per lato, che su una casa di citta e piu del suo stesso ingombro
+        # (vedi add_ridge_roof e TASK-47).
+        draw_building(level_stack, ids, building_blueprint, palette, roof=False)
+        add_ridge_roof(level, ids, _building_footprint(building_blueprint), palette)
+
+    for footprint in blueprint.building_footprints:
+        draw_city_footprint(level, ids, footprint, palette)
 
 
 def render_cave_blueprint(level, blueprint) -> None:

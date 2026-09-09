@@ -27,6 +27,63 @@ I sottocomandi (`generate`, `validate`, `inspect`, `catalog`, `preview`)
 sono documentati in `docs/SPEC.md` §8 e vengono implementati milestone per
 milestone.
 
+### Mappe cittadine: i tre preset di scala
+
+`ddforge generate city` ha un parametro `--scale` con tre preset, perche un
+isolato giocabile al tavolo, un quartiere intero e una citta capace di
+contenerne una decina non stanno alla stessa scala
+(`backlog/decisions/decision-2`, rivista da Jay al round 2 del gate umano).
+Il default e `isolato`.
+
+Misure su un canvas 78×78 (`templates/blank_80x80.dungeondraft_map`, seed
+1337; il template di riferimento pesa 1,68 MB senza nulla disegnato sopra):
+
+| | `--scale isolato` (default) | `--scale quartiere` | `--scale citta` |
+|---|---|---|---|
+| Un quadretto vale | 5 ft / 1,5 m | circa un edificio | circa un edificio, ma di un quartiere fra una decina |
+| Edifici sul canvas | 30 | 322 | 3.325 |
+| Ingombro medio di un edificio | 4,7×5,2 quadretti (~55 m²) | 2,5×2,4 quadretti (~13 m²) | 0,7×0,7 quadretti (~1 m²) |
+| Cos'e un edificio | pianta completa: muri portanti, tramezzi, stanze, porte, tetto (riusa `generators/building.py`, con tipologie diverse per lotto) | ingombro dell'edificio: pavimento e tetto a due falde, senza stanze | come `quartiere`, a scala ridotta |
+| Dimensione del file | 1,87 MB (~6,4 KB/edificio) | 2,09 MB (~1,3 KB/edificio) | 5,44 MB (~1,1 KB/edificio) |
+| A cosa serve | far muovere le miniature dentro e fuori dagli edifici di una via | inquadrare un quartiere esteso, decidere dove si va | orientarsi in una citta intera; non e pensata per essere giocata al tavolo |
+
+I tempi di apertura in Dungeondraft per i tre preset non sono ancora stati
+misurati: solo Jay puo darli, aprendo i file a mano.
+
+Strade, isolati, lotti con fronte strada e piazze ci sono in tutti e tre:
+cambia solo la taratura geometrica (`SCALE_PRESETS` in
+`generators/city.py`) e la rappresentazione degli edifici.
+
+In tutti e tre i preset la rete stradale non e una griglia: la centro-linea
+di ogni via serpeggia dentro l'ingombro che le e riservato, e una via
+obliqua attraversa la mappa da un bordo all'altro togliendo gli edifici che
+incontra. Gli isolati profondi ricevono due file di lotti schiena contro
+schiena, con il cortile in mezzo, cosi le case si affacciano su entrambe le
+vie che bordano l'isolato.
+
+**Come scegliere.** Se la scena si gioca *dentro* gli edifici, serve
+`isolato`: agli altri due preset un edificio e largo meno di un quadretto e
+non ci sta una stanza. Se serve un quartiere intero visto dall'alto, serve
+`quartiere`. Se serve un'intera citta o una vista d'insieme di piu quartieri,
+serve `citta`: alla scala `quartiere` gli stessi 3.325 edifici
+richiederebbero un canvas di circa 285×285 quadretti, mentre l'unico
+template di produzione e 80×80 e `ddforge` non cambia mai le dimensioni del
+canvas del template.
+
+```bash
+# un isolato, giocabile al tavolo
+ddforge generate city --template templates/blank_80x80.dungeondraft_map \
+    --out isolato.dungeondraft_map --width 78 --height 78 --seed 1337
+
+# un quartiere intero visto dall'alto
+ddforge generate city --template templates/blank_80x80.dungeondraft_map \
+    --out quartiere.dungeondraft_map --width 78 --height 78 --seed 1337 --scale quartiere
+
+# una citta intera, per orientarsi
+ddforge generate city --template templates/blank_80x80.dungeondraft_map \
+    --out citta.dungeondraft_map --width 78 --height 78 --seed 1337 --scale citta
+```
+
 ## Test
 
 ```bash

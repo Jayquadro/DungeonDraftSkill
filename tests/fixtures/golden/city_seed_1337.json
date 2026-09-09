@@ -854,7 +854,7 @@
     "format": 3,
     "width": 80,
     "height": 80,
-    "next_node_id": "df",
+    "next_node_id": "fd",
     "next_prefab_id": "0",
     "msi": {
       "offset_map_size": 512,
@@ -7334,23 +7334,35 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 256, 4912.555287891709, 3980.842961016358, 4912.555287891709, 3980.842961016358, 8259.406471343938, 256, 8259.406471343938 )",
+            "points": "PoolVector2Array( 256, 256, 3700.3122410209003, 256, 3700.3122410209003, 7419.110001249963, 256, 7419.110001249963 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
-            "node_id": "10"
+            "node_id": "a"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 15104, 14428.680704017945, 17664, 14428.680704017945, 17664, 17664, 15104, 17664 )",
+            "points": "PoolVector2Array( 6246.952520143362, 12966.339125870378, 9574.95252014336, 12966.339125870378, 9574.95252014336, 17664, 6246.952520143362, 17664 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
+            "node_id": "c"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 5043.380822999418, 640, 6579.380822999418, 640, 6579.380822999418, 1664, 5043.380822999418, 1664 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/cobblestone.png",
             "node_id": "12"
           },
           {
@@ -7358,19 +7370,19 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1216, 704, 2240, 704, 2240, 1984, 1216, 1984 )",
+            "points": "PoolVector2Array( 5043.380822999418, 1664, 6067.380822999418, 1664, 6067.380822999418, 2176, 5043.380822999418, 2176 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "18"
+            "node_id": "15"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1216, 1984, 2240, 1984, 2240, 3008, 1216, 3008 )",
+            "points": "PoolVector2Array( 7677.071888369746, 640, 8701.071888369746, 640, 8701.071888369746, 1664, 7677.071888369746, 1664 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -7382,199 +7394,175 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 2240, 704, 3520, 704, 3520, 1472, 2240, 1472 )",
+            "points": "PoolVector2Array( 7677.071888369746, 1664, 8189.071888369746, 1664, 8189.071888369746, 2176, 7677.071888369746, 2176 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "25"
+            "node_id": "22"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 2240, 1472, 3520, 1472, 3520, 3008, 2240, 3008 )",
+            "points": "PoolVector2Array( 5175.151417855285, 3027.7033337499875, 6199.151417855285, 3027.7033337499875, 6199.151417855285, 4563.703333749987, 5175.151417855285, 4563.703333749987 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "2a"
+            "node_id": "2c"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 704, 704, 1216, 704, 1216, 3008, 704, 3008 )",
+            "points": "PoolVector2Array( 7774.303431735555, 3027.7033337499875, 8798.303431735556, 3027.7033337499875, 8798.303431735556, 4563.703333749987, 7774.303431735555, 4563.703333749987 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "2e"
+            "node_id": "33"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1216, 9492.438445029698, 2240, 9492.438445029698, 2240, 10516.438445029698, 1216, 10516.438445029698 )",
+            "points": "PoolVector2Array( 5159.552971664668, 5415.406667499975, 6439.552971664668, 5415.406667499975, 6439.552971664668, 6439.406667499975, 5159.552971664668, 6439.406667499975 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "36"
+            "node_id": "3a"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1216, 10516.438445029698, 2240, 10516.438445029698, 2240, 11540.438445029698, 1216, 11540.438445029698 )",
+            "points": "PoolVector2Array( 5159.552971664668, 6439.406667499975, 5927.552971664668, 6439.406667499975, 5927.552971664668, 6951.406667499975, 5159.552971664668, 6951.406667499975 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "3b"
+            "node_id": "3d"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 704, 9492.438445029698, 1216, 9492.438445029698, 1216, 11540.438445029698, 704, 11540.438445029698 )",
+            "points": "PoolVector2Array( 8041.089140842963, 5415.406667499975, 9065.089140842963, 5415.406667499975, 9065.089140842963, 6951.406667499975, 8041.089140842963, 6951.406667499975 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "40"
+            "node_id": "47"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 3764.1897065829858, 9492.438445029698, 4788.189706582985, 9492.438445029698, 4788.189706582985, 10516.438445029698, 3764.1897065829858, 10516.438445029698 )",
+            "points": "PoolVector2Array( 761.3612055396466, 8824.132877122918, 1785.3612055396466, 8824.132877122918, 1785.3612055396466, 10616.132877122918, 761.3612055396466, 10616.132877122918 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "48"
+            "node_id": "4e"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 3764.1897065829858, 10516.438445029698, 4788.189706582985, 10516.438445029698, 4788.189706582985, 11540.438445029698, 3764.1897065829858, 11540.438445029698 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 8824.132877122918, 4468.036474565682, 8824.132877122918, 4468.036474565682, 10616.132877122918, 3188.0364745656816, 10616.132877122918 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "4d"
+            "node_id": "55"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 3252.1897065829858, 9492.438445029698, 3764.1897065829858, 9492.438445029698, 3764.1897065829858, 11540.438445029698, 3252.1897065829858, 11540.438445029698 )",
+            "points": "PoolVector2Array( 640, 15833.438307325314, 2176, 15833.438307325314, 2176, 16857.438307325312, 640, 16857.438307325312 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "52"
+            "node_id": "5c"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1216, 13770.99074599085, 2240, 13770.99074599085, 2240, 15306.99074599085, 1216, 15306.99074599085 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 15921.04678336404, 4724.036474565682, 15921.04678336404, 4724.036474565682, 16433.04678336404, 3188.0364745656816, 16433.04678336404 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "5a"
+            "node_id": "63"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 1216, 15306.99074599085, 2240, 15306.99074599085, 2240, 16842.99074599085, 1216, 16842.99074599085 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 16433.04678336404, 4212.036474565682, 16433.04678336404, 4212.036474565682, 16945.04678336404, 3188.0364745656816, 16945.04678336404 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "5f"
+            "node_id": "66"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 704, 13770.99074599085, 1216, 13770.99074599085, 1216, 16842.99074599085, 704, 16842.99074599085 )",
+            "points": "PoolVector2Array( 7866.658809735191, 8824.132877122918, 8890.658809735192, 8824.132877122918, 8890.658809735192, 9336.132877122918, 7866.658809735191, 9336.132877122918 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "64"
+            "node_id": "70"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 3764.1897065829858, 13770.99074599085, 4788.189706582985, 13770.99074599085, 4788.189706582985, 15306.99074599085, 3764.1897065829858, 15306.99074599085 )",
+            "points": "PoolVector2Array( 7866.658809735191, 9336.132877122918, 8378.658809735192, 9336.132877122918, 8378.658809735192, 9848.132877122918, 7866.658809735191, 9848.132877122918 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "6c"
+            "node_id": "73"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 3764.1897065829858, 15306.99074599085, 4788.189706582985, 15306.99074599085, 4788.189706582985, 16842.99074599085, 3764.1897065829858, 16842.99074599085 )",
+            "points": "PoolVector2Array( 11238.95252014336, 655.1195679576011, 12518.95252014336, 655.1195679576011, 12518.95252014336, 1935.1195679576012, 11238.95252014336, 1935.1195679576012 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "71"
+            "node_id": "7d"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 3252.1897065829858, 13770.99074599085, 3764.1897065829858, 13770.99074599085, 3764.1897065829858, 16842.99074599085, 3252.1897065829858, 16842.99074599085 )",
-            "layer": -400,
-            "color": "ffffffff",
-            "outline": false,
-            "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "76"
-          },
-          {
-            "position": "Vector2( 0, 0 )",
-            "shape_rotation": 0,
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 6929.311766229694, 14862.801448277129, 8209.311766229694, 14862.801448277129, 8209.311766229694, 16654.80144827713, 6929.311766229694, 16654.80144827713 )",
-            "layer": -400,
-            "color": "ffffffff",
-            "outline": false,
-            "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "7e"
-          },
-          {
-            "position": "Vector2( 0, 0 )",
-            "shape_rotation": 0,
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 8209.311766229694, 14862.801448277129, 8977.311766229694, 14862.801448277129, 8977.311766229694, 16654.80144827713, 8209.311766229694, 16654.80144827713 )",
+            "points": "PoolVector2Array( 11238.95252014336, 3138.4115476589777, 12518.95252014336, 3138.4115476589777, 12518.95252014336, 4162.411547658978, 11238.95252014336, 4162.411547658978 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -7586,7 +7574,7 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 6417.311766229694, 14862.801448277129, 6929.311766229694, 14862.801448277129, 6929.311766229694, 16654.80144827713, 6417.311766229694, 16654.80144827713 )",
+            "points": "PoolVector2Array( 11238.95252014336, 4162.411547658978, 12006.95252014336, 4162.411547658978, 12006.95252014336, 4674.411547658978, 11238.95252014336, 4674.411547658978 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -7598,43 +7586,31 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11814.95252014336, 704, 13094.95252014336, 704, 13094.95252014336, 2496, 11814.95252014336, 2496 )",
+            "points": "PoolVector2Array( 13508.635013428908, 975.6146412621333, 14788.635013428908, 975.6146412621333, 14788.635013428908, 1999.6146412621333, 13508.635013428908, 1999.6146412621333 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "8f"
+            "node_id": "91"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11302.95252014336, 704, 11814.95252014336, 704, 11814.95252014336, 2496, 11302.95252014336, 2496 )",
+            "points": "PoolVector2Array( 13508.635013428908, 3138.4115476589777, 14788.635013428908, 3138.4115476589777, 14788.635013428908, 4418.411547658978, 13508.635013428908, 4418.411547658978 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "93"
+            "node_id": "98"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11814.95252014336, 3526.265028031183, 13350.95252014336, 3526.265028031183, 13350.95252014336, 5318.265028031183, 11814.95252014336, 5318.265028031183 )",
-            "layer": -400,
-            "color": "ffffffff",
-            "outline": false,
-            "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "9b"
-          },
-          {
-            "position": "Vector2( 0, 0 )",
-            "shape_rotation": 0,
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11302.95252014336, 3526.265028031183, 11814.95252014336, 3526.265028031183, 11814.95252014336, 5318.265028031183, 11302.95252014336, 5318.265028031183 )",
+            "points": "PoolVector2Array( 15778.317506714455, 932.8362381352231, 17058.317506714455, 932.8362381352231, 17058.317506714455, 1444.836238135223, 15778.317506714455, 1444.836238135223 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
@@ -7646,125 +7622,173 @@
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11814.95252014336, 7270.163403805782, 13350.95252014336, 7270.163403805782, 13350.95252014336, 8550.163403805782, 11814.95252014336, 8550.163403805782 )",
+            "points": "PoolVector2Array( 15778.317506714455, 1444.836238135223, 16546.317506714455, 1444.836238135223, 16546.317506714455, 1956.836238135223, 15778.317506714455, 1956.836238135223 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "a7"
+            "node_id": "a2"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11814.95252014336, 8550.163403805782, 13350.95252014336, 8550.163403805782, 13350.95252014336, 10086.163403805782, 11814.95252014336, 10086.163403805782 )",
+            "points": "PoolVector2Array( 15778.317506714455, 3665.6758106794578, 17058.317506714455, 3665.6758106794578, 17058.317506714455, 4689.675810679458, 15778.317506714455, 4689.675810679458 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "ab"
+            "node_id": "ac"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11302.95252014336, 7270.163403805782, 11814.95252014336, 7270.163403805782, 11814.95252014336, 10086.163403805782, 11302.95252014336, 10086.163403805782 )",
+            "points": "PoolVector2Array( 11750.95252014336, 7353.544596309946, 12518.95252014336, 7353.544596309946, 12518.95252014336, 8889.544596309946, 11750.95252014336, 8889.544596309946 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "b1"
+            "node_id": "b3"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 15758.38435882109, 7270.163403805782, 16782.384358821088, 7270.163403805782, 16782.384358821088, 8550.163403805782, 15758.38435882109, 8550.163403805782 )",
+            "points": "PoolVector2Array( 11238.95252014336, 7353.544596309946, 11750.95252014336, 7353.544596309946, 11750.95252014336, 8889.544596309946, 11238.95252014336, 8889.544596309946 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "b9"
+            "node_id": "b7"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 15758.38435882109, 8550.163403805782, 16782.384358821088, 8550.163403805782, 16782.384358821088, 10086.163403805782, 15758.38435882109, 10086.163403805782 )",
+            "points": "PoolVector2Array( 13508.635013428908, 7433.080006756554, 14788.635013428908, 7433.080006756554, 14788.635013428908, 8457.080006756554, 13508.635013428908, 8457.080006756554 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "bd"
+            "node_id": "bf"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 15246.38435882109, 7270.163403805782, 15758.38435882109, 7270.163403805782, 15758.38435882109, 10086.163403805782, 15246.38435882109, 10086.163403805782 )",
+            "points": "PoolVector2Array( 13508.635013428908, 8457.080006756554, 14276.635013428908, 8457.080006756554, 14276.635013428908, 8969.080006756554, 13508.635013428908, 8969.080006756554 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "c3"
+            "node_id": "c2"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11814.95252014336, 11701.778178887644, 13606.95252014336, 11701.778178887644, 13606.95252014336, 13237.778178887644, 11814.95252014336, 13237.778178887644 )",
+            "points": "PoolVector2Array( 15778.317506714455, 7838.884675437953, 17058.317506714455, 7838.884675437953, 17058.317506714455, 8862.884675437952, 15778.317506714455, 8862.884675437952 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "cb"
+            "node_id": "cc"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11302.95252014336, 11701.778178887644, 11814.95252014336, 11701.778178887644, 11814.95252014336, 13237.778178887644, 11302.95252014336, 13237.778178887644 )",
+            "points": "PoolVector2Array( 11433.18811137469, 13219.686200253424, 12713.18811137469, 13219.686200253424, 12713.18811137469, 14243.686200253424, 11433.18811137469, 14243.686200253424 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "cf"
+            "node_id": "d3"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11814.95252014336, 15200.756575373656, 13606.95252014336, 15200.756575373656, 13606.95252014336, 16992.756575373656, 11814.95252014336, 16992.756575373656 )",
+            "points": "PoolVector2Array( 11433.18811137469, 14243.686200253424, 12201.18811137469, 14243.686200253424, 12201.18811137469, 14755.686200253424, 11433.18811137469, 14755.686200253424 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "d7"
+            "node_id": "d6"
           },
           {
             "position": "Vector2( 0, 0 )",
             "shape_rotation": 0,
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "points": "PoolVector2Array( 11302.95252014336, 15200.756575373656, 11814.95252014336, 15200.756575373656, 11814.95252014336, 16992.756575373656, 11302.95252014336, 16992.756575373656 )",
+            "points": "PoolVector2Array( 16028.04593569152, 13219.686200253424, 17052.04593569152, 13219.686200253424, 17052.04593569152, 14755.686200253424, 16028.04593569152, 14755.686200253424 )",
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
             "texture": "res://textures/patterns/normal/cobblestone.png",
-            "node_id": "db"
+            "node_id": "e0"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 11590.391237622809, 15633.843100126713, 12870.391237622809, 15633.843100126713, 12870.391237622809, 16657.843100126713, 11590.391237622809, 16657.843100126713 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/cobblestone.png",
+            "node_id": "e7"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 11590.391237622809, 16657.843100126713, 12358.391237622809, 16657.843100126713, 12358.391237622809, 17169.843100126713, 11590.391237622809, 17169.843100126713 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/cobblestone.png",
+            "node_id": "ea"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 15957.669672759264, 15633.843100126713, 16981.669672759264, 15633.843100126713, 16981.669672759264, 16657.843100126713, 15957.669672759264, 16657.843100126713 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/cobblestone.png",
+            "node_id": "f4"
+          },
+          {
+            "position": "Vector2( 0, 0 )",
+            "shape_rotation": 0,
+            "rotation": 0,
+            "scale": "Vector2( 1, 1 )",
+            "points": "PoolVector2Array( 15957.669672759264, 16657.843100126713, 16469.669672759264, 16657.843100126713, 16469.669672759264, 17169.843100126713, 15957.669672759264, 17169.843100126713 )",
+            "layer": -400,
+            "color": "ffffffff",
+            "outline": false,
+            "texture": "res://textures/patterns/normal/cobblestone.png",
+            "node_id": "f7"
           }
         ],
         "walls": [
           {
-            "points": "PoolVector2Array( 704, 704, 3520, 704 )",
+            "points": "PoolVector2Array( 5043.380822999418, 640, 6579.380822999418, 640 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7772,11 +7796,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "14",
+            "node_id": "e",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 3520, 704, 3520, 3008 )",
+            "points": "PoolVector2Array( 6579.380822999418, 640, 6579.380822999418, 2176 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7784,11 +7808,73 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "15",
+            "node_id": "f",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 3520, 3008, 704, 3008 )",
+            "points": "PoolVector2Array( 6579.380822999418, 2176, 5043.380822999418, 2176 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "10",
+            "portals": [
+              {
+                "position": "Vector2( 5555.380822999418, 2176 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "10",
+                "wall_distance": 0.6666666666666666,
+                "closed": true,
+                "node_id": "19"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 5043.380822999418, 2176, 5043.380822999418, 640 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "11",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 6579.380822999418, 1664, 5043.380822999418, 1664 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "13",
+            "portals": [
+              {
+                "position": "Vector2( 5555.380822999418, 1664 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "13",
+                "wall_distance": 0.6666666666666666,
+                "closed": true,
+                "node_id": "14"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 5043.380822999418, 1664, 6067.380822999418, 1664 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7799,21 +7885,21 @@
             "node_id": "16",
             "portals": [
               {
-                "position": "Vector2( 1728, 3008 )",
-                "rotation": 3.141592653589793,
+                "position": "Vector2( 5555.380822999418, 1664 )",
+                "rotation": 0.0,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
+                "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "16",
-                "wall_distance": 0.6363636363636364,
+                "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "24"
+                "node_id": "18"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 704, 3008, 704, 704 )",
+            "points": "PoolVector2Array( 6067.380822999418, 1664, 6067.380822999418, 2176 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7825,57 +7911,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2240, 704, 2240, 1984 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "19",
-            "portals": [
-              {
-                "position": "Vector2( 2240, 1088 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "19",
-                "wall_distance": 0.3,
-                "closed": true,
-                "node_id": "1d"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 2240, 1984, 1216, 1984 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "1a",
-            "portals": [
-              {
-                "position": "Vector2( 1728, 1984 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "1a",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "1c"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 1216, 1984, 1216, 704 )",
+            "points": "PoolVector2Array( 7677.071888369746, 640, 8701.071888369746, 640 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7884,23 +7920,59 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "1b",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 8701.071888369746, 640, 8701.071888369746, 2176 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "1c",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 8701.071888369746, 2176, 7677.071888369746, 2176 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "1d",
             "portals": [
               {
-                "position": "Vector2( 1216, 1344 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 7933.071888369746, 2176 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "1b",
-                "wall_distance": 0.5,
+                "wall_id": "1d",
+                "wall_distance": 0.75,
                 "closed": true,
-                "node_id": "1e"
+                "node_id": "26"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 1216, 1984, 2240, 1984 )",
+            "points": "PoolVector2Array( 7677.071888369746, 2176, 7677.071888369746, 640 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "1e",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 8701.071888369746, 1664, 7677.071888369746, 1664 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7911,70 +7983,21 @@
             "node_id": "20",
             "portals": [
               {
-                "position": "Vector2( 1728, 1984 )",
-                "rotation": 0.0,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "20",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "23"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 2240, 1984, 2240, 3008 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "21",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 1216, 3008, 1216, 1984 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "22",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 3520, 1472, 2240, 1472 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "26",
-            "portals": [
-              {
-                "position": "Vector2( 2880, 1472 )",
+                "position": "Vector2( 7933.071888369746, 1664 )",
                 "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "26",
-                "wall_distance": 0.5,
+                "wall_id": "20",
+                "wall_distance": 0.75,
                 "closed": true,
-                "node_id": "29"
+                "node_id": "21"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 2240, 1472, 2240, 704 )",
+            "points": "PoolVector2Array( 7677.071888369746, 1664, 8189.071888369746, 1664 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -7982,24 +8005,85 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "27",
+            "node_id": "23",
             "portals": [
               {
-                "position": "Vector2( 2240, 1088 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 7933.071888369746, 1664 )",
+                "rotation": 0.0,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "27",
+                "wall_id": "23",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "28"
+                "node_id": "25"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 2240, 1472, 3520, 1472 )",
+            "points": "PoolVector2Array( 8189.071888369746, 1664, 8189.071888369746, 2176 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "24",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 5175.151417855285, 3027.7033337499875, 6199.151417855285, 3027.7033337499875 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "28",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 6199.151417855285, 3027.7033337499875, 6199.151417855285, 4563.703333749987 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "29",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 6199.151417855285, 4563.703333749987, 5175.151417855285, 4563.703333749987 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "2a",
+            "portals": [
+              {
+                "position": "Vector2( 5687.151417855285, 4563.703333749987 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "2a",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "2d"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 5175.151417855285, 4563.703333749987, 5175.151417855285, 3027.7033337499875 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8008,35 +8092,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "2b",
-            "portals": [
-              {
-                "position": "Vector2( 2880, 1472 )",
-                "rotation": 0.0,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "2b",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "2d"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 2240, 3008, 2240, 1472 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "2c",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 1216, 704, 1216, 3008 )",
+            "points": "PoolVector2Array( 7774.303431735555, 3027.7033337499875, 8798.303431735556, 3027.7033337499875 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8045,23 +8104,47 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "2f",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 8798.303431735556, 3027.7033337499875, 8798.303431735556, 4563.703333749987 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "30",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 8798.303431735556, 4563.703333749987, 7774.303431735555, 4563.703333749987 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "31",
             "portals": [
               {
-                "position": "Vector2( 1216, 1344 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 8286.303431735556, 4563.703333749987 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "2f",
-                "wall_distance": 0.2777777777777778,
+                "wall_id": "31",
+                "wall_distance": 0.49999999999999956,
                 "closed": true,
-                "node_id": "30"
+                "node_id": "34"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 704, 9492.438445029698, 2240, 9492.438445029698 )",
+            "points": "PoolVector2Array( 7774.303431735555, 4563.703333749987, 7774.303431735555, 3027.7033337499875 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8073,7 +8156,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2240, 9492.438445029698, 2240, 11540.438445029698 )",
+            "points": "PoolVector2Array( 5159.552971664668, 5415.406667499975, 6439.552971664668, 5415.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8081,48 +8164,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "33",
+            "node_id": "36",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2240, 11540.438445029698, 704, 11540.438445029698 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "34",
-            "portals": [
-              {
-                "position": "Vector2( 1728, 11540.438445029698 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "34",
-                "wall_distance": 0.3333333333333333,
-                "closed": true,
-                "node_id": "3f"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 704, 11540.438445029698, 704, 9492.438445029698 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "35",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 2240, 10516.438445029698, 1216, 10516.438445029698 )",
+            "points": "PoolVector2Array( 6439.552971664668, 5415.406667499975, 6439.552971664668, 6951.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8131,23 +8177,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "37",
-            "portals": [
-              {
-                "position": "Vector2( 1728, 10516.438445029698 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "37",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "39"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 1216, 10516.438445029698, 1216, 9492.438445029698 )",
+            "points": "PoolVector2Array( 6439.552971664668, 6951.406667499975, 5159.552971664668, 6951.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8158,21 +8191,21 @@
             "node_id": "38",
             "portals": [
               {
-                "position": "Vector2( 1216, 10004.438445029698 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 5543.552971664668, 6951.406667499975 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "38",
-                "wall_distance": 0.5,
+                "wall_distance": 0.7,
                 "closed": true,
-                "node_id": "3a"
+                "node_id": "41"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 1216, 10516.438445029698, 2240, 10516.438445029698 )",
+            "points": "PoolVector2Array( 5159.552971664668, 6951.406667499975, 5159.552971664668, 5415.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8180,24 +8213,61 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "3c",
+            "node_id": "39",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 6439.552971664668, 6439.406667499975, 5159.552971664668, 6439.406667499975 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "3b",
             "portals": [
               {
-                "position": "Vector2( 1728, 10516.438445029698 )",
+                "position": "Vector2( 5543.552971664668, 6439.406667499975 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "3b",
+                "wall_distance": 0.7,
+                "closed": true,
+                "node_id": "3c"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 5159.552971664668, 6439.406667499975, 5927.552971664668, 6439.406667499975 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "3e",
+            "portals": [
+              {
+                "position": "Vector2( 5543.552971664668, 6439.406667499975 )",
                 "rotation": 0.0,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "3c",
+                "wall_id": "3e",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "3e"
+                "node_id": "40"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 1216, 11540.438445029698, 1216, 10516.438445029698 )",
+            "points": "PoolVector2Array( 5927.552971664668, 6439.406667499975, 5927.552971664668, 6951.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8205,11 +8275,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "3d",
+            "node_id": "3f",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 1216, 9492.438445029698, 1216, 11540.438445029698 )",
+            "points": "PoolVector2Array( 8041.089140842963, 5415.406667499975, 9065.089140842963, 5415.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8217,24 +8287,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "41",
-            "portals": [
-              {
-                "position": "Vector2( 1216, 10004.438445029698 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "41",
-                "wall_distance": 0.25,
-                "closed": true,
-                "node_id": "42"
-              }
-            ]
+            "node_id": "43",
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 3252.1897065829858, 9492.438445029698, 4788.189706582985, 9492.438445029698 )",
+            "points": "PoolVector2Array( 9065.089140842963, 5415.406667499975, 9065.089140842963, 6951.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8246,7 +8303,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 4788.189706582985, 9492.438445029698, 4788.189706582985, 11540.438445029698 )",
+            "points": "PoolVector2Array( 9065.089140842963, 6951.406667499975, 8041.089140842963, 6951.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8255,10 +8312,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "45",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 8553.089140842963, 6951.406667499975 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "45",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "48"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 4788.189706582985, 11540.438445029698, 3252.1897065829858, 11540.438445029698 )",
+            "points": "PoolVector2Array( 8041.089140842963, 6951.406667499975, 8041.089140842963, 5415.406667499975 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8267,60 +8337,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "46",
-            "portals": [
-              {
-                "position": "Vector2( 4276.189706582985, 11540.438445029698 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "46",
-                "wall_distance": 0.3333333333333334,
-                "closed": true,
-                "node_id": "51"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 3252.1897065829858, 11540.438445029698, 3252.1897065829858, 9492.438445029698 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "47",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 4788.189706582985, 10516.438445029698, 3764.1897065829858, 10516.438445029698 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "49",
-            "portals": [
-              {
-                "position": "Vector2( 4276.189706582985, 10516.438445029698 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "49",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "4b"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 3764.1897065829858, 10516.438445029698, 3764.1897065829858, 9492.438445029698 )",
+            "points": "PoolVector2Array( 761.3612055396466, 8824.132877122918, 1785.3612055396466, 8824.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8329,60 +8349,83 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "4a",
-            "portals": [
-              {
-                "position": "Vector2( 3764.1897065829858, 10004.438445029698 )",
-                "rotation": -1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "4a",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "4c"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 3764.1897065829858, 10516.438445029698, 4788.189706582985, 10516.438445029698 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "4e",
-            "portals": [
-              {
-                "position": "Vector2( 4276.189706582985, 10516.438445029698 )",
-                "rotation": 0.0,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "4e",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "50"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 3764.1897065829858, 11540.438445029698, 3764.1897065829858, 10516.438445029698 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "4f",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 3764.1897065829858, 9492.438445029698, 3764.1897065829858, 11540.438445029698 )",
+            "points": "PoolVector2Array( 1785.3612055396466, 8824.132877122918, 1785.3612055396466, 10616.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "4b",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 1785.3612055396466, 10616.132877122918, 761.3612055396466, 10616.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "4c",
+            "portals": [
+              {
+                "position": "Vector2( 1273.3612055396466, 10616.132877122918 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "4c",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "4f"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 761.3612055396466, 10616.132877122918, 761.3612055396466, 8824.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "4d",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 3188.0364745656816, 8824.132877122918, 4468.036474565682, 8824.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "51",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 4468.036474565682, 8824.132877122918, 4468.036474565682, 10616.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "52",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 4468.036474565682, 10616.132877122918, 3188.0364745656816, 10616.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8393,21 +8436,21 @@
             "node_id": "53",
             "portals": [
               {
-                "position": "Vector2( 3764.1897065829858, 10004.438445029698 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 3828.0364745656816, 10616.132877122918 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "53",
-                "wall_distance": 0.25,
+                "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "54"
+                "node_id": "56"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 704, 13770.99074599085, 2240, 13770.99074599085 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 10616.132877122918, 3188.0364745656816, 8824.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8415,23 +8458,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "56",
+            "node_id": "54",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2240, 13770.99074599085, 2240, 16842.99074599085 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "57",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 2240, 16842.99074599085, 704, 16842.99074599085 )",
+            "points": "PoolVector2Array( 640, 15833.438307325314, 2176, 15833.438307325314 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8440,23 +8471,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "58",
-            "portals": [
-              {
-                "position": "Vector2( 1728, 16842.99074599085 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "58",
-                "wall_distance": 0.3333333333333333,
-                "closed": true,
-                "node_id": "63"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 704, 16842.99074599085, 704, 13770.99074599085 )",
+            "points": "PoolVector2Array( 2176, 15833.438307325314, 2176, 16857.438307325312 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8468,7 +8486,32 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 2240, 15306.99074599085, 1216, 15306.99074599085 )",
+            "points": "PoolVector2Array( 2176, 16857.438307325312, 640, 16857.438307325312 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "5a",
+            "portals": [
+              {
+                "position": "Vector2( 1408, 16857.438307325312 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "5a",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "5d"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 640, 16857.438307325312, 640, 15833.438307325314 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8477,23 +8520,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "5b",
-            "portals": [
-              {
-                "position": "Vector2( 1728, 15306.99074599085 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "5b",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "5d"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 1216, 15306.99074599085, 1216, 13770.99074599085 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 15921.04678336404, 4724.036474565682, 15921.04678336404 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8501,24 +8531,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "5c",
-            "portals": [
-              {
-                "position": "Vector2( 1216, 14538.99074599085 )",
-                "rotation": -1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "5c",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "5e"
-              }
-            ]
+            "node_id": "5f",
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 1216, 15306.99074599085, 2240, 15306.99074599085 )",
+            "points": "PoolVector2Array( 4724.036474565682, 15921.04678336404, 4724.036474565682, 16945.04678336404 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8527,23 +8544,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "60",
-            "portals": [
-              {
-                "position": "Vector2( 1728, 15306.99074599085 )",
-                "rotation": 0.0,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "60",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "62"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 1216, 16842.99074599085, 1216, 15306.99074599085 )",
+            "points": "PoolVector2Array( 4724.036474565682, 16945.04678336404, 3188.0364745656816, 16945.04678336404 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8552,10 +8556,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "61",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 3700.0364745656816, 16945.04678336404 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "61",
+                "wall_distance": 0.6666666666666666,
+                "closed": true,
+                "node_id": "6a"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 1216, 13770.99074599085, 1216, 16842.99074599085 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 16945.04678336404, 3188.0364745656816, 15921.04678336404 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8563,24 +8580,61 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "65",
+            "node_id": "62",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 4724.036474565682, 16433.04678336404, 3188.0364745656816, 16433.04678336404 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "64",
             "portals": [
               {
-                "position": "Vector2( 1216, 14538.99074599085 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 3700.0364745656816, 16433.04678336404 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "65",
-                "wall_distance": 0.25,
+                "wall_id": "64",
+                "wall_distance": 0.6666666666666666,
                 "closed": true,
-                "node_id": "66"
+                "node_id": "65"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 3252.1897065829858, 13770.99074599085, 4788.189706582985, 13770.99074599085 )",
+            "points": "PoolVector2Array( 3188.0364745656816, 16433.04678336404, 4212.036474565682, 16433.04678336404 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "67",
+            "portals": [
+              {
+                "position": "Vector2( 3700.0364745656816, 16433.04678336404 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "67",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "69"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 4212.036474565682, 16433.04678336404, 4212.036474565682, 16945.04678336404 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8592,7 +8646,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 4788.189706582985, 13770.99074599085, 4788.189706582985, 16842.99074599085 )",
+            "points": "PoolVector2Array( 7866.658809735191, 8824.132877122918, 8890.658809735192, 8824.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8600,48 +8654,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "69",
+            "node_id": "6c",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 4788.189706582985, 16842.99074599085, 3252.1897065829858, 16842.99074599085 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "6a",
-            "portals": [
-              {
-                "position": "Vector2( 4276.189706582985, 16842.99074599085 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "6a",
-                "wall_distance": 0.3333333333333334,
-                "closed": true,
-                "node_id": "75"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 3252.1897065829858, 16842.99074599085, 3252.1897065829858, 13770.99074599085 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "6b",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 4788.189706582985, 15306.99074599085, 3764.1897065829858, 15306.99074599085 )",
+            "points": "PoolVector2Array( 8890.658809735192, 8824.132877122918, 8890.658809735192, 9848.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8650,23 +8667,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "6d",
-            "portals": [
-              {
-                "position": "Vector2( 4276.189706582985, 15306.99074599085 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "6d",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "6f"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 3764.1897065829858, 15306.99074599085, 3764.1897065829858, 13770.99074599085 )",
+            "points": "PoolVector2Array( 8890.658809735192, 9848.132877122918, 7866.658809735191, 9848.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8677,21 +8681,21 @@
             "node_id": "6e",
             "portals": [
               {
-                "position": "Vector2( 3764.1897065829858, 14538.99074599085 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 8122.658809735192, 9848.132877122918 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "6e",
-                "wall_distance": 0.5,
+                "wall_distance": 0.7499999999999993,
                 "closed": true,
-                "node_id": "70"
+                "node_id": "77"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 3764.1897065829858, 15306.99074599085, 4788.189706582985, 15306.99074599085 )",
+            "points": "PoolVector2Array( 7866.658809735191, 9848.132877122918, 7866.658809735191, 8824.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8699,24 +8703,61 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "72",
+            "node_id": "6f",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 8890.658809735192, 9336.132877122918, 7866.658809735191, 9336.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "71",
             "portals": [
               {
-                "position": "Vector2( 4276.189706582985, 15306.99074599085 )",
+                "position": "Vector2( 8122.658809735191, 9336.132877122918 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "71",
+                "wall_distance": 0.75,
+                "closed": true,
+                "node_id": "72"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 7866.658809735191, 9336.132877122918, 8378.658809735192, 9336.132877122918 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "74",
+            "portals": [
+              {
+                "position": "Vector2( 8122.658809735192, 9336.132877122918 )",
                 "rotation": 0.0,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "72",
+                "wall_id": "74",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "74"
+                "node_id": "76"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 3764.1897065829858, 16842.99074599085, 3764.1897065829858, 15306.99074599085 )",
+            "points": "PoolVector2Array( 8378.658809735192, 9336.132877122918, 8378.658809735192, 9848.132877122918 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8724,11 +8765,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "73",
+            "node_id": "75",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 3764.1897065829858, 13770.99074599085, 3764.1897065829858, 16842.99074599085 )",
+            "points": "PoolVector2Array( 11238.95252014336, 655.1195679576011, 12518.95252014336, 655.1195679576011 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8736,24 +8777,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "77",
-            "portals": [
-              {
-                "position": "Vector2( 3764.1897065829858, 14538.99074599085 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "77",
-                "wall_distance": 0.25,
-                "closed": true,
-                "node_id": "78"
-              }
-            ]
+            "node_id": "79",
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 6417.311766229694, 14862.801448277129, 8977.311766229694, 14862.801448277129 )",
+            "points": "PoolVector2Array( 12518.95252014336, 655.1195679576011, 12518.95252014336, 1935.1195679576012 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8765,7 +8793,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 8977.311766229694, 14862.801448277129, 8977.311766229694, 16654.80144827713 )",
+            "points": "PoolVector2Array( 12518.95252014336, 1935.1195679576012, 11238.95252014336, 1935.1195679576012 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8774,10 +8802,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "7b",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 11878.95252014336, 1935.1195679576012 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "7b",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "7e"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 8977.311766229694, 16654.80144827713, 6417.311766229694, 16654.80144827713 )",
+            "points": "PoolVector2Array( 11238.95252014336, 1935.1195679576012, 11238.95252014336, 655.1195679576011 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8786,60 +8827,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "7c",
-            "portals": [
-              {
-                "position": "Vector2( 7569.311766229694, 16654.80144827713 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "7c",
-                "wall_distance": 0.55,
-                "closed": true,
-                "node_id": "83"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 6417.311766229694, 16654.80144827713, 6417.311766229694, 14862.801448277129 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "7d",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 8209.311766229694, 14862.801448277129, 8209.311766229694, 16654.80144827713 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "7f",
-            "portals": [
-              {
-                "position": "Vector2( 8209.311766229694, 15758.801448277129 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "7f",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "81"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 6929.311766229694, 16654.80144827713, 6929.311766229694, 14862.801448277129 )",
+            "points": "PoolVector2Array( 11238.95252014336, 3138.4115476589777, 12518.95252014336, 3138.4115476589777 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8848,23 +8839,59 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "80",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12518.95252014336, 3138.4115476589777, 12518.95252014336, 4674.411547658978 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "81",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12518.95252014336, 4674.411547658978, 11238.95252014336, 4674.411547658978 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "82",
             "portals": [
               {
-                "position": "Vector2( 6929.311766229694, 15758.801448277129 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 11622.95252014336, 4674.411547658978 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "80",
-                "wall_distance": 0.5,
+                "wall_id": "82",
+                "wall_distance": 0.7,
                 "closed": true,
-                "node_id": "82"
+                "node_id": "8b"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 8209.311766229694, 16654.80144827713, 8209.311766229694, 14862.801448277129 )",
+            "points": "PoolVector2Array( 11238.95252014336, 4674.411547658978, 11238.95252014336, 3138.4115476589777 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "83",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12518.95252014336, 4162.411547658978, 11238.95252014336, 4162.411547658978 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8875,21 +8902,21 @@
             "node_id": "85",
             "portals": [
               {
-                "position": "Vector2( 8209.311766229694, 15758.801448277129 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 11622.95252014336, 4162.411547658978 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "85",
-                "wall_distance": 0.5,
+                "wall_distance": 0.7,
                 "closed": true,
                 "node_id": "86"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 6929.311766229694, 14862.801448277129, 6929.311766229694, 16654.80144827713 )",
+            "points": "PoolVector2Array( 11238.95252014336, 4162.411547658978, 12006.95252014336, 4162.411547658978 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8900,21 +8927,21 @@
             "node_id": "88",
             "portals": [
               {
-                "position": "Vector2( 6929.311766229694, 15758.801448277129 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 11622.95252014336, 4162.411547658978 )",
+                "rotation": 0.0,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( 1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "88",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "89"
+                "node_id": "8a"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 704, 13094.95252014336, 704 )",
+            "points": "PoolVector2Array( 12006.95252014336, 4162.411547658978, 12006.95252014336, 4674.411547658978 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8922,23 +8949,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "8b",
+            "node_id": "89",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13094.95252014336, 704, 13094.95252014336, 2496 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "8c",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 13094.95252014336, 2496, 11302.95252014336, 2496 )",
+            "points": "PoolVector2Array( 13508.635013428908, 975.6146412621333, 14788.635013428908, 975.6146412621333 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8947,23 +8962,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "8d",
-            "portals": [
-              {
-                "position": "Vector2( 12454.95252014336, 2496 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "8d",
-                "wall_distance": 0.35714285714285715,
-                "closed": true,
-                "node_id": "92"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 2496, 11302.95252014336, 704 )",
+            "points": "PoolVector2Array( 14788.635013428908, 975.6146412621333, 14788.635013428908, 1999.6146412621333 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8975,7 +8977,32 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 2496, 11814.95252014336, 704 )",
+            "points": "PoolVector2Array( 14788.635013428908, 1999.6146412621333, 13508.635013428908, 1999.6146412621333 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "8f",
+            "portals": [
+              {
+                "position": "Vector2( 14148.635013428908, 1999.6146412621333 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "8f",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "92"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 13508.635013428908, 1999.6146412621333, 13508.635013428908, 975.6146412621333 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -8984,23 +9011,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "90",
-            "portals": [
-              {
-                "position": "Vector2( 11814.95252014336, 1600 )",
-                "rotation": -1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "90",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "91"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 704, 11814.95252014336, 2496 )",
+            "points": "PoolVector2Array( 13508.635013428908, 3138.4115476589777, 14788.635013428908, 3138.4115476589777 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9009,23 +9023,47 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "94",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 14788.635013428908, 3138.4115476589777, 14788.635013428908, 4418.411547658978 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "95",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 14788.635013428908, 4418.411547658978, 13508.635013428908, 4418.411547658978 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "96",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 1600 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 14148.635013428908, 4418.411547658978 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "94",
+                "wall_id": "96",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "95"
+                "node_id": "99"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 3526.265028031183, 13350.95252014336, 3526.265028031183 )",
+            "points": "PoolVector2Array( 13508.635013428908, 4418.411547658978, 13508.635013428908, 3138.4115476589777 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9037,7 +9075,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13350.95252014336, 3526.265028031183, 13350.95252014336, 5318.265028031183 )",
+            "points": "PoolVector2Array( 15778.317506714455, 932.8362381352231, 17058.317506714455, 932.8362381352231 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9045,48 +9083,11 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "98",
+            "node_id": "9b",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13350.95252014336, 5318.265028031183, 11302.95252014336, 5318.265028031183 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "99",
-            "portals": [
-              {
-                "position": "Vector2( 12582.95252014336, 5318.265028031183 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "99",
-                "wall_distance": 0.375,
-                "closed": true,
-                "node_id": "9e"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 11302.95252014336, 5318.265028031183, 11302.95252014336, 3526.265028031183 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "9a",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 11814.95252014336, 5318.265028031183, 11814.95252014336, 3526.265028031183 )",
+            "points": "PoolVector2Array( 17058.317506714455, 932.8362381352231, 17058.317506714455, 1956.836238135223 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9095,23 +9096,47 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "9c",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 17058.317506714455, 1956.836238135223, 15778.317506714455, 1956.836238135223 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "9d",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 4422.265028031183 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 16162.317506714455, 1956.836238135223 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "9c",
-                "wall_distance": 0.5,
+                "wall_id": "9d",
+                "wall_distance": 0.7,
                 "closed": true,
-                "node_id": "9d"
+                "node_id": "a6"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 3526.265028031183, 11814.95252014336, 5318.265028031183 )",
+            "points": "PoolVector2Array( 15778.317506714455, 1956.836238135223, 15778.317506714455, 932.8362381352231 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "9e",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 17058.317506714455, 1444.836238135223, 15778.317506714455, 1444.836238135223 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9122,21 +9147,21 @@
             "node_id": "a0",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 4422.265028031183 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 16162.317506714455, 1444.836238135223 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
                 "wall_id": "a0",
-                "wall_distance": 0.49999999999999983,
+                "wall_distance": 0.7,
                 "closed": true,
                 "node_id": "a1"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 7270.163403805782, 13350.95252014336, 7270.163403805782 )",
+            "points": "PoolVector2Array( 15778.317506714455, 1444.836238135223, 16546.317506714455, 1444.836238135223 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9145,10 +9170,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "a3",
-            "portals": []
+            "portals": [
+              {
+                "position": "Vector2( 16162.317506714455, 1444.836238135223 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "a3",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "a5"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 13350.95252014336, 7270.163403805782, 13350.95252014336, 10086.163403805782 )",
+            "points": "PoolVector2Array( 16546.317506714455, 1444.836238135223, 16546.317506714455, 1956.836238135223 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9160,44 +9198,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13350.95252014336, 10086.163403805782, 11302.95252014336, 10086.163403805782 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "a5",
-            "portals": [
-              {
-                "position": "Vector2( 12582.95252014336, 10086.163403805782 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "a5",
-                "wall_distance": 0.375,
-                "closed": true,
-                "node_id": "b0"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 11302.95252014336, 10086.163403805782, 11302.95252014336, 7270.163403805782 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "a6",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 13350.95252014336, 8550.163403805782, 11814.95252014336, 8550.163403805782 )",
+            "points": "PoolVector2Array( 15778.317506714455, 3665.6758106794578, 17058.317506714455, 3665.6758106794578 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9206,23 +9207,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "a8",
-            "portals": [
-              {
-                "position": "Vector2( 12582.95252014336, 8550.163403805782 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "a8",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "aa"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 8550.163403805782, 11814.95252014336, 7270.163403805782 )",
+            "points": "PoolVector2Array( 17058.317506714455, 3665.6758106794578, 17058.317506714455, 4689.675810679458 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9234,7 +9222,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 8550.163403805782, 13350.95252014336, 8550.163403805782 )",
+            "points": "PoolVector2Array( 17058.317506714455, 4689.675810679458, 15778.317506714455, 4689.675810679458 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9242,24 +9230,24 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "ac",
+            "node_id": "aa",
             "portals": [
               {
-                "position": "Vector2( 12582.95252014336, 8550.163403805782 )",
-                "rotation": 0.0,
+                "position": "Vector2( 16418.317506714455, 4689.675810679458 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "ac",
+                "wall_id": "aa",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "ae"
+                "node_id": "ad"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 10086.163403805782, 11814.95252014336, 8550.163403805782 )",
+            "points": "PoolVector2Array( 15778.317506714455, 4689.675810679458, 15778.317506714455, 3665.6758106794578 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9267,24 +9255,60 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "ad",
+            "node_id": "ab",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 11238.95252014336, 7353.544596309946, 12518.95252014336, 7353.544596309946 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "af",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12518.95252014336, 7353.544596309946, 12518.95252014336, 8889.544596309946 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "b0",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12518.95252014336, 8889.544596309946, 11238.95252014336, 8889.544596309946 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "b1",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 9318.163403805782 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 12134.95252014336, 8889.544596309946 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "ad",
-                "wall_distance": 0.5,
+                "wall_id": "b1",
+                "wall_distance": 0.3,
                 "closed": true,
-                "node_id": "af"
+                "node_id": "b6"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 7270.163403805782, 11814.95252014336, 10086.163403805782 )",
+            "points": "PoolVector2Array( 11238.95252014336, 8889.544596309946, 11238.95252014336, 7353.544596309946 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9293,72 +9317,35 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "b2",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 11750.95252014336, 8889.544596309946, 11750.95252014336, 7353.544596309946 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "b4",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 9318.163403805782 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 11750.95252014336, 8121.544596309946 )",
+                "rotation": -1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( 0, -1 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "b2",
-                "wall_distance": 0.7272727272727273,
+                "wall_id": "b4",
+                "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "b3"
+                "node_id": "b5"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 15246.38435882109, 7270.163403805782, 16782.384358821088, 7270.163403805782 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "b5",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 16782.384358821088, 7270.163403805782, 16782.384358821088, 10086.163403805782 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "b6",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 16782.384358821088, 10086.163403805782, 15246.38435882109, 10086.163403805782 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "b7",
-            "portals": [
-              {
-                "position": "Vector2( 16270.384358821088, 10086.163403805782 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "b7",
-                "wall_distance": 0.3333333333333337,
-                "closed": true,
-                "node_id": "c2"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 15246.38435882109, 10086.163403805782, 15246.38435882109, 7270.163403805782 )",
+            "points": "PoolVector2Array( 11750.95252014336, 7353.544596309946, 11750.95252014336, 8889.544596309946 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9367,35 +9354,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "b8",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 16782.384358821088, 8550.163403805782, 15758.38435882109, 8550.163403805782 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "ba",
             "portals": [
               {
-                "position": "Vector2( 16270.384358821088, 8550.163403805782 )",
-                "rotation": 3.141592653589793,
+                "position": "Vector2( 11750.95252014336, 8121.544596309946 )",
+                "rotation": 1.5707963267948966,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
+                "direction": "Vector2( 0, 1 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "ba",
+                "wall_id": "b8",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "bc"
+                "node_id": "b9"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 15758.38435882109, 8550.163403805782, 15758.38435882109, 7270.163403805782 )",
+            "points": "PoolVector2Array( 13508.635013428908, 7433.080006756554, 14788.635013428908, 7433.080006756554 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9407,7 +9382,44 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 15758.38435882109, 8550.163403805782, 16782.384358821088, 8550.163403805782 )",
+            "points": "PoolVector2Array( 14788.635013428908, 7433.080006756554, 14788.635013428908, 8969.080006756554 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "bc",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 14788.635013428908, 8969.080006756554, 13508.635013428908, 8969.080006756554 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "bd",
+            "portals": [
+              {
+                "position": "Vector2( 13892.635013428908, 8969.080006756554 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "bd",
+                "wall_distance": 0.7,
+                "closed": true,
+                "node_id": "c6"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 13508.635013428908, 8969.080006756554, 13508.635013428908, 7433.080006756554 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9416,23 +9428,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "be",
-            "portals": [
-              {
-                "position": "Vector2( 16270.384358821088, 8550.163403805782 )",
-                "rotation": 0.0,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "be",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "c0"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 15758.38435882109, 10086.163403805782, 15758.38435882109, 8550.163403805782 )",
+            "points": "PoolVector2Array( 14788.635013428908, 8457.080006756554, 13508.635013428908, 8457.080006756554 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9440,24 +9439,49 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "bf",
+            "node_id": "c0",
             "portals": [
               {
-                "position": "Vector2( 15758.38435882109, 9318.163403805782 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 13892.635013428908, 8457.080006756554 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "bf",
-                "wall_distance": 0.5,
+                "wall_id": "c0",
+                "wall_distance": 0.7,
                 "closed": true,
                 "node_id": "c1"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 15758.38435882109, 7270.163403805782, 15758.38435882109, 10086.163403805782 )",
+            "points": "PoolVector2Array( 13508.635013428908, 8457.080006756554, 14276.635013428908, 8457.080006756554 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "c3",
+            "portals": [
+              {
+                "position": "Vector2( 13892.635013428908, 8457.080006756554 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "c3",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "c5"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 14276.635013428908, 8457.080006756554, 14276.635013428908, 8969.080006756554 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9466,35 +9490,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "c4",
-            "portals": [
-              {
-                "position": "Vector2( 15758.38435882109, 9318.163403805782 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "c4",
-                "wall_distance": 0.7272727272727273,
-                "closed": true,
-                "node_id": "c5"
-              }
-            ]
-          },
-          {
-            "points": "PoolVector2Array( 11302.95252014336, 11701.778178887644, 13606.95252014336, 11701.778178887644 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "c7",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13606.95252014336, 11701.778178887644, 13606.95252014336, 13237.778178887644 )",
+            "points": "PoolVector2Array( 15778.317506714455, 7838.884675437953, 17058.317506714455, 7838.884675437953 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9506,7 +9505,7 @@
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13606.95252014336, 13237.778178887644, 11302.95252014336, 13237.778178887644 )",
+            "points": "PoolVector2Array( 17058.317506714455, 7838.884675437953, 17058.317506714455, 8862.884675437952 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9515,23 +9514,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "c9",
-            "portals": [
-              {
-                "position": "Vector2( 12710.95252014336, 13237.778178887644 )",
-                "rotation": 3.141592653589793,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( -1, 0 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "c9",
-                "wall_distance": 0.3888888888888889,
-                "closed": true,
-                "node_id": "ce"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 13237.778178887644, 11302.95252014336, 11701.778178887644 )",
+            "points": "PoolVector2Array( 17058.317506714455, 8862.884675437952, 15778.317506714455, 8862.884675437952 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9540,27 +9526,15 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "ca",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 11814.95252014336, 13237.778178887644, 11814.95252014336, 11701.778178887644 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "cc",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 12469.778178887644 )",
-                "rotation": -1.5707963267948966,
+                "position": "Vector2( 16418.317506714455, 8862.884675437952 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "cc",
+                "wall_id": "ca",
                 "wall_distance": 0.5,
                 "closed": true,
                 "node_id": "cd"
@@ -9568,7 +9542,31 @@
             ]
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 11701.778178887644, 11814.95252014336, 13237.778178887644 )",
+            "points": "PoolVector2Array( 15778.317506714455, 8862.884675437952, 15778.317506714455, 7838.884675437953 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "cb",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 11433.18811137469, 13219.686200253424, 12713.18811137469, 13219.686200253424 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "cf",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12713.18811137469, 13219.686200253424, 12713.18811137469, 14755.686200253424 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9577,23 +9575,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "d0",
-            "portals": [
-              {
-                "position": "Vector2( 11814.95252014336, 12469.778178887644 )",
-                "rotation": 1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "d0",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "d1"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 15200.756575373656, 13606.95252014336, 15200.756575373656 )",
+            "points": "PoolVector2Array( 12713.18811137469, 14755.686200253424, 11433.18811137469, 14755.686200253424 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9601,11 +9586,36 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "d3",
+            "node_id": "d1",
+            "portals": [
+              {
+                "position": "Vector2( 11817.18811137469, 14755.686200253424 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "d1",
+                "wall_distance": 0.7,
+                "closed": true,
+                "node_id": "da"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 11433.18811137469, 14755.686200253424, 11433.18811137469, 13219.686200253424 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "d2",
             "portals": []
           },
           {
-            "points": "PoolVector2Array( 13606.95252014336, 15200.756575373656, 13606.95252014336, 16992.756575373656 )",
+            "points": "PoolVector2Array( 12713.18811137469, 14243.686200253424, 11433.18811137469, 14243.686200253424 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9614,35 +9624,23 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "d4",
-            "portals": []
-          },
-          {
-            "points": "PoolVector2Array( 13606.95252014336, 16992.756575373656, 11302.95252014336, 16992.756575373656 )",
-            "texture": "res://textures/walls/cobble.png",
-            "color": "ffffffff",
-            "loop": false,
-            "type": 1,
-            "joint": 0,
-            "normalize_uv": true,
-            "shadow": true,
-            "node_id": "d5",
             "portals": [
               {
-                "position": "Vector2( 12710.95252014336, 16992.756575373656 )",
+                "position": "Vector2( 11817.18811137469, 14243.686200253424 )",
                 "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
                 "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "d5",
-                "wall_distance": 0.3888888888888889,
+                "wall_id": "d4",
+                "wall_distance": 0.7,
                 "closed": true,
-                "node_id": "da"
+                "node_id": "d5"
               }
             ]
           },
           {
-            "points": "PoolVector2Array( 11302.95252014336, 16992.756575373656, 11302.95252014336, 15200.756575373656 )",
+            "points": "PoolVector2Array( 11433.18811137469, 14243.686200253424, 12201.18811137469, 14243.686200253424 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9650,11 +9648,24 @@
             "joint": 0,
             "normalize_uv": true,
             "shadow": true,
-            "node_id": "d6",
-            "portals": []
+            "node_id": "d7",
+            "portals": [
+              {
+                "position": "Vector2( 11817.18811137469, 14243.686200253424 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "d7",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "d9"
+              }
+            ]
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 16992.756575373656, 11814.95252014336, 15200.756575373656 )",
+            "points": "PoolVector2Array( 12201.18811137469, 14243.686200253424, 12201.18811137469, 14755.686200253424 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9663,23 +9674,10 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "d8",
-            "portals": [
-              {
-                "position": "Vector2( 11814.95252014336, 16096.756575373656 )",
-                "rotation": -1.5707963267948966,
-                "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, -1 )",
-                "texture": "res://textures/portals/threshold_01.png",
-                "radius": 128,
-                "wall_id": "d8",
-                "wall_distance": 0.5,
-                "closed": true,
-                "node_id": "d9"
-              }
-            ]
+            "portals": []
           },
           {
-            "points": "PoolVector2Array( 11814.95252014336, 15200.756575373656, 11814.95252014336, 16992.756575373656 )",
+            "points": "PoolVector2Array( 16028.04593569152, 13219.686200253424, 17052.04593569152, 13219.686200253424 )",
             "texture": "res://textures/walls/cobble.png",
             "color": "ffffffff",
             "loop": false,
@@ -9688,20 +9686,302 @@
             "normalize_uv": true,
             "shadow": true,
             "node_id": "dc",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 17052.04593569152, 13219.686200253424, 17052.04593569152, 14755.686200253424 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "dd",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 17052.04593569152, 14755.686200253424, 16028.04593569152, 14755.686200253424 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "de",
             "portals": [
               {
-                "position": "Vector2( 11814.95252014336, 16096.756575373656 )",
-                "rotation": 1.5707963267948966,
+                "position": "Vector2( 16540.04593569152, 14755.686200253424 )",
+                "rotation": 3.141592653589793,
                 "scale": "Vector2( 1, 1 )",
-                "direction": "Vector2( 0, 1 )",
+                "direction": "Vector2( -1, 0 )",
                 "texture": "res://textures/portals/threshold_01.png",
                 "radius": 128,
-                "wall_id": "dc",
+                "wall_id": "de",
                 "wall_distance": 0.5,
                 "closed": true,
-                "node_id": "dd"
+                "node_id": "e1"
               }
             ]
+          },
+          {
+            "points": "PoolVector2Array( 16028.04593569152, 14755.686200253424, 16028.04593569152, 13219.686200253424 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "df",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 11590.391237622809, 15633.843100126713, 12870.391237622809, 15633.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "e3",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12870.391237622809, 15633.843100126713, 12870.391237622809, 17169.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "e4",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12870.391237622809, 17169.843100126713, 11590.391237622809, 17169.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "e5",
+            "portals": [
+              {
+                "position": "Vector2( 11974.391237622809, 17169.843100126713 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "e5",
+                "wall_distance": 0.7,
+                "closed": true,
+                "node_id": "ee"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 11590.391237622809, 17169.843100126713, 11590.391237622809, 15633.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "e6",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 12870.391237622809, 16657.843100126713, 11590.391237622809, 16657.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "e8",
+            "portals": [
+              {
+                "position": "Vector2( 11974.391237622809, 16657.843100126713 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "e8",
+                "wall_distance": 0.7,
+                "closed": true,
+                "node_id": "e9"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 11590.391237622809, 16657.843100126713, 12358.391237622809, 16657.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "eb",
+            "portals": [
+              {
+                "position": "Vector2( 11974.391237622809, 16657.843100126713 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "eb",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "ed"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 12358.391237622809, 16657.843100126713, 12358.391237622809, 17169.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "ec",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 15957.669672759264, 15633.843100126713, 16981.669672759264, 15633.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f0",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 16981.669672759264, 15633.843100126713, 16981.669672759264, 17169.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f1",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 16981.669672759264, 17169.843100126713, 15957.669672759264, 17169.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f2",
+            "portals": [
+              {
+                "position": "Vector2( 16213.669672759264, 17169.843100126713 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "f2",
+                "wall_distance": 0.75,
+                "closed": true,
+                "node_id": "fb"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 15957.669672759264, 17169.843100126713, 15957.669672759264, 15633.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f3",
+            "portals": []
+          },
+          {
+            "points": "PoolVector2Array( 16981.669672759264, 16657.843100126713, 15957.669672759264, 16657.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f5",
+            "portals": [
+              {
+                "position": "Vector2( 16213.669672759264, 16657.843100126713 )",
+                "rotation": 3.141592653589793,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( -1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "f5",
+                "wall_distance": 0.75,
+                "closed": true,
+                "node_id": "f6"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 15957.669672759264, 16657.843100126713, 16469.669672759264, 16657.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f8",
+            "portals": [
+              {
+                "position": "Vector2( 16213.669672759264, 16657.843100126713 )",
+                "rotation": 0.0,
+                "scale": "Vector2( 1, 1 )",
+                "direction": "Vector2( 1, 0 )",
+                "texture": "res://textures/portals/threshold_01.png",
+                "radius": 128,
+                "wall_id": "f8",
+                "wall_distance": 0.5,
+                "closed": true,
+                "node_id": "fa"
+              }
+            ]
+          },
+          {
+            "points": "PoolVector2Array( 16469.669672759264, 16657.843100126713, 16469.669672759264, 17169.843100126713 )",
+            "texture": "res://textures/walls/cobble.png",
+            "color": "ffffffff",
+            "loop": false,
+            "type": 1,
+            "joint": 0,
+            "normalize_uv": true,
+            "shadow": true,
+            "node_id": "f9",
+            "portals": []
           }
         ],
         "portals": [],
@@ -9731,10 +10011,10 @@
             "position": "Vector2( 10214.95252014336, 256 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 0, 17408 )",
+            "edit_points": "PoolVector2Array( 0, 0, 14.902976975039564, 1740.8, -60.09993505627972, 3481.6, 38.43273454821792, 5222.4, -149.7720969074253, 6963.2, 145.31943861461878, 8704, -52.100245740834, 10444.8, 129.74654556222777, 12185.6, 188.93347643352354, 13926.4, -86.18024218518258, 15667.2, 0, 17408 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 1280,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 832,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9745,13 +10025,13 @@
             "node_id": "1"
           },
           {
-            "position": "Vector2( 256, 8651.922458186818 )",
+            "position": "Vector2( 256, 7929.6214391864405 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 9318.95252014336, 0 )",
+            "edit_points": "PoolVector2Array( 0, 0, 1863.7905040286723, 55.847063465598694, 3727.581008057344, 147.34061542714335, 5591.371512086016, -139.62391936418135, 7455.162016114688, 114.51095260468173, 9318.95252014336, 0 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 785,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 663,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9762,13 +10042,13 @@
             "node_id": "2"
           },
           {
-            "position": "Vector2( 4386.804523615339, 256 )",
+            "position": "Vector2( 4096.870139399453, 256 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 0, 8003.406471343938 )",
+            "edit_points": "PoolVector2Array( 0, 0, 55.29834612749801, 1790.7775003124907, -42.1654620041445, 3581.5550006249814, -26.763188375908612, 5372.332500937472, 0, 7163.110001249963 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 811,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 515,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9779,13 +10059,13 @@
             "node_id": "3"
           },
           {
-            "position": "Vector2( 256, 4445.515608683355 )",
+            "position": "Vector2( 5799.512734637363, 8440.132877122918 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 3724.842961016358, 0 )",
+            "edit_points": "PoolVector2Array( 0, 0, 29.58461363193146, 1844.7734245754164, -12.23587818668966, 3689.5468491508327, 143.3124445024796, 5534.320273726249, 92.62190779887806, 7379.093698301665, 0, 9223.867122877082 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 934,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 581,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9796,13 +10076,13 @@
             "node_id": "4"
           },
           {
-            "position": "Vector2( 4792.766086214321, 5241.265588165523 )",
+            "position": "Vector2( 256, 13955.764243584734 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 4782.18643392904, 0 )",
+            "edit_points": "PoolVector2Array( 0, 0, 1698.6909830437878, 110.48510317004366, 3397.3819660875756, -11.403152241930002, 5096.072949131363, 0 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 916,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 494,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9813,13 +10093,13 @@
             "node_id": "5"
           },
           {
-            "position": "Vector2( 5660.845589697832, 9044.438445029698 )",
+            "position": "Vector2( 6246.952520143362, 12595.486737768813 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 0, 8619.561554970302 )",
+            "edit_points": "PoolVector2Array( 0, 0, 1663.999999999999, -112.3274091507501, 3327.999999999999, 0 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 616,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 482,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9830,13 +10110,13 @@
             "node_id": "6"
           },
           {
-            "position": "Vector2( 256, 12833.44057821117 )",
+            "position": "Vector2( 10854.95252014336, 10000.644162388966 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 5096.3794131659715, 0 )",
+            "edit_points": "PoolVector2Array( 0, 0, 1702.2618699641607, 22.773430581397406, 3404.5237399283196, -134.3817714957804, 5106.7856098924785, -27.261150538908623, 6809.047479856639, 0 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 979,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 547,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9847,13 +10127,13 @@
             "node_id": "7"
           },
           {
-            "position": "Vector2( 5969.311766229694, 14142.073606889584 )",
+            "position": "Vector2( 10854.95252014336, 5698.184265946345 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 3605.640753913667, 0 )",
+            "edit_points": "PoolVector2Array( 0, 0, 1702.2618699641607, 54.743444314312, 3404.5237399283196, 42.08597077315699, 5106.7856098924785, -94.4542297046628, 6809.047479856639, 0 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 545,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 578,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9864,13 +10144,13 @@
             "node_id": "8"
           },
           {
-            "position": "Vector2( 10854.95252014336, 10894.459771059563 )",
+            "position": "Vector2( 256, 11667.59202834807 )",
             "rotation": 0,
             "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 6809.047479856639, 0 )",
+            "edit_points": "PoolVector2Array( 0, 0, 5816.51289846106, -157.39174363212078, 11624.981870881473, -439.964615839619, 17408, -1118.608420527802 )",
             "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 718,
+            "texture": "res://textures/paths/path_blender_03.png",
+            "width": 832,
             "layer": 100,
             "fade_in": false,
             "fade_out": false,
@@ -9879,113 +10159,11 @@
             "block_light": false,
             "loop": false,
             "node_id": "9"
-          },
-          {
-            "position": "Vector2( 10854.95252014336, 6361.346729934074 )",
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 6809.047479856639, 0 )",
-            "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 921,
-            "layer": 100,
-            "fade_in": false,
-            "fade_out": false,
-            "grow": false,
-            "shrink": false,
-            "block_light": false,
-            "loop": false,
-            "node_id": "a"
-          },
-          {
-            "position": "Vector2( 14634.878327649747, 256 )",
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 0, 5644.530056062366 )",
-            "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 938,
-            "layer": 100,
-            "fade_in": false,
-            "fade_out": false,
-            "grow": false,
-            "shrink": false,
-            "block_light": false,
-            "loop": false,
-            "node_id": "b"
-          },
-          {
-            "position": "Vector2( 14338.679971438876, 6822.163403805782 )",
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 0, 3712.977959425698 )",
-            "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 919,
-            "layer": 100,
-            "fade_in": false,
-            "fade_out": false,
-            "grow": false,
-            "shrink": false,
-            "block_light": false,
-            "loop": false,
-            "node_id": "c"
-          },
-          {
-            "position": "Vector2( 14671.221408993197, 11253.778178887644 )",
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 0, 6410.221821112356 )",
-            "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 865,
-            "layer": 100,
-            "fade_in": false,
-            "fade_out": false,
-            "grow": false,
-            "shrink": false,
-            "block_light": false,
-            "loop": false,
-            "node_id": "d"
-          },
-          {
-            "position": "Vector2( 10854.95252014336, 14379.724233219316 )",
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 3383.4902978430327, 0 )",
-            "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 746,
-            "layer": 100,
-            "fade_in": false,
-            "fade_out": false,
-            "grow": false,
-            "shrink": false,
-            "block_light": false,
-            "loop": false,
-            "node_id": "e"
-          },
-          {
-            "position": "Vector2( 15104, 14121.229441452793 )",
-            "rotation": 0,
-            "scale": "Vector2( 1, 1 )",
-            "edit_points": "PoolVector2Array( 0, 0, 2560, 0 )",
-            "smoothness": 1,
-            "texture": "res://textures/paths/cobble.png",
-            "width": 614,
-            "layer": 100,
-            "fade_in": false,
-            "fade_out": false,
-            "grow": false,
-            "shrink": false,
-            "block_light": false,
-            "loop": false,
-            "node_id": "f"
           }
         ],
         "objects": [
           {
-            "position": "Vector2( 2118.4214805081792, 6585.980879617824 )",
+            "position": "Vector2( 1978.1561205104501, 3837.5550006249814 )",
             "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -9993,10 +10171,10 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "11"
+            "node_id": "b"
           },
           {
-            "position": "Vector2( 16384, 16046.340352008972 )",
+            "position": "Vector2( 7910.952520143361, 15315.169562935189 )",
             "rotation": 0.0,
             "scale": "Vector2( 1, 1 )",
             "mirror": false,
@@ -10004,7 +10182,7 @@
             "layer": 100,
             "shadow": true,
             "block_light": false,
-            "node_id": "13"
+            "node_id": "d"
           }
         ],
         "lights": [],
@@ -10017,121 +10195,241 @@
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 704, 704, 3520, 704, 3520, 3008, 704, 3008 )",
+              "points": "PoolVector2Array( 5811.380822999418, 640, 5811.380822999418, 2176 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
-              "width": 512,
+              "width": 768,
               "type": 0,
-              "node_id": "31"
+              "node_id": "1a"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 704, 9492.438445029698, 2240, 9492.438445029698, 2240, 11540.438445029698, 704, 11540.438445029698 )",
+              "points": "PoolVector2Array( 8189.071888369746, 640, 8189.071888369746, 2176 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "43"
+              "node_id": "27"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 3252.1897065829858, 9492.438445029698, 4788.189706582985, 9492.438445029698, 4788.189706582985, 11540.438445029698, 3252.1897065829858, 11540.438445029698 )",
+              "points": "PoolVector2Array( 5687.151417855285, 3027.7033337499875, 5687.151417855285, 4563.703333749987 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "55"
+              "node_id": "2e"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 704, 13770.99074599085, 2240, 13770.99074599085, 2240, 16842.99074599085, 704, 16842.99074599085 )",
+              "points": "PoolVector2Array( 8286.303431735556, 3027.7033337499875, 8286.303431735556, 4563.703333749987 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "67"
+              "node_id": "35"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 3252.1897065829858, 13770.99074599085, 4788.189706582985, 13770.99074599085, 4788.189706582985, 16842.99074599085, 3252.1897065829858, 16842.99074599085 )",
+              "points": "PoolVector2Array( 5799.552971664668, 5415.406667499975, 5799.552971664668, 6951.406667499975 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
-              "width": 512,
+              "width": 640,
               "type": 0,
-              "node_id": "79"
+              "node_id": "42"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 6417.311766229694, 14862.801448277129, 8977.311766229694, 14862.801448277129, 8977.311766229694, 16654.80144827713, 6417.311766229694, 16654.80144827713 )",
+              "points": "PoolVector2Array( 8553.089140842963, 5415.406667499975, 8553.089140842963, 6951.406667499975 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "8a"
+              "node_id": "49"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 11302.95252014336, 704, 13094.95252014336, 704, 13094.95252014336, 2496, 11302.95252014336, 2496 )",
+              "points": "PoolVector2Array( 1273.3612055396466, 8824.132877122918, 1273.3612055396466, 10616.132877122918 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "96"
+              "node_id": "50"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 11302.95252014336, 3526.265028031183, 13350.95252014336, 3526.265028031183, 13350.95252014336, 5318.265028031183, 11302.95252014336, 5318.265028031183 )",
+              "points": "PoolVector2Array( 3828.0364745656816, 8824.132877122918, 3828.0364745656816, 10616.132877122918 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
-              "width": 512,
+              "width": 640,
               "type": 0,
-              "node_id": "a2"
+              "node_id": "57"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 11302.95252014336, 7270.163403805782, 13350.95252014336, 7270.163403805782, 13350.95252014336, 10086.163403805782, 11302.95252014336, 10086.163403805782 )",
+              "points": "PoolVector2Array( 640, 16345.438307325312, 2176, 16345.438307325312 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
-              "width": 512,
+              "width": 511,
               "type": 0,
-              "node_id": "b4"
+              "node_id": "5e"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 15246.38435882109, 7270.163403805782, 16782.384358821088, 7270.163403805782, 16782.384358821088, 10086.163403805782, 15246.38435882109, 10086.163403805782 )",
+              "points": "PoolVector2Array( 3188.0364745656816, 16433.04678336404, 4724.036474565682, 16433.04678336404 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "c6"
+              "node_id": "6b"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 11302.95252014336, 11701.778178887644, 13606.95252014336, 11701.778178887644, 13606.95252014336, 13237.778178887644, 11302.95252014336, 13237.778178887644 )",
+              "points": "PoolVector2Array( 7866.658809735191, 9336.132877122918, 8890.658809735192, 9336.132877122918 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "d2"
+              "node_id": "78"
             },
             {
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 11302.95252014336, 15200.756575373656, 13606.95252014336, 15200.756575373656, 13606.95252014336, 16992.756575373656, 11302.95252014336, 16992.756575373656 )",
+              "points": "PoolVector2Array( 11878.95252014336, 655.1195679576011, 11878.95252014336, 1935.1195679576012 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "7f"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 11878.95252014336, 3138.4115476589777, 11878.95252014336, 4674.411547658978 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "8c"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 13508.635013428908, 1487.6146412621333, 14788.635013428908, 1487.6146412621333 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
               "width": 512,
               "type": 0,
-              "node_id": "de"
+              "node_id": "93"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 14148.635013428908, 3138.4115476589777, 14148.635013428908, 4418.411547658978 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "9a"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 15778.317506714455, 1444.836238135223, 17058.317506714455, 1444.836238135223 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 512,
+              "type": 0,
+              "node_id": "a7"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 15778.317506714455, 4177.675810679458, 17058.317506714455, 4177.675810679458 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 512,
+              "type": 0,
+              "node_id": "ae"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 11878.95252014336, 7353.544596309946, 11878.95252014336, 8889.544596309946 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "ba"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 14148.635013428908, 7433.080006756554, 14148.635013428908, 8969.080006756554 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "c7"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 15778.317506714455, 8350.884675437952, 17058.317506714455, 8350.884675437952 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 511,
+              "type": 0,
+              "node_id": "ce"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 12073.18811137469, 13219.686200253424, 12073.18811137469, 14755.686200253424 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "db"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 16540.04593569152, 13219.686200253424, 16540.04593569152, 14755.686200253424 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 512,
+              "type": 0,
+              "node_id": "e2"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 12230.391237622809, 15633.843100126713, 12230.391237622809, 17169.843100126713 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 640,
+              "type": 0,
+              "node_id": "ef"
+            },
+            {
+              "position": "Vector2( 0, 0 )",
+              "rotation": 0,
+              "scale": "Vector2( 1, 1 )",
+              "points": "PoolVector2Array( 16469.669672759264, 15633.843100126713, 16469.669672759264, 17169.843100126713 )",
+              "texture": "res://textures/roofs/flat_clay_red/tiles.png",
+              "width": 512,
+              "type": 0,
+              "node_id": "fc"
             }
           ]
         },

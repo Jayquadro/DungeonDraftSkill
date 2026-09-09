@@ -111,6 +111,14 @@ def _cmd_generate(args: argparse.Namespace) -> int:
             seed=args.seed,
             building_type=args.building_type, l_shaped=args.l_shaped,
         )
+    elif is_city:
+        # --scale e l'unico parametro esclusivo di city (TASK-41): passato
+        # solo qui, come --building-type/--l-shaped per building.
+        blueprint = generators[args.algorithm].generate(
+            width=args.width if args.width is not None else 40,
+            height=args.height if args.height is not None else 40,
+            seed=args.seed, scale=args.scale,
+        )
     else:
         blueprint = generators[args.algorithm].generate(
             width=args.width if args.width is not None else 40,
@@ -143,9 +151,11 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         level = prepared["world"]["levels"]["0"]
         render_sewer_blueprint(level, ids, blueprint, palette)
     elif is_city:
-        # Le stanze vive sono quelle di ogni blueprint.buildings, non
-        # blueprint.rooms (TASK-35): niente furnish/luci qui, che
-        # presumono un solo Blueprint a stanze come quello passato loro.
+        # Niente furnish/luci qui: presumono un solo Blueprint a stanze come
+        # quello passato loro, e blueprint.rooms per una citta e sempre vuoto.
+        # Nel preset isolato le stanze vive sono quelle di ogni
+        # blueprint.buildings (TASK-35); nei preset quartiere/citta non ce ne
+        # sono affatto, gli edifici sono solo ingombri (TASK-41).
         level_stack = prepared["world"]["levels"]
         render_city_blueprint(level_stack, ids, blueprint, palette)
     else:
@@ -279,7 +289,24 @@ def _cmd_catalog(args: argparse.Namespace) -> int:
 
 
 def _cmd_preview(args: argparse.Namespace) -> int:
-    raise NotImplementedError("ddforge preview: implementato in TASK-37")
+    from ddforge.preview import PillowMissingError, render_preview
+
+    doc = _load_document(args.file)
+    if doc is None:
+        return 1
+
+    out = args.out or str(Path(args.file).with_suffix(".png"))
+    try:
+        render_preview(doc, out, level_id=args.level, scale=args.scale)
+    except PillowMissingError as exc:
+        print(f"Errore: {exc}", file=sys.stderr)
+        return 1
+    except ValueError as exc:
+        print(f"Errore: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"Scritto {out}")
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -309,6 +336,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--l-shaped", action="store_true",
         help="pianta a L invece che rettangolare (solo per l'algoritmo 'building')",
     )
+    p_generate.add_argument(
+        "--scale", choices=["isolato", "quartiere", "citta"], default="isolato",
+        help="preset di scala della mappa cittadina (solo per l'algoritmo 'city'): "
+             "'isolato' = 1 quadretto = 5 ft, edifici completi da giocare al tavolo; "
+             "'quartiere' = 1 quadretto = 1 edificio, un quartiere intero visto dall'alto; "
+             "'citta' = una citta intera, capace di contenere una decina di quartieri",
+    )
     p_generate.add_argument("--style", default=None, help="palette semantica, es. crypt, tavern, sewer")
     p_generate.add_argument("--lights", action="store_true")
     p_generate.add_argument("--furnish", choices=["none", "light", "medium", "heavy"], default="none")
@@ -332,6 +366,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_preview = subparsers.add_parser("preview", help="renderizza un PNG di anteprima (M6)")
     p_preview.add_argument("file")
+    p_preview.add_argument(
+        "--out", default=None,
+        help="percorso del PNG da scrivere; default: il file di input con estensione .png",
+    )
+    p_preview.add_argument(
+        "--level", default=None,
+        help="id del livello da renderizzare (es. '0'); default: il primo livello del documento",
+    )
+    p_preview.add_argument("--scale", type=int, default=8, help="pixel per quadretto nel PNG (default 8)")
     p_preview.set_defaults(func=_cmd_preview)
 
     return parser
