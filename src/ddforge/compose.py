@@ -582,10 +582,18 @@ def draw_building(level_stack: dict, ids, blueprint, palette, *, roof: bool = Tr
     piano. level_stack e nella stessa forma di prepared['world']['levels']
     (dict con chiavi stringa '0'..'N-1', da template.prepare).
 
-    `roof=False` lascia l'edificio senza tetto, per il chiamante che vuole
-    disegnarlo diversamente: lo usa render_city_blueprint, dove il tetto va
-    costruito come linea di colmo (vedi _ridge_line e TASK-47) invece che col
-    poligono chiuso del footprint usato qui."""
+    Il tetto e una linea di colmo via add_ridge_roof (TASK-47), la stessa che
+    usano i preset di city.py: prima passava i 4 vertici del footprint come
+    poligono chiuso con la width di default, che con la semantica di
+    roof.points/roof.width verificata in TASK-41 sborda 2 quadretti oltre
+    l'edificio su ogni lato (docs/format.md §5).
+
+    `roof=False` lascia l'edificio senza tetto: lo usa render_city_blueprint,
+    che disegna il tetto per conto proprio con la stessa add_ridge_roof.
+    Resta cosi per non toccare quel percorso (gia testato e approvato al
+    gate M5) mentre si correggeva solo l'edificio singolo; i due tetti
+    prodotti sono pero ormai identici, quindi il chiamante potrebbe in futuro
+    lasciare roof=True e togliere la chiamata duplicata."""
     load_bearing = palette.wall_load_bearing or palette.wall
     footprint = _building_footprint(blueprint)
     footprint_corners = [
@@ -643,8 +651,8 @@ def draw_building(level_stack: dict, ids, blueprint, palette, *, roof: bool = Tr
         # Tetto solo sull'ultimo piano. sun_direction non viene toccato:
         # template.prepare duplica lo stesso livello sorgente su ogni
         # piano, quindi e gia coerente su tutto l'edificio.
-        if roof and level_key == top_level_key and palette.roof is not None:
-            add_roof(level, ids, footprint_corners, palette.roof)
+        if roof and level_key == top_level_key:
+            add_ridge_roof(level, ids, footprint, palette)
 
 
 def render_blueprint(level, ids, blueprint, palette) -> None:
@@ -712,16 +720,14 @@ def add_ridge_roof(level, ids, footprint: Rect, palette) -> None:
     """Tetto a due falde che copre esattamente `footprint`, come linea di
     colmo (vedi _ridge_line).
 
-    E' il tetto che usano entrambi i preset di city.py. Il tetto di
-    draw_building, invece, passa i 4 vertici del footprint come poligono
-    chiuso con la `width` di default: con la semantica verificata in TASK-41
-    quel tetto e una fascia larga 2 quadretti per lato CENTRATA sul
-    perimetro, quindi sborda 2 quadretti oltre l'edificio su ogni lato. Su
-    una casa di citta da 5x5 quadretti vuol dire un tetto 9x9 che arriva in
-    mezzo alla strada e si sovrappone a quello del vicino. Vedi TASK-47: la
-    correzione di draw_building ha bisogno di un riscontro visivo di Jay
-    perche cambia un output gia approvato al gate M4, mentre qui il tetto
-    giusto serve subito."""
+    E' il tetto che usa sia draw_building (edificio singolo e isolato di
+    city.py, TASK-47) sia draw_city_footprint (preset "quartiere"/"citta").
+    Prima di TASK-47, draw_building passava invece i 4 vertici del footprint
+    come poligono chiuso con la `width` di default: con la semantica
+    verificata in TASK-41 quel tetto era una fascia larga 2 quadretti per
+    lato CENTRATA sul perimetro, quindi sbordava 2 quadretti oltre
+    l'edificio su ogni lato (su una casa di citta da 5x5 quadretti, un tetto
+    9x9 in mezzo alla strada)."""
     if palette.roof is None:
         return
     ridge, width = _ridge_line(footprint)
@@ -780,9 +786,10 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
             add_object(level, ids, cx, cy, fountain)
 
     for building_blueprint in blueprint.buildings:
-        # Il tetto NON lo disegna draw_building: il suo sborda 2 quadretti
-        # per lato, che su una casa di citta e piu del suo stesso ingombro
-        # (vedi add_ridge_roof e TASK-47).
+        # draw_building disegna anche il tetto giusto ormai (TASK-47), ma qui
+        # resta disattivato (roof=False) e ridisegnato a parte: e il percorso
+        # gia testato e approvato al gate M5, e i due tetti sono comunque
+        # identici (stessa add_ridge_roof).
         draw_building(level_stack, ids, building_blueprint, palette, roof=False)
         add_ridge_roof(level, ids, _building_footprint(building_blueprint), palette)
 

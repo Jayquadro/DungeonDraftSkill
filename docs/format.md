@@ -463,17 +463,19 @@ preset di `generators/city.py`: il colmo corre lungo il lato lungo del
 footprint e `width` e meta del lato corto, cosi le due gronde cadono
 esattamente sui bordi dell'edificio.
 
-Conseguenza sull'altro tetto in circolazione: `compose.draw_building` passa
-invece i 4 vertici del footprint come poligono chiuso con la `width` di
-default (512 px). Con la semantica appena verificata quel tetto e una fascia
-larga 2 quadretti per lato **centrata sul perimetro**, quindi sborda 2
-quadretti oltre l'edificio su ogni lato — su una casa di citta da 5×5
-quadretti significa un tetto 9×9 che arriva in mezzo alla strada e si
-sovrappone a quello del vicino. Per questo `render_city_blueprint` chiama
-`draw_building(..., roof=False)` e disegna il tetto con `add_ridge_roof`.
-L'edificio singolo (`ddforge generate building`) usa ancora il tetto a
-poligono: e un output gia approvato da Jay al gate umano M4 e correggerlo
-richiede un nuovo riscontro visivo, tracciato in **TASK-47**.
+Conseguenza sull'altro tetto in circolazione: fino a TASK-47,
+`compose.draw_building` passava invece i 4 vertici del footprint come
+poligono chiuso con la `width` di default (512 px). Con la semantica appena
+verificata quel tetto era una fascia larga 2 quadretti per lato **centrata
+sul perimetro**, quindi sbordava 2 quadretti oltre l'edificio su ogni lato —
+su una casa di citta da 5×5 quadretti un tetto 9×9 che arrivava in mezzo alla
+strada e si sovrapponeva a quello del vicino. TASK-47 ha corretto
+`draw_building` per usare anch'esso `add_ridge_roof`: sia l'edificio singolo
+(`ddforge generate building`) sia gli edifici del preset "isolato" di
+city.py hanno ora il tetto a linea di colmo. `render_city_blueprint`
+continua a chiamare `draw_building(..., roof=False)` e a disegnare il tetto
+per conto proprio con `add_ridge_roof`: e il percorso gia testato al gate
+M5 e i due tetti sono comunque identici, quindi non e stato toccato.
 
 ### `light` e `text`
 

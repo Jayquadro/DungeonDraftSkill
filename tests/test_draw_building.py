@@ -2,7 +2,7 @@
 
 from ddforge.assets import Palette
 from ddforge.compose import draw_building
-from ddforge.godot import parse_pv2
+from ddforge.godot import grid_to_px, parse_pv2
 from ddforge.ids import IdAllocator
 from ddforge.model import Blueprint, Door, Rect, Room
 from ddforge.template import finalize, load_template, prepare
@@ -127,6 +127,34 @@ def test_no_roof_when_palette_has_none():
     ids = IdAllocator()
     draw_building(level_stack, ids, _two_floor_blueprint(), palette_no_roof)
     assert level_stack["1"]["roofs"]["roofs"] == []
+
+
+def test_roof_does_not_overhang_the_building():
+    """TASK-47: prima della correzione il tetto era un poligono chiuso a 4
+    vertici con `width` di default (512 px), che con la semantica di
+    roof.points/roof.width verificata in TASK-41 (width = MEZZA larghezza,
+    docs/format.md §5) si stende 2 quadretti oltre il perimetro su ogni
+    lato. Ora usa la stessa add_ridge_roof dei preset di city.py: colmo a 2
+    punti, gronde esattamente sui bordi del footprint. Stesso schema di
+    test_isolato_roofs_do_not_overhang_the_building in
+    tests/test_generators_city.py."""
+    from ddforge.compose import _building_footprint
+
+    level_stack = _empty_level_stack(2)
+    ids = IdAllocator()
+    bp = _two_floor_blueprint(stairs_rect=Rect(0, 10, 20, 14))
+    draw_building(level_stack, ids, bp, PALETTE)
+
+    footprint = _building_footprint(bp)
+    roofs = level_stack["1"]["roofs"]["roofs"]
+    assert len(roofs) == 1
+    points = parse_pv2(roofs[0]["points"])
+    assert len(points) == 2, "tetto a poligono chiuso: sborda (vedi TASK-47)"
+    half = roofs[0]["width"]
+    assert half <= grid_to_px(min(footprint.w, footprint.h)) / 2 + 1e-6
+    for x, y in points:
+        assert grid_to_px(footprint.x1) - 1e-6 <= x <= grid_to_px(footprint.x2) + 1e-6
+        assert grid_to_px(footprint.y1) - 1e-6 <= y <= grid_to_px(footprint.y2) + 1e-6
 
 
 def test_load_bearing_walls_use_a_different_texture_than_partitions():

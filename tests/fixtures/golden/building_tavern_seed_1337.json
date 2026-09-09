@@ -15196,9 +15196,9 @@
               "position": "Vector2( 0, 0 )",
               "rotation": 0,
               "scale": "Vector2( 1, 1 )",
-              "points": "PoolVector2Array( 256, 256, 4352, 256, 4352, 3328, 256, 3328 )",
+              "points": "PoolVector2Array( 256, 1792, 4352, 1792 )",
               "texture": "res://textures/roofs/flat_clay_red/tiles.png",
-              "width": 512,
+              "width": 1536,
               "type": 0,
               "node_id": "48"
             }
