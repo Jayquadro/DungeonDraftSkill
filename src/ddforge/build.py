@@ -139,7 +139,12 @@ def add_pattern(level, ids, rect_grid, texture, *,
 
 def add_object(level, ids, x, y, texture, *,
                 rotation=0.0, scale=1.0, layer=100,
-                shadow=True, block_light=False, mirror=False) -> dict:
+                shadow=True, block_light=False, mirror=False,
+                custom_color: str | None = None) -> dict:
+    """`custom_color` (TASK-46) va omesso, non messo a None: nei campioni
+    osservati (templates/rich_reference.dungeondraft_map) un object non
+    colorabile non porta affatto il campo, solo quelli di un pack "Colorable"
+    lo hanno (un ARGB esadecimale a 8 cifre, es. "ff6b3834")."""
     obj = {
         "position": v2(grid_to_px(x), grid_to_px(y)),
         "rotation": rotation,
@@ -149,8 +154,10 @@ def add_object(level, ids, x, y, texture, *,
         "layer": layer,
         "shadow": shadow,
         "block_light": block_light,
-        "node_id": ids.next(),
     }
+    if custom_color is not None:
+        obj["custom_color"] = custom_color
+    obj["node_id"] = ids.next()
     level["objects"].append(obj)
     return obj
 

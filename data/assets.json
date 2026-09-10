@@ -343,7 +343,14 @@
   "roofs": {
     "tiles": "res://textures/roofs/flat_clay_red/tiles.png"
   },
-  "paths": {},
+  "paths": {
+    "bb_countryroad_path": "res://packs/6VxwaRdj/textures/paths/BB_CountryRoad_path.png",
+    "bb_mainroad_path": "res://packs/6VxwaRdj/textures/paths/BB_MainRoad_path.png",
+    "bb_river_path": "res://packs/6VxwaRdj/textures/paths/BB_River_path.png",
+    "bb_shore_path": "res://packs/6VxwaRdj/textures/paths/BB_Shore_path.png",
+    "bb_sideroad_path": "res://packs/6VxwaRdj/textures/paths/BB_SideRoad_path.png",
+    "bb_wall_path": "res://packs/6VxwaRdj/textures/paths/BB_Wall_path.png"
+  },
   "objects": {
     "alchemy_potion_colorable_12": "res://packs/DnDgWAWA/textures/objects/[DnD] Tool/Colorable/alchemy_potion_colorable_12.webp",
     "animal_cage_top_02_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Cage_Top_02_A.webp",
@@ -351,10 +358,57 @@
     "barrel": "res://textures/objects/dwarven_set/barrel_forge_01.png",
     "barrel_01": "res://textures/objects/containers/barrel_01.png",
     "barrel_forge_01": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+    "bb_houses1_balcony": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Balcony.png",
+    "bb_houses1_flag1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Flag1.png",
+    "bb_houses1_flag2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Flag2.png",
+    "bb_houses1_house1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House1.png",
     "bb_houses1_house10": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House10.png",
+    "bb_houses1_house11": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House11.png",
     "bb_houses1_house12": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House12.png",
+    "bb_houses1_house13": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House13.png",
+    "bb_houses1_house14": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House14.png",
+    "bb_houses1_house15": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House15.png",
+    "bb_houses1_house16": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House16.png",
+    "bb_houses1_house17": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House17.png",
+    "bb_houses1_house18": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House18.png",
+    "bb_houses1_house19": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House19.png",
+    "bb_houses1_house2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House2.png",
+    "bb_houses1_house20": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House20.png",
+    "bb_houses1_house21": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House21.png",
+    "bb_houses1_house22": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House22.png",
+    "bb_houses1_house23": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House23.png",
+    "bb_houses1_house24": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House24.png",
+    "bb_houses1_house25": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House25.png",
+    "bb_houses1_house26": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House26.png",
+    "bb_houses1_house27": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House27.png",
     "bb_houses1_house28": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House28.png",
+    "bb_houses1_house29": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House29.png",
+    "bb_houses1_house3": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House3.png",
+    "bb_houses1_house30": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House30.png",
+    "bb_houses1_house31": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House31.png",
+    "bb_houses1_house32": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House32.png",
+    "bb_houses1_house33": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House33.png",
+    "bb_houses1_house4": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House4.png",
+    "bb_houses1_house5": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House5.png",
+    "bb_houses1_house6": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House6.png",
+    "bb_houses1_house7": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House7.png",
+    "bb_houses1_house8": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House8.png",
+    "bb_houses1_house9": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House9.png",
+    "bb_houses1_roof1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof1.png",
+    "bb_houses1_roof10": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof10.png",
+    "bb_houses1_roof2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof2.png",
+    "bb_houses1_roof3": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof3.png",
+    "bb_houses1_roof4": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof4.png",
+    "bb_houses1_roof5": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof5.png",
+    "bb_houses1_roof6": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof6.png",
     "bb_houses1_roof7": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof7.png",
+    "bb_houses1_roof8": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof8.png",
+    "bb_houses1_roof9": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Roof9.png",
+    "bb_houses1_tarp1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tarp1.png",
+    "bb_houses1_tarp2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tarp2.png",
+    "bb_houses1_tarp3": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tarp3.png",
+    "bb_houses1_tower1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tower1.png",
+    "bb_houses1_tower2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tower2.png",
     "bed": "res://packs/sWxkyx98/textures/objects/Bunk Bed 4 - Colorable.png",
     "bed_wood_single_01": "res://textures/objects/tables/bed_wood_single_01.png",
     "bench_wood_01": "res://textures/objects/tables/bench_wood_01.png",
@@ -404,5 +458,235 @@
     "table_wood_rectangular_small_01": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
     "trough_barn_04": "res://textures/objects/stable/trough_barn_04.png",
     "worker_3": "res://packs/6v1aRL4R/textures/objects/Human/Active/Colorable/Worker (3).png"
+  },
+  "object_sizes": {
+    "bb_countryroad_path": [
+      770,
+      144
+    ],
+    "bb_houses1_balcony": [
+      26,
+      64
+    ],
+    "bb_houses1_flag1": [
+      41,
+      23
+    ],
+    "bb_houses1_flag2": [
+      55,
+      26
+    ],
+    "bb_houses1_house1": [
+      108,
+      83
+    ],
+    "bb_houses1_house10": [
+      70,
+      79
+    ],
+    "bb_houses1_house11": [
+      131,
+      74
+    ],
+    "bb_houses1_house12": [
+      152,
+      102
+    ],
+    "bb_houses1_house13": [
+      66,
+      70
+    ],
+    "bb_houses1_house14": [
+      100,
+      73
+    ],
+    "bb_houses1_house15": [
+      118,
+      80
+    ],
+    "bb_houses1_house16": [
+      71,
+      137
+    ],
+    "bb_houses1_house17": [
+      166,
+      172
+    ],
+    "bb_houses1_house18": [
+      132,
+      123
+    ],
+    "bb_houses1_house19": [
+      90,
+      65
+    ],
+    "bb_houses1_house2": [
+      82,
+      102
+    ],
+    "bb_houses1_house20": [
+      63,
+      67
+    ],
+    "bb_houses1_house21": [
+      89,
+      109
+    ],
+    "bb_houses1_house22": [
+      109,
+      108
+    ],
+    "bb_houses1_house23": [
+      213,
+      104
+    ],
+    "bb_houses1_house24": [
+      51,
+      99
+    ],
+    "bb_houses1_house25": [
+      91,
+      142
+    ],
+    "bb_houses1_house26": [
+      118,
+      134
+    ],
+    "bb_houses1_house27": [
+      97,
+      80
+    ],
+    "bb_houses1_house28": [
+      69,
+      74
+    ],
+    "bb_houses1_house29": [
+      87,
+      56
+    ],
+    "bb_houses1_house3": [
+      117,
+      90
+    ],
+    "bb_houses1_house30": [
+      67,
+      64
+    ],
+    "bb_houses1_house31": [
+      132,
+      77
+    ],
+    "bb_houses1_house32": [
+      107,
+      100
+    ],
+    "bb_houses1_house33": [
+      102,
+      137
+    ],
+    "bb_houses1_house4": [
+      81,
+      112
+    ],
+    "bb_houses1_house5": [
+      83,
+      45
+    ],
+    "bb_houses1_house6": [
+      248,
+      122
+    ],
+    "bb_houses1_house7": [
+      167,
+      117
+    ],
+    "bb_houses1_house8": [
+      138,
+      205
+    ],
+    "bb_houses1_house9": [
+      98,
+      121
+    ],
+    "bb_houses1_roof1": [
+      106,
+      79
+    ],
+    "bb_houses1_roof10": [
+      94,
+      36
+    ],
+    "bb_houses1_roof2": [
+      58,
+      101
+    ],
+    "bb_houses1_roof3": [
+      53,
+      85
+    ],
+    "bb_houses1_roof4": [
+      140,
+      50
+    ],
+    "bb_houses1_roof5": [
+      54,
+      46
+    ],
+    "bb_houses1_roof6": [
+      73,
+      31
+    ],
+    "bb_houses1_roof7": [
+      44,
+      31
+    ],
+    "bb_houses1_roof8": [
+      44,
+      26
+    ],
+    "bb_houses1_roof9": [
+      66,
+      31
+    ],
+    "bb_houses1_tarp1": [
+      48,
+      39
+    ],
+    "bb_houses1_tarp2": [
+      31,
+      44
+    ],
+    "bb_houses1_tarp3": [
+      54,
+      21
+    ],
+    "bb_houses1_tower1": [
+      47,
+      49
+    ],
+    "bb_houses1_tower2": [
+      87,
+      90
+    ],
+    "bb_mainroad_path": [
+      770,
+      144
+    ],
+    "bb_river_path": [
+      770,
+      336
+    ],
+    "bb_shore_path": [
+      770,
+      202
+    ],
+    "bb_sideroad_path": [
+      770,
+      144
+    ],
+    "bb_wall_path": [
+      770,
+      104
+    ]
   }
 }

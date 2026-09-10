@@ -388,9 +388,19 @@ di SPEC.md §13. In attesa di una nuova conferma visiva da Jay.
   "layer": 100,
   "shadow": false,
   "block_light": false,
+  "custom_color": "ff6b3834",
   "node_id": "a0d"
 }
 ```
+
+`custom_color` (TASK-46) e OPZIONALE: assente del tutto per gli object di un
+pack non "Colorable" (il caso comune, verificato su tutti i campioni reali
+gia catalogati prima di TASK-46), presente con un ARGB esadecimale a 8 cifre
+solo per quelli di un pack "Colorable" — 7 campioni in
+`templates/rich_reference.dungeondraft_map`, tutti con lo stesso valore
+`ff6b3834` (il default del programma). Verificato che Dungeondraft non
+richiede il campo per gli object non colorabili: `add_object` (build.py) lo
+omette quando `custom_color=None` invece di scriverlo `null`.
 
 ### `path`
 
@@ -1013,6 +1023,103 @@ e `manor.accents["bookshelf"]` sono state ripuntate alla chiave letterale
 (`bed_wood_single_01`, `bookshelf_wood_01`) invece dell'alias ambiguo,
 cosi il risultato resta identico a prima indipendentemente da come si
 rimescola il catalogo in futuro.
+
+### 10.2 Aggiornamento TASK-46: lettura diretta di un `.dungeondraft_pack`
+
+TASK-45 aveva catalogato solo 4 texture del pack `6VxwaRdj` ("BB 51 Assets
+Houses1", BluBerrey) — quelle che Jay aveva disegnato a mano in
+`rich_reference.dungeondraft_map`. Un `.dungeondraft_map` non porta pero le
+dimensioni pixel native di una texture, indispensabili per calcolare la
+scala di piazzamento di uno sprite edificio (TASK-46 AC2): senza, non c'e
+modo di sapere quanto ingrandire `BB_Houses1_House11.png` per farlo stare in
+un lotto di N quadretti senza sbordare o restare minuscolo.
+
+**Formato verificato** sul file reale di Jay
+(`C:/Users/lorenzo_m/Documents/Dungeondraft/BB-51-Assets-Houses1.dungeondraft_pack`):
+un pacchetto Godot PCK, magic `GDPC`, `pack_version=1` (Godot 3.2.1). Header:
+magic (4 byte) + `pack_version` (int32) + 3× int32 di versione Godot + 64
+byte riservati, poi `file_count` (int32) e per ogni entry
+`path_len(uint32)+path+offset(uint64)+size(uint64)+md5(16 byte)`, tutto
+little-endian; gli offset sono assoluti nel file (nessun `base_offset`: quel
+campo esiste solo nel formato con embedding di Godot 4, non usato qui).
+Contiene `res://packs/6VxwaRdj.json` (il manifest: id/name/author/version,
+duplicato identico in `res://packs/6VxwaRdj/pack.json`) e le texture sotto
+`res://packs/6VxwaRdj/textures/`: 51 `object` (33 case, 10 tetti, 2 torri, 3
+tende, 1 balcone, 2 bandiere) piu 6 `paths` (strade/fiumi/coste, mai usate
+da AC2), tutte `.png`. Le dimensioni si leggono dall'header IHDR del PNG
+(primi 24 byte del file, `width`/`height` come `>II` a partire dal byte 16)
+— es. `House11.png` 131×74 px, `House12.png` 152×102 px.
+
+`assets.read_dungeondraft_pack(path)` implementa questo parsing e ritorna
+`{"manifest": {...}, "textures": {res_path: (width_px, height_px)}}`
+(solo i `.png` sotto `res://packs/<id>/` ricevono una dimensione: nessuna
+texture di questo pack e in un altro formato). `assets.build_catalog(*docs,
+pack_sources=(...))` accetta questi risultati oltre ai documenti `--from`
+gia esistenti: **vincolo non negoziabile invariato** — se il `manifest["id"]`
+di un pack source non compare fra i pack ID raccolti dai documenti `--from`,
+`build_catalog` fallisce con un `ValueError` esplicito invece di aggiungere
+in silenzio una texture che romperebbe DDF014 su ogni mappa generata dal
+template di produzione. Le texture ammesse popolano i bucket esistenti
+(`objects`, `paths`, ...) via lo stesso `_classify`/`_slug` dei documenti,
+piu un nuovo campo top-level del catalogo, `object_sizes: {key: [w_px,
+h_px]}`, popolato solo per le chiavi lette da un pack source.
+
+**Comando** (aggiunge `--pack` al comando di TASK-45, stessi 11 `--from`):
+
+```
+ddforge catalog --from templates/rich_reference.dungeondraft_map \
+  --from ".../NovaMistralis/Mappe/Carcere_celle.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_sotterraneo.dungeondraft_map" \
+  --from ".../NovaMistralis/Mappe/Carcere_torre.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere1.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/Carcere_Nova_Mistralis_PianoTerra.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova2.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/prova3.dungeondraft_map" \
+  --from ".../NovaMistralis/Da espandere/Bozze - Atto 1/Carcere/ProvaMappa.dungeondraft_map" \
+  --from "<estratto git>/Carcere_Nova.dungeondraft_map" \
+  --from "<estratto git>/Carcere_Nova_2.dungeondraft_map" \
+  --pack "C:/Users/lorenzo_m/Documents/Dungeondraft/BB-51-Assets-Houses1.dungeondraft_pack" \
+  --out data/assets.json
+```
+
+Risultato: 51 pack (invariato — il pack era gia nel manifest da TASK-45),
+`objects` 59 -> 106 (+47, le texture del pack non ancora osservate in nessun
+documento reale), `paths` 0 -> 6 (**prima voce mai popolata in questa
+categoria**: nessun `.dungeondraft_map` reale di Jay usa un elemento `path`,
+ma il pack ne contiene 6 come texture pure), `object_sizes` 57 voci (51
+object + 6 paths del pack). Nessuna chiave preesistente rimossa o
+modificata; nessun pack ID orfano (invariante verificato con lo stesso
+script di TASK-4/45).
+
+**`palette_for("city", ...)` aggiornato**: `Palette` guadagna
+`building_variants: list[(texture, width_px, height_px)]` e
+`building_colors: tuple[str, ...]`. Per lo stile `"city"`,
+`building_variants` risolve le 33 chiavi letterali `bb_houses1_house1`..
+`bb_houses1_house33` (elenco esplicito in `_CITY_BUILDING_KEYS`, non un
+pattern su substring — stesso motivo di `bed`/`bookshelf` in §10.1: un match
+per substring si aggancerebbe in silenzio a un pack diverso a seconda
+dell'ordine dei `--from`). Tetti/torri/tende/balconi/bandiere dello stesso
+pack restano catalogati ma fuori scope: TASK-46 AC2 vuole "un object
+edificio per lotto", non un intero set di decorazioni cittadine.
+`building_colors` sono 6 tinte ARGB fisse scelte a mano (non chiavi di
+catalogo, il pack e "Colorable" — vedi §5 `object`/`custom_color` — quindi
+senza variarle ogni sprite avrebbe lo stesso tetto, sempre `ff6b3834`, il
+default del programma). Ogni altro stile ha `building_variants=[]` e
+`building_colors=()`.
+
+**Scala di piazzamento** (`compose._fit_scale`, usata da
+`draw_city_building`): a scala 1, uno sprite occupa
+`larghezza_px/GRID × altezza_px/GRID` quadretti (`GRID=256`, verificato sui
+campioni gia colorabili di `rich_reference.dungeondraft_map`). La scala
+uniforme (`add_object` ha una sola `scale` per entrambi gli assi, non puo
+stirare) che fa stare lo sprite dentro il footprint del lotto senza sbordare
+e `min(footprint.w / (width_px/GRID), footprint.h / (height_px/GRID))`:
+almeno un asse tocca esattamente il bordo del footprint, l'altro resta
+dentro. Lo sprite e centrato su `footprint.center()`. Verificato che questo
+sostituisce interamente `draw_city_footprint` (pavimento + tetto a colmo
+sintetico, TASK-41): un edificio dei preset `quartiere`/`citta` e ora un solo
+`object` con `custom_color`, senza pattern ne roof — lo sprite e gia una
+casa completa vista dall'alto.
 
 ## 11. `tests/fixtures/reference_8x8.dungeondraft_map` — provenienza (TASK-5)
 

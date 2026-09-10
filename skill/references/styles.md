@@ -45,7 +45,7 @@ Jay al round 2 del gate umano). Il default e `isolato`.
 | Un quadretto vale | 5 ft / 1,5 m | circa un edificio | circa un edificio, di un quartiere fra una decina |
 | Edifici su un canvas 78×78 | ~30 | ~320 | ~3.300 |
 | Ingombro di un edificio | ~4,7×5,2 quadretti (~55 m²) | ~2,5×2,4 quadretti | ~0,7×0,7 quadretti |
-| Cos'e un edificio | pianta completa: muri, stanze, porte, tetto, con tipologie diverse per lotto | ingombro: pavimento e tetto, senza stanze | come `quartiere`, a scala ridotta |
+| Cos'e un edificio | pianta completa: muri, stanze, porte, tetto, con tipologie diverse per lotto | uno sprite `object` del pack "BB 51 Assets Houses1" (33 varianti), scalato dentro il lotto e tinto (`custom_color`) fra 6 toni | come `quartiere`, a scala ridotta |
 | Isolati | 13–22 quadretti | 6–11 quadretti | 1,85–3,4 quadretti |
 
 **Come scegliere.** Se la scena si gioca *dentro* gli edifici serve
@@ -57,6 +57,12 @@ stessi ~3.300 edifici richiederebbero un canvas di circa 285×285 quadretti,
 e `ddforge` non cambia mai le dimensioni del canvas del template (l'unico
 template di produzione e 80×80). `citta` non e pensata per essere giocata al
 tavolo: e uno sfondo/riferimento visivo dall'alto.
+
+Solo `isolato` produce una pianta giocabile (TASK-46): `quartiere` e `citta`
+sono mappe viste dall'alto senza layout tattico, quindi i loro edifici sono
+sprite pescati da un asset pack invece della geometria di
+`generators/building.py` — non serve un ingresso, un arretramento o una
+stanza per leggersi come casa su una mappa di citta.
 
 In tutti e tre i preset le vie serpeggiano invece di essere rettilinee, e una
 via obliqua attraversa la mappa da un bordo all'altro.

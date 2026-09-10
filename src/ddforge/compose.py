@@ -7,6 +7,7 @@ TASK-27.
 """
 
 import math
+import random
 import re
 
 from ddforge.build import (
@@ -736,20 +737,42 @@ def add_ridge_roof(level, ids, footprint: Rect, palette) -> None:
     add_roof(level, ids, ridge, palette.roof, width=int(grid_to_px(width)))
 
 
-def draw_city_footprint(level, ids, footprint: Rect, palette) -> None:
-    """Edificio dei preset di scala astratti "quartiere"/"citta" (TASK-41):
-    il pavimento del suo ingombro piu un tetto a due falde che lo copre
-    esattamente.
+def _fit_scale(area: Rect, width_px: float, height_px: float) -> float:
+    """Scala uniforme che fa stare uno sprite nativo (add_object ha una sola
+    `scale` per entrambi gli assi, non puo stirare) dentro `area` senza
+    sbordare, preservando le proporzioni. A scala 1 uno sprite occupa
+    larghezza_px/GRID x altezza_px/GRID quadretti (verificato su
+    templates/rich_reference.dungeondraft_map, TASK-46): il rapporto piu
+    stretto fra area e sprite nativo e il limite che tiene lo sprite dentro
+    `area` su entrambi gli assi."""
+    native_w = width_px / GRID
+    native_h = height_px / GRID
+    return min(area.w / native_w, area.h / native_h)
 
-    Non passa da draw_building: a questa scala non ci sono stanze da
-    disegnare (vedi generators/city.py), e il pavimento serve comunque,
-    perche in Dungeondraft i tetti si possono nascondere e sotto resterebbe
-    il vuoto."""
-    add_pattern(level, ids, footprint, palette.floor)
-    add_ridge_roof(level, ids, footprint, palette)
+
+def draw_city_building(level, ids, footprint: Rect, palette, rng: random.Random) -> None:
+    """Edificio dei preset di scala astratti "quartiere"/"citta" (TASK-46):
+    un object sprite del pack scelto da Jay (Palette.building_variants) al
+    posto della geometria generata da building.py, scalato per stare dentro
+    `footprint` (lo stesso ingombro gia garantito da
+    generators.city._building_area: fronte strada e arretramento restano
+    quelli di TASK-35/41) e centrato al suo interno.
+
+    Nessun pavimento sintetico sotto, a differenza del vecchio tetto a colmo
+    isolato: lo sprite e gia una casa completa vista dall'alto, non solo un
+    tetto senza muri.
+
+    `custom_color` variato per lotto (Palette.building_colors): il pack e
+    "Colorable", senza variarlo ogni edificio avrebbe lo stesso tetto
+    (sempre "ff6b3834", il default del programma)."""
+    texture, width_px, height_px = rng.choice(palette.building_variants)
+    scale = _fit_scale(footprint, width_px, height_px)
+    cx, cy = footprint.center()
+    color = rng.choice(palette.building_colors) if palette.building_colors else None
+    add_object(level, ids, cx, cy, texture, scale=scale, custom_color=color)
 
 
-def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
+def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: random.Random) -> None:
     """Disegna un Blueprint di isolato/quartiere/citta (TASK-35, SPEC.md
     §9.4): strade come add_path (AC2, mai come pattern), piazze come
     pavimento diverso + elemento centrale (AC5), ed edifici in una delle due
@@ -761,11 +784,13 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
       ognuno abbia footprint e tetto propri (TASK-35: "riusa building.py a
       un solo piano" vuol dire un edificio per lotto, non tutti i lotti in
       un unico Blueprint);
-    - `blueprint.building_footprints` (preset "quartiere"/"citta"): il solo
-      ingombro, via draw_city_footprint.
+    - `blueprint.building_footprints` (preset "quartiere"/"citta"): un object
+      sprite del pack scelto da Jay, via draw_city_building (TASK-46).
 
     I due campi si escludono a vicenda, ma il rendering non lo pretende:
-    disegna quello che trova."""
+    disegna quello che trova. `rng` sceglie variante/colore dello sprite per
+    ogni footprint (mai usato per `blueprint.buildings`, che non ha bisogno
+    di randomicita in questa funzione)."""
     level = level_stack["0"]
 
     # La centro-linea di una via e gia una polilinea serpeggiante decisa dal
@@ -794,7 +819,7 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette) -> None:
         add_ridge_roof(level, ids, _building_footprint(building_blueprint), palette)
 
     for footprint in blueprint.building_footprints:
-        draw_city_footprint(level, ids, footprint, palette)
+        draw_city_building(level, ids, footprint, palette, rng)
 
 
 def render_cave_blueprint(level, blueprint) -> None:

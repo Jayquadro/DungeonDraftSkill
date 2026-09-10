@@ -1,6 +1,7 @@
 """Test per ddforge.assets: build_catalog, load_catalog, CLI catalog."""
 
 import json
+import struct
 import subprocess
 import sys
 
@@ -11,8 +12,38 @@ from ddforge.assets import (
     build_catalog,
     load_catalog,
     palette_for,
+    read_dungeondraft_pack,
     required_packs,
 )
+
+
+def _fake_png(width: int, height: int) -> bytes:
+    """PNG minimo: solo signature+IHDR, quanto basta per read_dungeondraft_pack
+    (legge solo i primi 24 byte, non un PNG davvero decodificabile)."""
+    return b"\x89PNG\r\n\x1a\n" + struct.pack(">I", 13) + b"IHDR" + struct.pack(">II", width, height) + b"\x00" * 5
+
+
+def _build_pck(files: dict) -> bytes:
+    """.dungeondraft_pack minimo (Godot PCK 'GDPC', pack_version 1) per i
+    test, stesso formato verificato sul file reale in read_dungeondraft_pack:
+    magic + pack_version(int32) + 3x int32 versione Godot + 64 byte
+    riservati, poi file_count(int32) e per ogni entry
+    path_len(uint32)+path+offset(uint64)+size(uint64)+md5(16 byte,
+    ignorato dal reader), tutto little-endian, dati in coda."""
+    header = b"GDPC" + struct.pack("<4i", 1, 3, 2, 1) + b"\x00" * 64
+    entries = list(files.items())
+    directory_len = 4 + sum(4 + len(p.encode("utf-8")) + 8 + 8 + 16 for p, _ in entries)
+    directory = struct.pack("<i", len(entries))
+    data = b""
+    offset = len(header) + directory_len
+    for path, blob in entries:
+        path_b = path.encode("utf-8")
+        directory += struct.pack("<I", len(path_b)) + path_b
+        directory += struct.pack("<QQ", offset, len(blob))
+        directory += b"\x00" * 16
+        data += blob
+        offset += len(blob)
+    return header + directory + data
 
 
 def _doc(*, packs=(), walls=(), portals=(), patterns=(), objects=(), roofs=()):
@@ -260,3 +291,119 @@ def test_required_packs_on_real_rich_reference_matches_manifest_subset():
     manifest_ids = {m["id"] for m in doc["header"]["asset_manifest"]}
     used = required_packs(doc)
     assert used.issubset(manifest_ids)
+
+
+# ---------------------------------------------------------------------------
+# read_dungeondraft_pack / build_catalog(pack_sources=...) (TASK-46)
+# ---------------------------------------------------------------------------
+
+
+def test_read_dungeondraft_pack_reads_manifest_and_png_sizes(tmp_path):
+    manifest = json.dumps({"name": "Test Pack", "id": "ZZZTest1", "author": "T", "version": "1"}).encode("utf-8")
+    pack_bytes = _build_pck({
+        "res://packs/ZZZTest1.json": manifest,
+        "res://packs/ZZZTest1/textures/objects/thing.png": _fake_png(64, 32),
+        # Non .png: ignorato, nessuna dimensione nota per lui.
+        "res://packs/ZZZTest1/textures/objects/other.webp": b"not-a-png",
+    })
+    path = tmp_path / "test.dungeondraft_pack"
+    path.write_bytes(pack_bytes)
+
+    result = read_dungeondraft_pack(path)
+
+    assert result["manifest"]["id"] == "ZZZTest1"
+    assert result["textures"] == {"res://packs/ZZZTest1/textures/objects/thing.png": (64, 32)}
+
+
+def test_read_dungeondraft_pack_rejects_bad_magic(tmp_path):
+    path = tmp_path / "bad.dungeondraft_pack"
+    path.write_bytes(b"NOTG" + b"\x00" * 100)
+    with pytest.raises(ValueError, match="GDPC"):
+        read_dungeondraft_pack(path)
+
+
+def test_build_catalog_with_pack_source_adds_textures_and_pixel_sizes():
+    doc = _doc(packs=["ZZZTest1"])
+    pack_source = {
+        "manifest": {"id": "ZZZTest1"},
+        "textures": {"res://packs/ZZZTest1/textures/objects/thing.png": (64, 32)},
+    }
+    catalog = build_catalog(doc, pack_sources=[pack_source])
+
+    assert catalog["objects"]["thing"] == "res://packs/ZZZTest1/textures/objects/thing.png"
+    assert catalog["object_sizes"]["thing"] == [64, 32]
+
+
+def test_build_catalog_rejects_pack_source_absent_from_manifest():
+    """Stesso vincolo non negoziabile di AC1: mai una texture di un pack
+    assente da header.asset_manifest, nemmeno quando arriva da --pack."""
+    doc = _doc(packs=["OTHER"])
+    pack_source = {
+        "manifest": {"id": "ORPHAN"},
+        "textures": {"res://packs/ORPHAN/textures/objects/thing.png": (10, 10)},
+    }
+    with pytest.raises(ValueError, match="ORPHAN"):
+        build_catalog(doc, pack_sources=[pack_source])
+
+
+def test_cli_catalog_accepts_pack_flag_and_writes_object_sizes(tmp_path):
+    doc = _doc(packs=["ZZZTest1"])
+    src = tmp_path / "source.dungeondraft_map"
+    src.write_text(json.dumps(doc), encoding="utf-8")
+
+    manifest = json.dumps({"name": "Test Pack", "id": "ZZZTest1", "author": "T", "version": "1"}).encode("utf-8")
+    pack_path = tmp_path / "test.dungeondraft_pack"
+    pack_path.write_bytes(_build_pck({
+        "res://packs/ZZZTest1.json": manifest,
+        "res://packs/ZZZTest1/textures/objects/thing.png": _fake_png(64, 32),
+    }))
+
+    out = tmp_path / "out.json"
+    result = subprocess.run(
+        [
+            sys.executable, "-m", "ddforge.cli", "catalog",
+            "--from", str(src), "--pack", str(pack_path), "--out", str(out),
+        ],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    written = json.loads(out.read_text(encoding="utf-8"))
+    assert written["objects"]["thing"] == "res://packs/ZZZTest1/textures/objects/thing.png"
+    assert written["object_sizes"]["thing"] == [64, 32]
+
+
+# ---------------------------------------------------------------------------
+# Palette.building_variants / building_colors (TASK-46)
+# ---------------------------------------------------------------------------
+
+
+def test_palette_for_city_populates_building_variants_and_colors(real_catalog):
+    palette = palette_for("city", real_catalog)
+
+    assert len(palette.building_variants) == 33
+    for texture, width_px, height_px in palette.building_variants:
+        assert texture.startswith("res://packs/6VxwaRdj/textures/objects/")
+        assert width_px > 0
+        assert height_px > 0
+
+    assert len(palette.building_colors) > 0
+    for color in palette.building_colors:
+        assert len(color) == 8
+        int(color, 16)  # ARGB esadecimale valido
+
+
+@pytest.mark.parametrize("style", sorted(s for s in _STYLE_DEFINITIONS if s != "city"))
+def test_palette_for_non_city_styles_have_no_building_variants(style, real_catalog):
+    palette = palette_for(style, real_catalog)
+    assert palette.building_variants == []
+    assert palette.building_colors == ()
+
+
+def test_palette_for_city_building_variants_only_reference_the_manifest_pack(real_catalog):
+    known_pack_ids = {p["id"] for p in real_catalog["packs"]}
+    palette = palette_for("city", real_catalog)
+    for texture, _w, _h in palette.building_variants:
+        assert texture.startswith("res://packs/")
+        pack_id = texture.split("/")[3]
+        assert pack_id in known_pack_ids

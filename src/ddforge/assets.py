@@ -1,11 +1,14 @@
 """Catalogo asset: pack, texture e Palette per stile.
 
 Vedi docs/SPEC.md §6.7. `build_catalog`/`load_catalog` implementati in
-TASK-4; `Palette`/`palette_for`/`required_packs` in TASK-17.
+TASK-4; `Palette`/`palette_for`/`required_packs` in TASK-17;
+`read_dungeondraft_pack` (lettura diretta dei file .dungeondraft_pack) in
+TASK-46.
 """
 
 import json
 import re
+import struct
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -51,6 +54,20 @@ class Palette:
     # peggio di nessuna scala. Nel gate umano M4 il vano scale era vuoto e
     # Jay non lo riconosceva.
     stairs: str | None = None
+    # Sprite edificio dei preset di scala astratti "quartiere"/"citta"
+    # (TASK-46): una texture, non una sola (a differenza di `accents`), perche
+    # compose.draw_city_building ne sceglie una a caso per lotto per dare
+    # varieta. (texture, larghezza_px, altezza_px): le dimensioni servono a
+    # calcolare la scala di piazzamento (Dungeondraft usa i pixel nativi a
+    # scala 1, 256 px/quadretto) e non sono ricavabili da un
+    # .dungeondraft_map, solo da catalog["object_sizes"] (TASK-46,
+    # read_dungeondraft_pack). Vuoto per ogni stile diverso da "city".
+    building_variants: list = field(default_factory=list)
+    # Tinte ARGB fisse per variare custom_color (il pack e "Colorable": senza
+    # variarlo ogni edificio avrebbe lo stesso tetto). Non sono chiavi del
+    # catalogo (non sono texture, solo colori scelti a mano): vuoto per ogni
+    # stile diverso da "city".
+    building_colors: tuple = ()
 
 
 def _slug(texture_path: str) -> str:
@@ -108,11 +125,97 @@ def _iter_textures(doc: dict):
                     yield roof["texture"]
 
 
-def build_catalog(*docs: dict) -> dict:
-    """Costruisce il catalogo unendo pack e texture osservate in piu documenti.
+_PCK_MAGIC = b"GDPC"
+_PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+_PACK_MANIFEST_RE = re.compile(r"res://packs/[^/]+\.json")
 
-    Ogni texture nel risultato e presa letteralmente da uno dei documenti
-    passati: nessuna categoria viene mai popolata con un path inventato.
+
+def _read_pck_entries(data: bytes) -> dict[str, tuple[int, int]]:
+    """Indice path -> (offset, size) di un file .dungeondraft_pack (Godot PCK).
+
+    Formato verificato sul file reale di Jay (BB-51-Assets-Houses1, Godot
+    3.2.1): magic 'GDPC', pack_version(int32), 3x int32 versione Godot, 16x
+    int32 riservati (64 byte), file_count(int32), poi per ogni entry
+    path_len(uint32)+path(padded)+offset(uint64)+size(uint64)+md5(16 byte),
+    tutto little-endian. Gli offset sono assoluti nel file (nessun base_offset:
+    quello serve solo al formato con embedding di Godot 4, non usato qui).
+    Solo pack_version 1 e supportato (l'unico osservato); altre versioni
+    falliscono esplicitamente invece di essere lette a caso.
+    """
+    if data[:4] != _PCK_MAGIC:
+        raise ValueError("Non e un file .dungeondraft_pack valido (magic GDPC assente)")
+    off = 4
+    (pack_version,) = struct.unpack_from("<i", data, off)
+    off += 16  # pack_version gia consumato sopra: qui i 3 int32 di versione Godot
+    if pack_version != 1:
+        raise ValueError(
+            f"Formato .dungeondraft_pack non supportato (pack_version={pack_version}, atteso 1)"
+        )
+    off += 64  # 16 int32 riservati
+    (file_count,) = struct.unpack_from("<i", data, off)
+    off += 4
+
+    entries: dict[str, tuple[int, int]] = {}
+    for _ in range(file_count):
+        (path_len,) = struct.unpack_from("<I", data, off)
+        off += 4
+        path = data[off : off + path_len].rstrip(b"\x00").decode("utf-8")
+        off += path_len
+        offset, size = struct.unpack_from("<QQ", data, off)
+        off += 16 + 16  # offset+size gia letti sopra, poi 16 byte di md5
+        entries[path] = (offset, size)
+    return entries
+
+
+def read_dungeondraft_pack(path) -> dict:
+    """Legge un file .dungeondraft_pack ed estrae manifest e dimensioni pixel.
+
+    Necessario per AC1 di TASK-46: un .dungeondraft_map non porta le
+    dimensioni native delle texture, indispensabili per calcolare la scala di
+    piazzamento di un object (vedi Palette.building_variants). Ritorna
+    {"manifest": {id, name, author, version, ...}, "textures": {res_path:
+    (width_px, height_px)}}. Solo i file .png sotto res://packs/<id>/ ricevono
+    una dimensione (letta dall'IHDR): nessuna texture di questo pack e in un
+    altro formato, e leggere le dimensioni di un WebP richiederebbe un parser
+    diverso, fuori scope.
+    """
+    with open(path, "rb") as f:
+        data = f.read()
+    entries = _read_pck_entries(data)
+
+    manifest_paths = [p for p in entries if _PACK_MANIFEST_RE.fullmatch(p)]
+    if not manifest_paths:
+        raise ValueError(f"Manifest del pack (res://packs/<id>.json) non trovato in {path}")
+    offset, size = entries[manifest_paths[0]]
+    manifest = json.loads(data[offset : offset + size].decode("utf-8"))
+    pack_id = manifest.get("id")
+
+    textures: dict[str, tuple[int, int]] = {}
+    prefix = f"res://packs/{pack_id}/"
+    for entry_path, (offset, size) in entries.items():
+        if not entry_path.startswith(prefix) or not entry_path.lower().endswith(".png"):
+            continue
+        header = data[offset : offset + 24]
+        if header[:8] != _PNG_MAGIC:
+            continue
+        width, height = struct.unpack_from(">II", header, 16)
+        textures[entry_path] = (width, height)
+
+    return {"manifest": manifest, "textures": textures}
+
+
+def build_catalog(*docs: dict, pack_sources=()) -> dict:
+    """Costruisce il catalogo unendo pack e texture osservate in piu documenti,
+    piu (TASK-46) le texture lette direttamente da file .dungeondraft_pack via
+    `read_dungeondraft_pack`.
+
+    Ogni texture nel risultato e presa letteralmente da uno dei documenti o
+    pack passati: nessuna categoria viene mai popolata con un path inventato.
+    Vincolo non negoziabile: una texture di un pack_source il cui id non
+    compare nell'asset_manifest di nessun documento --from e rifiutata con un
+    errore esplicito, mai inclusa in silenzio (altrimenti DDF014 romperebbe
+    ogni mappa generata dal template di produzione, che non conosce quel
+    pack).
     """
     packs: dict[str, dict] = {}
     buckets: dict[str, dict[str, str]] = {
@@ -141,6 +244,23 @@ def build_catalog(*docs: dict) -> dict:
             key = _slug(texture)
             buckets[category].setdefault(key, texture)
 
+    object_sizes: dict[str, list[int]] = {}
+    for pack_source in pack_sources:
+        pack_id = pack_source["manifest"].get("id")
+        if pack_id not in packs:
+            raise ValueError(
+                f"Pack {pack_id!r} (da --pack) assente da header.asset_manifest dei "
+                "template --from: aggiungi un --from che lo referenzi prima di leggere "
+                "il file .dungeondraft_pack"
+            )
+        for texture, (width, height) in pack_source["textures"].items():
+            category = _classify(texture)
+            if category is None:
+                continue
+            key = _slug(texture)
+            buckets[category].setdefault(key, texture)
+            object_sizes.setdefault(key, [width, height])
+
     for key, texture in list(buckets["objects"].items()):
         for alias, keywords in OBJECT_ALIASES.items():
             if alias in buckets["objects"]:
@@ -151,6 +271,7 @@ def build_catalog(*docs: dict) -> dict:
     return {
         "packs": [packs[k] for k in sorted(packs)],
         **{name: dict(sorted(bucket.items())) for name, bucket in buckets.items()},
+        "object_sizes": dict(sorted(object_sizes.items())),
     }
 
 
@@ -270,6 +391,31 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
 }
 
 
+# Sprite edificio del preset "city" (TASK-46): le 33 texture "casa" del pack
+# scelto da Jay (6VxwaRdj, "BB 51 Assets Houses1"), chiavi letterali derivate
+# da _slug("BB_Houses1_HouseN.png") -> "bb_houses1_housen". Elenco esplicito
+# (non un pattern/alias su substring) per lo stesso motivo di "bed"/"bookshelf"
+# qui sopra: dopo TASK-45 un match per substring puo agganciarsi in silenzio a
+# un pack diverso a seconda dell'ordine dei --from. Tetti/torri/tende/
+# balconi/bandiere dello stesso pack restano catalogati (AC1) ma fuori scope
+# per il piazzamento di un edificio (AC2 vuole "un object edificio per lotto").
+_CITY_BUILDING_KEYS = tuple(f"bb_houses1_house{i}" for i in range(1, 34))
+
+# Tinte ARGB fisse per variare custom_color fra un edificio e l'altro (il pack
+# e' "Colorable": senza variarlo ogni sprite avrebbe lo stesso tetto/muro,
+# sempre "ff6b3834", il default di Dungeondraft osservato in
+# templates/rich_reference.dungeondraft_map). Toni terrosi plausibili per un
+# tetto/muro di casa, non colori scelti a caso in tutto lo spazio RGB.
+_CITY_BUILDING_COLORS = (
+    "ff6b3834",  # bruno-rossiccio (il default del programma)
+    "ff8a5a3b",  # bruno chiaro
+    "ff5c6b73",  # grigio ardesia
+    "ffa9762f",  # ocra/tan
+    "ff7a3b3b",  # rosso mattone smorzato
+    "ff4f5d4e",  # verde muschio
+)
+
+
 def _lookup(catalog: dict, category: str, key: str) -> str:
     bucket = catalog.get(category)
     if not isinstance(bucket, dict) or key not in bucket:
@@ -278,6 +424,17 @@ def _lookup(catalog: dict, category: str, key: str) -> str:
             "con `ddforge catalog` includendo un documento che la contenga"
         )
     return bucket[key]
+
+
+def _lookup_size(catalog: dict, key: str) -> tuple[float, float]:
+    sizes = catalog.get("object_sizes")
+    if not isinstance(sizes, dict) or key not in sizes:
+        raise ValueError(
+            f"Dimensioni pixel assenti per la texture {key!r}: rigenera data/assets.json "
+            "con `ddforge catalog --pack <file.dungeondraft_pack>`"
+        )
+    width, height = sizes[key]
+    return float(width), float(height)
 
 
 def palette_for(style: str, catalog: dict) -> Palette:
@@ -296,9 +453,17 @@ def palette_for(style: str, catalog: dict) -> Palette:
         _lookup(catalog, "walls", definition["wall_load_bearing"]) if "wall_load_bearing" in definition else None
     )
     stairs = _lookup(catalog, "objects", definition["stairs"]) if "stairs" in definition else None
+    building_variants: list = []
+    building_colors: tuple = ()
+    if style == "city":
+        building_variants = [
+            (_lookup(catalog, "objects", key), *_lookup_size(catalog, key)) for key in _CITY_BUILDING_KEYS
+        ]
+        building_colors = _CITY_BUILDING_COLORS
     return Palette(
         wall=wall, floor=floor, door=door, accents=accents, floors=floors, roof=roof,
         wall_load_bearing=wall_load_bearing, stairs=stairs,
+        building_variants=building_variants, building_colors=building_colors,
     )
 
 

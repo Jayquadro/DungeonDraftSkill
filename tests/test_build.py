@@ -139,6 +139,26 @@ def test_add_object_position_in_px():
     assert obj in level["objects"]
 
 
+def test_add_object_without_custom_color_omits_the_field():
+    """Un object non colorabile non porta il campo (TASK-46, verificato su
+    templates/rich_reference.dungeondraft_map: solo gli object di un pack
+    "Colorable" hanno custom_color, gli altri ne sono del tutto privi)."""
+    level = _empty_level()
+    ids = IdAllocator()
+    obj = add_object(level, ids, 0, 0, "res://textures/objects/camp/campfire_07.png")
+    assert "custom_color" not in obj
+
+
+def test_add_object_custom_color_is_set_when_given():
+    level = _empty_level()
+    ids = IdAllocator()
+    obj = add_object(
+        level, ids, 0, 0, "res://packs/6VxwaRdj/textures/objects/BB_Houses1_House1.png",
+        custom_color="ff6b3834",
+    )
+    assert obj["custom_color"] == "ff6b3834"
+
+
 def test_add_path_position_is_first_point_edit_points_relative():
     level = _empty_level()
     ids = IdAllocator()

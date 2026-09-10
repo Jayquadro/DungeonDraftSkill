@@ -5,6 +5,7 @@ import collections
 import copy
 import json
 import random
+import re
 from pathlib import Path
 
 import pytest
@@ -12,7 +13,7 @@ import pytest
 from ddforge.assets import load_catalog, palette_for
 from ddforge.compose import render_city_blueprint
 from ddforge.generators import city
-from ddforge.godot import grid_to_px, parse_pv2
+from ddforge.godot import GRID, grid_to_px, parse_pv2
 from ddforge.ids import IdAllocator
 from ddforge.model import Blueprint
 from ddforge.template import finalize, load_template, prepare
@@ -21,6 +22,14 @@ from ddforge.validate import validate
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO_ROOT / "templates" / "blank_80x80.dungeondraft_map"
 GOLDEN_DIR = REPO_ROOT / "tests" / "fixtures" / "golden"
+
+_V2_RE = re.compile(r"Vector2\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)")
+
+
+def _parse_v2(s: str) -> tuple[float, float]:
+    m = _V2_RE.fullmatch(s)
+    assert m, f"non e' una Vector2 valida: {s!r}"
+    return float(m.group(1)), float(m.group(2))
 
 
 # --- protocollo Generator ---------------------------------------------------
@@ -263,7 +272,7 @@ def test_end_to_end_render_through_render_city_blueprint_passes_validate():
     palette = palette_for("city", catalog)
 
     blueprint = city.generate(width=70, height=70, seed=1337)
-    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
     finalize(prepared, ids)
 
     issues = validate(prepared)
@@ -290,7 +299,7 @@ def test_plaza_pattern_uses_a_different_texture_than_buildings_and_has_a_fountai
     palette = palette_for("city", catalog)
 
     blueprint = city.generate(width=70, height=70, seed=1337)
-    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
     finalize(prepared, ids)
 
     level = prepared["world"]["levels"]["0"]
@@ -313,7 +322,7 @@ def _generate_full_document(seed: int) -> dict:
     palette = palette_for("city", catalog)
 
     blueprint = city.generate(width=70, height=70, seed=seed)
-    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
     finalize(prepared, ids)
     return prepared
 
@@ -433,8 +442,10 @@ def test_abstract_footprints_stay_inside_the_canvas(seed, scale):
 
 @pytest.mark.parametrize("scale", ["quartiere", "citta"])
 def test_abstract_preset_renders_and_validates_clean(scale):
-    """AC7: il documento generato nei preset quartiere/citta passa validate()
-    senza errori, e ogni edificio ha il suo pavimento e il suo tetto."""
+    """AC3: il documento generato nei preset quartiere/citta passa validate()
+    senza errori. Ogni edificio e' ora un object sprite del pack scelto da
+    Jay (TASK-46), non piu' un pavimento+tetto sintetico: nessun muro/tetto/
+    pavimento di edificio, solo strade, piazze e sprite."""
     doc = load_template(TEMPLATE)
     prepared = prepare(doc, levels=1)
     ids = IdAllocator.from_document(prepared)
@@ -442,7 +453,7 @@ def test_abstract_preset_renders_and_validates_clean(scale):
     palette = palette_for("city", catalog)
 
     blueprint = city.generate(width=78, height=78, seed=1337, scale=scale)
-    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
     finalize(prepared, ids)
 
     issues = validate(prepared)
@@ -451,21 +462,24 @@ def test_abstract_preset_renders_and_validates_clean(scale):
 
     level = prepared["world"]["levels"]["0"]
     assert len(level["paths"]) == len(blueprint.streets)
-    # un tetto per edificio, nessuno di draw_building (che qui non gira)
-    assert len(level["roofs"]["roofs"]) == len(blueprint.building_footprints)
-    # un pavimento per edificio piu uno per piazza
+    building_textures = {texture for texture, _w, _h in palette.building_variants}
+    building_objects = [o for o in level["objects"] if o["texture"] in building_textures]
+    assert len(building_objects) == len(blueprint.building_footprints)
+    # nessun tetto/pavimento sintetico per gli edifici (restava solo dal
+    # vecchio draw_city_footprint): i soli pattern sono quelli delle piazze.
+    assert len(level["roofs"]["roofs"]) == 0
     n_footprint_floors = sum(1 for p in level["patterns"] if p["texture"] == palette.floor)
-    assert n_footprint_floors == len(blueprint.building_footprints)
+    assert n_footprint_floors == 0
     # nessun muro: a questa scala non c'e geometria di stanze da disegnare
     assert level["walls"] == []
 
 
 @pytest.mark.parametrize("scale", ["quartiere", "citta"])
-def test_abstract_roof_eaves_land_on_the_footprint_edges(scale):
-    """Il tetto e' una linea di colmo con `width` = MEZZA larghezza
-    (compose._ridge_line, verificato su un file Dungeondraft reale): con
-    width = meta del lato corto le due gronde cadono sui bordi del
-    footprint, senza sbordare sulla strada."""
+def test_abstract_building_sprite_fits_inside_its_footprint(scale):
+    """TASK-46: lo sprite scelto (Palette.building_variants) non deve mai
+    sborda re dal suo footprint (fronte strada/arretramento gia' garantiti da
+    TASK-35/41), e' centrato al suo interno e porta un custom_color valido
+    (il pack e' "Colorable")."""
     doc = load_template(TEMPLATE)
     prepared = prepare(doc, levels=1)
     ids = IdAllocator.from_document(prepared)
@@ -473,27 +487,34 @@ def test_abstract_roof_eaves_land_on_the_footprint_edges(scale):
     palette = palette_for("city", catalog)
 
     blueprint = city.generate(width=78, height=78, seed=1337, scale=scale)
-    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
 
-    roofs = prepared["world"]["levels"]["0"]["roofs"]["roofs"]
-    assert len(roofs) == len(blueprint.building_footprints)
-    for footprint, roof in zip(blueprint.building_footprints, roofs):
-        (ax, ay), (bx, by) = parse_pv2(roof["points"])
-        width = roof["width"]
-        short_side = min(footprint.w, footprint.h)
-        # la mezza larghezza non supera mai meta del lato corto: la gronda
-        # cade sul bordo o appena dentro, mai fuori
-        assert width <= grid_to_px(short_side) / 2 + 1e-6
-        if footprint.h >= footprint.w:  # colmo verticale, lungo il lato lungo
-            assert ax == bx == pytest.approx(grid_to_px((footprint.x1 + footprint.x2) / 2))
-            assert sorted((ay, by)) == pytest.approx(
-                [grid_to_px(footprint.y1), grid_to_px(footprint.y2)]
-            )
-        else:
-            assert ay == by == pytest.approx(grid_to_px((footprint.y1 + footprint.y2) / 2))
-            assert sorted((ax, bx)) == pytest.approx(
-                [grid_to_px(footprint.x1), grid_to_px(footprint.x2)]
-            )
+    building_sizes = {texture: (w, h) for texture, w, h in palette.building_variants}
+    level = prepared["world"]["levels"]["0"]
+    objects = [o for o in level["objects"] if o["texture"] in building_sizes]
+    assert len(objects) == len(blueprint.building_footprints)
+
+    for footprint, obj in zip(blueprint.building_footprints, objects):
+        width_px, height_px = building_sizes[obj["texture"]]
+        scale_x, scale_y = _parse_v2(obj["scale"])
+        assert scale_x == scale_y  # add_object ha una sola scala per entrambi gli assi
+        rendered_w = width_px / GRID * scale_x
+        rendered_h = height_px / GRID * scale_y
+        assert rendered_w <= footprint.w + 1e-6
+        assert rendered_h <= footprint.h + 1e-6
+        # almeno un asse tocca il bordo del footprint: la scala non e' piu
+        # piccola del necessario
+        assert (
+            rendered_w == pytest.approx(footprint.w, abs=1e-6)
+            or rendered_h == pytest.approx(footprint.h, abs=1e-6)
+        )
+
+        cx, cy = _parse_v2(obj["position"])
+        fx, fy = footprint.center()
+        assert cx == pytest.approx(grid_to_px(fx))
+        assert cy == pytest.approx(grid_to_px(fy))
+
+        assert obj["custom_color"] in palette.building_colors
 
 
 def test_isolato_roofs_do_not_overhang_the_building():
@@ -510,7 +531,7 @@ def test_isolato_roofs_do_not_overhang_the_building():
     palette = palette_for("city", catalog)
 
     blueprint = city.generate(width=78, height=78, seed=1337)
-    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette)
+    render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
 
     roofs = prepared["world"]["levels"]["0"]["roofs"]["roofs"]
     assert len(roofs) == len(blueprint.buildings)

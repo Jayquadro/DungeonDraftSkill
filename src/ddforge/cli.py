@@ -157,7 +157,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         # blueprint.buildings (TASK-35); nei preset quartiere/citta non ce ne
         # sono affatto, gli edifici sono solo ingombri (TASK-41).
         level_stack = prepared["world"]["levels"]
-        render_city_blueprint(level_stack, ids, blueprint, palette)
+        render_city_blueprint(level_stack, ids, blueprint, palette, rng=random.Random(args.seed))
     else:
         level = prepared["world"]["levels"]["0"]
         render_blueprint(level, ids, blueprint, palette)
@@ -268,14 +268,16 @@ def _cmd_inspect(args: argparse.Namespace) -> int:
 def _cmd_catalog(args: argparse.Namespace) -> int:
     import json
 
-    from ddforge.assets import build_catalog
+    from ddforge.assets import build_catalog, read_dungeondraft_pack
 
     docs = []
     for path in args.from_template:
         with open(path, encoding="utf-8") as f:
             docs.append(json.load(f))
 
-    catalog = build_catalog(*docs)
+    pack_sources = [read_dungeondraft_pack(path) for path in args.pack]
+
+    catalog = build_catalog(*docs, pack_sources=pack_sources)
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -360,6 +362,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_catalog.add_argument(
         "--from", dest="from_template", action="append", required=True,
         help="documento .dungeondraft_map sorgente; ripetibile per unire piu file",
+    )
+    p_catalog.add_argument(
+        "--pack", dest="pack", action="append", default=[],
+        help="file .dungeondraft_pack sorgente da leggere direttamente (texture native "
+             "e dimensioni pixel, non ricavabili da un .dungeondraft_map); ripetibile. "
+             "Il pack deve essere gia referenziato da almeno un --from",
     )
     p_catalog.add_argument("--out", default="data/assets.json")
     p_catalog.set_defaults(func=_cmd_catalog)

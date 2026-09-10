@@ -255,7 +255,10 @@ def test_generate_city_scale_quartiere_produces_a_valid_file(tmp_path):
     isolato = json.loads(out_isolato.read_text(encoding="utf-8"))["world"]["levels"]["0"]
     quartiere = json.loads(out_quartiere.read_text(encoding="utf-8"))["world"]["levels"]["0"]
 
-    assert len(quartiere["roofs"]["roofs"]) > 5 * len(isolato["roofs"]["roofs"])
+    # TASK-46: quartiere/citta piazzano un object sprite per edificio invece
+    # di un tetto astratto, quindi il confronto di densita' passa da
+    # roofs["roofs"] a objects.
+    assert len(quartiere["objects"]) > 5 * len(isolato["roofs"]["roofs"])
     assert len(quartiere["paths"]) > len(isolato["paths"])
     assert quartiere["walls"] == []
     assert isolato["walls"] != []
@@ -282,7 +285,8 @@ def test_generate_city_scale_citta_has_an_order_of_magnitude_more_buildings(tmp_
     quartiere = json.loads(out_quartiere.read_text(encoding="utf-8"))["world"]["levels"]["0"]
     citta = json.loads(out_citta.read_text(encoding="utf-8"))["world"]["levels"]["0"]
 
-    ratio = len(citta["roofs"]["roofs"]) / len(quartiere["roofs"]["roofs"])
+    # TASK-46: un object sprite per edificio invece di un tetto astratto.
+    ratio = len(citta["objects"]) / len(quartiere["objects"])
     assert 5.0 < ratio < 20.0, ratio
     assert citta["walls"] == []
 

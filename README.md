@@ -43,9 +43,16 @@ Misure su un canvas 78×78 (`templates/blank_80x80.dungeondraft_map`, seed
 | Un quadretto vale | 5 ft / 1,5 m | circa un edificio | circa un edificio, ma di un quartiere fra una decina |
 | Edifici sul canvas | 30 | 322 | 3.325 |
 | Ingombro medio di un edificio | 4,7×5,2 quadretti (~55 m²) | 2,5×2,4 quadretti (~13 m²) | 0,7×0,7 quadretti (~1 m²) |
-| Cos'e un edificio | pianta completa: muri portanti, tramezzi, stanze, porte, tetto (riusa `generators/building.py`, con tipologie diverse per lotto) | ingombro dell'edificio: pavimento e tetto a due falde, senza stanze | come `quartiere`, a scala ridotta |
-| Dimensione del file | 1,87 MB (~6,4 KB/edificio) | 2,09 MB (~1,3 KB/edificio) | 5,44 MB (~1,1 KB/edificio) |
+| Cos'e un edificio | pianta completa: muri portanti, tramezzi, stanze, porte, tetto (riusa `generators/building.py`, con tipologie diverse per lotto) | uno sprite `object` del pack "BB 51 Assets Houses1" (BluBerrey, 33 varianti), scalato per riempire il lotto e con una tinta (`custom_color`) variata fra 6 toni — non piu un ingombro astratto | come `quartiere`, a scala ridotta |
+| Dimensione del file | 1,87 MB (~6,4 KB/edificio) | 1,92 MB (~768 B/edificio) | 3,71 MB (~613 B/edificio) |
 | A cosa serve | far muovere le miniature dentro e fuori dagli edifici di una via | inquadrare un quartiere esteso, decidere dove si va | orientarsi in una citta intera; non e pensata per essere giocata al tavolo |
+
+Solo il preset `isolato` produce una geometria giocabile al tavolo (muri,
+stanze, porte a scala 5 ft). `quartiere` e `citta` sono mappe di citta viste
+dall'alto — uno sfondo/riferimento visivo, non un layout tattico — ed e per
+questo che dal TASK-46 i loro edifici sono sprite del pack scelto da Jay
+invece della geometria di `generators/building.py` (vedi `docs/format.md`
+§10.2 per la provenienza del pack e il calcolo della scala di piazzamento).
 
 I tempi di apertura in Dungeondraft per i tre preset non sono ancora stati
 misurati: solo Jay puo darli, aprendo i file a mano.
