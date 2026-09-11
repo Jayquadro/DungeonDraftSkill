@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from ddforge.assets import load_catalog, palette_for
-from ddforge.compose import render_city_blueprint
+from ddforge.compose import _STREET_TEXTURE as STREET_TEXTURE, render_city_blueprint
 from ddforge.generators import city
 from ddforge.godot import GRID, grid_to_px, parse_pv2
 from ddforge.ids import IdAllocator
@@ -280,15 +280,19 @@ def test_end_to_end_render_through_render_city_blueprint_passes_validate():
     assert errors == [], errors
 
     level = prepared["world"]["levels"]["0"]
-    # AC2: le strade sono add_path, non pattern.
-    assert len(level["paths"]) == len(blueprint.streets)
+    # AC2: le strade sono add_path, non pattern. Dopo TASK-48 i `paths` non
+    # sono piu' solo le strade (mura, fiume e riva del porto sono path
+    # anche loro): il conto va fatto sulla texture stradale.
+    streets = [p for p in level["paths"] if p["texture"] == STREET_TEXTURE]
+    assert len(streets) == len(blueprint.streets)
     # La texture e' una superficie stradale vera, non `cobble.png`, che a
     # dispetto del nome e' una texture da muretto (vedi il commento su
     # compose._STREET_TEXTURE: bocciata da Jay al primo round del gate).
-    assert all(p["texture"] == "res://textures/paths/path_blender_03.png" for p in level["paths"])
     assert all(p["texture"] != "res://textures/paths/cobble.png" for p in level["paths"])
-    # AC4: ogni edificio ha un tetto (un draw_building per edificio).
-    assert len(level["roofs"]["roofs"]) == len(blueprint.buildings)
+    # AC4: ogni edificio ha un tetto (un draw_building per edificio). Dopo
+    # TASK-48 anche i luoghi con un edificio proprio ne hanno uno.
+    with_building = sum(1 for mark in blueprint.landmarks if mark.building is not None)
+    assert len(level["roofs"]["roofs"]) == len(blueprint.buildings) + with_building
 
 
 def test_plaza_pattern_uses_a_different_texture_than_buildings_and_has_a_fountain():
@@ -314,14 +318,14 @@ def test_plaza_pattern_uses_a_different_texture_than_buildings_and_has_a_fountai
 # --- AC2 (TASK-36): golden file, stessa alberatura di test_bsp_integration.py ----
 
 
-def _generate_full_document(seed: int) -> dict:
+def _generate_full_document(seed: int, *, landmarks: bool = True) -> dict:
     doc = load_template(TEMPLATE)
     prepared = prepare(doc, levels=1)
     ids = IdAllocator.from_document(prepared)
     catalog = load_catalog()
     palette = palette_for("city", catalog)
 
-    blueprint = city.generate(width=70, height=70, seed=seed)
+    blueprint = city.generate(width=70, height=70, seed=seed, landmarks=landmarks)
     render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
     finalize(prepared, ids)
     return prepared
@@ -343,8 +347,35 @@ def test_city_golden_file_matches_reference_for_fixed_seed():
     questo test fallisce dopo una modifica intenzionale al generatore,
     rigenerare il golden con lo script in questo stesso file
     (_generate_full_document) e verificare a mano il diff prima di
-    sovrascrivere."""
+    sovrascrivere.
+
+    `landmarks=False` (TASK-48): e' la garanzia di NON REGRESSIONE
+    geometrica, cioe' che gli elementi urbani notevoli non abbiano spostato
+    di un pixel la rete stradale, gli isolati, i lotti ne gli edifici gia'
+    approvati al gate M5. Il documento completo, luoghi compresi, ha il suo
+    golden qui sotto.
+
+    Il golden e' stato rigenerato una volta durante TASK-48, e NON per una
+    modifica al generatore: il commit 306f14f di Jay ha cambiato i template
+    (il pack 2fXlBwjR e' uscito dal manifest di blank_80x80). Confronto
+    strutturale fatto prima di sovrascrivere: le uniche differenze erano
+    `header.asset_manifest` e `tiles.lookup`, due campi che arrivano dal
+    template e che il generatore non tocca; walls, objects, paths, patterns,
+    roofs e texts erano identici elemento per elemento."""
     golden_path = GOLDEN_DIR / "city_seed_1337.json"
+    actual = _normalize_for_golden(_generate_full_document(seed=1337, landmarks=False))
+
+    assert golden_path.exists(), f"Golden file mancante: {golden_path}"
+    expected = json.loads(golden_path.read_text(encoding="utf-8"))
+    assert actual == expected
+
+
+@pytest.mark.slow
+def test_city_with_landmarks_golden_file_matches_reference_for_fixed_seed():
+    """TASK-48: stesso seed e stesso canvas, ma con gli elementi urbani
+    notevoli attivi (il comportamento di default). Rigenerare con
+    scripts/regen_city_golden.py dopo una modifica intenzionale."""
+    golden_path = GOLDEN_DIR / "city_seed_1337_landmarks.json"
     actual = _normalize_for_golden(_generate_full_document(seed=1337))
 
     assert golden_path.exists(), f"Golden file mancante: {golden_path}"
@@ -392,9 +423,16 @@ def test_isolato_uses_buildings_quartiere_and_citta_use_footprints():
 @pytest.mark.parametrize("seed", [0, 1, 1337, 42])
 def test_quartiere_preset_fits_many_more_and_much_smaller_buildings_than_isolato(seed):
     """AC3: "1 quadretto = 1 edificio" contro "1 quadretto = 5 ft" deve
-    vedersi nei numeri, sullo stesso canvas e con lo stesso seed."""
-    isolato = city.generate(width=78, height=78, seed=seed, scale="isolato")
-    quartiere = city.generate(width=78, height=78, seed=seed, scale="quartiere")
+    vedersi nei numeri, sullo stesso canvas e con lo stesso seed.
+
+    `landmarks=False` (TASK-48): qui si misura la TARATURA DEI PRESET, e i
+    luoghi notevoli la sporcherebbero in modo asimmetrico - al preset
+    "quartiere" mura, porto e fascia extramurale sottraggono area
+    edificabile, al preset "isolato" no (nessuno dei tre e' ammissibile a
+    quella scala). Il rapporto con i luoghi attivi e' misurato a parte, in
+    tests/test_city_landmarks.py."""
+    isolato = city.generate(width=78, height=78, seed=seed, scale="isolato", landmarks=False)
+    quartiere = city.generate(width=78, height=78, seed=seed, scale="quartiere", landmarks=False)
 
     assert len(quartiere.streets) > len(isolato.streets)
     assert len(quartiere.building_footprints) > 5 * len(isolato.buildings)
@@ -409,9 +447,13 @@ def test_citta_preset_has_an_order_of_magnitude_more_buildings_than_quartiere(se
     un ordine di grandezza in piu' di edifici del preset quartiere sullo
     stesso canvas. Misurato al momento della taratura (SCALE_PRESETS["citta"]):
     fra ~9,6x e ~10,8x su 7 seed a 78x78; qui si verifica un margine largo
-    (5x-20x) per non far dipendere il test dal seed esatto."""
-    quartiere = city.generate(width=78, height=78, seed=seed, scale="quartiere")
-    citta = city.generate(width=78, height=78, seed=seed, scale="citta")
+    (5x-20x) per non far dipendere il test dal seed esatto.
+
+    `landmarks=False` per lo stesso motivo del test qui sopra (TASK-48):
+    e' la taratura dei preset a essere sotto esame, non l'ingombro dei
+    luoghi."""
+    quartiere = city.generate(width=78, height=78, seed=seed, scale="quartiere", landmarks=False)
+    citta = city.generate(width=78, height=78, seed=seed, scale="citta", landmarks=False)
 
     ratio = len(citta.building_footprints) / len(quartiere.building_footprints)
     assert 5.0 < ratio < 20.0, (len(citta.building_footprints), len(quartiere.building_footprints), ratio)
@@ -461,12 +503,16 @@ def test_abstract_preset_renders_and_validates_clean(scale):
     assert errors == [], errors
 
     level = prepared["world"]["levels"]["0"]
-    assert len(level["paths"]) == len(blueprint.streets)
+    # Solo i path con la texture stradale: dopo TASK-48 mura, fiume e riva
+    # del porto sono path anche loro.
+    assert len([p for p in level["paths"] if p["texture"] == STREET_TEXTURE]) == len(blueprint.streets)
     building_textures = {texture for texture, _w, _h in palette.building_variants}
     building_objects = [o for o in level["objects"] if o["texture"] in building_textures]
     assert len(building_objects) == len(blueprint.building_footprints)
     # nessun tetto/pavimento sintetico per gli edifici (restava solo dal
-    # vecchio draw_city_footprint): i soli pattern sono quelli delle piazze.
+    # vecchio draw_city_footprint): i soli pattern sono quelli delle piazze
+    # e (da TASK-48) dei luoghi, della banchina e dei ponti, che usano
+    # texture proprie e non palette.floor.
     assert len(level["roofs"]["roofs"]) == 0
     n_footprint_floors = sum(1 for p in level["patterns"] if p["texture"] == palette.floor)
     assert n_footprint_floors == 0
@@ -534,8 +580,14 @@ def test_isolato_roofs_do_not_overhang_the_building():
     render_city_blueprint(prepared["world"]["levels"], ids, blueprint, palette, rng=random.Random(1337))
 
     roofs = prepared["world"]["levels"]["0"]["roofs"]["roofs"]
-    assert len(roofs) == len(blueprint.buildings)
-    footprints = [city._footprint_of(bp) for bp in blueprint.buildings]
+    # Un tetto per edificio ordinario, piu' uno per ogni luogo notevole che
+    # al preset "isolato" ha un edificio a stanze proprio (TASK-48): sono
+    # disegnati dalla stessa add_ridge_roof e devono rispettare lo stesso
+    # vincolo. L'ordine e' quello di render_city_blueprint, prima gli
+    # ordinari e poi i luoghi.
+    with_building = [m.building for m in blueprint.landmarks if m.building is not None]
+    assert len(roofs) == len(blueprint.buildings) + len(with_building)
+    footprints = [city._footprint_of(bp) for bp in blueprint.buildings + with_building]
     for footprint, roof in zip(footprints, roofs):
         points = parse_pv2(roof["points"])
         assert len(points) == 2, "tetto a poligono chiuso: sborda (vedi TASK-47)"

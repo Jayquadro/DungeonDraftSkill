@@ -41,10 +41,11 @@ Misure su un canvas 78×78 (`templates/blank_80x80.dungeondraft_map`, seed
 | | `--scale isolato` (default) | `--scale quartiere` | `--scale citta` |
 |---|---|---|---|
 | Un quadretto vale | 5 ft / 1,5 m | circa un edificio | circa un edificio, ma di un quartiere fra una decina |
-| Edifici sul canvas | 30 | 322 | 3.325 |
-| Ingombro medio di un edificio | 4,7×5,2 quadretti (~55 m²) | 2,5×2,4 quadretti (~13 m²) | 0,7×0,7 quadretti (~1 m²) |
+| Edifici ordinari sul canvas | 23 | 143 | 2.745 |
+| Luoghi notevoli sul canvas | 10 | 42 | 29 |
+| Ingombro medio di un edificio | 4,9×5,9 quadretti (~65 m²) | 2,4×2,4 quadretti (~13 m²) | 0,7×0,7 quadretti (~1 m²) |
 | Cos'e un edificio | pianta completa: muri portanti, tramezzi, stanze, porte, tetto (riusa `generators/building.py`, con tipologie diverse per lotto) | uno sprite `object` del pack "BB 51 Assets Houses1" (BluBerrey, 33 varianti), scalato per riempire il lotto e con una tinta (`custom_color`) variata fra 6 toni — non piu un ingombro astratto | come `quartiere`, a scala ridotta |
-| Dimensione del file | 1,87 MB (~6,4 KB/edificio) | 1,92 MB (~768 B/edificio) | 3,71 MB (~613 B/edificio) |
+| Dimensione del file | 1,78 MB | 1,80 MB | 3,28 MB |
 | A cosa serve | far muovere le miniature dentro e fuori dagli edifici di una via | inquadrare un quartiere esteso, decidere dove si va | orientarsi in una citta intera; non e pensata per essere giocata al tavolo |
 
 Solo il preset `isolato` produce una geometria giocabile al tavolo (muri,
@@ -76,6 +77,58 @@ serve `citta`: alla scala `quartiere` gli stessi 3.325 edifici
 richiederebbero un canvas di circa 285×285 quadretti, mentre l'unico
 template di produzione e 80×80 e `ddforge` non cambia mai le dimensioni del
 canvas del template.
+
+### Mappe cittadine: i luoghi notevoli
+
+Una citta di soli edifici anonimi non ha luoghi. In tutti e tre i preset la
+mappa riceve **elementi urbani notevoli** — templi, mercati, taverne,
+concerie, cimiteri, mura, fiumi, porti — estratti dal seed, ciascuno con il
+suo **sprite dedicato** e un'**etichetta col nome**.
+
+Un luogo si disegna come tutto il resto della mappa: uno sprite vero preso
+dal pack giusto (cattedrale, chiesa, mulino, faro, forgia, gogna, lapidi,
+banchi da mercato...), non una toppa di pavimento con un'icona sopra. Gli
+spiazzi aperti sono fatti di piu' sprite sparsi, perche' un mercato sono i
+banchi e un cimitero sono le lapidi. L'etichetta sta sotto l'ingombro e il
+corpo del testo cresce con l'importanza del luogo: una cattedrale ha un nome
+grande, una bottega un nome piccolo. Due nomi non si sovrappongono mai.
+
+Non sono sparsi a caso: chi ha una regola la rispetta, ed e questo che rende
+la citta leggibile invece che solo varia.
+
+| elemento | dove finisce |
+|---|---|
+| dogana, torre di guardia | alle porte delle mura |
+| mulino | sulla riva del fiume |
+| conceria, macello | sulla riva **a valle** (i mestieri che puzzano stanno sottovento) |
+| cimitero | fuori le mura, o presso il tempio se mura non ce ne sono |
+| mercato | sulla piazza; il patibolo sulla piazza principale |
+| cantiere navale, faro, mercato del pesce | sulla banchina del porto |
+| monastero, fiera, quartiere povero, lazzaretto | ai margini |
+
+Un elemento la cui regola non trova posto **non viene piazzato altrove**:
+viene saltato. Su una mappa senza fiume non c'e nessuna conceria.
+
+Quantita e ammissibilita dipendono dal preset: un fornaio si vede a `isolato`,
+dove la bottega e un edificio con le stanze; su una mappa di citta intera si
+segnano cattedrale, palazzo, mura, porto e mercati, non le panetterie. Le
+proporzioni misurate su 30 seed per preset sono in `docs/SPEC.md` §9.4.1
+(rigenerabili con `python scripts/city_landmarks_census.py --markdown`).
+
+```bash
+# chiedi elementi specifici (ripetibile; accetta anche mura, fiume, porto)
+ddforge generate city --template templates/blank_80x80.dungeondraft_map \
+    --out porto.dungeondraft_map --width 78 --height 78 --seed 1337 \
+    --scale quartiere --landmark porto --landmark faro --landmark cattedrale
+
+# nessun luogo e nessuna struttura: solo strade, isolati ed edifici
+ddforge generate city --template templates/blank_80x80.dungeondraft_map \
+    --out spoglia.dungeondraft_map --width 78 --height 78 --seed 1337 --no-landmarks
+```
+
+Chiedere un elemento non ammissibile per il `--scale` scelto (per esempio
+un'arena in un quartiere) e un errore esplicito, non un'omissione
+silenziosa. `ddforge generate --help` elenca tutti i valori accettati.
 
 ```bash
 # un isolato, giocabile al tavolo

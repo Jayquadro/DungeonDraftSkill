@@ -68,6 +68,19 @@ class Palette:
     # catalogo (non sono texture, solo colori scelti a mano): vuoto per ogni
     # stile diverso da "city".
     building_colors: tuple = ()
+    # Texture della categoria `paths` del catalogo, per nome semantico
+    # (TASK-48): "mura", "fiume", "banchina". Campo a se e non voci di
+    # `accents` perche un path non e un object: si disegna con add_path lungo
+    # una polilinea, non si piazza in un punto. Vuoto per gli stili che non
+    # disegnano strutture urbane.
+    paths: dict = field(default_factory=dict)
+    # Sprite dei luoghi urbani notevoli (TASK-48), per CHIAVE DI LUOGO
+    # (LandmarkKind.key) e non per nome di icona: un luogo si disegna con lo
+    # sprite di quel luogo, punto. Ogni voce e una lista di
+    # (texture, larghezza_px, altezza_px) come building_variants, perche il
+    # piazzamento ha bisogno delle dimensioni native per calcolare la scala e
+    # perche piu varianti danno varieta fra un'istanza e l'altra.
+    landmark_sprites: dict = field(default_factory=dict)
 
 
 def _slug(texture_path: str) -> str:
@@ -85,6 +98,15 @@ def _classify(texture_path: str) -> str | None:
         return "walls"
     if "/patterns/" in p or "/tilesets/" in p:
         return "floors"
+    # Le texture di terreno sono un bucket a se (TASK-48): servono per le aree
+    # colorate dei luoghi all'aperto (l'erba di un parco, la terra battuta di
+    # una fiera) e nei pattern non ci sono - i pack le mettono sotto
+    # /terrain/. Categoria separata da "floors" perche' NON e' verificato che
+    # Dungeondraft accetti una texture di terreno dentro un elemento
+    # `pattern`: tenerle distinte rende la differenza visibile invece di
+    # nasconderla dietro un nome comune.
+    if "/terrain/" in p:
+        return "terrain"
     if "/portals/" in p:
         return "portals"
     if "/roofs/" in p:
@@ -128,6 +150,45 @@ def _iter_textures(doc: dict):
 _PCK_MAGIC = b"GDPC"
 _PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 _PACK_MANIFEST_RE = re.compile(r"res://packs/[^/]+\.json")
+# res://.import/<nome originale>-<md5>.stex: e' cosi che Godot archivia una
+# texture importata, col nome del file sorgente dentro il nome dell'archivio.
+_STEX_RE = re.compile(r"res://\.import/(.+)-[0-9a-f]{32}\.stex")
+
+
+def _image_size(blob: bytes) -> tuple[int, int] | None:
+    """Dimensioni in pixel di un PNG o di un WebP, dai soli header.
+
+    Serve perche le dimensioni native di uno sprite decidono la scala di
+    piazzamento (TASK-46) e non sono ricavabili da un .dungeondraft_map. Solo
+    stdlib: il core del progetto non dipende da Pillow (SPEC.md §4).
+
+    WebP e' arrivato con TASK-48: le texture base di Dungeondraft sono tutte
+    WebP dentro i .stex, e finche si leggeva il solo PNG restavano senza
+    misura. Tre varianti del formato, tutte e tre necessarie perche il
+    programma le usa tutte: VP8X (esteso), VP8L (lossless), VP8 (lossy).
+    """
+    if blob[:8] == _PNG_MAGIC:
+        width, height = struct.unpack_from(">II", blob, 16)
+        return width, height
+    if blob[:4] != b"RIFF" or blob[8:12] != b"WEBP":
+        return None
+    chunk = blob[12:16]
+    if chunk == b"VP8X":
+        # Larghezza e altezza su 24 bit little-endian, meno uno.
+        w = int.from_bytes(blob[24:27], "little") + 1
+        h = int.from_bytes(blob[27:30], "little") + 1
+        return w, h
+    if chunk == b"VP8L":
+        bits = int.from_bytes(blob[21:25], "little")
+        return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    if chunk == b"VP8 ":
+        # Frame header: 3 byte di tag, i 3 byte di start code 9d 01 2a, poi
+        # larghezza e altezza su 14 bit ciascuna.
+        if blob[23:26] != b"\x9d\x01\x2a":
+            return None
+        w, h = struct.unpack_from("<HH", blob, 26)
+        return w & 0x3FFF, h & 0x3FFF
+    return None
 
 
 def _read_pck_entries(data: bytes) -> dict[str, tuple[int, int]]:
@@ -193,18 +254,84 @@ def read_dungeondraft_pack(path) -> dict:
     textures: dict[str, tuple[int, int]] = {}
     prefix = f"res://packs/{pack_id}/"
     for entry_path, (offset, size) in entries.items():
-        if not entry_path.startswith(prefix) or not entry_path.lower().endswith(".png"):
+        if not entry_path.startswith(prefix):
             continue
-        header = data[offset : offset + 24]
-        if header[:8] != _PNG_MAGIC:
+        if not entry_path.lower().endswith((".png", ".webp")):
             continue
-        width, height = struct.unpack_from(">II", header, 16)
-        textures[entry_path] = (width, height)
+        size_px = _image_size(data[offset : offset + 64])
+        if size_px is not None:
+            textures[entry_path] = size_px
 
     return {"manifest": manifest, "textures": textures}
 
 
-def build_catalog(*docs: dict, pack_sources=()) -> dict:
+def read_base_pack(path, prefixes) -> dict:
+    """Texture BASE del programma, lette da Dungeondraft.pck (TASK-48).
+
+    Non sono texture di un pack: appartengono all'eseguibile, quindi non
+    compaiono in nessun `asset_manifest` e non possono mai far scattare
+    DDF014. Sono le piu' sicure che ci siano, ed e' per questo che vale la
+    pena pescarle: il programma ne ha oltre duemila, fra cui intere famiglie
+    (per esempio `objects/graveyard/`) che nessun template di Jay usa e che
+    quindi non erano mai finite in catalogo.
+
+    `prefixes` e' obbligatorio e senza default: si dichiara quali cartelle
+    importare, una alla volta. Prendere tutto raddoppierebbe il catalogo con
+    duemila voci che nessuno ha chiesto, e la disciplina del progetto e'
+    che ogni texture in catalogo ci sia perche qualcuno l'ha voluta.
+
+    Il pck base non archivia le texture al loro path: le mette in
+    `res://.import/<nome>-<md5>.stex`, un contenitore Godot con dentro
+    l'immagine vera. Il path di destinazione si ricostruisce dai fratelli
+    `<path>.import`, che invece stanno al posto giusto.
+    """
+    with open(path, "rb") as f:
+        data = f.read()
+    entries = _read_pck_entries(data)
+
+    # nome file originale -> path res:// di destinazione
+    destinations = {}
+    for entry_path in entries:
+        if not entry_path.endswith(".import"):
+            continue
+        real = entry_path[: -len(".import")]
+        if any(real.startswith(prefix) for prefix in prefixes):
+            destinations[real.rsplit("/", 1)[-1]] = real
+
+    textures: dict[str, tuple[int, int]] = {}
+    for entry_path, (offset, size) in entries.items():
+        match = _STEX_RE.fullmatch(entry_path)
+        if match is None:
+            continue
+        destination = destinations.get(match.group(1))
+        if destination is None:
+            continue
+        blob = data[offset : offset + size]
+        # L'immagine e' incorporata dopo l'intestazione del .stex: la si
+        # trova dal suo magic invece che da un offset fisso, che cambia con
+        # la versione del formato.
+        start = blob.find(_PNG_MAGIC)
+        if start < 0:
+            start = blob.find(b"RIFF")
+        if start < 0:
+            continue
+        size_px = _image_size(blob[start : start + 64])
+        if size_px is not None:
+            textures[destination] = size_px
+
+    return {"textures": textures}
+
+
+def _pack_of(texture: str) -> str | None:
+    """Id del pack a cui appartiene una texture res://packs/<id>/..., o None
+    per le texture base del programma."""
+    if not texture.startswith("res://packs/"):
+        return None
+    parts = texture.split("/")
+    return parts[3] if len(parts) >= 4 else None
+
+
+def build_catalog(*docs: dict, pack_sources=(), base: dict | None = None, base_pack: dict | None = None) -> dict:
     """Costruisce il catalogo unendo pack e texture osservate in piu documenti,
     piu (TASK-46) le texture lette direttamente da file .dungeondraft_pack via
     `read_dungeondraft_pack`.
@@ -216,6 +343,15 @@ def build_catalog(*docs: dict, pack_sources=()) -> dict:
     errore esplicito, mai inclusa in silenzio (altrimenti DDF014 romperebbe
     ogni mappa generata dal template di produzione, che non conosce quel
     pack).
+
+    `base` (TASK-48) e un catalogo gia esistente da cui ripartire, e le sue
+    chiavi vincono su tutto il resto. Serve perche il catalogo di TASK-45/46
+    era stato costruito anche da undici mappe della campagna di Jay che non
+    sono piu sul disco: rigenerarlo dai soli template perderebbe una novantina
+    di chiavi che le palette usano per nome, e con loro gli stili tavern,
+    manor e warehouse. Il vincolo sul pack orfano vale identico per `base`:
+    una sua texture che punta a un pack assente dai manifest dei --from e un
+    errore, non un'eredita da tenersi.
     """
     packs: dict[str, dict] = {}
     buckets: dict[str, dict[str, str]] = {
@@ -225,6 +361,7 @@ def build_catalog(*docs: dict, pack_sources=()) -> dict:
         "roofs": {},
         "paths": {},
         "objects": {},
+        "terrain": {},
     }
 
     for doc in docs:
@@ -245,6 +382,37 @@ def build_catalog(*docs: dict, pack_sources=()) -> dict:
             buckets[category].setdefault(key, texture)
 
     object_sizes: dict[str, list[int]] = {}
+
+    # Il catalogo di partenza si innesta DOPO i documenti ma con setdefault,
+    # quindi in pratica vince: le sue chiavi ci sono gia tutte e i documenti
+    # non le sovrascrivono. E' l'ordine giusto perche i pack dei documenti
+    # devono comunque essere noti prima del controllo sul pack orfano.
+    if base is not None:
+        for category, bucket in buckets.items():
+            for key, texture in (base.get(category) or {}).items():
+                orphan = _pack_of(texture)
+                if orphan is not None and orphan not in packs:
+                    raise ValueError(
+                        f"La texture {key!r} del catalogo di partenza appartiene al pack "
+                        f"{orphan!r}, assente da header.asset_manifest dei documenti --from: "
+                        "aggiungi un --from che lo referenzi, oppure togli quella texture "
+                        "dal catalogo"
+                    )
+                bucket.setdefault(key, texture)
+        object_sizes.update(base.get("object_sizes") or {})
+
+    # Le texture base del programma (TASK-48) non appartengono a nessun pack,
+    # quindi saltano il controllo sull'orfano: non possono far scattare
+    # DDF014 nemmeno in teoria.
+    if base_pack is not None:
+        for texture, (width, height) in base_pack["textures"].items():
+            category = _classify(texture)
+            if category is None:
+                continue
+            key = _slug(texture)
+            buckets[category].setdefault(key, texture)
+            object_sizes.setdefault(key, [width, height])
+
     for pack_source in pack_sources:
         pack_id = pack_source["manifest"].get("id")
         if pack_id not in packs:
@@ -385,10 +553,128 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         # riusa lo stesso meccanismo di Palette.floors con una chiave
         # sintetica, cosi la piazza ha una pavimentazione diversa dal
         # cobblestone di strade/edifici (SPEC.md §9.4 AC5) senza aggiungere
-        # un campo dedicato alla Palette.
-        "floors": {"piazza": "tileset_brick_basketweave"},
+        # un campo dedicato alla Palette. Stessa cosa per le tre chiavi
+        # sintetiche di TASK-48: lo spiazzo di un luogo all'aperto, la
+        # banchina del porto e l'impalcato di un ponte.
+        "floors": {
+            "piazza": "tileset_brick_basketweave", "selciato": "tileset_cobble",
+            # Non "cobblestone": e gia' `floor` di questo stile, e una
+            # banchina indistinguibile dal pavimento di default non si
+            # riconosce come banchina (ne' in Dungeondraft ne' in un test).
+            "banchina": "stone_floor", "ponte": "wood_planks",
+        },
+        # TASK-48: il terreno steso sotto gli sprite di un luogo all'aperto.
+        # Viene dalla categoria `terrain` del catalogo e non da `floors`
+        # perche' nei pattern l'erba e la terra battuta non ci sono: i pack le
+        # mettono sotto /terrain/. Finiscono comunque in Palette.floors, che
+        # e' il dizionario da cui compose pesca una texture di pavimento.
+        #
+        # NON VERIFICATO che Dungeondraft accetti una texture di categoria
+        # terrain dentro un elemento `pattern`. L'indizio a favore: il
+        # template ricco disegnato a mano da Jay usa come pattern texture di
+        # `tilesets/simple/`, quindi lo strumento non si limita a
+        # `patterns/normal/`. La conferma sta nel file di calibrazione
+        # generato da scripts/label_calibration.py, che stende una toppa per
+        # ciascuna di queste texture.
+        "grounds": {"verde": "chr_grass", "terra": "chr_dirt"},
+        # TASK-48: le tre strutture urbane che si disegnano come path lungo
+        # una polilinea. Tutte e tre dal pack 6VxwaRdj, gia' referenziato dal
+        # template di produzione (nessun rischio DDF014).
+        "paths": {"mura": "bb_wall_path", "fiume": "bb_river_path", "banchina": "bb_shore_path"},
     },
 }
+
+
+# Sprite dei luoghi urbani notevoli (TASK-48), per chiave di LandmarkKind.
+#
+# Perche esiste questa tabella: al primo giro un luogo era reso come una
+# chiazza di pavimento piu un'iconcina, ed era l'UNICO elemento della mappa
+# non disegnato come sprite. In mezzo alle case colorate leggeva come un
+# rettangolo bianco — la cosa che Jay ha bocciato guardando la mappa vera.
+# Ora un luogo e uno sprite come tutto il resto.
+#
+# Provenienza degli sprite, tutti da pack gia referenziati dal template di
+# produzione (nessun rischio DDF014):
+# - Bp03igMq "CHR - Town Maps": edifici singoli disegnati alla scala di una
+#   mappa di paese (una casa ~0,8 quadretti). E il registro giusto per i
+#   preset "quartiere" e "citta", dove un edificio ordinario e uno sprite di
+#   dimensione simile.
+# - RchUgE31 "City Terrain": cattedrale, cimitero, castello, molo.
+# - roSIrsHG "Lost Lands Hamlets": forgia, gogna, cappi, pozzo.
+# - 2VHJB262 "BB BaseCity" e KtpqsMIX "BB KeepsAndCastles": tessere 3x3
+#   quadretti che ritraggono un complesso intero con le sue pertinenze. Usate
+#   SOLO dove non esiste un edificio singolo equivalente (anfiteatro,
+#   giardino, faro, forte, mercato): a quel punto e giusto che il monumento
+#   occupi piu spazio degli altri.
+#
+# Chiavi LETTERALI del catalogo e mai alias semantici, per lo stesso motivo
+# gia documentato su "bed" e "bookshelf": dopo TASK-45 un alias su substring
+# puo agganciarsi in silenzio a un pack diverso a seconda dell'ordine dei
+# --from. Piu varianti per luogo = varieta fra due istanze dello stesso tipo.
+# Regola imparata guardando il primo risultato renderizzato: gli sprite BB
+# ritraggono un complesso CON LE SUE PERTINENZE, terreno compreso. L'abbazia
+# su un'isola porta con se il mare, il maschio col fossato porta l'acqua: in
+# mezzo a un quartiere fitto sono toppe di campagna, non edifici. Vanno usati
+# solo dove quel contorno e' giusto (il faro sta sulla costa, l'anfiteatro ha
+# davvero i suoi spalti). Per tutto il resto servono sprite di edificio
+# singolo su sfondo trasparente: CHR Town Maps, City Terrain, Lost Lands.
+_CITY_LANDMARK_SPRITES: dict[str, tuple[str, ...]] = {
+    # --- luoghi di culto e potere ----------------------------------------
+    "tempio": ("bb_city_cathedral_1_color",),
+    "cattedrale": ("bb_keepsandcastles_cathedral_color",),
+    "monastero": ("bb_keepsandcastles_forestkeep_color",),
+    "palazzo": ("bb_keepsandcastles_castle_color",),
+    "municipio": ("bb_houses1_flag1",),
+    "caserma": ("bb_city_fort_1_color",),
+    "prigione": ("cage_04",),
+    "arena": ("tourney_grounds",),
+    "teatro": ("bb_keepsandcastles_amphitheatre_color",),
+    # --- sapere -----------------------------------------------------------
+    "accademia": ("castle_w_moat",),
+    "biblioteca": ("house_05",),
+    "alchimista": ("house_07",),
+    # --- commercio --------------------------------------------------------
+    "banca": ("house_05",),
+    "gilda": ("house_09",),
+    "magazzino": ("shed_01",),
+    "dogana": ("shed_02",),
+    # --- artigianato ------------------------------------------------------
+    "fabbro": ("shed_01",),
+    "stalle": ("shed_01",),
+    "fornaio": ("house_10",),
+    "macelleria": ("house_01",),
+    "conceria": ("shed_02",),
+    "macello": ("shed_02",),
+    "mulino": ("windmill_02",),
+    # --- svago e servizi --------------------------------------------------
+    "taverna": ("house_03",),
+    "locanda": ("inn_01",),
+    "bordello": ("house_06",),
+    "bagni": ("house_04",),
+    "lazzaretto": ("strawhouse_03",),
+    # --- struttura urbana -------------------------------------------------
+    "torre_guardia": ("wood_walls_tower",),
+    "faro": ("bb_seasandshores_cliff_lighthouse_color",),
+    "mercato": ("canopy_01",),
+    "patibolo": ("thehangedman",),
+    "statua": ("statue_male_mage_alt_03_a",),
+    "fiera": ("tent_03",),
+    # --- aree con sprite multipli: DA CONFERMARE --------------------------
+    # Giardino e cimitero non sono uno sprite ma una scena: un'area colorata
+    # con dentro piu' pezzi. Jay ha lasciato sul campionario tutti i
+    # candidati perche' vanno giudicati montati, non in fila. Questi sono i
+    # miei insiemi di lavoro, in attesa del suo verdetto sul foglio generato
+    # da `landmark_sprite_sheet.py --areas`: fuori i due sprite BB (giardino
+    # e frutteto sono tessere 3x3 con il loro terreno, e sparpagliate
+    # ricoprirebbero l'area invece di popolarla) e fuori panchina, recinto e
+    # sasso, che a queste dimensioni non si distinguono.
+    "giardino": (
+        "tree_big_green_01", "tree_big_green_03", "tree_green_simple_01",
+        "tree_green_simple_03", "tree_massive_green_01",
+    ),
+    "cimitero": ("gravestone_01", "gravestone_02", "gravestone_04", "gravestone_05"),
+}
+
 
 
 # Sprite edificio del preset "city" (TASK-46): le 33 texture "casa" del pack
@@ -426,9 +712,20 @@ def _lookup(catalog: dict, category: str, key: str) -> str:
     return bucket[key]
 
 
-def _lookup_size(catalog: dict, key: str) -> tuple[float, float]:
+def _lookup_size(catalog: dict, key: str, *, optional: bool = False):
+    """Dimensioni native in pixel di una texture, per calcolare la scala di
+    piazzamento (TASK-46).
+
+    `optional=True` ritorna (None, None) invece di fallire. Serve alle
+    texture non-PNG: `read_dungeondraft_pack` legge le dimensioni dall'IHDR
+    di un PNG, e i pack in WebP (per esempio WFWMFRDX, da cui viene la
+    statua) non ne hanno nessuna nel catalogo. Chi riceve (None, None) ricade
+    sulla stima per nome di compose._texture_size, che e meno precisa ma
+    esiste sempre — meglio di rinunciare allo sprite giusto."""
     sizes = catalog.get("object_sizes")
     if not isinstance(sizes, dict) or key not in sizes:
+        if optional:
+            return None, None
         raise ValueError(
             f"Dimensioni pixel assenti per la texture {key!r}: rigenera data/assets.json "
             "con `ddforge catalog --pack <file.dungeondraft_pack>`"
@@ -448,22 +745,38 @@ def palette_for(style: str, catalog: dict) -> Palette:
     door = _lookup(catalog, "portals", definition["door"])
     accents = {name: _lookup(catalog, "objects", key) for name, key in definition["accents"].items()}
     floors = {kind: _lookup(catalog, "floors", key) for kind, key in definition.get("floors", {}).items()}
+    # I terreni stanno nello stesso dizionario dei pavimenti (chi disegna
+    # vuole una texture, non sapere da che bucket viene) ma si risolvono da
+    # una categoria diversa del catalogo.
+    floors.update(
+        {name: _lookup(catalog, "terrain", key) for name, key in definition.get("grounds", {}).items()}
+    )
     roof = _lookup(catalog, "roofs", definition["roof"]) if "roof" in definition else None
     wall_load_bearing = (
         _lookup(catalog, "walls", definition["wall_load_bearing"]) if "wall_load_bearing" in definition else None
     )
     stairs = _lookup(catalog, "objects", definition["stairs"]) if "stairs" in definition else None
+    paths = {name: _lookup(catalog, "paths", key) for name, key in definition.get("paths", {}).items()}
     building_variants: list = []
     building_colors: tuple = ()
+    landmark_sprites: dict = {}
     if style == "city":
         building_variants = [
             (_lookup(catalog, "objects", key), *_lookup_size(catalog, key)) for key in _CITY_BUILDING_KEYS
         ]
         building_colors = _CITY_BUILDING_COLORS
+        landmark_sprites = {
+            kind: [
+                (_lookup(catalog, "objects", key), *_lookup_size(catalog, key, optional=True))
+                for key in keys
+            ]
+            for kind, keys in _CITY_LANDMARK_SPRITES.items()
+        }
     return Palette(
         wall=wall, floor=floor, door=door, accents=accents, floors=floors, roof=roof,
         wall_load_bearing=wall_load_bearing, stairs=stairs,
         building_variants=building_variants, building_colors=building_colors,
+        paths=paths, landmark_sprites=landmark_sprites,
     )
 
 

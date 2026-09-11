@@ -43,8 +43,9 @@ Jay al round 2 del gate umano). Il default e `isolato`.
 | | `--scale isolato` (default) | `--scale quartiere` | `--scale citta` |
 |---|---|---|---|
 | Un quadretto vale | 5 ft / 1,5 m | circa un edificio | circa un edificio, di un quartiere fra una decina |
-| Edifici su un canvas 78×78 | ~30 | ~320 | ~3.300 |
-| Ingombro di un edificio | ~4,7×5,2 quadretti (~55 m²) | ~2,5×2,4 quadretti | ~0,7×0,7 quadretti |
+| Edifici ordinari su un canvas 78×78 | ~20 | ~160 | ~2.700 |
+| Luoghi notevoli su un canvas 78×78 | ~9 | ~44 | ~29 |
+| Ingombro di un edificio | ~4,9×5,9 quadretti (~65 m²) | ~2,4×2,4 quadretti | ~0,7×0,7 quadretti |
 | Cos'e un edificio | pianta completa: muri, stanze, porte, tetto, con tipologie diverse per lotto | uno sprite `object` del pack "BB 51 Assets Houses1" (33 varianti), scalato dentro il lotto e tinto (`custom_color`) fra 6 toni | come `quartiere`, a scala ridotta |
 | Isolati | 13–22 quadretti | 6–11 quadretti | 1,85–3,4 quadretti |
 
@@ -69,6 +70,32 @@ via obliqua attraversa la mappa da un bordo all'altro.
 
 Strade, isolati, lotti con fronte strada e piazze ci sono in tutti e tre i
 preset: cambia la taratura geometrica e la rappresentazione degli edifici.
+
+## Luoghi notevoli e strutture urbane (`--landmark`, `--no-landmarks`)
+
+Ogni mappa cittadina riceve, estratti dal seed, luoghi notevoli con il loro
+**sprite dedicato** e un'**etichetta col nome**: templi, mercati, taverne,
+concerie, cimiteri, piu le strutture che li ancorano (mura con porte
+fortificate, fiumi con ponti, porti). Un luogo si disegna come un edificio
+vero, non come una toppa di pavimento con un'icona; gli spiazzi aperti sono
+fatti di piu' sprite sparsi. Il corpo dell'etichetta cresce con l'ingombro,
+quindi i monumenti si leggono a colpo d'occhio anche a mappa intera.
+
+`--landmark ELEMENTO` (ripetibile) chiede un elemento per certo; accetta sia i
+luoghi sia `mura`, `fiume`, `porto`. `--no-landmarks` li toglie tutti.
+`ddforge generate --help` elenca i valori accettati.
+
+Le regole di piazzamento sono la ragione per cui i luoghi valgono: dogana e
+torri alle porte, mulino sul fiume, conceria e macello **a valle**, cimitero
+fuori le mura o presso il tempio, mercato sulla piazza e patibolo sulla
+principale, cantiere e faro sulla banchina, monastero e baraccopoli ai
+margini. Un luogo la cui regola non trova posto non viene piazzato altrove:
+su una mappa senza fiume non c'e nessuna conceria.
+
+**Ammissibilita per preset**: un fornaio si vede solo a `isolato`, un'arena
+solo a `citta`, mura e porto solo a `quartiere`/`citta`. Chiedere un elemento
+non ammissibile per il `--scale` scelto e un errore esplicito. Le proporzioni
+misurate stanno in `docs/SPEC.md` §9.4.1.
 
 ## Arredo e luci
 

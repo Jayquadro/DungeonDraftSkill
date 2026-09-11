@@ -12,7 +12,7 @@ import re
 
 from ddforge.build import (
     add_light, add_object, add_path, add_pattern, add_polygon_pattern, add_portal, add_roof,
-    add_wall, add_water_polygon, set_cave_bitmap,
+    add_text, add_wall, add_water_polygon, set_cave_bitmap,
 )
 from ddforge.godot import GRID, grid_to_px, parse_pv2
 from ddforge.model import Blueprint, Chamber, Corridor, Door, Rect, Room
@@ -772,6 +772,308 @@ def draw_city_building(level, ids, footprint: Rect, palette, rng: random.Random)
     add_object(level, ids, cx, cy, texture, scale=scale, custom_color=color)
 
 
+# ---------------------------------------------------------------------------
+# TASK-48: strutture urbane e luoghi notevoli
+# ---------------------------------------------------------------------------
+
+# Corpo del testo dell'etichetta. `font_size` e in PIXEL DI MONDO, e un
+# quadretto ne vale 256: il 32 del solo campione osservato (docs/format.md §4)
+# vale un ottavo di quadretto, cioe' un'etichetta che a mappa intera non si
+# vede. Il corpo si ricava quindi dall'ingombro del luogo, chiedendo che il
+# nome sia largo _LABEL_WIDTH_FACTOR volte il luogo che nomina: e' cosi' che
+# l'etichetta e leggibile alla scala a cui la mappa viene guardata, qualunque
+# sia il preset.
+_LABEL_WIDTH_FACTOR = 1.4
+# Larghezza media di un carattere in frazione del corpo del font. Stima: senza
+# il font vero non c'e modo di misurare un testo, e serve solo a dimensionare
+# e a capire se due nomi si pestano i piedi.
+_LABEL_CHAR_WIDTH = 0.55
+_LABEL_LINE_HEIGHT = 1.3
+_LABEL_FONT_RANGE = (24, 600)
+# L'etichetta sta SOTTO l'ingombro, staccata di questa frazione del lato: al
+# centro copriva lo sprite del luogo, che e' proprio la cosa che deve farsi
+# riconoscere. La distanza e' relativa e non assoluta perche un ingombro vale
+# 5 quadretti al preset "isolato" e mezzo alla scala "citta".
+_LABEL_GAP = 0.12
+# Un luogo chiuso e' UN solo sprite che riempie quasi tutto l'ingombro: sotto
+# questa frazione tornerebbe a leggersi come un'iconcina appoggiata su una
+# toppa di pavimento, che e' il difetto che questa taratura corregge.
+_SPRITE_FILL = 0.92
+# Uno spiazzo aperto e' fatto di piu' sprite piccoli sparsi: un mercato sono i
+# banchi, un cimitero le lapidi. Uno solo grande al centro non sarebbe ne'
+# l'uno ne' l'altro.
+#
+# I pezzi sparsi si disegnano alla LORO dimensione nativa (scala 1), non a una
+# frazione dell'area. Prima erano scalati al 45% del lato dello spiazzo, e su
+# un cimitero grande veniva fuori una lapide da 4,5 quadretti: alta quasi sette
+# metri. La dimensione nativa di uno sprite E' la sua dimensione reale, perche'
+# un pack e' disegnato a 256 px per quadretto; l'unico caso in cui si rimpicciolisce
+# e' uno spiazzo piu' piccolo del pezzo stesso.
+#
+# Quanti: densita' costante invece di un numero fisso, cosi' un cimitero doppio
+# ha il doppio delle lapidi e non lapidi larghe il doppio. _SCATTER_SPACING e'
+# quante volte l'ingombro di un pezzo vale l'area che gli si lascia intorno.
+# Tarato guardando il foglio di confronto delle aree: a 3.0 un parco da 12x12
+# metri riceveva due alberi e sembrava un prato incolto, a 1.2 ne riceve
+# cinque o sei e si legge come un giardino. Il conto e' sul RETTANGOLO di
+# ingombro dello sprite, che per una chioma o una tenda e' piu' largo della
+# parte disegnata: e' per questo che il valore giusto sta sotto 2 e non sopra.
+_SCATTER_SPACING = 1.2
+_SCATTER_RANGE = (2, 24)
+# Tentativi di posizionamento prima di rinunciare a un pezzo: i pezzi non si
+# sovrappongono fra loro, e su uno spiazzo affollato l'ultimo posto libero non
+# si trova al primo colpo.
+_SCATTER_TRIES = 8
+
+
+def draw_city_walls(level, ids, walls, palette) -> None:
+    """Cinta muraria come path lungo l'anello, INTERROTTO in corrispondenza
+    di ogni porta.
+
+    Il varco non e' decorativo: e' il muro a non esserci. Il taglio riusa
+    _subtract_intervals, la stessa funzione con cui i muri di un canale si
+    fermano dove ne inizia un altro.
+
+    Sul varco non va nessuno sprite di porta: Jay ha escluso la torre-porta
+    guardando il campionario. Il varco resta un'apertura nella cinta, ed e'
+    comunque il punto a cui la dogana e la torre di guardia si agganciano
+    (generators/landmarks.py, RULE_GATE)."""
+    texture = palette.paths.get("mura")
+    if texture is None:
+        return
+    ring = walls.ring
+    width_px = int(grid_to_px(walls.thickness))
+    sides = {
+        _TOP: ((ring.x1, ring.x2), lambda v: (v, ring.y1)),
+        _BOTTOM: ((ring.x1, ring.x2), lambda v: (v, ring.y2)),
+        _LEFT: ((ring.y1, ring.y2), lambda v: (ring.x1, v)),
+        _RIGHT: ((ring.y1, ring.y2), lambda v: (ring.x2, v)),
+    }
+    for side, (span, point_at) in sides.items():
+        holes = [
+            (
+                (gate.x if side in (_TOP, _BOTTOM) else gate.y) - gate.width / 2,
+                (gate.x if side in (_TOP, _BOTTOM) else gate.y) + gate.width / 2,
+            )
+            for gate in walls.gates if gate.side == side
+        ]
+        for lo, hi in _subtract_intervals(span, holes):
+            add_path(level, ids, [point_at(lo), point_at(hi)], texture, width=width_px)
+
+
+def draw_river(level, ids, river, palette) -> None:
+    """Fiume come path sulla sua centro-linea.
+
+    Un path e non un poligono d'acqua (add_water_polygon, usato invece per il
+    porto): la texture del pack ha gia' rive e increspature disegnate e segue
+    la polilinea che serpeggia, mentre un poligono d'acqua andrebbe costruito
+    offrendo la polilinea da entrambi i lati - piu' codice per un risultato
+    meno leggibile."""
+    texture = palette.paths.get("fiume")
+    if texture is None:
+        return
+    add_path(level, ids, river.points, texture, width=int(grid_to_px(river.width)))
+
+
+def draw_bridge(level, ids, bridge, palette) -> None:
+    """Impalcato del ponte dove una via incrocia il fiume: un pavimento steso
+    sull'acqua, largo quanto l'attraversamento.
+
+    Niente sprite (scelta di Jay dopo averlo visto sulla mappa vera). Uno
+    sprite di ponte e' UNA campata di dimensione fissa, mentre qui il ponte e'
+    lungo quanto il fiume e' largo e orientato come la via che lo attraversa:
+    scalarlo per coprire l'attraversamento lo deformava, e lasciarlo alla sua
+    dimensione lasciava scoperta l'acqua ai lati. L'impalcato liscio fa il suo
+    lavoro senza raccontare una campata che non c'e'."""
+    add_pattern(level, ids, bridge.rect, palette.floors.get("ponte", palette.floor))
+
+
+def draw_port(level, ids, port, palette) -> None:
+    """Specchio d'acqua, riva e banchina del porto.
+
+    L'acqua e' un poligono del layer water nativo (rettangolo: qui la forma e'
+    davvero un rettangolo, a differenza del fiume), la banchina un pattern
+    calpestabile, la riva un path sulla linea di separazione fra le due."""
+    water = port.water
+    add_water_polygon(level, ids, [
+        (water.x1, water.y1), (water.x2, water.y1), (water.x2, water.y2), (water.x1, water.y2),
+    ])
+    add_pattern(level, ids, port.quay, palette.floors.get("banchina", palette.floor))
+
+    shore = palette.paths.get("banchina")
+    if shore is None:
+        return
+    quay = port.quay
+    if port.side in (_TOP, _BOTTOM):
+        y = quay.y1 if port.side == _TOP else quay.y2
+        points = [(quay.x1, y), (quay.x2, y)]
+        width = quay.h
+    else:
+        x = quay.x1 if port.side == _LEFT else quay.x2
+        points = [(x, quay.y1), (x, quay.y2)]
+        width = quay.w
+    add_path(level, ids, points, shore, width=int(grid_to_px(width / 2)))
+
+
+def _label_font_size(rect: Rect, text: str) -> int:
+    """Corpo del font perche' il nome sia largo _LABEL_WIDTH_FACTOR volte il
+    luogo che nomina. Un nome lungo su un luogo piccolo viene scritto piu'
+    fitto, non piu' largo: e' l'ingombro a comandare, altrimenti "Bottega
+    dell'Alchimista" invaderebbe le tre case accanto."""
+    lo, hi = _LABEL_FONT_RANGE
+    span = grid_to_px(rect.w) * _LABEL_WIDTH_FACTOR
+    return int(min(max(span / (max(1, len(text)) * _LABEL_CHAR_WIDTH), lo), hi))
+
+
+def _label_box(rect: Rect, text: str, font_size: int, *, above: bool) -> Rect:
+    """Ingombro stimato dell'etichetta, in quadretti, sopra o sotto `rect`.
+
+    La larghezza e' una stima per numero di caratteri (_LABEL_CHAR_WIDTH volte
+    il corpo del font): non c'e' modo di misurare davvero un testo senza il
+    font, e serve solo a sapere se due nomi si pestano i piedi."""
+    width = len(text) * font_size * _LABEL_CHAR_WIDTH / GRID
+    height = font_size * _LABEL_LINE_HEIGHT / GRID
+    gap = min(rect.w, rect.h) * _LABEL_GAP
+    cx = (rect.x1 + rect.x2) / 2
+    top = rect.y1 - gap - height if above else rect.y2 + gap
+    return Rect(cx - width / 2, top, cx + width / 2, top + height)
+
+
+def _place_label(rect: Rect, text: str, font_size: int, taken: list) -> tuple | None:
+    """Posizione dell'etichetta, o None se non c'e' posto.
+
+    Sotto l'ingombro, e se li' c'e' gia' un altro nome, sopra. Se non ci sta
+    da nessuna parte l'etichetta viene OMESSA: al preset "quartiere" i luoghi
+    sono una quarantina, e senza questo controllo i nomi si sovrapponevano fra
+    loro fino a non leggersene nessuno - meglio uno in meno che tre illeggibili
+    (lo sprite del luogo resta comunque, e resta riconoscibile)."""
+    for above in (False, True):
+        box = _label_box(rect, text, font_size, above=above)
+        if any(box.overlaps(other) for other in taken):
+            continue
+        taken.append(box)
+        return (box.x1 + box.x2) / 2, box.y1
+    return None
+
+
+def _sprite_size(sprite) -> tuple[float, float]:
+    """Ingombro nativo di uno sprite in quadretti, cioe' la sua dimensione
+    reale: un pack e' disegnato a 256 px per quadretto.
+
+    Le texture non-PNG non hanno dimensioni in catalogo (vedi
+    assets._lookup_size): li si ricade sulla stima per nome di _texture_size,
+    la stessa che furnish usa per non sovrapporre gli arredi."""
+    texture, width_px, height_px = sprite
+    if width_px and height_px:
+        return width_px / GRID, height_px / GRID
+    size = _texture_size(texture)
+    return size, size
+
+
+def _sprite_scale(area: Rect, sprite, fill: float) -> float:
+    """Scala che fa stare `sprite` dentro `area` occupandone la frazione
+    `fill`."""
+    native_w, native_h = _sprite_size(sprite)
+    return min(area.w / native_w, area.h / native_h) * fill
+
+
+def _draw_landmark_sprites(level, ids, landmark, palette, rng: random.Random) -> None:
+    """Gli sprite che FANNO il luogo dentro il suo ingombro.
+
+    Un luogo chiuso e' un solo sprite grande, come un edificio ordinario (che
+    dal TASK-46 e' anch'esso uno sprite): la cattedrale e' la cattedrale, non
+    un'icona di cattedrale appoggiata su una toppa di selciato. Uno spiazzo
+    aperto e' fatto di piu' sprite piccoli sparsi, perche' un mercato sono i
+    banchi e un cimitero sono le lapidi.
+
+    E' questo il rimedio al difetto visto sulla mappa vera: prima un luogo era
+    l'unico elemento reso come chiazza di pavimento piu' iconcina, e in mezzo
+    alle case colorate leggeva come un rettangolo bianco."""
+    sprites = palette.landmark_sprites.get(landmark.kind)
+    if not sprites:
+        return
+    rect = landmark.rect
+
+    if not landmark.open_air:
+        sprite = sprites[rng.randrange(len(sprites))]
+        cx, cy = rect.center()
+        add_object(level, ids, cx, cy, sprite[0], scale=_sprite_scale(rect, sprite, _SPRITE_FILL))
+        return
+
+    # Quanti pezzi: densita' costante sulla dimensione DICHIARATA del pezzo
+    # (Landmark.piece_size). Una lapide e' una lapide: se il cimitero e' il
+    # doppio, le lapidi raddoppiano di numero, non di dimensione.
+    piece = landmark.piece_size
+    lo, hi = _SCATTER_RANGE
+    count = min(hi, max(lo, int(rect.w * rect.h / (piece * piece * _SCATTER_SPACING))))
+
+    placed: list[Rect] = []
+    for _ in range(count):
+        sprite = sprites[rng.randrange(len(sprites))]
+        # Il lato lungo del pezzo vale piece_size, sempre: la dimensione
+        # nativa dello sprite serve solo a tenere le proporzioni. I pack sono
+        # disegnati a scale incompatibili fra loro (un albero di City Terrain
+        # e' nativo 0,3 quadretti, uno di CHR 0,6) e fidarsi del nativo dava
+        # alberi grandi come cespugli. Si rimpicciolisce solo se lo spiazzo e'
+        # piu' piccolo del pezzo, cosa che succede alla scala "citta".
+        native_w, native_h = _sprite_size(sprite)
+        scale = piece / max(native_w, native_h)
+        scale = min(scale, rect.w / native_w, rect.h / native_h)
+        half_w, half_h = native_w * scale / 2, native_h * scale / 2
+        for _attempt in range(_SCATTER_TRIES):
+            x = rng.uniform(rect.x1 + half_w, max(rect.x1 + half_w, rect.x2 - half_w))
+            y = rng.uniform(rect.y1 + half_h, max(rect.y1 + half_h, rect.y2 - half_h))
+            box = Rect(x - half_w, y - half_h, x + half_w, y + half_h)
+            if any(box.overlaps(other) for other in placed):
+                continue
+            placed.append(box)
+            add_object(level, ids, x, y, sprite[0], scale=scale)
+            break
+
+
+def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random, labels=None) -> None:
+    """Un luogo urbano notevole (TASK-48): sprite ed ETICHETTA col nome.
+
+    Tre forme, secondo com'e' fatto il luogo:
+    - ha un edificio a stanze (preset "isolato", luogo non all'aperto): si
+      disegna come qualunque altro edificio della citta', muri, porte e tetto,
+      con la tipologia della sua destinazione d'uso;
+    - e' un edificio dei preset astratti: un solo sprite grande che riempie
+      l'ingombro, perche' li' un edificio E' uno sprite (TASK-46);
+    - e' uno spiazzo aperto: un'AREA COLORATA piu' sprite sparsi sopra. Il
+      terreno dell'area e' quello che il luogo dichiara (Landmark.ground):
+      selciato per mercato, patibolo e banchina, erba per parco e cimitero,
+      terra battuta per fiera e baraccopoli. Dare a tutti la stessa
+      pavimentazione urbana era il motivo per cui un cimitero sembrava un
+      piazzale; la statua non ha area perche' sta gia' su una piazza
+      pavimentata e una seconda toppa sopra non aggiunge niente.
+
+    L'etichetta va SOTTO l'ingombro e non al centro: al centro copre proprio
+    lo sprite che deve farsi riconoscere. `labels` e' la lista degli ingombri
+    gia' occupati da altre etichette, condivisa fra tutti i luoghi della
+    mappa: senza, al preset "quartiere" i quaranta nomi si sovrappongono fino
+    a non leggersene nessuno.
+
+    NOTA non verificata: `text.position` e' l'unico campo dello schema di
+    docs/format.md §4 di cui non si conosce l'ancoraggio (un solo campione in
+    tutto il progetto). Se al gate umano le etichette risultassero spostate
+    tutte nella stessa direzione, e' _label_box da correggere."""
+    level = level_stack["0"]
+    rect = landmark.rect
+    if landmark.building is not None:
+        draw_building(level_stack, ids, landmark.building, palette, roof=False)
+        add_ridge_roof(level, ids, _building_footprint(landmark.building), palette)
+    else:
+        if landmark.ground is not None:
+            add_pattern(level, ids, rect, palette.floors.get(landmark.ground, palette.floor))
+        _draw_landmark_sprites(level, ids, landmark, palette, rng)
+
+    font_size = _label_font_size(rect, landmark.label)
+    position = _place_label(rect, landmark.label, font_size, labels if labels is not None else [])
+    if position is not None:
+        add_text(level, ids, position[0], position[1], landmark.label, font_size=font_size)
+
+
 def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: random.Random) -> None:
     """Disegna un Blueprint di isolato/quartiere/citta (TASK-35, SPEC.md
     §9.4): strade come add_path (AC2, mai come pattern), piazze come
@@ -792,6 +1094,15 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: rando
     ogni footprint (mai usato per `blueprint.buildings`, che non ha bisogno
     di randomicita in questa funzione)."""
     level = level_stack["0"]
+
+    # Le strutture urbane per prime (TASK-48): acqua e banchina del porto
+    # stanno SOTTO strade ed edifici nell'ordine di disegno, che e anche
+    # l'ordine in cui Dungeondraft sovrappone gli elementi dello stesso
+    # livello.
+    if blueprint.port is not None:
+        draw_port(level, ids, blueprint.port, palette)
+    if blueprint.river is not None:
+        draw_river(level, ids, blueprint.river, palette)
 
     # La centro-linea di una via e gia una polilinea serpeggiante decisa dal
     # generatore (model.Street): qui non si calcola nulla, perche il
@@ -820,6 +1131,21 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: rando
 
     for footprint in blueprint.building_footprints:
         draw_city_building(level, ids, footprint, palette, rng)
+
+    # I ponti dopo le vie: l'impalcato va sopra il selciato, non sotto.
+    for bridge in blueprint.bridges:
+        draw_bridge(level, ids, bridge, palette)
+
+    # Le mura dopo gli edifici (una cinta muraria si vede sopra i tetti che
+    # le stanno addosso) e i luoghi per ultimi, cosi' nessuna etichetta
+    # finisce coperta da quel che viene disegnato dopo.
+    if blueprint.walls is not None:
+        draw_city_walls(level, ids, blueprint.walls, palette)
+    # Le etichette gia' piazzate viaggiano di luogo in luogo: e' l'unico modo
+    # perche' due nomi vicini si accorgano l'uno dell'altro.
+    labels: list[Rect] = []
+    for landmark in blueprint.landmarks:
+        draw_landmark(level_stack, ids, landmark, palette, rng, labels=labels)
 
 
 def render_cave_blueprint(level, blueprint) -> None:

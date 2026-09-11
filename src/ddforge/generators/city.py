@@ -52,10 +52,13 @@ vale la pena senza un riscontro visivo di Jay.
 
 import math
 import random
+import zlib
 from dataclasses import dataclass
 
-from ddforge.generators import building
-from ddforge.model import Blueprint, Corridor, Door, Rect, Room, Street
+from ddforge.generators import building, landmarks as lm
+from ddforge.model import (
+    Blueprint, Bridge, CityWalls, Corridor, Door, Gate, Landmark, Port, Rect, River, Room, Street,
+)
 
 # Stessa convenzione di compose.py (_TOP=0, _RIGHT=1, _BOTTOM=2, _LEFT=3):
 # non importata da li perche privata al modulo, ma i valori devono restare
@@ -600,7 +603,13 @@ def _rect_near_polyline(rect: Rect, points: list, radius: float, *, step: float)
 def _clear_avenue(avenue: Street, rects: list, preset: ScalePreset) -> list:
     """Indici degli elementi di `rects` che la via obliqua attraversa: sono
     quelli da togliere perche la via ci passi davvero, invece di disegnarci
-    sopra una strada che entra dentro le case.
+    sopra una strada che entra dentro le case. Serve identica al fiume
+    (TASK-48), che ha gli stessi due attributi usati qui, `points` e `width`.
+
+    `rects` puo contenere None: dopo TASK-48 gli edifici tolti lasciano un
+    buco invece di far scalare la lista, perche gli indici devono restare
+    stabili fra un passaggio e l'altro (un lotto sa a quale edificio
+    corrisponde).
 
     Il passo di campionamento e derivato da preset.min_building_side (mai
     sopra 0,25 quadretti, il valore tarato per i preset "isolato" e
@@ -612,7 +621,8 @@ def _clear_avenue(avenue: Street, rects: list, preset: ScalePreset) -> list:
     radius = avenue.width / 2 + preset.side_margin
     step = min(0.25, preset.min_building_side / 3)
     return [
-        i for i, rect in enumerate(rects) if _rect_near_polyline(rect, avenue.points, radius, step=step)
+        i for i, rect in enumerate(rects)
+        if rect is not None and _rect_near_polyline(rect, avenue.points, radius, step=step)
     ]
 
 
@@ -628,9 +638,641 @@ def _footprint_of(bp: Blueprint) -> Rect:
     )
 
 
+# ---------------------------------------------------------------------------
+# TASK-48: strutture urbane (mura, fiume, porto) e luoghi notevoli
+# ---------------------------------------------------------------------------
+#
+# L'idea che tiene insieme tutto questo blocco: un luogo notevole non viene
+# MAI disegnato in uno spazio libero trovato a occhio, ma prende il posto di
+# qualcosa che la partizione aveva gia' riservato (un lotto, un isolato, una
+# porzione di piazza, una cella della fascia extramurale). Cosi' la garanzia
+# di TASK-35 "nessun edificio in mezzo alla strada" si estende gratis ai
+# luoghi, e AC6 diventa un invariante di costruzione invece di un controllo a
+# posteriori che ogni tanto fallisce.
+
+# Profondita' della fascia di margine, in frazione del lato minore, con un
+# tetto espresso in lotti. E' la fascia extramurale quando ci sono le mura
+# ("fuori le mura") e il margine della citta' quando non ci sono ("ai
+# margini"): un solo spazio riservato per le due regole, che sul terreno sono
+# la stessa cosa.
+#
+# Il tetto in lotti non e' un dettaglio: alla sola frazione, sul canvas di
+# produzione 78x78 la fascia veniva profonda ~7 quadretti in ENTRAMBI i preset
+# astratti - due lotti al preset "quartiere" (ragionevole) e otto al preset
+# "citta" (un terzo della mappa buttato in un prato). La fascia deve contenere
+# un paio di celle di fascia, e una cella vale un lotto.
+_FRAME_FRACTION = 0.06
+_FRAME_MAX_LOTS = 2.5
+# Spessore del muro, in multipli della via principale: una cinta muraria e'
+# larga come mezza strada, non come un tramezzo.
+_WALL_THICKNESS_FACTOR = 0.5
+_PORT_DEPTH_RANGE = (0.08, 0.13)
+# Oltre questa quota del lato la fascia portuale non e' piu' un porto ma un
+# lago: su un canvas troppo piccolo perche' una banchina larga un lotto stia
+# in una frazione ragionevole, la citta' resta senza porto.
+_PORT_MAX_DEPTH = 0.25
+# Quanta parte della fascia portuale e' banchina calpestabile invece che
+# acqua: e' li' che vanno cantiere, faro e mercato del pesce.
+_PORT_QUAY_FRACTION = 0.35
+_RIVER_WIDTH_FACTOR = 1.7
+# Quanto lontano puo' stare un luogo dall'elemento che lo vincola e contare
+# ancora come "a ridosso" (in multipli del lotto-bersaglio). Sotto ~2 lotti
+# nessun sito soddisfa mai la regola, perche' fra la porta e il primo lotto
+# c'e' sempre almeno la larghezza della via.
+_RULE_RADIUS_LOTS = 3.0
+# Frazione del percorso del fiume oltre la quale si e' "a valle" (AC5): la
+# meta' finale. Il verso e' quello di River.points, dalla sorgente alla foce.
+_DOWNSTREAM_FROM = 0.5
+
+
+def _shrunk(rect: Rect, d: float) -> Rect | None:
+    """`rect` rimpicciolito di `d` per lato, o None se non resta nulla."""
+    out = Rect(rect.x1 + d, rect.y1 + d, rect.x2 - d, rect.y2 - d)
+    return out if out.w > 0 and out.h > 0 else None
+
+
+def _edge_point(rect: Rect, side: int, rng: random.Random) -> tuple[float, float]:
+    """Punto casuale sul lato `side` di `rect`, lontano dagli spigoli: una
+    foce o una sorgente in un angolo taglierebbe via una scheggia di mappa
+    invece di attraversarla."""
+    lo, hi = 0.2, 0.8
+    if side in (_TOP, _BOTTOM):
+        x = rect.x1 + rect.w * rng.uniform(lo, hi)
+        return (x, rect.y1 if side == _TOP else rect.y2)
+    y = rect.y1 + rect.h * rng.uniform(lo, hi)
+    return (rect.x1 if side == _LEFT else rect.x2, y)
+
+
+def _make_port(rect: Rect, rng: random.Random, preset: ScalePreset):
+    """Fascia portuale su un bordo di `rect`: acqua verso l'esterno, banchina
+    verso la citta'. Ritorna (Port, rect_residuo).
+
+    Ritorna (None, rect) se la fascia non ci sta: una banchina piu' stretta di
+    un paio di lotti non e' un porto, e' un bordo bagnato."""
+    side = rng.randrange(4)
+    span = rect.h if side in (_TOP, _BOTTOM) else rect.w
+    # La banchina non puo' venire piu' stretta di un lotto, altrimenti non ci
+    # sta nemmeno una cella di fascia e cantiere, faro e mercato del pesce non
+    # trovano mai posto: il porto risulterebbe presente e deserto. Il minimo
+    # ha la precedenza sulla frazione, ed e' il motivo per cui la frazione da
+    # sola non basta (al preset "quartiere" 8% di 76 quadretti da' una
+    # banchina di 2,1 contro un lotto di 3).
+    depth = max(span * rng.uniform(*_PORT_DEPTH_RANGE), preset.target_lot_len / _PORT_QUAY_FRACTION)
+    if depth > span * _PORT_MAX_DEPTH:
+        return None, rect
+    water_depth = depth * (1 - _PORT_QUAY_FRACTION)
+
+    if side == _TOP:
+        water = Rect(rect.x1, rect.y1, rect.x2, rect.y1 + water_depth)
+        quay = Rect(rect.x1, water.y2, rect.x2, rect.y1 + depth)
+        rest = Rect(rect.x1, rect.y1 + depth, rect.x2, rect.y2)
+    elif side == _BOTTOM:
+        water = Rect(rect.x1, rect.y2 - water_depth, rect.x2, rect.y2)
+        quay = Rect(rect.x1, rect.y2 - depth, rect.x2, water.y1)
+        rest = Rect(rect.x1, rect.y1, rect.x2, rect.y2 - depth)
+    elif side == _LEFT:
+        water = Rect(rect.x1, rect.y1, rect.x1 + water_depth, rect.y2)
+        quay = Rect(water.x2, rect.y1, rect.x1 + depth, rect.y2)
+        rest = Rect(rect.x1 + depth, rect.y1, rect.x2, rect.y2)
+    else:
+        water = Rect(rect.x2 - water_depth, rect.y1, rect.x2, rect.y2)
+        quay = Rect(rect.x2 - depth, rect.y1, water.x1, rect.y2)
+        rest = Rect(rect.x1, rect.y1, rect.x2 - depth, rect.y2)
+    return Port(water=water, quay=quay, side=side), rest
+
+
+def _make_river(rect: Rect, rng: random.Random, preset: ScalePreset, *, mouth: int | None) -> River:
+    """Fiume da un bordo di `rect` al bordo opposto, con la stessa meccanica
+    di serpeggio della via obliqua (_avenue).
+
+    `mouth` e' il lato dove sfocia: quello del porto se c'e' un porto (un
+    fiume sfocia nel mare, e cosi' banchina e corso d'acqua si incontrano
+    dove ci si aspetta), altrimenti a sorte. La sorgente e' sempre il lato
+    opposto, quindi points va SEMPRE da monte a valle: e' quello a rendere
+    definito "la conceria sta a valle" (AC5)."""
+    width = preset.main_street_width * _RIVER_WIDTH_FACTOR
+    mouth = rng.randrange(4) if mouth is None else mouth
+    source = (mouth + 2) % 4
+    start = _edge_point(rect, source, rng)
+    end = _edge_point(rect, mouth, rng)
+
+    dx, dy = end[0] - start[0], end[1] - start[1]
+    length = math.hypot(dx, dy) or 1.0
+    steps = max(2, round(length / (preset.street_segment_len * _AVENUE_SEGMENT_FACTOR)))
+    nx, ny = -dy / length, dx / length
+    sway = width * _AVENUE_SWAY_FACTOR * 2
+
+    points = []
+    for i in range(steps + 1):
+        px, py = start[0] + dx * i / steps, start[1] + dy * i / steps
+        if i not in (0, steps):
+            offset = rng.uniform(-sway, sway)
+            px, py = px + nx * offset, py + ny * offset
+        points.append((px, py))
+    return River(points=points, width=width)
+
+
+def _segment_intersection(p1, p2, p3, p4):
+    """Punto di intersezione fra i segmenti p1p2 e p3p4, o None. Formula
+    parametrica standard; i segmenti paralleli (denominatore nullo) non
+    contano come incrocio, che e' esattamente quello che serve qui: una via
+    che corre parallela al fiume non ci costruisce sopra un ponte."""
+    (x1, y1), (x2, y2), (x3, y3), (x4, y4) = p1, p2, p3, p4
+    den = (x2 - x1) * (y4 - y3) - (y2 - y1) * (x4 - x3)
+    if abs(den) < 1e-12:
+        return None
+    t = ((x3 - x1) * (y4 - y3) - (y3 - y1) * (x4 - x3)) / den
+    u = ((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) / den
+    if not (0.0 <= t <= 1.0 and 0.0 <= u <= 1.0):
+        return None
+    return (x1 + (x2 - x1) * t, y1 + (y2 - y1) * t)
+
+
+def _river_bridges(river: River, streets: list) -> list:
+    """Un ponte dove una via incrocia il fiume.
+
+    I ponti non sono decisi a caso: sono esattamente le intersezioni fra le
+    due polilinee, quindi una via che finisce nel fiume ha sempre il suo
+    attraversamento e non ce ne sono di sospesi nel vuoto. Due incroci molto
+    vicini (una via che ondeggia sopra il fiume e lo taglia due volte)
+    diventano un ponte solo: sono lo stesso attraversamento."""
+    bridges: list[Bridge] = []
+    for street in streets:
+        for a, b in zip(street.points, street.points[1:]):
+            for c, d in zip(river.points, river.points[1:]):
+                hit = _segment_intersection(a, b, c, d)
+                if hit is None:
+                    continue
+                horizontal = abs(b[0] - a[0]) >= abs(b[1] - a[1])
+                half_along = river.width * 0.75
+                half_across = max(street.width, river.width * 0.35) / 2
+                if horizontal:
+                    rect = Rect(hit[0] - half_along, hit[1] - half_across,
+                                hit[0] + half_along, hit[1] + half_across)
+                else:
+                    rect = Rect(hit[0] - half_across, hit[1] - half_along,
+                                hit[0] + half_across, hit[1] + half_along)
+                if any(rect.overlaps(existing.rect) for existing in bridges):
+                    continue
+                bridges.append(Bridge(rect=rect, horizontal=horizontal))
+    return bridges
+
+
+def _wall_gates(streets: list, buildable: Rect, ring: Rect) -> list:
+    """Porte fortificate: una per lato, dove l'ingombro della via piu' larga
+    incontra le mura.
+
+    Una porta si apre dove una strada arriva davvero, altrimenti e' un varco
+    che non porta da nessuna parte. L'ingombro riservato di una via (non la
+    sua centro-linea, che serpeggia) e' il riferimento giusto: e' rettangolo
+    e i suoi estremi coincidono con il bordo dell'area edificabile per
+    costruzione."""
+    eps = 1e-6
+    best: dict[int, Gate] = {}
+
+    def consider(side: int, x: float, y: float, w: float) -> None:
+        current = best.get(side)
+        if current is None or w > current.width:
+            best[side] = Gate(x=x, y=y, side=side, width=w)
+
+    for street in streets:
+        corridor = street.corridor
+        if corridor is None:
+            continue
+        if corridor.h >= corridor.w:  # via verticale: tocca i lati alto/basso
+            cx = (corridor.x1 + corridor.x2) / 2
+            if abs(corridor.y1 - buildable.y1) < eps:
+                consider(_TOP, cx, ring.y1, corridor.w)
+            if abs(corridor.y2 - buildable.y2) < eps:
+                consider(_BOTTOM, cx, ring.y2, corridor.w)
+        else:
+            cy = (corridor.y1 + corridor.y2) / 2
+            if abs(corridor.x1 - buildable.x1) < eps:
+                consider(_LEFT, ring.x1, cy, corridor.h)
+            if abs(corridor.x2 - buildable.x2) < eps:
+                consider(_RIGHT, ring.x2, cy, corridor.h)
+    return [best[side] for side in sorted(best)]
+
+
+def _frame_strips(outer: Rect, inner: Rect, clearance: float) -> list:
+    """Le quattro strisce fra `outer` e `inner`, arretrate di `clearance` sul
+    lato interno per lasciare passare le mura (che corrono sul bordo di
+    `inner` con meta' spessore che sborda verso l'esterno). Senza
+    l'arretramento un cimitero finirebbe addosso al muro."""
+    top = Rect(outer.x1, outer.y1, outer.x2, inner.y1 - clearance)
+    bottom = Rect(outer.x1, inner.y2 + clearance, outer.x2, outer.y2)
+    left = Rect(outer.x1, inner.y1, inner.x1 - clearance, inner.y2)
+    right = Rect(inner.x2 + clearance, inner.y1, outer.x2, inner.y2)
+    return [s for s in (top, bottom, left, right) if s.w > 0 and s.h > 0]
+
+
+def _grid(rect: Rect, cols: int, rows: int) -> list:
+    """Griglia cols x rows su `rect`, riga per riga."""
+    cw, ch = rect.w / cols, rect.h / rows
+    return [
+        [
+            Rect(rect.x1 + c * cw, rect.y1 + r * ch, rect.x1 + (c + 1) * cw, rect.y1 + (r + 1) * ch)
+            for c in range(cols)
+        ]
+        for r in range(rows)
+    ]
+
+
+def _cells(rect: Rect, cell: float) -> list:
+    """Griglia di celle di lato ~`cell` che copre `rect`, riga per riga."""
+    return _grid(rect, max(1, int(rect.w / cell)), max(1, int(rect.h / cell)))
+
+
+def _union(rects: list) -> Rect:
+    return Rect(
+        min(r.x1 for r in rects), min(r.y1 for r in rects),
+        max(r.x2 for r in rects), max(r.y2 for r in rects),
+    )
+
+
+def _cell_runs(grid: list, span: int, occupied: list) -> list:
+    """Tutte le finestre di `span` celle consecutive - per riga E per colonna
+    - che non toccano nulla di gia' occupato.
+
+    Le colonne non sono un di piu': una banchina e' una striscia stretta e
+    lunga, e la sua griglia viene di una colonna sola per venticinque righe.
+    Cercando solo per riga, nessun luogo largo piu' di una cella trovava mai
+    posto e il porto restava senza cantiere navale (visto sul disegno del
+    Blueprint, non da un test: i test verificavano le regole dei luoghi
+    piazzati, non che venissero piazzati)."""
+    lines = list(grid)
+    if grid:
+        lines += [list(column) for column in zip(*grid)]
+
+    runs = []
+    seen = set()
+    for line in lines:
+        for i in range(len(line) - span + 1):
+            rect = _union(line[i : i + span])
+            key = (rect.x1, rect.y1, rect.x2, rect.y2)
+            if key in seen:
+                continue
+            seen.add(key)
+            if not any(rect.overlaps(taken) for taken in occupied):
+                runs.append(rect)
+    return runs
+
+
+def _polyline_proximity(rect: Rect, points: list, *, step: float) -> tuple[float, float]:
+    """(distanza minima fra `rect` e la polilinea, parametro 0..1 del punto
+    piu' vicino lungo la polilinea).
+
+    Il secondo valore e' quello che rende verificabile "a valle" (AC5): 0 e'
+    la sorgente, 1 la foce. Campionamento invece di distanza esatta, stessa
+    scelta gia' fatta in _rect_near_polyline e per lo stesso motivo."""
+    lengths = [math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(points, points[1:])]
+    total = sum(lengths) or 1.0
+    best = (math.inf, 0.0)
+    travelled = 0.0
+    for (ax, ay), (bx, by), length in zip(points, points[1:], lengths):
+        samples = max(1, int(length / step))
+        for i in range(samples + 1):
+            u = i / samples
+            d = _distance_point_to_rect(ax + (bx - ax) * u, ay + (by - ay) * u, rect)
+            if d < best[0]:
+                best = (d, (travelled + length * u) / total)
+        travelled += length
+    return best
+
+
+@dataclass
+class _Lot:
+    """Un lotto edificabile con quel che ci e' stato costruito sopra.
+
+    Esiste solo perche' i luoghi notevoli hanno bisogno di sapere quali lotti
+    ci sono e quali sono ancora liberi: prima di TASK-48 i lotti venivano
+    consumati dentro il ciclo di generate() e buttati via."""
+
+    rect: Rect
+    front: int
+    block: int
+    row: int
+    strip: int
+    area: Rect | None = None
+    # Indice in buildings/footprints, o None se il lotto era troppo piccolo.
+    index: int | None = None
+    taken: bool = False
+
+
+@dataclass
+class _Sites:
+    """Tutto quello che serve per decidere dove va un luogo. Un contenitore e
+    non una decina di parametri: le funzioni di piazzamento ne usano quasi
+    tutti i campi, e passarli sciolti nasconderebbe che sono un unico stato."""
+
+    preset: ScalePreset
+    seed: int
+    # Area davvero edificabile (dentro le mura, fuori dal porto): il
+    # riferimento di "ai margini", che senza non sarebbe definito.
+    buildable: Rect
+    lots: list
+    plaza_indices: set
+    plazas: list
+    walls: CityWalls | None
+    river: River | None
+    port: Port | None
+    frame: tuple | None  # (outer, inner) oppure None se non c'e' spazio
+    buildings: list  # con buchi None per gli edifici tolti
+    footprints: list  # idem
+    occupied: list  # ingombri gia' presi su piazze e fasce
+    landmarks: list
+
+
+def _radius(preset: ScalePreset) -> float:
+    return max(preset.target_lot_len * _RULE_RADIUS_LOTS, preset.main_street_width * 2)
+
+
+def _rect_distance(a: Rect, b: Rect) -> float:
+    """Distanza fra due rettangoli, 0 se si toccano o si sovrappongono."""
+    dx = max(b.x1 - a.x2, 0.0, a.x1 - b.x2)
+    dy = max(b.y1 - a.y2, 0.0, a.y1 - b.y2)
+    return math.hypot(dx, dy)
+
+
+def _rule_ok(sites: _Sites, kind, rect: Rect) -> bool:
+    """La regola di piazzamento di `kind` vale per l'ingombro `rect`? (AC5)
+
+    OGNI regola e' verificata qui in modo geometrico, anche quelle che il
+    generatore di siti gia' garantirebbe da solo. Sembra ridondante e non lo
+    e': "sulla piazza" e "ai margini" valgono anche per luoghi che NON stanno
+    su un sito di piazza o di fascia (il municipio e la casa di cambio sono
+    edifici affacciati sulla piazza, il monastero e' un isolato ai margini),
+    e finche' queste regole rispondevano True fidandosi del sito quei tre
+    luoghi finivano dove capitava. Verificarle tutte allo stesso modo rende
+    AC5 un invariante unico invece di una collezione di casi speciali."""
+    radius = _radius(sites.preset)
+    if kind.rule == lm.RULE_ANY:
+        return True
+    if kind.rule == lm.RULE_GATE:
+        walls = sites.walls
+        if walls is None or not walls.gates:
+            return False
+        return any(
+            _distance_point_to_rect(gate.x, gate.y, rect) <= radius for gate in walls.gates
+        )
+    if kind.rule in (lm.RULE_RIVER, lm.RULE_RIVER_DOWNSTREAM):
+        if sites.river is None:
+            return False
+        step = max(0.25, sites.preset.target_lot_len / 4)
+        distance, t = _polyline_proximity(rect, sites.river.points, step=step)
+        if distance > radius:
+            return False
+        return kind.rule == lm.RULE_RIVER or t >= _DOWNSTREAM_FROM
+    if kind.rule in (lm.RULE_PLAZA, lm.RULE_MAIN_PLAZA):
+        plazas = sites.plazas
+        if not plazas:
+            return False
+        if kind.rule == lm.RULE_MAIN_PLAZA:
+            plazas = [max(plazas, key=lambda p: p.w * p.h)]
+        return any(_rect_distance(rect, plaza) <= radius for plaza in plazas)
+    if kind.rule == lm.RULE_PORT:
+        return sites.port is not None and _rect_distance(rect, sites.port.quay) <= radius
+    if kind.rule == lm.RULE_EDGE:
+        # "Ai margini" = non entra nel nucleo, cioe' nell'area edificabile
+        # arretrata di un raggio. Una definizione per sottrazione perche' il
+        # margine di una citta' non e' un rettangolo: e' tutto quel che non e'
+        # centro, dentro o fuori le mura che sia.
+        core = _shrunk(sites.buildable, radius)
+        return core is None or not rect.overlaps(core)
+    if kind.rule == lm.RULE_OUTSIDE_WALLS_OR_TEMPLE:
+        if sites.walls is not None and not rect.overlaps(sites.walls.ring):
+            return True
+        temples = [mark.rect.center() for mark in sites.landmarks if mark.kind == "tempio"]
+        return any(_distance_point_to_rect(cx, cy, rect) <= radius for cx, cy in temples)
+    return False
+
+
+def _lot_candidates(sites: _Sites, kind) -> list:
+    """Ingombri ricavabili da lotti liberi: `kind.lots` lotti consecutivi
+    della stessa fila dello stesso isolato.
+
+    Solo lotti che avevano davvero un edificio (`area` non None): un lotto
+    troppo piccolo per una casa e' troppo piccolo anche per un luogo, e
+    prendere lotti consecutivi con un buco in mezzo darebbe un ingombro che
+    include spazio mai riservato a nessuno."""
+    span = max(1, round(kind.lots))
+    by_row: dict[tuple[int, int], list] = {}
+    for index, lot in enumerate(sites.lots):
+        by_row.setdefault((lot.block, lot.row), []).append(index)
+
+    candidates = []
+    for indices in by_row.values():
+        indices.sort(key=lambda i: sites.lots[i].strip)
+        for start in range(len(indices) - span + 1):
+            window = indices[start : start + span]
+            lots = [sites.lots[i] for i in window]
+            if any(lot.taken or lot.area is None for lot in lots):
+                continue
+            if any(b.strip - a.strip != 1 for a, b in zip(lots, lots[1:])):
+                continue
+            candidates.append((_union([lot.area for lot in lots]), window))
+
+    # Al preset "isolato" un luogo chiuso e' un edificio a stanze vero, e
+    # building.generate pretende min_building_side per lato. Fra i lotti
+    # liberi si preferiscono quindi quelli dove l'edificio ci sta davvero:
+    # senza questa preferenza l'83% dei luoghi chiusi finiva su un lotto
+    # troppo stretto e ripiegava sullo sprite, cioe' alla scala giocabile la
+    # taverna era una taverna in cui non si entra. Se nessun lotto e'
+    # abbastanza grande si ripiega su tutti: un luogo con lo sprite e'
+    # comunque meglio di nessun luogo.
+    if not kind.open_air and not sites.preset.abstract_buildings:
+        side = sites.preset.min_building_side
+        roomy = [entry for entry in candidates if entry[0].w >= side and entry[0].h >= side]
+        if roomy:
+            return roomy
+    return candidates
+
+
+def _block_candidates(sites: _Sites, _kind) -> list:
+    """Isolati interi ancora liberi: un monastero, una cattedrale o un'arena
+    occupano un isolato, non un lotto.
+
+    UN isolato, non piu' d'uno, e non e' una svista. L'ingombro di un luogo e'
+    un rettangolo, e fra due isolati la partizione mette SEMPRE una via:
+    qualunque monumento a cavallo di due isolati si porta dentro la strada in
+    mezzo, che e' esattamente cio' che AC6 vieta. Scritto, provato e tolto -
+    la cattedrale finiva sopra una via. Per farlo davvero servirebbe spezzare
+    quella via in due tronconi dove il monumento la ingloba: e' un lavoro sul
+    modello delle strade, non un parametro in piu' qui.
+
+    Il rilievo dei monumenti viene da altro: lo sprite dedicato
+    (assets._CITY_LANDMARK_SPRITES) e il corpo dell'etichetta, che cresce con
+    l'ingombro. Un isolato vale gia' tre-cinque case a tutte e tre le scale.
+
+    `_kind` non serve (l'isolato si prende com'e) ma sta nella firma perche'
+    tutte le strategie di _site_strategies vengono chiamate allo stesso modo."""
+    by_block: dict[int, list] = {}
+    for index, lot in enumerate(sites.lots):
+        by_block.setdefault(lot.block, []).append(index)
+
+    candidates = []
+    for block_index, indices in by_block.items():
+        if block_index in sites.plaza_indices:
+            continue
+        if any(sites.lots[i].taken for i in indices):
+            continue
+        areas = [sites.lots[i].area for i in indices if sites.lots[i].area is not None]
+        if areas:
+            candidates.append((_union(areas), indices))
+    return candidates
+
+
+def _plaza_candidates(sites: _Sites, kind) -> list:
+    """Porzioni di piazza. La cella centrale non e' disponibile: e' della
+    fontana, che render_city_blueprint disegna al centro di ogni piazza."""
+    span = max(1, round(kind.lots))
+    plazas = sites.plazas
+    if kind.rule == lm.RULE_MAIN_PLAZA and plazas:
+        plazas = [max(plazas, key=lambda p: p.w * p.h)]
+
+    candidates = []
+    for plaza in plazas:
+        # Griglia 3x3 FISSA, non celle di lato dato: una piazza va divisa in
+        # proporzione a se stessa. Con celle di dimensione assoluta una piazza
+        # di lato pari al doppio della cella diventava 2x1, la fontana ne
+        # occupava meta' e il mercato (che vuole due celle affiancate) non
+        # trovava mai posto. Con 3x3 le due file esterne alla fontana restano
+        # sempre libere, a qualunque scala.
+        grid = _grid(plaza, 3, 3)
+        centre = plaza.center()
+        blocked = list(sites.occupied)
+        for row in grid:
+            for rect in row:
+                if rect.x1 <= centre[0] <= rect.x2 and rect.y1 <= centre[1] <= rect.y2:
+                    blocked.append(rect)
+        candidates.extend((rect, None) for rect in _cell_runs(grid, span, blocked))
+    return candidates
+
+
+def _band_candidates(sites: _Sites, kind) -> list:
+    """Celle della banchina (regola del porto) o della fascia
+    extramurale/di margine (tutte le altre)."""
+    span = max(1, round(kind.lots))
+    if kind.rule == lm.RULE_PORT:
+        strips = [sites.port.quay] if sites.port is not None else []
+    else:
+        if sites.frame is None:
+            return []
+        outer, inner = sites.frame
+        clearance = sites.walls.thickness / 2 if sites.walls is not None else 0.0
+        strips = _frame_strips(outer, inner, clearance)
+
+    cell = max(sites.preset.target_lot_len, sites.preset.min_lot_len)
+    candidates = []
+    for strip in strips:
+        grid = _cells(strip, cell)
+        candidates.extend((rect, None) for rect in _cell_runs(grid, span, sites.occupied))
+    return candidates
+
+
+def _site_strategies(sites: _Sites, kind) -> list:
+    """Quali generatori di siti provare per `kind`, in ordine.
+
+    Una sola voce per quasi tutti. L'eccezione e' il cimitero: la sua regola
+    ha due rami ("fuori le mura OPPURE presso il tempio") e i due rami stanno
+    in posti diversi della citta', quindi anche in siti diversi - la fascia
+    extramurale se le mura ci sono, un lotto vicino al tempio se non ci
+    sono."""
+    if kind.rule == lm.RULE_OUTSIDE_WALLS_OR_TEMPLE and sites.walls is None:
+        return [_lot_candidates]
+    return [{
+        lm.SITE_LOT: _lot_candidates,
+        lm.SITE_BLOCK: _block_candidates,
+        lm.SITE_PLAZA: _plaza_candidates,
+        lm.SITE_BAND: _band_candidates,
+    }[kind.site]]
+
+
+def _claim(sites: _Sites, kind, rect: Rect, lot_indices) -> None:
+    """Registra il luogo e toglie di mezzo quel che occupava lo spazio."""
+    building_blueprint = None
+    if lot_indices is not None:
+        for index in lot_indices:
+            lot = sites.lots[index]
+            lot.taken = True
+            if lot.index is None:
+                continue
+            if sites.preset.abstract_buildings:
+                sites.footprints[lot.index] = None
+            else:
+                # Al preset "isolato" l'edificio del luogo viene rigenerato
+                # sull'ingombro COMPLESSIVO (piu' lotti uniti), con la
+                # tipologia della sua destinazione d'uso: un tempio non e' la
+                # casa che c'era prima con un cartello sopra.
+                sites.buildings[lot.index] = None
+        if not kind.open_air and not sites.preset.abstract_buildings:
+            building_blueprint = _landmark_building(sites, kind, rect)
+    else:
+        sites.occupied.append(rect)
+    sites.landmarks.append(
+        Landmark(kind=kind.key, label=kind.label, rect=rect, site=kind.site,
+                 open_air=kind.open_air, ground=kind.ground, piece_size=kind.piece_size,
+                 building=building_blueprint)
+    )
+
+
+def _landmark_building(sites: _Sites, kind, rect: Rect):
+    """Edificio a stanze di un luogo al preset "isolato". None se l'ingombro
+    e' troppo piccolo per building.generate: il luogo resta comunque sulla
+    mappa come ingombro piu' etichetta, che e' meglio di un edificio rotto."""
+    width, height = int(rect.w), int(rect.h)
+    if width < sites.preset.min_building_side or height < sites.preset.min_building_side:
+        return None
+    building_type = lm.BUILDING_TYPE.get(kind.key, lm.BUILDING_TYPE_DEFAULT)
+    # Seed derivato dalla chiave del luogo e non estratto dall'rng: cosi'
+    # aggiungere un luogo non sposta la geometria interna di quelli gia'
+    # decisi, e lo stesso tempio con lo stesso seed di mappa e' sempre lo
+    # stesso tempio.
+    #
+    # crc32 e non hash(): l'hash delle stringhe di Python e' randomizzato per
+    # processo (PYTHONHASHSEED), quindi due esecuzioni della stessa riga di
+    # comando davano due edifici diversi. Trovato dal test di riproducibilita'
+    # della CLI, che gira in sottoprocesso — dai test in-process non si vede.
+    bp = building.generate(
+        width=width, height=height,
+        seed=(sites.seed + zlib.crc32(kind.key.encode("utf-8"))) % (1 << 30),
+        building_type=building_type, l_shaped=False,
+    )
+    ground = [room for room in bp.rooms if room.level == 0]
+    if not ground:
+        return None
+    return _translate_blueprint(bp, rect.x1, rect.y1, rooms=ground)
+
+
+def _place_landmarks(sites: _Sites, selection: list, rng: random.Random) -> None:
+    """Piazza i luoghi selezionati, in ordine di catalogo (i vincolati prima
+    dei liberi, vedi landmarks.LANDMARK_KINDS).
+
+    Un luogo la cui regola non trova un sito NON viene piazzato altrove:
+    viene semplicemente saltato. E' questa riga a rendere AC5 un invariante
+    ("se e' sulla mappa, la regola vale") invece di una tendenza."""
+    for kind, count in selection:
+        for _ in range(count):
+            placed = False
+            for strategy in _site_strategies(sites, kind):
+                candidates = [
+                    (rect, owner) for rect, owner in strategy(sites, kind)
+                    if _rule_ok(sites, kind, rect)
+                ]
+                if not candidates:
+                    continue
+                rect, owner = candidates[rng.randrange(len(candidates))]
+                _claim(sites, kind, rect, owner)
+                placed = True
+                break
+            if not placed:
+                break
+
+
 def generate(
     *, width: int, height: int, seed: int,
     scale: str = DEFAULT_SCALE, preset: ScalePreset | None = None,
+    landmarks: bool = True, requested_landmarks=(),
     **params,
 ) -> Blueprint:
     """Genera un quartiere/citta (SPEC.md §9.4). RNG locale da `seed`, mai
@@ -642,7 +1284,15 @@ def generate(
 
     rooms/corridors restano vuoti (city.py non e a stanze, vedi model.py):
     la geometria vive in streets/plazas piu buildings (preset quartiere) o
-    building_footprints (preset citta)."""
+    building_footprints (preset citta).
+
+    TASK-48 aggiunge gli elementi urbani notevoli e le strutture che li
+    ancorano. `landmarks=False` li disattiva del tutto e riporta il
+    generatore a quello che era prima del task, output byte per byte
+    compreso: e' l'interruttore che permette di verificare che nessuna
+    regressione geometrica sia entrata insieme ai luoghi.
+    `requested_landmarks` sono le richieste esplicite (AC1); tutto il resto
+    e' estratto dal seed (AC2)."""
     if preset is None:
         preset = SCALE_PRESETS.get(scale)
         if preset is None:
@@ -653,22 +1303,68 @@ def generate(
     rng = random.Random(seed)
     root = Rect(1, 1, width - 1, height - 1)
 
+    # --- strutture urbane: decise PRIMA di strade ed edifici -------------
+    # Porto e mura non decorano una citta' gia' fatta, la rimodellano: il
+    # porto sottrae una fascia di canvas, le mura riducono l'area
+    # edificabile. Decidendole qui, "dentro le mura" e "sul mare" sono veri
+    # per costruzione invece che da verificare a posteriori.
+    structures: set = set()
+    port: Port | None = None
+    walls: CityWalls | None = None
+    river: River | None = None
+    frame: tuple | None = None
+    buildable = root
+
+    if landmarks:
+        lm.check_requested(requested_landmarks, scale)
+        structures = lm.select_structures(scale=scale, rng=rng, requested=requested_landmarks)
+        if "porto" in structures:
+            port, buildable = _make_port(buildable, rng, preset)
+        if lm.needs_frame(scale) or "mura" in structures:
+            depth = min(
+                max(min(buildable.w, buildable.h) * _FRAME_FRACTION, preset.min_lot_len),
+                preset.target_lot_len * _FRAME_MAX_LOTS,
+            )
+            inner = _shrunk(buildable, depth)
+            # Serve almeno un isolato piu' la via che lo borda: sotto, la
+            # fascia si mangerebbe la citta' invece di circondarla.
+            floor_side = preset.min_block + preset.main_street_width
+            if inner is not None and min(inner.w, inner.h) >= floor_side:
+                frame = (buildable, inner)
+                buildable = inner
+                if "mura" in structures:
+                    thickness = preset.main_street_width * _WALL_THICKNESS_FACTOR
+                    walled = _shrunk(inner, thickness)
+                    if walled is not None and min(walled.w, walled.h) >= floor_side:
+                        walls = CityWalls(ring=inner, thickness=thickness)
+                        buildable = walled
+
     streets: list[Street] = []
-    blocks = _build_blocks(root, rng, depth=0, streets=streets, preset=preset)
+    blocks = _build_blocks(buildable, rng, depth=0, streets=streets, preset=preset)
 
     n_plazas = 2 if len(blocks) >= 4 else (1 if len(blocks) >= 2 else 0)
     plaza_indices = set(rng.sample(range(len(blocks)), n_plazas)) if n_plazas else set()
     plazas = [blocks[i] for i in sorted(plaza_indices)]
 
-    buildings: list[Blueprint] = []
-    footprints: list[Rect] = []
+    # I lotti non vengono piu' consumati e buttati (TASK-48): sono i siti su
+    # cui i luoghi notevoli prendono il posto di una casa qualunque, quindi
+    # vanno conservati insieme a quale edificio ci e' finito sopra.
+    lots: list[_Lot] = []
+    buildings: list = []
+    footprints: list = []
     for i, block in enumerate(blocks):
         if i in plaza_indices:
             continue
-        for lot, front in _split_into_lots(block, preset):
+        # Stessa formula di _split_into_lots: la profondita' su cui si contano
+        # le file e' il lato ortogonale alle strisce.
+        rows = _lot_rows(block.h if block.w >= block.h else block.w, preset)
+        for j, (lot_rect, front) in enumerate(_split_into_lots(block, preset)):
+            record = _Lot(rect=lot_rect, front=front, block=i, row=j % rows, strip=j // rows)
+            lots.append(record)
             if preset.abstract_buildings:
-                footprint = _place_footprint(lot, front, rng, preset)
+                footprint = _place_footprint(lot_rect, front, rng, preset)
                 if footprint is not None:
+                    record.area, record.index = footprint, len(footprints)
                     footprints.append(footprint)
             else:
                 # Il seed dell'edificio va estratto PRIMA di entrare in
@@ -676,9 +1372,29 @@ def generate(
                 # esplicito qui evita di dipendere dall'ordine di valutazione
                 # degli argomenti di una chiamata.
                 building_seed = rng.randrange(1 << 30)
-                placed = _place_building(lot, front, rng, preset, seed=building_seed)
+                placed = _place_building(lot_rect, front, rng, preset, seed=building_seed)
                 if placed is not None:
+                    record.area, record.index = _footprint_of(placed), len(buildings)
                     buildings.append(placed)
+
+    def _clear(crosser) -> None:
+        """Toglie gli edifici che `crosser` (via obliqua o fiume) attraversa,
+        lasciando un buco invece di far scalare la lista: gli indici sono
+        quelli con cui i lotti sanno a quale edificio corrispondono."""
+        if preset.abstract_buildings:
+            for index in _clear_avenue(crosser, footprints, preset):
+                footprints[index] = None
+        else:
+            boxes = [None if bp is None else _footprint_of(bp) for bp in buildings]
+            for index in _clear_avenue(crosser, boxes, preset):
+                buildings[index] = None
+
+    # Il fiume prima delle vie oblique, e come loro dopo gli edifici: non ha
+    # un ingombro riservato dalla partizione, quindi si fa spazio togliendo
+    # quel che incontra (stessa meccanica di _avenue).
+    if "fiume" in structures:
+        river = _make_river(root, rng, preset, mouth=None if port is None else port.side)
+        _clear(river)
 
     # Le vie oblique per ultime: hanno bisogno degli edifici gia piazzati per
     # sapere quali togliere. Un canvas troppo piccolo per essere diviso
@@ -687,17 +1403,33 @@ def generate(
     n_avenues = preset.avenues if len(blocks) > 1 else 0
     for _ in range(n_avenues):
         avenue = _avenue(width, height, rng, preset)
-        if preset.abstract_buildings:
-            crossed = set(_clear_avenue(avenue, footprints, preset))
-            footprints = [f for i, f in enumerate(footprints) if i not in crossed]
-        else:
-            boxes = [_footprint_of(bp) for bp in buildings]
-            crossed = set(_clear_avenue(avenue, boxes, preset))
-            buildings = [bp for i, bp in enumerate(buildings) if i not in crossed]
+        _clear(avenue)
         streets.append(avenue)
+
+    bridges: list[Bridge] = []
+    if walls is not None:
+        walls.gates = _wall_gates(streets, buildable, walls.ring)
+    if river is not None:
+        bridges = _river_bridges(river, streets)
+
+    marks: list[Landmark] = []
+    if landmarks:
+        sites = _Sites(
+            preset=preset, seed=seed, buildable=buildable, lots=lots,
+            plaza_indices=plaza_indices, plazas=plazas, walls=walls, river=river,
+            port=port, frame=frame, buildings=buildings, footprints=footprints,
+            occupied=[], landmarks=marks,
+        )
+        n_buildings = sum(1 for b in (footprints if preset.abstract_buildings else buildings) if b is not None)
+        selection = lm.select(
+            scale=scale, n_buildings=n_buildings, rng=rng, requested=requested_landmarks,
+        )
+        _place_landmarks(sites, selection, rng)
 
     return Blueprint(
         width=width, height=height, rooms=[], corridors=[], graph={},
         seed=seed, style="city", streets=streets, plazas=plazas,
-        buildings=buildings, building_footprints=footprints,
+        buildings=[bp for bp in buildings if bp is not None],
+        building_footprints=[f for f in footprints if f is not None],
+        landmarks=marks, walls=walls, river=river, bridges=bridges, port=port,
     )

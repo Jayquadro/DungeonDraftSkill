@@ -546,6 +546,9 @@ ddforge generate dungeon \
 
 Stili disponibili: `dungeon`, `building`, `cave`, `city`.
 
+Parametri esclusivi di `city`: `--scale isolato|quartiere|citta` (§9.4),
+`--landmark ELEMENTO` (ripetibile) e `--no-landmarks` (§9.4.1).
+
 **Comportamento obbligatorio:** `generate` esegue `validate` sul risultato
 prima di scrivere il file. Se ci sono errori, **non scrive** ed esce con codice
 1 stampando gli Issue. Un warning stampa ma non blocca.
@@ -663,6 +666,198 @@ Decidi in M5 se supportare entrambe o solo il quartiere.
 > e tre i preset; cambiano solo i valori numerici (SCALE_PRESETS in
 > `generators/city.py`). Differenza fra i preset e come scegliere:
 > `README.md` e `skill/references/styles.md`.
+
+#### 9.4.1 Elementi urbani notevoli (TASK-48)
+
+Una città di soli edifici anonimi non ha luoghi, e senza luoghi il tavolo non
+si orienta. `generators/landmarks.py` è il catalogo: per ogni luogo dichiara a
+quali preset è ammissibile, in che quantità e con quale **regola di
+piazzamento**. `generators/city.py` lo applica; `compose.draw_landmark`
+disegna **sprite dedicato** ed **etichetta col nome**.
+
+**Come si disegna un luogo.** Uno sprite come tutto il resto della mappa, con
+la sua texture presa da `Palette.landmark_sprites` (tabella in `assets.py`,
+indicizzata per chiave di luogo). Al primo giro un luogo era invece una
+chiazza di pavimento più un'iconcina: era l'unico elemento non disegnato come
+sprite, e in mezzo alle case colorate leggeva come un rettangolo bianco —
+bocciato da Jay guardando la mappa vera. Tre forme:
+
+- preset `isolato`, luogo chiuso: un edificio a stanze vero, generato da
+  `building.py` con la tipologia della sua destinazione d'uso (una taverna è
+  divisa come una taverna, un magazzino come un magazzino);
+- preset `quartiere`/`citta`, luogo chiuso: **un** solo sprite che riempie
+  l'ingombro, come gli edifici ordinari dal TASK-46;
+- spiazzo aperto (mercato, cimitero, fiera, giardino, patibolo):
+  un'**area colorata** più **sprite sparsi** sopra. Il terreno dell'area è
+  quello che il luogo dichiara (`LandmarkKind.ground`): selciato per mercato,
+  patibolo e cantiere, erba per parco e cimitero, terra battuta per fiera e
+  quartiere povero. Dare a tutti la stessa pavimentazione urbana era il
+  motivo per cui un cimitero sembrava un piazzale.
+
+I pezzi sparsi si disegnano alla loro **dimensione nativa**, che è la loro
+dimensione reale (un pack è disegnato a 256 px per quadretto), e si
+rimpiccioliscono solo se lo spiazzo è più piccolo del pezzo. Il numero cresce
+con l'area a densità costante, e i pezzi non si sovrappongono fra loro: un
+cimitero doppio ha il doppio delle lapidi, non lapidi larghe il doppio. Prima
+ogni pezzo veniva scalato al 45% del lato dell'area e su un cimitero grande
+usciva una lapide da 4,5 quadretti, alta quasi sette metri.
+
+Al preset `isolato` un luogo chiuso dovrebbe sempre essere un edificio a
+stanze, ma `building.generate` pretende `min_building_side` per lato e molti
+lotti sono più stretti. `_lot_candidates` preferisce quindi i lotti in cui
+l'edificio ci sta (misurato su 30 seed: 55% dei luoghi chiusi ottiene la
+geometria vera, contro il 17% senza la preferenza); il resto ripiega sullo
+sprite, che è meglio di nessun luogo.
+
+Gli sprite vengono da pack già referenziati dal template di produzione:
+CHR Town Maps ed City Terrain per gli edifici singoli, Lost Lands Hamlets per
+forgia, gogna e pozzo, BB BaseCity/KeepsAndCastles solo dove non esiste un
+edificio singolo equivalente (anfiteatro, faro). Regola imparata guardando il
+primo render: gli sprite BB ritraggono un complesso **con le sue
+pertinenze** — l'abbazia su un'isola si porta dietro il mare — e in mezzo a un
+quartiere fitto sono toppe di campagna, non edifici.
+
+**L'etichetta** porta il nome del luogo e sta sotto l'ingombro, mai al centro
+(al centro copre proprio lo sprite che deve farsi riconoscere). Il corpo si
+ricava dall'ingombro, chiedendo che il nome sia largo ~1,4 volte il luogo che
+nomina, e due etichette non si sovrappongono mai: la seconda va sopra invece
+che sotto e, se non c'è posto neanche lì, viene omessa.
+
+> **Le etichette non sono ancora tarate.** Il calcolo del corpo parte dal
+> presupposto che `text.font_size` sia in pixel di mondo (256 per quadretto),
+> dedotto dall'unico campione osservato in tutto il progetto (§4). Aperto in
+> Dungeondraft il risultato è sbagliato: le etichette escono fuori misura e
+> sovrapposte, quindi almeno una fra quella deduzione, l'ancoraggio di
+> `position` e la stima della larghezza di un carattere è errata.
+> `scripts/label_calibration.py` genera il foglio che le misura tutte e tre —
+> va aperto in Dungeondraft e guardato, e finché non lo è il calcolo resta
+> quello che è invece di essere indovinato una seconda volta.
+
+**Perché un monumento occupa al più un isolato.** L'ingombro di un luogo è un
+rettangolo e fra due isolati la partizione mette sempre una via: qualunque
+monumento a cavallo di due isolati si porta dentro quella strada, che è
+esattamente ciò che AC6 vieta. Scritto, provato e tolto. Per farlo davvero
+servirebbe spezzare la via in due tronconi dove il monumento la ingloba: un
+lavoro sul modello delle strade, non un parametro in più. Il rilievo dei
+monumenti viene invece dallo sprite dedicato e dal corpo dell'etichetta.
+
+**Strutture urbane.** Mura (con porte fortificate), fiume (con ponti) e porto
+non sono luoghi ma la forma della città: vengono decisi **prima** di strade
+ed edifici e ne riducono l'area edificabile. È rispetto a loro che si
+verificano le regole di piazzamento, quindi non sono separabili dai luoghi.
+Mura e porto solo ai preset `quartiere`/`citta`; il fiume a tutti e tre.
+
+**Le tre proporzioni.**
+
+- **Quanti**: i luoghi `unique` compaiono al più una volta (palazzo del
+  signore, cattedrale, arena); i comuni hanno una `rate` espressa in istanze
+  **per edificio generato**, mai un valore assoluto. Il totale dei comuni ha
+  un tetto del 15% degli edifici, applicato in proporzione fra i kind e non
+  a chi arriva prima nel catalogo.
+- **A quale scala**: ogni voce dichiara i preset ammessi. Un fornaio si vede
+  al preset `isolato`; su una mappa di città intera si segnano cattedrale,
+  palazzo, mura, porto e mercati. Un elemento non ammissibile non viene mai
+  piazzato, e chiederlo con `--landmark` è un **errore esplicito**.
+- **Dove**: `dogana` e `torre di guardia` alle porte; `mulino` sul fiume;
+  `conceria` e `macello` sulla riva **a valle** (il verso è quello di
+  `River.points`, dalla sorgente alla foce); `cimitero` fuori le mura o
+  presso il tempio; `mercato` sulla piazza e `patibolo` sulla principale;
+  `cantiere`, `faro` e `mercato del pesce` sulla banchina; `monastero`,
+  `fiera`, `baraccopoli` e `lazzaretto` ai margini. Un luogo la cui regola
+  non trova un sito **non viene piazzato altrove**: viene saltato. È così che
+  la regola è un invariante ("se è sulla mappa, la regola vale") e non una
+  tendenza statistica.
+
+**Nessun luogo finisce in mezzo a una strada** perché nessun luogo viene
+disegnato in uno spazio libero trovato a occhio: prende il posto di qualcosa
+che la partizione aveva già riservato (un lotto, un isolato, una porzione di
+piazza, una cella della fascia extramurale o della banchina). L'unica
+sovrapposizione ammessa è quella dichiarata da una regola: il mercato **è**
+sulla piazza.
+
+**CLI**: `--landmark ELEMENTO` (ripetibile, accetta anche `mura`/`fiume`/
+`porto`) chiede un elemento per certo; senza, tutto è estratto dal seed.
+`--no-landmarks` riporta il generatore a prima di TASK-48, con output
+byte-identico (verificato dal golden file `city_seed_1337.json`, non
+rigenerato).
+
+##### Proporzioni misurate
+
+Misura su **30 seed** per preset, canvas 78x78 (l'area utile del solo
+template di produzione reale). Rigenerabile con
+`python scripts/city_landmarks_census.py --seeds 30 --markdown`.
+
+| misura | isolato | quartiere | citta |
+|---|---|---|---|
+| edifici ordinari per mappa | 20 | 158 | 2688 |
+| luoghi notevoli per mappa | 9.4 | 43.6 | 28.6 |
+| quota di luoghi sul totale | 32% | 22% | 1% |
+| tipi di luogo ammissibili | 18 | 36 | 30 |
+| porte per mappa | 0.00 | 2.80 | 2.80 |
+| ponti per mappa | 1.77 | 1.80 | 7.13 |
+| mappe con mura | n/d | 21/30 | 21/30 |
+| mappe con fiume | 17/30 | 11/30 | 11/30 |
+| mappe con porto | n/d | 7/30 | 7/30 |
+
+La quota cresce al diminuire della scala, ed è voluto: al preset `isolato` la
+mappa è una via sola, dove una bottega su tre è legittimamente un luogo con
+un nome; alla scala `citta` i 2688 edifici restano case e si segnano solo le
+tre decine di luoghi che orientano chi guarda.
+
+Quantità medie per mappa, per luogo (stessa misura; `-` = non ammissibile a
+quel preset):
+
+| luogo | tipo | isolato | quartiere | citta |
+|---|---|---|---|---|
+| dogana | comune | - | 0.80 | 2.80 |
+| torre_guardia | comune | - | 1.10 | 2.80 |
+| mulino | unico | 0.47 | 0.23 | 0.27 |
+| conceria | unico | 0.43 | 0.23 | 0.27 |
+| macello | unico | - | 0.17 | 0.27 |
+| cantiere | unico | - | 0.20 | 0.20 |
+| faro | unico | - | 0.20 | 0.23 |
+| mercato | unico | 0.97 | 0.87 | 0.97 |
+| patibolo | unico | 0.47 | 0.67 | 0.70 |
+| mercato_pesce | unico | - | 0.10 | 0.10 |
+| tempio | unico | 0.77 | 0.87 | 0.97 |
+| cattedrale | unico | - | 0.87 | 0.70 |
+| palazzo | unico | - | 0.93 | 0.90 |
+| municipio | unico | - | 0.77 | 0.73 |
+| caserma | unico | 0.67 | 0.80 | 0.83 |
+| prigione | unico | - | 0.43 | 0.67 |
+| monastero | unico | - | 0.40 | 0.43 |
+| arena | unico | - | - | 0.47 |
+| teatro | unico | - | 0.40 | 0.37 |
+| biblioteca | unico | 0.57 | 0.67 | 0.50 |
+| accademia | unico | - | 0.33 | 0.40 |
+| alchimista | comune | 0.30 | 1.93 | - |
+| banca | unico | - | 0.63 | 0.63 |
+| magazzino | comune | 0.60 | 4.73 | - |
+| gilda | comune | - | 1.63 | 4.00 |
+| taverna | comune | 0.73 | 6.87 | - |
+| locanda | comune | 0.47 | 3.27 | - |
+| bordello | comune | 0.13 | 1.67 | - |
+| bagni | unico | - | 0.33 | 0.40 |
+| lazzaretto | unico | - | 0.43 | 0.40 |
+| fabbro | comune | 0.53 | 4.20 | - |
+| stalle | comune | 0.43 | 2.70 | - |
+| fornaio | comune | 0.73 | - | - |
+| macelleria | comune | 0.43 | - | - |
+| statua | comune | 0.10 | 1.83 | 3.00 |
+| giardino | comune | - | 0.87 | 3.00 |
+| cimitero | unico | 0.60 | 0.77 | 0.73 |
+| baraccopoli | unico | - | 0.40 | 0.50 |
+| fiera | unico | - | 0.33 | 0.37 |
+
+I luoghi legati a una struttura (dogana, mulino, faro…) hanno medie basse
+perché la struttura stessa non è sempre presente: rapportati alle sole mappe
+che hanno mura, fiume o porto, dogana e faro compaiono quasi sempre.
+
+**Fuori dall'inventario, per scelta**: chiusini delle fognature sulle strade,
+edicole votive, fossato/bastioni/barbacane come corredo delle mura, ponte
+coperto e guado come varianti dell'attraversamento. Non sono un ingombro con
+un nome e chiederebbero un tipo di sito proprio; sono un'aggiunta
+incrementale al catalogo, non una riprogettazione.
 
 ### 9.5 Arredo (`furnish`)
 

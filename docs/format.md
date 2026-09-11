@@ -276,6 +276,32 @@ Tutti i campi **osservati** (non ipotizzati), ma su un solo esemplare:
   osservando l'effetto — non va inventato un valore.
 - Nessun campo di rotazione osservato per `text`.
 
+**Primo uso in produzione: TASK-48.** Fino a TASK-47 `build.add_text` non
+veniva chiamato da nessun generatore. Da TASK-48 ogni elemento urbano
+notevole di `generators/city.py` porta la sua etichetta col nome
+(`compose.draw_landmark`).
+
+> **Ancoraggio di `position`: ancora non verificato.** Con un solo campione
+> non si sa se il Vector2 sia il centro del testo, l'angolo in alto a
+> sinistra o la baseline. `draw_landmark` lo tratta come **centro**
+> dell'ingombro del luogo. Se al gate umano le etichette risultassero
+> spostate in modo sistematico (per esempio tutte in basso a destra rispetto
+> al luogo), la correzione e una riga in `compose.draw_landmark` — e questa
+> nota va aggiornata con l'ancoraggio vero, finalmente osservato.
+
+> **`font_size` e in pixel di MONDO, non in punti di schermo** (dedotto, non
+> osservato su piu campioni). Un quadretto vale 256 px, quindi il 32 del
+> campione e alto un ottavo di quadretto: su una mappa di citta intera
+> un'etichetta cosi non si vede. `compose.draw_landmark` ricava percio il
+> corpo dall'ingombro del luogo, chiedendo che il nome sia largo ~1,4 volte
+> il luogo che nomina (limiti 24-600). Se al gate umano le etichette
+> risultassero enormi o minuscole, la deduzione e sbagliata ed e questa nota
+> a dover cambiare per prima.
+
+Due etichette non si sovrappongono mai: `compose._place_label` prova sotto
+l'ingombro, poi sopra, e se non c'e posto omette l'etichetta invece di
+scriverne una illeggibile sopra un'altra.
+
 **Condizione di stop dell'AC5 di TASK-3: non applicabile.** Il template
 ricco contiene sia luci sia testi (confermato anche in TASK-2): si procede.
 
@@ -1120,6 +1146,51 @@ sostituisce interamente `draw_city_footprint` (pavimento + tetto a colmo
 sintetico, TASK-41): un edificio dei preset `quartiere`/`citta` e ora un solo
 `object` con `custom_color`, senza pattern ne roof — lo sprite e gia una
 casa completa vista dall'alto.
+
+### 10.3 Catalogo incrementale: `--from-catalog` (TASK-48)
+
+Il catalogo di §10.2 era nato da undici mappe della campagna di Jay che **non
+sono piu sul disco**. Rigenerarlo dai soli template perderebbe una novantina
+di chiavi che le palette usano per nome, e con loro gli stili `tavern`,
+`manor` e `warehouse`. `ddforge catalog` accetta percio `--from-catalog`: il
+catalogo esistente viene innestato per primo e le sue chiavi vincono su tutto
+il resto.
+
+Il vincolo sul pack orfano vale identico per il catalogo di partenza: una sua
+texture che punta a un pack assente dai manifest dei `--from` e un errore
+esplicito, non un'eredita da tenersi. (Verificato all'atto pratico: il commit
+`306f14f` di Jay ha tolto il pack `2fXlBwjR` dal manifest di `blank_80x80`, e
+il catalogo non lo referenziava — nessuna texture persa.)
+
+**Comando usato in TASK-48** per dare ai luoghi urbani notevoli uno sprite
+proprio:
+
+```
+ddforge catalog --from-catalog data/assets.json \
+  --from templates/blank_80x80.dungeondraft_map \
+  --from templates/rich_reference.dungeondraft_map \
+  --from templates/blank_160x160.dungeondraft_map \
+  --pack ".../BB-51-Assets-Houses1.dungeondraft_pack" \
+  --pack ".../BB BaseCity Colored.dungeondraft_pack" \
+  --pack ".../BB KeepsAndCastles Colored.dungeondraft_pack" \
+  --pack ".../BB SeasAndShores Colored.dungeondraft_pack" \
+  --pack ".../BB RiversRunnin Colored.dungeondraft_pack" \
+  --pack ".../CHR - Town Maps v0,5.dungeondraft_pack" \
+  --pack ".../City_Terrain.dungeondraft_pack" \
+  --pack ".../Lost_Lands_Hamlets.dungeondraft_pack" \
+  --out data/assets.json
+```
+
+Risultato: 51 pack (invariato), `objects` 106 -> 440, `paths` 6 -> 9,
+`walls` 6 -> 9, `floors` 6 -> 9, `object_sizes` 57 -> 396. Nessuna chiave
+preesistente persa o modificata (verificato chiave per chiave).
+
+**Texture non-PNG.** `read_dungeondraft_pack` legge le dimensioni dall'IHDR
+di un PNG, quindi i pack in WebP (per esempio WFWMFRDX, da cui viene la
+statua) non finiscono in `object_sizes` nemmeno passandoli con `--pack`.
+`assets._lookup_size(..., optional=True)` ritorna `(None, None)` e chi lo usa
+ricade sulla stima per nome di `compose._texture_size`: meno precisa, ma
+esiste sempre, ed e meglio che rinunciare allo sprite giusto.
 
 ## 11. `tests/fixtures/reference_8x8.dungeondraft_map` — provenienza (TASK-5)
 

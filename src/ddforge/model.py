@@ -109,6 +109,129 @@ class Street:
     main: bool = False
 
 
+@dataclass(frozen=True)
+class Gate:
+    """Porta fortificata sulle mura cittadine (TASK-48).
+
+    `side` usa la stessa convenzione di compose.py (_TOP=0, _RIGHT=1,
+    _BOTTOM=2, _LEFT=3): e' il lato dell'anello murario su cui si apre. Una
+    porta nasce sempre dove l'ingombro di una via incontra le mura, mai in un
+    punto scelto a caso: e' quello che la rende il posto in cui la dogana ha
+    senso (TASK-48 AC5) invece di un varco decorativo.
+    """
+
+    x: float
+    y: float
+    side: int
+    width: float
+
+
+@dataclass
+class CityWalls:
+    """Cinta muraria: anello rettangolare piu' le sue porte (TASK-48).
+
+    `ring` e' il rettangolo su cui corre il muro; `thickness` la sua
+    larghezza. L'interno abitato e' `ring` rimpicciolito di `thickness`
+    (vedi city._walled_interior): e' li' che nascono strade ed edifici,
+    quindi "dentro le mura" e' garantito per costruzione e non verificato a
+    posteriori. Tutto quel che sta fuori da `ring` e' la fascia extramurale,
+    dove vanno cimitero, fiera e baraccopoli.
+    """
+
+    ring: Rect
+    thickness: float
+    gates: list[Gate] = field(default_factory=list)
+
+
+@dataclass
+class River:
+    """Corso d'acqua che attraversa la mappa (TASK-48).
+
+    Polilinea come model.Street, ma con un VERSO: l'acqua scorre da
+    `points[0]` verso `points[-1]`. Il verso non e' un dettaglio estetico, e'
+    quello che rende verificabile la zonizzazione storica dei mestieri che
+    puzzano (conceria e macello a valle, TASK-48 AC5): senza, "a valle" non
+    sarebbe definito.
+    """
+
+    points: list[tuple[float, float]]
+    width: float
+
+
+@dataclass(frozen=True)
+class Bridge:
+    """Attraversamento del fiume, dove una via lo incrocia (TASK-48).
+
+    `rect` e' l'impalcato. `horizontal` ha la stessa semantica di
+    model.Corridor: dice come e' orientato l'attraversamento, non e'
+    derivabile da w >= h quando il ponte e' quasi quadrato.
+    """
+
+    rect: Rect
+    horizontal: bool
+
+
+@dataclass
+class Port:
+    """Porto: specchio d'acqua su un bordo della mappa piu' la banchina
+    (TASK-48).
+
+    `water` e' la fascia d'acqua, `quay` la striscia di terra che le corre
+    accanto (dove vanno cantiere navale e faro), `side` il bordo del canvas
+    occupato, con la convenzione di compose.py. La citta' e' costiera solo se
+    questo campo e' valorizzato: senza porto, i luoghi che lo pretendono
+    semplicemente non vengono piazzati.
+    """
+
+    water: Rect
+    quay: Rect
+    side: int
+
+
+@dataclass
+class Landmark:
+    """Luogo urbano notevole: tempio, mercato, conceria, faro... (TASK-48).
+
+    `kind` e' la chiave del catalogo in generators/landmarks.py, `label` il
+    nome che finisce sulla mappa come `text` (e' l'etichetta a rendere il
+    luogo riconoscibile al tavolo dove nessuno sprite del catalogo e'
+    calzante). `rect` e' l'ingombro effettivamente occupato, gia' in
+    coordinate assolute della mappa; `site` dice da che tipo di spazio e'
+    stato ricavato ("lot", "block", "plaza", "band"), informazione che serve
+    al rendering per decidere se disegnare un edificio o uno spiazzo aperto.
+    """
+
+    kind: str
+    label: str
+    rect: Rect
+    site: str
+    # Copie di LandmarkKind.open_air/paved, non riferimenti al catalogo:
+    # compose.py disegna il Blueprint e basta, senza dover importare
+    # generators/landmarks.py (che e' un generatore, non un modello) solo per
+    # sapere che aspetto ha un luogo. Stesso motivo per cui Room porta `kind`
+    # e non un puntatore a una tabella di tipologie. Quale SPRITE usare non e'
+    # qui ma nella Palette (assets.Palette.landmark_sprites), indicizzato per
+    # `kind`: e' una scelta di catalogo asset, non di geometria.
+    open_air: bool = False
+    # Lato lungo di un pezzo sparso, in quadretti: e' il generatore a dire
+    # quanto e' grande un albero o una lapide, perche' i pack sono disegnati
+    # a scale diverse fra loro e la dimensione nativa di uno sprite non e'
+    # la sua dimensione reale. Vedi LandmarkKind.piece_size.
+    piece_size: float = 1.5
+    # Chiave di Palette.floors per il terreno steso sotto gli sprite sparsi
+    # ("selciato", "verde", "terra"), o None per lasciare il terreno della
+    # mappa. Solo per i luoghi open_air.
+    ground: str | None = None
+    # Preset "isolato": l'edificio del luogo, gia' in coordinate assolute,
+    # esattamente come una voce di Blueprint.buildings. Sta QUI e non li'
+    # perche' un luogo non e' una casa di contorno: separarli e' cio' che
+    # permette di verificare che nessun luogo si sovrapponga a un edificio
+    # ordinario (TASK-48 AC6) senza che ogni luogo risulti sovrapposto a se
+    # stesso. None per gli spiazzi aperti (LandmarkKind.open_air) e per i
+    # preset "quartiere"/"citta", dove il luogo e' uno sprite.
+    building: "Blueprint | None" = None
+
+
 @dataclass
 class Room:
     rect: Rect
@@ -179,3 +302,17 @@ class Blueprint:
     # I due campi si escludono a vicenda: `buildings` e popolato dal preset
     # "isolato", `building_footprints` dai preset "quartiere"/"citta".
     building_footprints: list[Rect] = field(default_factory=list)
+    # Elementi urbani notevoli e strutture che li ancorano (TASK-48). Sono
+    # campi separati e non voci di `landmarks` perche' mura, fiume e porto non
+    # sono luoghi da visitare: sono la struttura urbana che RIMODELLA la mappa
+    # (le mura riducono l'area edificabile, il fiume toglie gli edifici che
+    # attraversa, il porto sottrae una fascia di canvas) ed e' rispetto a loro
+    # che si verificano le regole di piazzamento di TASK-48 AC5. Tutti
+    # opzionali: una citta' senza mura, senza fiume o non costiera e' una
+    # citta' legittima, e i luoghi che pretendono la struttura mancante non
+    # vengono piazzati affatto.
+    landmarks: list[Landmark] = field(default_factory=list)
+    walls: CityWalls | None = None
+    river: River | None = None
+    bridges: list[Bridge] = field(default_factory=list)
+    port: Port | None = None

@@ -311,11 +311,17 @@
     "battlements": "res://textures/walls/battlements.png",
     "cobble": "res://textures/walls/cobble.png",
     "concrete": "res://textures/walls/concrete.png",
+    "long_round_fence": "res://packs/roSIrsHG/textures/walls/Long round fence.png",
+    "long_square_fence": "res://packs/roSIrsHG/textures/walls/Long square fence.png",
+    "small_cill": "res://packs/roSIrsHG/textures/walls/Small Cill.png",
     "stone": "res://textures/walls/stone.png",
     "stone_09": "res://textures/walls/stone_09.png",
     "wood_04": "res://textures/walls/wood_04.png"
   },
   "floors": {
+    "chr_forest": "res://packs/Bp03igMq/textures/patterns/normal/chr_forest.png",
+    "chr_ice": "res://packs/Bp03igMq/textures/patterns/normal/chr_ice.png",
+    "chr_water": "res://packs/Bp03igMq/textures/patterns/normal/chr_water.png",
     "cobblestone": "res://textures/patterns/normal/cobblestone.png",
     "stone_floor": "res://textures/patterns/normal/stone_floor.png",
     "tileset_brick_basketweave": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
@@ -349,15 +355,51 @@
     "bb_river_path": "res://packs/6VxwaRdj/textures/paths/BB_River_path.png",
     "bb_shore_path": "res://packs/6VxwaRdj/textures/paths/BB_Shore_path.png",
     "bb_sideroad_path": "res://packs/6VxwaRdj/textures/paths/BB_SideRoad_path.png",
-    "bb_wall_path": "res://packs/6VxwaRdj/textures/paths/BB_Wall_path.png"
+    "bb_wall_path": "res://packs/6VxwaRdj/textures/paths/BB_Wall_path.png",
+    "city_terrain_road": "res://packs/RchUgE31/textures/paths/City-Terrain-Road.png",
+    "long_round_fence": "res://packs/roSIrsHG/textures/paths/Long round fence.png",
+    "long_sqaure_fence": "res://packs/roSIrsHG/textures/paths/Long sqaure fence.png"
   },
   "objects": {
     "alchemy_potion_colorable_12": "res://packs/DnDgWAWA/textures/objects/[DnD] Tool/Colorable/alchemy_potion_colorable_12.webp",
     "animal_cage_top_02_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Cage_Top_02_A.webp",
     "animal_dish_dented_full": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Misc/Animal_Dish_Dented_Full.webp",
+    "aspen_01": "res://textures/objects/more_trees/aspen_01.png",
+    "aspen_02": "res://textures/objects/more_trees/aspen_02.png",
+    "aspen_03": "res://textures/objects/more_trees/aspen_03.png",
+    "aspen_04": "res://textures/objects/more_trees/aspen_04.png",
+    "autumn_tree_01": "res://textures/objects/vegetation/trees/autumn_tree_01.png",
+    "autumn_tree_02": "res://textures/objects/vegetation/trees/autumn_tree_02.png",
+    "autumn_tree_03": "res://textures/objects/vegetation/trees/autumn_tree_03.png",
+    "autumn_tree_04": "res://textures/objects/vegetation/trees/autumn_tree_04.png",
     "barrel": "res://textures/objects/dwarven_set/barrel_forge_01.png",
     "barrel_01": "res://textures/objects/containers/barrel_01.png",
     "barrel_forge_01": "res://textures/objects/dwarven_set/barrel_forge_01.png",
+    "bb_city_blacksmith_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Blacksmith_1_color.png",
+    "bb_city_cathedral_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Cathedral_1_color.png",
+    "bb_city_coastline_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Coastline_1_color.png",
+    "bb_city_dock_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Dock_1_color.png",
+    "bb_city_dock_2_color": "res://packs/2VHJB262/textures/objects/BB_City_Dock_2_color.png",
+    "bb_city_farms_color": "res://packs/2VHJB262/textures/objects/BB_City_Farms_color.png",
+    "bb_city_fort_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Fort_1_color.png",
+    "bb_city_houses_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Houses_1_color.png",
+    "bb_city_houses_2_color": "res://packs/2VHJB262/textures/objects/BB_City_Houses_2_color.png",
+    "bb_city_houses_3_color": "res://packs/2VHJB262/textures/objects/BB_City_Houses_3_color.png",
+    "bb_city_houses_4_color": "res://packs/2VHJB262/textures/objects/BB_City_Houses_4_color.png",
+    "bb_city_lighthouse_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Lighthouse_1_color.png",
+    "bb_city_market_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Market_1_color.png",
+    "bb_city_orchard_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Orchard_1_color.png",
+    "bb_city_tournament_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Tournament_1_color.png",
+    "bb_city_wall_corner_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Corner_1_color.png",
+    "bb_city_wall_corner_2_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Corner_2_color.png",
+    "bb_city_wall_gate_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Gate_1_color.png",
+    "bb_city_wall_inverse_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Inverse_1_color.png",
+    "bb_city_wall_inverse_2_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Inverse_2_color.png",
+    "bb_city_wall_straight_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Straight_1_color.png",
+    "bb_city_wall_straight_2_color": "res://packs/2VHJB262/textures/objects/BB_City_Wall_Straight_2_color.png",
+    "bb_city_woodmill_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Woodmill_1_color.png",
+    "bb_city_woods_1_color": "res://packs/2VHJB262/textures/objects/BB_City_Woods_1_color.png",
+    "bb_city_woods_2_color": "res://packs/2VHJB262/textures/objects/BB_City_Woods_2_color.png",
     "bb_houses1_balcony": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Balcony.png",
     "bb_houses1_flag1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Flag1.png",
     "bb_houses1_flag2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Flag2.png",
@@ -409,60 +451,620 @@
     "bb_houses1_tarp3": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tarp3.png",
     "bb_houses1_tower1": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tower1.png",
     "bb_houses1_tower2": "res://packs/6VxwaRdj/textures/objects/BB_Houses1_Tower2.png",
+    "bb_keepsandcastles_amphitheatre_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Amphitheatre_color.png",
+    "bb_keepsandcastles_castle_2_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Castle_2_color.png",
+    "bb_keepsandcastles_castle_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Castle_color.png",
+    "bb_keepsandcastles_cathedral_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Cathedral_color.png",
+    "bb_keepsandcastles_forestkeep_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_ForestKeep_color.png",
+    "bb_keepsandcastles_garden_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Garden_color.png",
+    "bb_keepsandcastles_keep_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Keep_color.png",
+    "bb_keepsandcastles_maze_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Maze_color.png",
+    "bb_keepsandcastles_moatkeep_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_MoatKeep_color.png",
+    "bb_keepsandcastles_seakeep_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_SeaKeep_color.png",
+    "bb_keepsandcastles_wall_corner_1_entrance_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Corner_1_Entrance_color.png",
+    "bb_keepsandcastles_wall_corner_2_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Corner_2_color.png",
+    "bb_keepsandcastles_wall_corner_3_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Corner_3_color.png",
+    "bb_keepsandcastles_wall_corner_4_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Corner_4_color.png",
+    "bb_keepsandcastles_wall_corner_inverse_1_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Corner_Inverse_1_color.png",
+    "bb_keepsandcastles_wall_corner_inverse_2_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Corner_Inverse_2_color.png",
+    "bb_keepsandcastles_wall_straight_1_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Straight_1_color.png",
+    "bb_keepsandcastles_wall_straight_2_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Straight_2_color.png",
+    "bb_keepsandcastles_wall_straight_3_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Straight_3_color.png",
+    "bb_keepsandcastles_wall_straight_wharf_color": "res://packs/KtpqsMIX/textures/objects/BB_KeepsAndCastles_Wall_Straight_Wharf_color.png",
+    "bb_riversrunnin_exittosea_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_ExitToSea_2_color.png",
+    "bb_riversrunnin_exittosea_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_ExitToSea_color.png",
+    "bb_riversrunnin_fork_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_Fork_1_color.png",
+    "bb_riversrunnin_fork_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_Fork_2_color.png",
+    "bb_riversrunnin_opensea_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_OpenSea_2_color.png",
+    "bb_riversrunnin_opensea_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_OpenSea_color.png",
+    "bb_riversrunnin_river_bridge_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Bridge_1_color.png",
+    "bb_riversrunnin_river_corner_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Corner_1_color.png",
+    "bb_riversrunnin_river_corner_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Corner_2_color.png",
+    "bb_riversrunnin_river_corner_3_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Corner_3_color.png",
+    "bb_riversrunnin_river_corner_4_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Corner_4_color.png",
+    "bb_riversrunnin_river_island_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Island_1_color.png",
+    "bb_riversrunnin_river_wall_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Wall_1_color.png",
+    "bb_riversrunnin_river_wall_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_River_Wall_2_color.png",
+    "bb_riversrunnin_sewers_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_Sewers_color.png",
+    "bb_riversrunnin_village_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_Village_1_color.png",
+    "bb_riversrunnin_village_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunnin_Village_2_color.png",
+    "bb_riversrunning_river_exit_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunning_River_Exit_1_color.png",
+    "bb_riversrunning_river_straight_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunning_River_Straight_1_color.png",
+    "bb_riversrunning_river_straight_2_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunning_River_Straight_2_color.png",
+    "bb_riversrunning_river_waterfall_1_color": "res://packs/4MPa6ax6/textures/objects/BB_RiversRunning_River_Waterfall_1_color.png",
+    "bb_seasandshores_cliff_colossusdocks_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_ColossusDocks_color.png",
+    "bb_seasandshores_cliff_hiddenbeach_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_HiddenBeach_color.png",
+    "bb_seasandshores_cliff_houses_1_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Houses_1_color.png",
+    "bb_seasandshores_cliff_houses_2_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Houses_2_color.png",
+    "bb_seasandshores_cliff_houses_3_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Houses_3_color.png",
+    "bb_seasandshores_cliff_houses_4_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Houses_4_color.png",
+    "bb_seasandshores_cliff_houses_5_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Houses_5_color.png",
+    "bb_seasandshores_cliff_lighthouse_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Lighthouse_color.png",
+    "bb_seasandshores_cliff_nature_1_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Nature_1_color.png",
+    "bb_seasandshores_cliff_nature_2_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Nature_2_color.png",
+    "bb_seasandshores_cliff_nature_3_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_Nature_3_color.png",
+    "bb_seasandshores_cliff_wallcorner_1_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_WallCorner_1_color.png",
+    "bb_seasandshores_cliff_wallcorner_2_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_WallCorner_2_color.png",
+    "bb_seasandshores_cliff_wallending_1_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_WallEnding_1_color.png",
+    "bb_seasandshores_cliff_wallending_2_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_WallEnding_2_color.png",
+    "bb_seasandshores_cliff_wallstraight_1_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_WallStraight_1_color.png",
+    "bb_seasandshores_cliff_wallstraight_2_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Cliff_WallStraight_2_color.png",
+    "bb_seasandshores_fishingvillage_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_FishingVillage_color.png",
+    "bb_seasandshores_island_monastery_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Island_Monastery_color.png",
+    "bb_seasandshores_island_ruins_color": "res://packs/QofNvPQx/textures/objects/BB_SeasAndShores_Island_Ruins_color.png",
     "bed": "res://packs/sWxkyx98/textures/objects/Bunk Bed 4 - Colorable.png",
     "bed_wood_single_01": "res://textures/objects/tables/bed_wood_single_01.png",
+    "bench_01": "res://packs/Bp03igMq/textures/objects/bench_01.png",
     "bench_wood_01": "res://textures/objects/tables/bench_wood_01.png",
+    "birch_01": "res://textures/objects/more_trees/birch_01.png",
+    "birch_02": "res://textures/objects/more_trees/birch_02.png",
+    "birch_03": "res://textures/objects/more_trees/birch_03.png",
+    "birch_04": "res://textures/objects/more_trees/birch_04.png",
     "bookshelf": "res://packs/OfL7DytA/textures/objects/bookshelf 4 v3.png",
     "bookshelf_4_v3": "res://packs/OfL7DytA/textures/objects/bookshelf 4 v3.png",
     "bookshelf_wood_01": "res://textures/objects/tables/bookshelf_wood_01.png",
+    "bounty_board_01": "res://packs/Bp03igMq/textures/objects/bounty_board_01.png",
     "bowl_berries_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Food/[WFW] Food - Readymade Dishes/Bowl_Berries_01_A.webp",
     "brazier": "res://textures/objects/light/brazier_01.png",
     "brazier_01": "res://textures/objects/light/brazier_01.png",
+    "bridge1_1segment": "res://packs/RchUgE31/textures/objects/bridge1-1segment.png",
+    "bridge1_2segment": "res://packs/RchUgE31/textures/objects/bridge1-2segment.png",
+    "bridge1_3segment": "res://packs/RchUgE31/textures/objects/bridge1-3segment.png",
+    "bridge1_4segment": "res://packs/RchUgE31/textures/objects/bridge1-4segment.png",
+    "bridge1_end": "res://packs/RchUgE31/textures/objects/bridge1-end.png",
+    "bridge2_1segment": "res://packs/RchUgE31/textures/objects/bridge2-1segment.png",
+    "bridge2_2segment": "res://packs/RchUgE31/textures/objects/bridge2-2segment.png",
+    "bridge2_3segment": "res://packs/RchUgE31/textures/objects/bridge2-3segment.png",
+    "bridge2_4segment": "res://packs/RchUgE31/textures/objects/bridge2-4segment.png",
+    "bridge2_end1": "res://packs/RchUgE31/textures/objects/bridge2-end1.png",
+    "bridge2_end2": "res://packs/RchUgE31/textures/objects/bridge2-end2.png",
     "bunk_bed_4_colorable": "res://packs/sWxkyx98/textures/objects/Bunk Bed 4 - Colorable.png",
+    "bush_01": "res://packs/Bp03igMq/textures/objects/bush_01.png",
+    "bush_02": "res://packs/Bp03igMq/textures/objects/bush_02.png",
+    "bush_03": "res://packs/Bp03igMq/textures/objects/bush_03.png",
+    "bush_04": "res://packs/Bp03igMq/textures/objects/bush_04.png",
+    "bush_05": "res://packs/Bp03igMq/textures/objects/bush_05.png",
+    "bush_06": "res://packs/Bp03igMq/textures/objects/bush_06.png",
+    "bush_07": "res://packs/Bp03igMq/textures/objects/bush_07.png",
+    "bush_08": "res://packs/Bp03igMq/textures/objects/bush_08.png",
+    "bush_09": "res://packs/Bp03igMq/textures/objects/bush_09.png",
+    "bush_flower_01": "res://textures/objects/vegetation/shrubs/bush_flower_01.png",
+    "bush_flower_02": "res://textures/objects/vegetation/shrubs/bush_flower_02.png",
+    "bush_flower_03": "res://textures/objects/vegetation/shrubs/bush_flower_03.png",
+    "bush_flower_04": "res://textures/objects/vegetation/shrubs/bush_flower_04.png",
+    "bush_flower_05": "res://textures/objects/vegetation/shrubs/bush_flower_05.png",
+    "bush_green_simple_01": "res://textures/objects/vegetation/shrubs/bush_green_simple_01.png",
+    "bush_green_simple_02": "res://textures/objects/vegetation/shrubs/bush_green_simple_02.png",
+    "bush_green_simple_03": "res://textures/objects/vegetation/shrubs/bush_green_simple_03.png",
+    "bush_green_simple_04": "res://textures/objects/vegetation/shrubs/bush_green_simple_04.png",
+    "bush_green_simple_05": "res://textures/objects/vegetation/shrubs/bush_green_simple_05.png",
+    "bush_green_simple_06": "res://textures/objects/vegetation/shrubs/bush_green_simple_06.png",
+    "bush_green_simple_07": "res://textures/objects/vegetation/shrubs/bush_green_simple_07.png",
+    "bush_green_simple_08": "res://textures/objects/vegetation/shrubs/bush_green_simple_08.png",
+    "bush_green_simple_09": "res://textures/objects/vegetation/shrubs/bush_green_simple_09.png",
+    "bush_green_simple_10": "res://textures/objects/vegetation/shrubs/bush_green_simple_10.png",
+    "bush_green_simple_11": "res://textures/objects/vegetation/shrubs/bush_green_simple_11.png",
+    "bush_green_simple_12": "res://textures/objects/vegetation/shrubs/bush_green_simple_12.png",
+    "bush_green_simple_13": "res://textures/objects/vegetation/shrubs/bush_green_simple_13.png",
     "cage_04": "res://textures/objects/supplies/cages/cage_04.png",
+    "campfire_01": "res://packs/Bp03igMq/textures/objects/campfire_01.png",
     "campfire_07": "res://textures/objects/camp/campfire_07.png",
     "campfire_lit_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Camping/Campfire_Lit_01_A.webp",
+    "canopy_01": "res://packs/Bp03igMq/textures/objects/canopy_01.png",
+    "canopy_02": "res://packs/Bp03igMq/textures/objects/canopy_02.png",
+    "canopy_03": "res://packs/Bp03igMq/textures/objects/canopy_03.png",
+    "castle_w_moat": "res://packs/RchUgE31/textures/objects/castle-w-moat.png",
+    "cathedral": "res://packs/RchUgE31/textures/objects/cathedral.png",
+    "cathedral_simple": "res://packs/RchUgE31/textures/objects/cathedral-simple.png",
+    "cemetery": "res://packs/RchUgE31/textures/objects/cemetery.png",
+    "cemetery_nondenominational": "res://packs/RchUgE31/textures/objects/cemetery-nondenominational.png",
     "chair": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Seats/Chair_01_Ashen.webp",
     "chair_01_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Seats/Chair_01_Ashen.webp",
     "chair_wood_01": "res://textures/objects/tables/chair_wood_01.png",
+    "cherry_tree_01": "res://textures/objects/vegetation/trees/cherry_tree_01.png",
+    "cherry_tree_02": "res://textures/objects/vegetation/trees/cherry_tree_02.png",
+    "cherry_tree_03": "res://textures/objects/vegetation/trees/cherry_tree_03.png",
+    "chimney": "res://packs/roSIrsHG/textures/objects/Chimney.png",
+    "church_01": "res://packs/Bp03igMq/textures/objects/church_01.png",
+    "column": "res://packs/Bp03igMq/textures/objects/pillar_01.png",
     "crate": "res://textures/objects/containers/crate_wood_01.png",
+    "crate_2": "res://packs/roSIrsHG/textures/objects/Crate 2.png",
     "crate_wood_01": "res://textures/objects/containers/crate_wood_01.png",
+    "crates_01": "res://packs/Bp03igMq/textures/objects/crates_01.png",
+    "crates_02": "res://packs/Bp03igMq/textures/objects/crates_02.png",
+    "crates_03": "res://packs/Bp03igMq/textures/objects/crates_03.png",
     "cupboard_wood_light_d_2x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_D_2x1.webp",
     "cupboard_wood_light_h2_2x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Cupboard_Wood_Light_H2_2x1.webp",
+    "dead_tree_01": "res://textures/objects/vegetation/trees/dead_tree_01.png",
+    "dead_tree_02": "res://textures/objects/vegetation/trees/dead_tree_02.png",
+    "dead_tree_03": "res://textures/objects/vegetation/trees/dead_tree_03.png",
+    "deck": "res://packs/roSIrsHG/textures/objects/Deck.png",
     "desk_wood_01": "res://textures/objects/tables/desk_wood_01.png",
+    "dirty_tarp": "res://packs/roSIrsHG/textures/objects/Dirty tarp.png",
+    "dock1": "res://packs/RchUgE31/textures/objects/dock1.png",
     "dq_alchemy_ingredient_prefab_09": "res://packs/XJdI4mDJ/textures/objects/[DQ] Alchemy Ingredients FREE/DQ_alchemy_ingredient_prefab_09.png",
+    "estate1": "res://packs/RchUgE31/textures/objects/estate1.png",
+    "estate2_lg": "res://packs/RchUgE31/textures/objects/estate2-lg.png",
+    "estate2_sm": "res://packs/RchUgE31/textures/objects/estate2-sm.png",
+    "eucalyptus_01": "res://textures/objects/more_trees/eucalyptus_01.png",
+    "eucalyptus_02": "res://textures/objects/more_trees/eucalyptus_02.png",
+    "eucalyptus_03": "res://textures/objects/more_trees/eucalyptus_03.png",
+    "eucalyptus_04": "res://textures/objects/more_trees/eucalyptus_04.png",
+    "fence_01": "res://packs/Bp03igMq/textures/objects/fence_01.png",
+    "fence_02": "res://packs/Bp03igMq/textures/objects/fence_02.png",
+    "fence_03": "res://packs/Bp03igMq/textures/objects/fence_03.png",
+    "forest_edge_01": "res://packs/Bp03igMq/textures/objects/forest_edge_01.png",
+    "forest_edge_02": "res://packs/Bp03igMq/textures/objects/forest_edge_02.png",
+    "forest_edge_03": "res://packs/Bp03igMq/textures/objects/forest_edge_03.png",
+    "forest_edge_04": "res://packs/Bp03igMq/textures/objects/forest_edge_04.png",
+    "forest_edge_05": "res://packs/Bp03igMq/textures/objects/forest_edge_05.png",
+    "forest_edge_06": "res://packs/Bp03igMq/textures/objects/forest_edge_06.png",
+    "forest_edge_07": "res://packs/Bp03igMq/textures/objects/forest_edge_07.png",
+    "forest_edge_08": "res://packs/Bp03igMq/textures/objects/forest_edge_08.png",
+    "forest_edge_09": "res://packs/Bp03igMq/textures/objects/forest_edge_09.png",
+    "forest_edge_10": "res://packs/Bp03igMq/textures/objects/forest_edge_10.png",
+    "forest_edge_11": "res://packs/Bp03igMq/textures/objects/forest_edge_11.png",
+    "forest_edge_12": "res://packs/Bp03igMq/textures/objects/forest_edge_12.png",
+    "forest_edge_13": "res://packs/Bp03igMq/textures/objects/forest_edge_13.png",
+    "forge": "res://packs/roSIrsHG/textures/objects/Forge.png",
     "fountain_stone_01": "res://textures/objects/decor/fountain_stone_01.png",
+    "funeral_pyre_01": "res://textures/objects/graveyard/funeral_pyre_01.png",
+    "funeral_pyre_02": "res://textures/objects/graveyard/funeral_pyre_02.png",
+    "funeral_pyre_03": "res://textures/objects/graveyard/funeral_pyre_03.png",
+    "funeral_pyre_04": "res://textures/objects/graveyard/funeral_pyre_04.png",
+    "gibbet": "res://packs/roSIrsHG/textures/objects/Gibbet.png",
+    "grave_01": "res://textures/objects/graveyard/grave_01.png",
+    "grave_02": "res://textures/objects/graveyard/grave_02.png",
+    "grave_03": "res://textures/objects/graveyard/grave_03.png",
+    "grave_04": "res://textures/objects/graveyard/grave_04.png",
+    "grave_05": "res://textures/objects/graveyard/grave_05.png",
+    "grave_06": "res://textures/objects/graveyard/grave_06.png",
+    "grave_07": "res://textures/objects/graveyard/grave_07.png",
+    "grave_08": "res://textures/objects/graveyard/grave_08.png",
+    "grave_09": "res://textures/objects/graveyard/grave_09.png",
+    "grave_10": "res://textures/objects/graveyard/grave_10.png",
+    "grave_11": "res://textures/objects/graveyard/grave_11.png",
+    "gravestone_01": "res://textures/objects/graveyard/gravestone_01.png",
+    "gravestone_02": "res://textures/objects/graveyard/gravestone_02.png",
+    "gravestone_03": "res://textures/objects/graveyard/gravestone_03.png",
+    "gravestone_04": "res://textures/objects/graveyard/gravestone_04.png",
+    "gravestone_05": "res://textures/objects/graveyard/gravestone_05.png",
+    "gravestone_06": "res://textures/objects/graveyard/gravestone_06.png",
+    "gravestone_07": "res://textures/objects/graveyard/gravestone_07.png",
     "gw_bakery_table_2": "res://packs/2usYTHKD/textures/objects/GW Bakery/gw bakery table 2.png",
+    "hamlet1": "res://packs/RchUgE31/textures/objects/hamlet1.png",
+    "hamlet2": "res://packs/RchUgE31/textures/objects/hamlet2.png",
+    "hamlet3": "res://packs/RchUgE31/textures/objects/hamlet3.png",
     "hat_witch_marisa": "res://packs/DnDgCORE/textures/objects/[DnD] Clothing/hat_witch_marisa.webp",
+    "hill1": "res://packs/RchUgE31/textures/objects/hill1.png",
+    "hill2": "res://packs/RchUgE31/textures/objects/hill2.png",
+    "hill_01": "res://packs/Bp03igMq/textures/objects/hill_01.png",
+    "hill_02": "res://packs/Bp03igMq/textures/objects/hill_02.png",
+    "hill_03": "res://packs/Bp03igMq/textures/objects/hill_03.png",
+    "hill_04": "res://packs/Bp03igMq/textures/objects/hill_04.png",
+    "hill_05": "res://packs/Bp03igMq/textures/objects/hill_05.png",
+    "hill_06": "res://packs/Bp03igMq/textures/objects/hill_06.png",
+    "hill_07": "res://packs/Bp03igMq/textures/objects/hill_07.png",
+    "hill_08": "res://packs/Bp03igMq/textures/objects/hill_08.png",
+    "hill_09": "res://packs/Bp03igMq/textures/objects/hill_09.png",
+    "hill_10": "res://packs/Bp03igMq/textures/objects/hill_10.png",
+    "hill_11": "res://packs/Bp03igMq/textures/objects/hill_11.png",
+    "hill_12": "res://packs/Bp03igMq/textures/objects/hill_12.png",
+    "hill_13": "res://packs/Bp03igMq/textures/objects/hill_13.png",
+    "hill_14": "res://packs/Bp03igMq/textures/objects/hill_14.png",
+    "hill_15": "res://packs/Bp03igMq/textures/objects/hill_15.png",
+    "house_01": "res://packs/Bp03igMq/textures/objects/house_01.png",
+    "house_02": "res://packs/Bp03igMq/textures/objects/house_02.png",
+    "house_03": "res://packs/Bp03igMq/textures/objects/house_03.png",
+    "house_04": "res://packs/Bp03igMq/textures/objects/house_04.png",
+    "house_05": "res://packs/Bp03igMq/textures/objects/house_05.png",
+    "house_06": "res://packs/Bp03igMq/textures/objects/house_06.png",
+    "house_07": "res://packs/Bp03igMq/textures/objects/house_07.png",
+    "house_08": "res://packs/Bp03igMq/textures/objects/house_08.png",
+    "house_09": "res://packs/Bp03igMq/textures/objects/house_09.png",
+    "house_10": "res://packs/Bp03igMq/textures/objects/house_10.png",
+    "house_11": "res://packs/Bp03igMq/textures/objects/house_11.png",
+    "house_12": "res://packs/Bp03igMq/textures/objects/house_12.png",
+    "inn_01": "res://packs/Bp03igMq/textures/objects/inn_01.png",
+    "j_maple_01": "res://textures/objects/more_trees/j_maple_01.png",
+    "j_maple_02": "res://textures/objects/more_trees/j_maple_02.png",
+    "j_maple_03": "res://textures/objects/more_trees/j_maple_03.png",
+    "j_maple_04": "res://textures/objects/more_trees/j_maple_04.png",
     "keg_wood_light_h_1x1": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Keg_Wood_Light_H_1x1.webp",
+    "ladder": "res://packs/roSIrsHG/textures/objects/Ladder.png",
+    "ladder_01": "res://packs/Bp03igMq/textures/objects/ladder_01.png",
+    "lantern_01": "res://packs/Bp03igMq/textures/objects/lantern_01.png",
+    "lantern_02": "res://packs/Bp03igMq/textures/objects/lantern_02.png",
+    "large_cill": "res://packs/roSIrsHG/textures/objects/Large Cill.png",
+    "large_dormer": "res://packs/roSIrsHG/textures/objects/Large Dormer.png",
+    "large_house": "res://packs/roSIrsHG/textures/objects/Large house.png",
+    "large_platform": "res://packs/roSIrsHG/textures/objects/Large platform.png",
+    "large_red_house": "res://packs/roSIrsHG/textures/objects/Large red house.png",
+    "large_roof_damage": "res://packs/roSIrsHG/textures/objects/Large roof damage.png",
     "latrine_multiple_01_a_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Latrines/Latrine_Multiple_01_A_Ashen.webp",
+    "long_round_fence": "res://packs/roSIrsHG/textures/objects/Long round fence.png",
+    "long_sqaure_fence": "res://packs/roSIrsHG/textures/objects/Long sqaure fence.png",
+    "long_stairs": "res://packs/roSIrsHG/textures/objects/Long stairs.png",
     "magic_circle_01": "res://textures/objects/decor/magic_circle_01.png",
     "magic_circle_small_01": "res://textures/objects/decor/magic_circle_small_01.png",
+    "maple_tree_colorable_01": "res://textures/objects/more_trees/maple_tree_colorable_01.png",
+    "maple_tree_colorable_02": "res://textures/objects/more_trees/maple_tree_colorable_02.png",
+    "maple_tree_colorable_03": "res://textures/objects/more_trees/maple_tree_colorable_03.png",
+    "mask_angle": "res://packs/RchUgE31/textures/objects/mask-angle.png",
+    "mask_curve": "res://packs/RchUgE31/textures/objects/mask-curve.png",
+    "mask_curve2": "res://packs/RchUgE31/textures/objects/mask-curve2.png",
+    "mask_double_curve": "res://packs/RchUgE31/textures/objects/mask-double-curve.png",
+    "mask_square": "res://packs/RchUgE31/textures/objects/mask-square.png",
+    "mask_u": "res://packs/RchUgE31/textures/objects/mask-U.png",
+    "medium_cill": "res://packs/roSIrsHG/textures/objects/Medium Cill.png",
+    "medium_roof_damage": "res://packs/roSIrsHG/textures/objects/Medium roof damage.png",
+    "medium_round_fence": "res://packs/roSIrsHG/textures/objects/Medium round fence.png",
+    "medium_square_fence": "res://packs/roSIrsHG/textures/objects/Medium square fence.png",
+    "mossy_trunks_01": "res://textures/objects/more_trees/mossy_trunks_01.png",
+    "mossy_trunks_02": "res://textures/objects/more_trees/mossy_trunks_02.png",
+    "mossy_trunks_03": "res://textures/objects/more_trees/mossy_trunks_03.png",
+    "mossy_trunks_04": "res://textures/objects/more_trees/mossy_trunks_04.png",
+    "mossy_trunks_05": "res://textures/objects/more_trees/mossy_trunks_05.png",
+    "mossy_trunks_06": "res://textures/objects/more_trees/mossy_trunks_06.png",
+    "moulin": "res://packs/RchUgE31/textures/objects/moulin.png",
+    "noose_1": "res://packs/roSIrsHG/textures/objects/Noose 1.png",
+    "noose_2": "res://packs/roSIrsHG/textures/objects/Noose 2.png",
+    "noose_3": "res://packs/roSIrsHG/textures/objects/Noose 3.png",
+    "oak_01": "res://textures/objects/more_trees/oak_01.png",
+    "oak_02": "res://textures/objects/more_trees/oak_02.png",
+    "oak_03": "res://textures/objects/more_trees/oak_03.png",
+    "oak_04": "res://textures/objects/more_trees/oak_04.png",
+    "ornament1": "res://packs/RchUgE31/textures/objects/ornament1.png",
+    "ornament2": "res://packs/RchUgE31/textures/objects/ornament2.png",
+    "ornament3": "res://packs/RchUgE31/textures/objects/ornament3.png",
+    "ornament4": "res://packs/RchUgE31/textures/objects/ornament4.png",
+    "ornament5": "res://packs/RchUgE31/textures/objects/ornament5.png",
     "oven_brick_red_a2_2x2": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/Oven_Brick_Red_A2_2x2.webp",
+    "palisade_gate": "res://packs/Bp03igMq/textures/objects/palisade_gate.png",
+    "palisades_01": "res://packs/Bp03igMq/textures/objects/palisades_01.png",
+    "palisades_02": "res://packs/Bp03igMq/textures/objects/palisades_02.png",
+    "palisades_03": "res://packs/Bp03igMq/textures/objects/palisades_03.png",
+    "palm_tree_01": "res://textures/objects/vegetation/trees/palm_tree_01.png",
+    "palm_tree_02": "res://textures/objects/vegetation/trees/palm_tree_02.png",
+    "palm_tree_03": "res://textures/objects/vegetation/trees/palm_tree_03.png",
     "pan": "res://textures/objects/activities/cooking/pan.png",
     "pants_02_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Clothing/Pants_02_A.webp",
+    "patched_tarp": "res://packs/roSIrsHG/textures/objects/Patched tarp.png",
+    "people1": "res://packs/RchUgE31/textures/objects/people1.png",
+    "pillar_01": "res://packs/Bp03igMq/textures/objects/pillar_01.png",
+    "pine_tree_01": "res://textures/objects/vegetation/trees/pine_tree_01.png",
+    "pine_tree_02": "res://textures/objects/vegetation/trees/pine_tree_02.png",
+    "pine_tree_03": "res://textures/objects/vegetation/trees/pine_tree_03.png",
+    "pine_tree_04": "res://textures/objects/vegetation/trees/pine_tree_04.png",
+    "red_dormer": "res://packs/roSIrsHG/textures/objects/Red dormer.png",
+    "red_portal": "res://packs/roSIrsHG/textures/objects/Red portal.png",
+    "rock_01": "res://packs/Bp03igMq/textures/objects/rock_01.png",
+    "rock_02": "res://packs/Bp03igMq/textures/objects/rock_02.png",
+    "rock_03": "res://packs/Bp03igMq/textures/objects/rock_03.png",
+    "rock_04": "res://packs/Bp03igMq/textures/objects/rock_04.png",
+    "rock_05": "res://packs/Bp03igMq/textures/objects/rock_05.png",
+    "rock_06": "res://packs/Bp03igMq/textures/objects/rock_06.png",
+    "rock_07": "res://packs/Bp03igMq/textures/objects/rock_07.png",
+    "rock_08": "res://packs/Bp03igMq/textures/objects/rock_08.png",
+    "rock_09": "res://packs/Bp03igMq/textures/objects/rock_09.png",
+    "roof_damage_small": "res://packs/roSIrsHG/textures/objects/Roof damage small.png",
     "rug_01": "res://textures/objects/decor/rug_01.png",
     "rug_rectangle_m2_colorable_3x2": "res://packs/FA30DDXY/textures/objects/[FA] Asset Testing/colorable/Rug_Rectangle_M2_Colorable_3x2.webp",
     "sauce_pan_lid_01_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Kitchenware/Sauce_Pan_Lid_01_A.webp",
+    "scaffold_01": "res://packs/Bp03igMq/textures/objects/scaffold_01.png",
+    "shed_01": "res://packs/Bp03igMq/textures/objects/shed_01.png",
+    "shed_02": "res://packs/Bp03igMq/textures/objects/shed_02.png",
+    "short_round_fence": "res://packs/roSIrsHG/textures/objects/Short round fence.png",
+    "short_square_fence": "res://packs/roSIrsHG/textures/objects/Short square fence.png",
+    "signpost": "res://packs/roSIrsHG/textures/objects/Signpost.png",
     "skeleton_04": "res://textures/objects/decor/dungeon/skeleton_04.png",
     "skeleton_grave_02": "res://textures/objects/decor/dungeon/skeleton_grave_02.png",
+    "small_cill": "res://packs/roSIrsHG/textures/objects/Small Cill.png",
+    "small_dormer": "res://packs/roSIrsHG/textures/objects/Small dormer.png",
+    "small_house": "res://packs/roSIrsHG/textures/objects/Small house.png",
+    "small_platform": "res://packs/roSIrsHG/textures/objects/small platform.png",
+    "small_red_house": "res://packs/roSIrsHG/textures/objects/Small red house.png",
     "small_table_08": "res://textures/objects/furniture/tables/small_table_08.png",
     "small_table_10": "res://textures/objects/furniture/tables/small_table_10.png",
+    "small_tarp_1": "res://packs/roSIrsHG/textures/objects/Small tarp 1.png",
+    "small_tarp_2": "res://packs/roSIrsHG/textures/objects/Small tarp 2.png",
+    "snow_edge_01": "res://packs/Bp03igMq/textures/objects/snow_edge_01.png",
+    "snow_edge_02": "res://packs/Bp03igMq/textures/objects/snow_edge_02.png",
+    "snow_edge_03": "res://packs/Bp03igMq/textures/objects/snow_edge_03.png",
+    "snow_edge_04": "res://packs/Bp03igMq/textures/objects/snow_edge_04.png",
+    "snow_edge_05": "res://packs/Bp03igMq/textures/objects/snow_edge_05.png",
+    "snow_edge_06": "res://packs/Bp03igMq/textures/objects/snow_edge_06.png",
+    "spider_web_well": "res://packs/roSIrsHG/textures/objects/Spider web well.png",
+    "spike_barricade_01": "res://packs/Bp03igMq/textures/objects/spike_barricade_01.png",
+    "spike_barricade_02": "res://packs/Bp03igMq/textures/objects/spike_barricade_02.png",
+    "spike_barricade_03": "res://packs/Bp03igMq/textures/objects/spike_barricade_03.png",
+    "stairs": "res://packs/roSIrsHG/textures/objects/Stairs.png",
     "stairs_round_04": "res://textures/objects/structures/stairs/stairs_round_04.png",
     "stairs_round_08": "res://textures/objects/structures/stairs/stairs_round_08.png",
     "statue_male_mage_alt_03_a": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Clutter/[WFW] Clutter - Ornaments and Decoration/[WFW] Statues/Statue_Male_Mage_Alt_03_A.webp",
+    "stone_stairs": "res://packs/roSIrsHG/textures/objects/Stone stairs.png",
+    "strawhouse_01": "res://packs/Bp03igMq/textures/objects/strawhouse_01.png",
+    "strawhouse_02": "res://packs/Bp03igMq/textures/objects/strawhouse_02.png",
+    "strawhouse_03": "res://packs/Bp03igMq/textures/objects/strawhouse_03.png",
+    "stump_01": "res://textures/objects/vegetation/trees/stump_01.png",
+    "stump_02": "res://textures/objects/vegetation/trees/stump_02.png",
+    "stump_03": "res://textures/objects/vegetation/trees/stump_03.png",
+    "stump_04": "res://textures/objects/vegetation/trees/stump_04.png",
+    "stump_05": "res://textures/objects/vegetation/trees/stump_05.png",
+    "table": "res://packs/roSIrsHG/textures/objects/Table.png",
+    "table_01": "res://packs/Bp03igMq/textures/objects/table_01.png",
+    "table_02": "res://packs/Bp03igMq/textures/objects/table_02.png",
     "table_3_v4": "res://packs/REqnHQfW/textures/objects/table 3 v4.png",
     "table_corner_wood_01": "res://textures/objects/furniture/tables/table_corner_wood_01.png",
     "table_round": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Tables/Table_Round_02_Ashen.webp",
     "table_round_02_ashen": "res://packs/WFWMFRDX/textures/objects/[WFW] Anniversary Megapack/[WFW] Fantasy/[WFW] Artificial/[WFW] Furniture/[WFW] Furniture - Tables/Table_Round_02_Ashen.webp",
     "table_wood_rectangular_small_01": "res://textures/objects/tables/table_wood_rectangular_small_01.png",
+    "tent_01": "res://packs/Bp03igMq/textures/objects/tent_01.png",
+    "tent_02": "res://packs/Bp03igMq/textures/objects/tent_02.png",
+    "tent_03": "res://packs/Bp03igMq/textures/objects/tent_03.png",
+    "thehangedman": "res://packs/RchUgE31/textures/objects/TheHangedMan.png",
+    "torch": "res://packs/Bp03igMq/textures/objects/torch_01.png",
+    "torch_01": "res://packs/Bp03igMq/textures/objects/torch_01.png",
+    "torch_02": "res://packs/Bp03igMq/textures/objects/torch_02.png",
+    "torch_lit": "res://packs/roSIrsHG/textures/objects/Torch lit.png",
+    "torch_unlit": "res://packs/roSIrsHG/textures/objects/Torch unlit.png",
+    "tourney_grounds": "res://packs/RchUgE31/textures/objects/tourney-grounds.png",
+    "trapdoor": "res://packs/roSIrsHG/textures/objects/Trapdoor.png",
+    "tree1": "res://packs/RchUgE31/textures/objects/tree1.png",
+    "tree2": "res://packs/RchUgE31/textures/objects/tree2.png",
+    "tree3": "res://packs/RchUgE31/textures/objects/tree3.png",
+    "tree4": "res://packs/RchUgE31/textures/objects/tree4.png",
+    "tree_01": "res://packs/Bp03igMq/textures/objects/tree_01.png",
+    "tree_02": "res://packs/Bp03igMq/textures/objects/tree_02.png",
+    "tree_03": "res://packs/Bp03igMq/textures/objects/tree_03.png",
+    "tree_04": "res://packs/Bp03igMq/textures/objects/tree_04.png",
+    "tree_05": "res://packs/Bp03igMq/textures/objects/tree_05.png",
+    "tree_06": "res://packs/Bp03igMq/textures/objects/tree_06.png",
+    "tree_07": "res://packs/Bp03igMq/textures/objects/tree_07.png",
+    "tree_big_green_01": "res://textures/objects/vegetation/trees/tree_big_green_01.png",
+    "tree_big_green_02": "res://textures/objects/vegetation/trees/tree_big_green_02.png",
+    "tree_big_green_03": "res://textures/objects/vegetation/trees/tree_big_green_03.png",
+    "tree_branch_01": "res://textures/objects/vegetation/trees/tree_branch_01.png",
+    "tree_branch_02": "res://textures/objects/vegetation/trees/tree_branch_02.png",
+    "tree_branch_03": "res://textures/objects/vegetation/trees/tree_branch_03.png",
+    "tree_flower_01": "res://textures/objects/more_trees/tree_flower_01.png",
+    "tree_flower_02": "res://textures/objects/more_trees/tree_flower_02.png",
+    "tree_flower_03": "res://textures/objects/more_trees/tree_flower_03.png",
+    "tree_flower_04": "res://textures/objects/more_trees/tree_flower_04.png",
+    "tree_green_simple_01": "res://textures/objects/vegetation/trees/tree_green_simple_01.png",
+    "tree_green_simple_02": "res://textures/objects/vegetation/trees/tree_green_simple_02.png",
+    "tree_green_simple_03": "res://textures/objects/vegetation/trees/tree_green_simple_03.png",
+    "tree_green_simple_04": "res://textures/objects/vegetation/trees/tree_green_simple_04.png",
+    "tree_massive_green_01": "res://textures/objects/vegetation/trees/tree_massive_green_01.png",
     "trough_barn_04": "res://textures/objects/stable/trough_barn_04.png",
+    "walkway_cap": "res://packs/roSIrsHG/textures/objects/Walkway cap.png",
+    "water_edge_01": "res://packs/Bp03igMq/textures/objects/water_edge_01.png",
+    "water_edge_02": "res://packs/Bp03igMq/textures/objects/water_edge_02.png",
+    "water_edge_03": "res://packs/Bp03igMq/textures/objects/water_edge_03.png",
+    "water_edge_04": "res://packs/Bp03igMq/textures/objects/water_edge_04.png",
+    "water_edge_05": "res://packs/Bp03igMq/textures/objects/water_edge_05.png",
+    "water_edge_06": "res://packs/Bp03igMq/textures/objects/water_edge_06.png",
+    "water_edge_07": "res://packs/Bp03igMq/textures/objects/water_edge_07.png",
+    "water_edge_08": "res://packs/Bp03igMq/textures/objects/water_edge_08.png",
+    "water_edge_09": "res://packs/Bp03igMq/textures/objects/water_edge_09.png",
+    "well": "res://packs/roSIrsHG/textures/objects/Well.png",
+    "well_bar": "res://packs/roSIrsHG/textures/objects/Well bar.png",
+    "well_bottom_black": "res://packs/roSIrsHG/textures/objects/well bottom black.png",
+    "well_bucket": "res://packs/roSIrsHG/textures/objects/Well bucket.png",
+    "well_cover": "res://packs/roSIrsHG/textures/objects/Well cover.png",
+    "windmill_01": "res://packs/Bp03igMq/textures/objects/windmill_01.png",
+    "windmill_02": "res://packs/Bp03igMq/textures/objects/windmill_02.png",
+    "windmill_03": "res://packs/Bp03igMq/textures/objects/windmill_03.png",
+    "wood_bridge_01": "res://packs/Bp03igMq/textures/objects/wood_bridge_01.png",
+    "wood_bridge_02": "res://packs/Bp03igMq/textures/objects/wood_bridge_02.png",
+    "wood_bridge_03": "res://packs/Bp03igMq/textures/objects/wood_bridge_03.png",
+    "wood_stairs_01": "res://packs/Bp03igMq/textures/objects/wood_stairs_01.png",
+    "wood_stairs_02": "res://packs/Bp03igMq/textures/objects/wood_stairs_02.png",
+    "wood_stairs_03": "res://packs/Bp03igMq/textures/objects/wood_stairs_03.png",
+    "wood_wall_01": "res://packs/Bp03igMq/textures/objects/wood_wall_01.png",
+    "wood_wall_02": "res://packs/Bp03igMq/textures/objects/wood_wall_02.png",
+    "wood_wall_03": "res://packs/Bp03igMq/textures/objects/wood_wall_03.png",
+    "wood_wall_04": "res://packs/Bp03igMq/textures/objects/wood_wall_04.png",
+    "wood_wall_05": "res://packs/Bp03igMq/textures/objects/wood_wall_05.png",
+    "wood_wall_06": "res://packs/Bp03igMq/textures/objects/wood_wall_06.png",
+    "wood_wall_07": "res://packs/Bp03igMq/textures/objects/wood_wall_07.png",
+    "wood_wall_08": "res://packs/Bp03igMq/textures/objects/wood_wall_08.png",
+    "wood_wall_09": "res://packs/Bp03igMq/textures/objects/wood_wall_09.png",
+    "wood_wall_10": "res://packs/Bp03igMq/textures/objects/wood_wall_10.png",
+    "wood_wall_11": "res://packs/Bp03igMq/textures/objects/wood_wall_11.png",
+    "wood_wall_12": "res://packs/Bp03igMq/textures/objects/wood_wall_12.png",
+    "wood_wall_13": "res://packs/Bp03igMq/textures/objects/wood_wall_13.png",
+    "wood_wall_14": "res://packs/Bp03igMq/textures/objects/wood_wall_14.png",
+    "wood_walls_gate": "res://packs/Bp03igMq/textures/objects/wood_walls_gate.png",
+    "wood_walls_tower": "res://packs/Bp03igMq/textures/objects/wood_walls_tower.png",
+    "wooden_barrel": "res://packs/roSIrsHG/textures/objects/Wooden barrel.png",
+    "wooden_barrel_lid": "res://packs/roSIrsHG/textures/objects/Wooden barrel lid.png",
+    "wooden_barrel_sideways": "res://packs/roSIrsHG/textures/objects/Wooden barrel sideways.png",
+    "wooden_coal_barrel": "res://packs/roSIrsHG/textures/objects/Wooden coal barrel.png",
+    "wooden_poison_barrel": "res://packs/roSIrsHG/textures/objects/Wooden poison barrel.png",
+    "wooden_water_barrel": "res://packs/roSIrsHG/textures/objects/Wooden water barrel.png",
     "worker_3": "res://packs/6v1aRL4R/textures/objects/Human/Active/Colorable/Worker (3).png"
   },
+  "terrain": {
+    "bb_grass_terrain": "res://packs/6VxwaRdj/textures/terrain/BB_Grass_terrain.png",
+    "bb_ground_terrain": "res://packs/6VxwaRdj/textures/terrain/BB_Ground_terrain.png",
+    "bb_sea_terrain": "res://packs/6VxwaRdj/textures/terrain/BB_Sea_terrain.png",
+    "chr_cobblestones": "res://packs/Bp03igMq/textures/terrain/chr_cobblestones.png",
+    "chr_dirt": "res://packs/Bp03igMq/textures/terrain/chr_dirt.png",
+    "chr_grass": "res://packs/Bp03igMq/textures/terrain/chr_grass.png",
+    "chr_ice": "res://packs/Bp03igMq/textures/terrain/chr_ice.png",
+    "chr_snow": "res://packs/Bp03igMq/textures/terrain/chr_snow.png",
+    "cityterrain": "res://packs/RchUgE31/textures/terrain/CityTerrain.png",
+    "cityterrainlarge": "res://packs/RchUgE31/textures/terrain/CityTerrainLarge.png"
+  },
   "object_sizes": {
+    "aspen_01": [
+      692,
+      616
+    ],
+    "aspen_02": [
+      674,
+      652
+    ],
+    "aspen_03": [
+      652,
+      558
+    ],
+    "aspen_04": [
+      516,
+      438
+    ],
+    "autumn_tree_01": [
+      2343,
+      2313
+    ],
+    "autumn_tree_02": [
+      1001,
+      1140
+    ],
+    "autumn_tree_03": [
+      1146,
+      1094
+    ],
+    "autumn_tree_04": [
+      777,
+      778
+    ],
+    "barrel_01": [
+      30,
+      42
+    ],
+    "bb_city_blacksmith_1_color": [
+      770,
+      770
+    ],
+    "bb_city_cathedral_1_color": [
+      770,
+      770
+    ],
+    "bb_city_coastline_1_color": [
+      770,
+      770
+    ],
+    "bb_city_dock_1_color": [
+      770,
+      770
+    ],
+    "bb_city_dock_2_color": [
+      770,
+      770
+    ],
+    "bb_city_farms_color": [
+      770,
+      770
+    ],
+    "bb_city_fort_1_color": [
+      770,
+      770
+    ],
+    "bb_city_houses_1_color": [
+      770,
+      770
+    ],
+    "bb_city_houses_2_color": [
+      770,
+      770
+    ],
+    "bb_city_houses_3_color": [
+      770,
+      770
+    ],
+    "bb_city_houses_4_color": [
+      770,
+      770
+    ],
+    "bb_city_lighthouse_1_color": [
+      770,
+      770
+    ],
+    "bb_city_market_1_color": [
+      770,
+      770
+    ],
+    "bb_city_orchard_1_color": [
+      770,
+      770
+    ],
+    "bb_city_tournament_1_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_corner_1_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_corner_2_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_gate_1_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_inverse_1_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_inverse_2_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_straight_1_color": [
+      770,
+      770
+    ],
+    "bb_city_wall_straight_2_color": [
+      770,
+      770
+    ],
+    "bb_city_woodmill_1_color": [
+      770,
+      770
+    ],
+    "bb_city_woods_1_color": [
+      770,
+      770
+    ],
+    "bb_city_woods_2_color": [
+      770,
+      770
+    ],
     "bb_countryroad_path": [
       770,
       144
+    ],
+    "bb_grass_terrain": [
+      770,
+      770
+    ],
+    "bb_ground_terrain": [
+      770,
+      770
     ],
     "bb_houses1_balcony": [
       26,
@@ -668,6 +1270,86 @@
       87,
       90
     ],
+    "bb_keepsandcastles_amphitheatre_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_castle_2_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_castle_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_cathedral_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_forestkeep_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_garden_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_keep_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_maze_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_moatkeep_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_seakeep_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_corner_1_entrance_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_corner_2_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_corner_3_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_corner_4_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_corner_inverse_1_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_corner_inverse_2_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_straight_1_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_straight_2_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_straight_3_color": [
+      770,
+      770
+    ],
+    "bb_keepsandcastles_wall_straight_wharf_color": [
+      770,
+      770
+    ],
     "bb_mainroad_path": [
       770,
       144
@@ -675,6 +1357,174 @@
     "bb_river_path": [
       770,
       336
+    ],
+    "bb_riversrunnin_exittosea_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_exittosea_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_fork_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_fork_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_opensea_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_opensea_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_bridge_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_corner_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_corner_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_corner_3_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_corner_4_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_island_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_wall_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_river_wall_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_sewers_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_village_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunnin_village_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunning_river_exit_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunning_river_straight_1_color": [
+      770,
+      770
+    ],
+    "bb_riversrunning_river_straight_2_color": [
+      770,
+      770
+    ],
+    "bb_riversrunning_river_waterfall_1_color": [
+      770,
+      770
+    ],
+    "bb_sea_terrain": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_colossusdocks_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_hiddenbeach_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_houses_1_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_houses_2_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_houses_3_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_houses_4_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_houses_5_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_lighthouse_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_nature_1_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_nature_2_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_nature_3_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_wallcorner_1_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_wallcorner_2_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_wallending_1_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_wallending_2_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_wallstraight_1_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_cliff_wallstraight_2_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_fishingvillage_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_island_monastery_color": [
+      770,
+      770
+    ],
+    "bb_seasandshores_island_ruins_color": [
+      770,
+      770
     ],
     "bb_shore_path": [
       770,
@@ -687,6 +1537,1418 @@
     "bb_wall_path": [
       770,
       104
+    ],
+    "bench_01": [
+      43,
+      48
+    ],
+    "birch_01": [
+      592,
+      578
+    ],
+    "birch_02": [
+      484,
+      462
+    ],
+    "birch_03": [
+      580,
+      524
+    ],
+    "birch_04": [
+      324,
+      316
+    ],
+    "bounty_board_01": [
+      66,
+      70
+    ],
+    "bridge1_1segment": [
+      86,
+      146
+    ],
+    "bridge1_2segment": [
+      173,
+      146
+    ],
+    "bridge1_3segment": [
+      259,
+      146
+    ],
+    "bridge1_4segment": [
+      346,
+      146
+    ],
+    "bridge1_end": [
+      86,
+      146
+    ],
+    "bridge2_1segment": [
+      69,
+      111
+    ],
+    "bridge2_2segment": [
+      138,
+      111
+    ],
+    "bridge2_3segment": [
+      207,
+      111
+    ],
+    "bridge2_4segment": [
+      276,
+      111
+    ],
+    "bridge2_end1": [
+      54,
+      111
+    ],
+    "bridge2_end2": [
+      63,
+      111
+    ],
+    "bush_01": [
+      83,
+      80
+    ],
+    "bush_02": [
+      82,
+      74
+    ],
+    "bush_03": [
+      76,
+      71
+    ],
+    "bush_04": [
+      51,
+      64
+    ],
+    "bush_05": [
+      42,
+      47
+    ],
+    "bush_06": [
+      42,
+      39
+    ],
+    "bush_07": [
+      68,
+      67
+    ],
+    "bush_08": [
+      40,
+      35
+    ],
+    "bush_09": [
+      86,
+      92
+    ],
+    "bush_flower_01": [
+      91,
+      107
+    ],
+    "bush_flower_02": [
+      97,
+      99
+    ],
+    "bush_flower_03": [
+      92,
+      93
+    ],
+    "bush_flower_04": [
+      109,
+      111
+    ],
+    "bush_flower_05": [
+      85,
+      93
+    ],
+    "bush_green_simple_01": [
+      436,
+      458
+    ],
+    "bush_green_simple_02": [
+      256,
+      236
+    ],
+    "bush_green_simple_03": [
+      439,
+      492
+    ],
+    "bush_green_simple_04": [
+      227,
+      227
+    ],
+    "bush_green_simple_05": [
+      288,
+      323
+    ],
+    "bush_green_simple_06": [
+      252,
+      243
+    ],
+    "bush_green_simple_07": [
+      353,
+      356
+    ],
+    "bush_green_simple_08": [
+      324,
+      249
+    ],
+    "bush_green_simple_09": [
+      246,
+      274
+    ],
+    "bush_green_simple_10": [
+      216,
+      279
+    ],
+    "bush_green_simple_11": [
+      216,
+      227
+    ],
+    "bush_green_simple_12": [
+      260,
+      276
+    ],
+    "bush_green_simple_13": [
+      224,
+      238
+    ],
+    "campfire_01": [
+      65,
+      60
+    ],
+    "canopy_01": [
+      87,
+      113
+    ],
+    "canopy_02": [
+      84,
+      93
+    ],
+    "canopy_03": [
+      104,
+      142
+    ],
+    "castle_w_moat": [
+      286,
+      171
+    ],
+    "cathedral": [
+      266,
+      317
+    ],
+    "cathedral_simple": [
+      145,
+      317
+    ],
+    "cemetery": [
+      185,
+      175
+    ],
+    "cemetery_nondenominational": [
+      185,
+      175
+    ],
+    "cherry_tree_01": [
+      480,
+      482
+    ],
+    "cherry_tree_02": [
+      719,
+      580
+    ],
+    "cherry_tree_03": [
+      671,
+      671
+    ],
+    "chimney": [
+      107,
+      132
+    ],
+    "chr_cobblestones": [
+      2048,
+      2048
+    ],
+    "chr_dirt": [
+      2048,
+      2048
+    ],
+    "chr_forest": [
+      1024,
+      1024
+    ],
+    "chr_grass": [
+      2048,
+      2048
+    ],
+    "chr_ice": [
+      1024,
+      1024
+    ],
+    "chr_snow": [
+      2048,
+      2048
+    ],
+    "chr_water": [
+      1024,
+      1024
+    ],
+    "church_01": [
+      295,
+      366
+    ],
+    "city_terrain_road": [
+      418,
+      32
+    ],
+    "cityterrain": [
+      2048,
+      2048
+    ],
+    "cityterrainlarge": [
+      2048,
+      2048
+    ],
+    "crate": [
+      220,
+      171
+    ],
+    "crate_2": [
+      220,
+      150
+    ],
+    "crates_01": [
+      75,
+      90
+    ],
+    "crates_02": [
+      33,
+      37
+    ],
+    "crates_03": [
+      33,
+      41
+    ],
+    "dead_tree_01": [
+      345,
+      298
+    ],
+    "dead_tree_02": [
+      602,
+      577
+    ],
+    "dead_tree_03": [
+      884,
+      875
+    ],
+    "deck": [
+      652,
+      273
+    ],
+    "dirty_tarp": [
+      349,
+      352
+    ],
+    "dock1": [
+      214,
+      117
+    ],
+    "estate1": [
+      324,
+      343
+    ],
+    "estate2_lg": [
+      520,
+      466
+    ],
+    "estate2_sm": [
+      281,
+      214
+    ],
+    "eucalyptus_01": [
+      612,
+      566
+    ],
+    "eucalyptus_02": [
+      740,
+      682
+    ],
+    "eucalyptus_03": [
+      502,
+      496
+    ],
+    "eucalyptus_04": [
+      574,
+      622
+    ],
+    "fence_01": [
+      60,
+      79
+    ],
+    "fence_02": [
+      74,
+      43
+    ],
+    "fence_03": [
+      18,
+      81
+    ],
+    "forest_edge_01": [
+      256,
+      256
+    ],
+    "forest_edge_02": [
+      256,
+      256
+    ],
+    "forest_edge_03": [
+      256,
+      256
+    ],
+    "forest_edge_04": [
+      256,
+      256
+    ],
+    "forest_edge_05": [
+      256,
+      512
+    ],
+    "forest_edge_06": [
+      256,
+      256
+    ],
+    "forest_edge_07": [
+      256,
+      256
+    ],
+    "forest_edge_08": [
+      256,
+      256
+    ],
+    "forest_edge_09": [
+      256,
+      512
+    ],
+    "forest_edge_10": [
+      256,
+      256
+    ],
+    "forest_edge_11": [
+      256,
+      256
+    ],
+    "forest_edge_12": [
+      256,
+      512
+    ],
+    "forest_edge_13": [
+      256,
+      512
+    ],
+    "forge": [
+      449,
+      219
+    ],
+    "funeral_pyre_01": [
+      341,
+      343
+    ],
+    "funeral_pyre_02": [
+      373,
+      531
+    ],
+    "funeral_pyre_03": [
+      327,
+      512
+    ],
+    "funeral_pyre_04": [
+      327,
+      512
+    ],
+    "gibbet": [
+      611,
+      34
+    ],
+    "grave_01": [
+      103,
+      293
+    ],
+    "grave_02": [
+      133,
+      311
+    ],
+    "grave_03": [
+      175,
+      331
+    ],
+    "grave_04": [
+      187,
+      331
+    ],
+    "grave_05": [
+      202,
+      348
+    ],
+    "grave_06": [
+      202,
+      348
+    ],
+    "grave_07": [
+      119,
+      123
+    ],
+    "grave_08": [
+      175,
+      331
+    ],
+    "grave_09": [
+      187,
+      331
+    ],
+    "grave_10": [
+      202,
+      348
+    ],
+    "grave_11": [
+      202,
+      348
+    ],
+    "gravestone_01": [
+      150,
+      59
+    ],
+    "gravestone_02": [
+      150,
+      59
+    ],
+    "gravestone_03": [
+      109,
+      53
+    ],
+    "gravestone_04": [
+      113,
+      39
+    ],
+    "gravestone_05": [
+      105,
+      44
+    ],
+    "gravestone_06": [
+      130,
+      46
+    ],
+    "gravestone_07": [
+      85,
+      43
+    ],
+    "hamlet1": [
+      211,
+      175
+    ],
+    "hamlet2": [
+      261,
+      142
+    ],
+    "hamlet3": [
+      422,
+      206
+    ],
+    "hill1": [
+      254,
+      214
+    ],
+    "hill2": [
+      148,
+      158
+    ],
+    "hill_01": [
+      394,
+      135
+    ],
+    "hill_02": [
+      318,
+      408
+    ],
+    "hill_03": [
+      46,
+      256
+    ],
+    "hill_04": [
+      291,
+      297
+    ],
+    "hill_05": [
+      256,
+      28
+    ],
+    "hill_06": [
+      332,
+      282
+    ],
+    "hill_07": [
+      512,
+      343
+    ],
+    "hill_08": [
+      218,
+      408
+    ],
+    "hill_09": [
+      148,
+      286
+    ],
+    "hill_10": [
+      213,
+      368
+    ],
+    "hill_11": [
+      157,
+      284
+    ],
+    "hill_12": [
+      197,
+      342
+    ],
+    "hill_13": [
+      312,
+      147
+    ],
+    "hill_14": [
+      280,
+      166
+    ],
+    "hill_15": [
+      144,
+      172
+    ],
+    "house_01": [
+      165,
+      226
+    ],
+    "house_02": [
+      208,
+      262
+    ],
+    "house_03": [
+      207,
+      263
+    ],
+    "house_04": [
+      195,
+      233
+    ],
+    "house_05": [
+      200,
+      238
+    ],
+    "house_06": [
+      184,
+      277
+    ],
+    "house_07": [
+      200,
+      265
+    ],
+    "house_08": [
+      153,
+      249
+    ],
+    "house_09": [
+      216,
+      213
+    ],
+    "house_10": [
+      180,
+      237
+    ],
+    "house_11": [
+      201,
+      236
+    ],
+    "house_12": [
+      194,
+      243
+    ],
+    "inn_01": [
+      264,
+      348
+    ],
+    "j_maple_01": [
+      450,
+      436
+    ],
+    "j_maple_02": [
+      788,
+      758
+    ],
+    "j_maple_03": [
+      640,
+      632
+    ],
+    "j_maple_04": [
+      746,
+      682
+    ],
+    "ladder": [
+      105,
+      76
+    ],
+    "ladder_01": [
+      47,
+      95
+    ],
+    "lantern_01": [
+      40,
+      67
+    ],
+    "lantern_02": [
+      41,
+      77
+    ],
+    "large_cill": [
+      38,
+      649
+    ],
+    "large_dormer": [
+      356,
+      655
+    ],
+    "large_house": [
+      729,
+      1488
+    ],
+    "large_platform": [
+      609,
+      653
+    ],
+    "large_red_house": [
+      727,
+      1488
+    ],
+    "large_roof_damage": [
+      925,
+      902
+    ],
+    "long_round_fence": [
+      655,
+      75
+    ],
+    "long_sqaure_fence": [
+      657,
+      69
+    ],
+    "long_square_fence": [
+      657,
+      69
+    ],
+    "long_stairs": [
+      260,
+      610
+    ],
+    "maple_tree_colorable_01": [
+      418,
+      310
+    ],
+    "maple_tree_colorable_02": [
+      464,
+      420
+    ],
+    "maple_tree_colorable_03": [
+      516,
+      506
+    ],
+    "mask_angle": [
+      76,
+      76
+    ],
+    "mask_curve": [
+      76,
+      76
+    ],
+    "mask_curve2": [
+      76,
+      76
+    ],
+    "mask_double_curve": [
+      76,
+      76
+    ],
+    "mask_square": [
+      76,
+      76
+    ],
+    "mask_u": [
+      76,
+      76
+    ],
+    "medium_cill": [
+      37,
+      537
+    ],
+    "medium_roof_damage": [
+      189,
+      269
+    ],
+    "medium_round_fence": [
+      370,
+      80
+    ],
+    "medium_square_fence": [
+      65,
+      359
+    ],
+    "mossy_trunks_01": [
+      446,
+      1028
+    ],
+    "mossy_trunks_02": [
+      188,
+      558
+    ],
+    "mossy_trunks_03": [
+      470,
+      262
+    ],
+    "mossy_trunks_04": [
+      170,
+      346
+    ],
+    "mossy_trunks_05": [
+      172,
+      614
+    ],
+    "mossy_trunks_06": [
+      342,
+      436
+    ],
+    "moulin": [
+      227,
+      267
+    ],
+    "noose_1": [
+      81,
+      95
+    ],
+    "noose_2": [
+      54,
+      67
+    ],
+    "noose_3": [
+      76,
+      107
+    ],
+    "oak_01": [
+      1232,
+      1074
+    ],
+    "oak_02": [
+      980,
+      896
+    ],
+    "oak_03": [
+      784,
+      776
+    ],
+    "oak_04": [
+      950,
+      972
+    ],
+    "ornament1": [
+      736,
+      672
+    ],
+    "ornament2": [
+      822,
+      524
+    ],
+    "ornament3": [
+      1344,
+      984
+    ],
+    "ornament4": [
+      1014,
+      1026
+    ],
+    "ornament5": [
+      318,
+      308
+    ],
+    "palisade_gate": [
+      104,
+      206
+    ],
+    "palisades_01": [
+      266,
+      119
+    ],
+    "palisades_02": [
+      30,
+      343
+    ],
+    "palisades_03": [
+      271,
+      359
+    ],
+    "palm_tree_01": [
+      596,
+      633
+    ],
+    "palm_tree_02": [
+      720,
+      741
+    ],
+    "palm_tree_03": [
+      952,
+      964
+    ],
+    "patched_tarp": [
+      349,
+      352
+    ],
+    "people1": [
+      114,
+      105
+    ],
+    "pillar_01": [
+      21,
+      77
+    ],
+    "pine_tree_01": [
+      519,
+      504
+    ],
+    "pine_tree_02": [
+      747,
+      793
+    ],
+    "pine_tree_03": [
+      1029,
+      1000
+    ],
+    "pine_tree_04": [
+      1917,
+      1867
+    ],
+    "red_dormer": [
+      357,
+      655
+    ],
+    "red_portal": [
+      100,
+      100
+    ],
+    "rock_01": [
+      45,
+      44
+    ],
+    "rock_02": [
+      49,
+      63
+    ],
+    "rock_03": [
+      55,
+      55
+    ],
+    "rock_04": [
+      57,
+      79
+    ],
+    "rock_05": [
+      48,
+      54
+    ],
+    "rock_06": [
+      30,
+      30
+    ],
+    "rock_07": [
+      74,
+      88
+    ],
+    "rock_08": [
+      56,
+      63
+    ],
+    "rock_09": [
+      47,
+      44
+    ],
+    "roof_damage_small": [
+      128,
+      155
+    ],
+    "scaffold_01": [
+      101,
+      152
+    ],
+    "shed_01": [
+      79,
+      119
+    ],
+    "shed_02": [
+      114,
+      145
+    ],
+    "short_round_fence": [
+      75,
+      280
+    ],
+    "short_square_fence": [
+      65,
+      272
+    ],
+    "signpost": [
+      65,
+      139
+    ],
+    "small_cill": [
+      350,
+      50
+    ],
+    "small_dormer": [
+      294,
+      538
+    ],
+    "small_house": [
+      749,
+      668
+    ],
+    "small_platform": [
+      247,
+      247
+    ],
+    "small_red_house": [
+      722,
+      722
+    ],
+    "small_tarp_1": [
+      349,
+      213
+    ],
+    "small_tarp_2": [
+      349,
+      213
+    ],
+    "snow_edge_01": [
+      210,
+      193
+    ],
+    "snow_edge_02": [
+      246,
+      72
+    ],
+    "snow_edge_03": [
+      84,
+      234
+    ],
+    "snow_edge_04": [
+      287,
+      116
+    ],
+    "snow_edge_05": [
+      82,
+      196
+    ],
+    "snow_edge_06": [
+      306,
+      211
+    ],
+    "spider_web_well": [
+      102,
+      102
+    ],
+    "spike_barricade_01": [
+      98,
+      155
+    ],
+    "spike_barricade_02": [
+      144,
+      130
+    ],
+    "spike_barricade_03": [
+      162,
+      76
+    ],
+    "stairs": [
+      252,
+      169
+    ],
+    "stone_stairs": [
+      120,
+      93
+    ],
+    "strawhouse_01": [
+      185,
+      209
+    ],
+    "strawhouse_02": [
+      191,
+      210
+    ],
+    "strawhouse_03": [
+      240,
+      245
+    ],
+    "stump_01": [
+      170,
+      158
+    ],
+    "stump_02": [
+      172,
+      174
+    ],
+    "stump_03": [
+      172,
+      189
+    ],
+    "stump_04": [
+      350,
+      360
+    ],
+    "stump_05": [
+      454,
+      438
+    ],
+    "table": [
+      272,
+      105
+    ],
+    "table_01": [
+      64,
+      73
+    ],
+    "table_02": [
+      75,
+      75
+    ],
+    "tent_01": [
+      101,
+      123
+    ],
+    "tent_02": [
+      74,
+      127
+    ],
+    "tent_03": [
+      161,
+      172
+    ],
+    "thehangedman": [
+      94,
+      103
+    ],
+    "torch_01": [
+      28,
+      62
+    ],
+    "torch_02": [
+      27,
+      62
+    ],
+    "torch_lit": [
+      77,
+      145
+    ],
+    "torch_unlit": [
+      61,
+      120
+    ],
+    "tourney_grounds": [
+      207,
+      263
+    ],
+    "trapdoor": [
+      104,
+      105
+    ],
+    "tree1": [
+      87,
+      128
+    ],
+    "tree2": [
+      87,
+      79
+    ],
+    "tree3": [
+      77,
+      62
+    ],
+    "tree4": [
+      64,
+      84
+    ],
+    "tree_01": [
+      98,
+      157
+    ],
+    "tree_02": [
+      99,
+      159
+    ],
+    "tree_03": [
+      102,
+      162
+    ],
+    "tree_04": [
+      75,
+      136
+    ],
+    "tree_05": [
+      90,
+      152
+    ],
+    "tree_06": [
+      93,
+      154
+    ],
+    "tree_07": [
+      76,
+      143
+    ],
+    "tree_big_green_01": [
+      1063,
+      1074
+    ],
+    "tree_big_green_02": [
+      986,
+      928
+    ],
+    "tree_big_green_03": [
+      973,
+      985
+    ],
+    "tree_branch_01": [
+      598,
+      603
+    ],
+    "tree_branch_02": [
+      788,
+      781
+    ],
+    "tree_branch_03": [
+      857,
+      876
+    ],
+    "tree_flower_01": [
+      408,
+      468
+    ],
+    "tree_flower_02": [
+      682,
+      684
+    ],
+    "tree_flower_03": [
+      682,
+      716
+    ],
+    "tree_flower_04": [
+      462,
+      466
+    ],
+    "tree_green_simple_01": [
+      581,
+      582
+    ],
+    "tree_green_simple_02": [
+      607,
+      524
+    ],
+    "tree_green_simple_03": [
+      550,
+      559
+    ],
+    "tree_green_simple_04": [
+      561,
+      556
+    ],
+    "tree_massive_green_01": [
+      2242,
+      2098
+    ],
+    "walkway_cap": [
+      56,
+      458
+    ],
+    "water_edge_01": [
+      373,
+      146
+    ],
+    "water_edge_02": [
+      461,
+      480
+    ],
+    "water_edge_03": [
+      90,
+      286
+    ],
+    "water_edge_04": [
+      408,
+      266
+    ],
+    "water_edge_05": [
+      346,
+      327
+    ],
+    "water_edge_06": [
+      259,
+      348
+    ],
+    "water_edge_07": [
+      204,
+      310
+    ],
+    "water_edge_08": [
+      165,
+      336
+    ],
+    "water_edge_09": [
+      181,
+      275
+    ],
+    "well": [
+      330,
+      331
+    ],
+    "well_bar": [
+      255,
+      29
+    ],
+    "well_bottom_black": [
+      100,
+      100
+    ],
+    "well_bucket": [
+      81,
+      107
+    ],
+    "well_cover": [
+      186,
+      175
+    ],
+    "windmill_01": [
+      230,
+      302
+    ],
+    "windmill_02": [
+      260,
+      346
+    ],
+    "windmill_03": [
+      197,
+      278
+    ],
+    "wood_bridge_01": [
+      219,
+      210
+    ],
+    "wood_bridge_02": [
+      224,
+      245
+    ],
+    "wood_bridge_03": [
+      227,
+      249
+    ],
+    "wood_stairs_01": [
+      69,
+      118
+    ],
+    "wood_stairs_02": [
+      79,
+      106
+    ],
+    "wood_stairs_03": [
+      78,
+      85
+    ],
+    "wood_wall_01": [
+      256,
+      256
+    ],
+    "wood_wall_02": [
+      512,
+      512
+    ],
+    "wood_wall_03": [
+      256,
+      512
+    ],
+    "wood_wall_04": [
+      512,
+      512
+    ],
+    "wood_wall_05": [
+      256,
+      256
+    ],
+    "wood_wall_06": [
+      256,
+      256
+    ],
+    "wood_wall_07": [
+      256,
+      256
+    ],
+    "wood_wall_08": [
+      256,
+      256
+    ],
+    "wood_wall_09": [
+      256,
+      256
+    ],
+    "wood_wall_10": [
+      256,
+      256
+    ],
+    "wood_wall_11": [
+      256,
+      256
+    ],
+    "wood_wall_12": [
+      256,
+      256
+    ],
+    "wood_wall_13": [
+      256,
+      256
+    ],
+    "wood_wall_14": [
+      256,
+      256
+    ],
+    "wood_walls_gate": [
+      191,
+      295
+    ],
+    "wood_walls_tower": [
+      127,
+      245
+    ],
+    "wooden_barrel": [
+      157,
+      155
+    ],
+    "wooden_barrel_lid": [
+      96,
+      95
+    ],
+    "wooden_barrel_sideways": [
+      190,
+      170
+    ],
+    "wooden_coal_barrel": [
+      157,
+      155
+    ],
+    "wooden_poison_barrel": [
+      157,
+      155
+    ],
+    "wooden_water_barrel": [
+      157,
+      155
     ]
   }
 }

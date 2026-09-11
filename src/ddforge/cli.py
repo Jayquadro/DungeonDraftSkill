@@ -112,13 +112,22 @@ def _cmd_generate(args: argparse.Namespace) -> int:
             building_type=args.building_type, l_shaped=args.l_shaped,
         )
     elif is_city:
-        # --scale e l'unico parametro esclusivo di city (TASK-41): passato
-        # solo qui, come --building-type/--l-shaped per building.
-        blueprint = generators[args.algorithm].generate(
-            width=args.width if args.width is not None else 40,
-            height=args.height if args.height is not None else 40,
-            seed=args.seed, scale=args.scale,
-        )
+        # --scale, --landmark e --no-landmarks sono i parametri esclusivi di
+        # city (TASK-41/TASK-48): passati solo qui, come
+        # --building-type/--l-shaped per building.
+        try:
+            blueprint = generators[args.algorithm].generate(
+                width=args.width if args.width is not None else 40,
+                height=args.height if args.height is not None else 40,
+                seed=args.seed, scale=args.scale,
+                landmarks=not args.no_landmarks, requested_landmarks=args.landmark,
+            )
+        except ValueError as exc:
+            # Tipicamente: un elemento urbano chiesto con --landmark che non e
+            # ammissibile al preset di scala scelto (TASK-48 AC3). Messaggio
+            # esplicito, non un traceback.
+            print(f"Errore: {exc}", file=sys.stderr)
+            return 1
     else:
         blueprint = generators[args.algorithm].generate(
             width=args.width if args.width is not None else 40,
@@ -268,7 +277,7 @@ def _cmd_inspect(args: argparse.Namespace) -> int:
 def _cmd_catalog(args: argparse.Namespace) -> int:
     import json
 
-    from ddforge.assets import build_catalog, read_dungeondraft_pack
+    from ddforge.assets import build_catalog, read_base_pack, read_dungeondraft_pack
 
     docs = []
     for path in args.from_template:
@@ -277,7 +286,24 @@ def _cmd_catalog(args: argparse.Namespace) -> int:
 
     pack_sources = [read_dungeondraft_pack(path) for path in args.pack]
 
-    catalog = build_catalog(*docs, pack_sources=pack_sources)
+    base = None
+    if args.from_catalog:
+        with open(args.from_catalog, encoding="utf-8") as f:
+            base = json.load(f)
+
+    base_pack = None
+    if args.base_pck:
+        if not args.base_include:
+            print(
+                "Errore: --base-pck richiede almeno un --base-include. Le texture base "
+                "sono oltre duemila: si dichiara quali cartelle importare, non si prende "
+                "tutto.",
+                file=sys.stderr,
+            )
+            return 1
+        base_pack = read_base_pack(args.base_pck, args.base_include)
+
+    catalog = build_catalog(*docs, pack_sources=pack_sources, base=base, base_pack=base_pack)
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -309,6 +335,15 @@ def _cmd_preview(args: argparse.Namespace) -> int:
 
     print(f"Scritto {out}")
     return 0
+
+
+def _landmark_choices() -> tuple:
+    """Valori accettati da --landmark (TASK-48). Import locale come
+    _load_generators: il parser si costruisce anche per `ddforge --help`, e
+    non deve tirarsi dietro i generatori per stampare un elenco."""
+    from ddforge.generators.landmarks import REQUESTABLE
+
+    return REQUESTABLE
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -345,6 +380,26 @@ def build_parser() -> argparse.ArgumentParser:
              "'quartiere' = 1 quadretto = 1 edificio, un quartiere intero visto dall'alto; "
              "'citta' = una citta intera, capace di contenere una decina di quartieri",
     )
+    p_generate.add_argument(
+        "--landmark", action="append", default=[], choices=sorted(_landmark_choices()),
+        metavar="ELEMENTO",
+        # metavar invece delle choices nella riga di uso: sono una
+        # quarantina, e argparse le stamperebbe tutte fra graffe in cima
+        # all'help rendendolo illeggibile. L'elenco resta completo, ma qui
+        # sotto, dove argparse lo manda a capo.
+        help="elemento urbano notevole da includere per certo nella mappa "
+             "(solo per l'algoritmo 'city'); ripetibile. Senza questo "
+             "parametro gli elementi sono estratti a sorte dal seed. "
+             "Chiedere un elemento non ammissibile per il --scale scelto e' "
+             "un errore esplicito. Valori accettati (luoghi e strutture): "
+             + ", ".join(sorted(_landmark_choices())),
+    )
+    p_generate.add_argument(
+        "--no-landmarks", action="store_true",
+        help="nessun elemento urbano notevole e nessuna struttura (solo per "
+             "l'algoritmo 'city'): riporta il generatore alla sola rete di "
+             "strade, isolati ed edifici",
+    )
     p_generate.add_argument("--style", default=None, help="palette semantica, es. crypt, tavern, sewer")
     p_generate.add_argument("--lights", action="store_true")
     p_generate.add_argument("--furnish", choices=["none", "light", "medium", "heavy"], default="none")
@@ -368,6 +423,28 @@ def build_parser() -> argparse.ArgumentParser:
         help="file .dungeondraft_pack sorgente da leggere direttamente (texture native "
              "e dimensioni pixel, non ricavabili da un .dungeondraft_map); ripetibile. "
              "Il pack deve essere gia referenziato da almeno un --from",
+    )
+    p_catalog.add_argument(
+        "--from-catalog", dest="from_catalog", default=None,
+        help="catalogo gia esistente da cui ripartire: le sue chiavi vengono "
+             "conservate tutte. Serve a far crescere data/assets.json in modo "
+             "incrementale quando i documenti --from da cui erano nate certe "
+             "chiavi non sono piu disponibili. Le texture del catalogo di "
+             "partenza restano soggette al controllo sul pack orfano",
+    )
+    p_catalog.add_argument(
+        "--base-pck", dest="base_pck", default=None,
+        help="Dungeondraft.pck, per pescare le texture BASE del programma (di solito "
+             "C:/Program Files/Dungeondraft/Dungeondraft.pck). Non appartengono a nessun "
+             "pack, quindi non possono far scattare DDF014. Richiede --base-include",
+    )
+    p_catalog.add_argument(
+        "--base-include", dest="base_include", action="append", default=[],
+        metavar="PREFISSO",
+        help="cartella res:// del pck base da importare, per esempio "
+             "res://textures/objects/graveyard/; ripetibile. Obbligatorio con --base-pck: "
+             "il pck base ha oltre duemila texture e prenderle tutte riempirebbe il "
+             "catalogo di roba che nessuno ha chiesto",
     )
     p_catalog.add_argument("--out", default="data/assets.json")
     p_catalog.set_defaults(func=_cmd_catalog)

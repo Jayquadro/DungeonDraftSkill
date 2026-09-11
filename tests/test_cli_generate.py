@@ -312,6 +312,55 @@ def test_generate_city_scale_defaults_to_isolato(tmp_path):
     assert outs[0] == outs[1]
 
 
+def test_generate_city_landmark_flag_forces_an_element(tmp_path):
+    """TASK-48 AC1: --landmark chiede un elemento urbano per certo. Si
+    verifica sul documento scritto e non sul Blueprint (quello e' gia'
+    coperto da tests/test_city_landmarks.py): qui interessa che il flag
+    arrivi fino in fondo alla catena."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "city",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "70", "--height", "70", "--seed", "1337",
+        "--landmark", "tempio", "--landmark", "mercato",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    labels = {t["text"] for t in doc["world"]["levels"]["0"]["texts"]}
+    assert {"Tempio", "Piazza del Mercato"} <= labels, sorted(labels)
+
+
+def test_generate_city_landmark_not_admitted_by_the_scale_is_a_clear_error(tmp_path):
+    """TASK-48 AC3: chiedere un elemento non ammissibile al preset non e'
+    un'omissione silenziosa ne' un traceback, e' un messaggio."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "city",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "70", "--height", "70", "--seed", "1", "--landmark", "arena",
+    )
+    assert result.returncode == 1
+    assert "non e' ammissibile al preset" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert not out.exists()
+
+
+def test_generate_city_no_landmarks_writes_a_map_without_places(tmp_path):
+    """TASK-48: --no-landmarks riporta il generatore a prima del task."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "city",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "70", "--height", "70", "--seed", "1337", "--no-landmarks",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    assert doc["world"]["levels"]["0"]["texts"] == []
+
+
 def test_all_declared_algorithms_are_wired_to_a_generator():
     """Nessuno stile fantasma nelle choices del parser (build_parser)
     che poi fallisce silenziosamente in _cmd_generate: regressione diretta
