@@ -3,11 +3,11 @@ id: TASK-48
 title: >-
   Elementi urbani notevoli nelle mappe cittadine: inserimento, proporzioni e
   bilanciamento
-status: In Progress
+status: Done
 assignee:
   - '@claude'
 created_date: '2026-09-09 08:36'
-updated_date: '2026-09-14 12:53'
+updated_date: '2026-09-14 14:41'
 labels: []
 milestone: m-8
 dependencies:
@@ -45,7 +45,7 @@ Da decidere in fase di piano, non qui: se un elemento sia un edificio con una ti
 - [x] #6 Gli elementi non si sovrappongono fra loro ne a strade, piazze o edifici esistenti
 - [x] #7 Le proporzioni risultanti sono misurate e documentate su piu seed e per ciascun preset, non solo affermate
 - [x] #8 Il documento generato passa validate() senza errori in tutti i preset e con e senza elementi richiesti
-- [ ] #9 Jay apre in Dungeondraft una mappa per preset e conferma che i luoghi si riconoscono e le proporzioni reggono al tavolo
+- [x] #9 Jay apre in Dungeondraft una mappa per preset e conferma che i luoghi si riconoscono e le proporzioni reggono al tavolo
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -236,6 +236,8 @@ Aggiornati docs/format.md (le tre risposte, al posto della nota 'dedotto non oss
 Rettifica: tre parole fra apici inversi sono state mangiate dalla shell nella nota qui sopra. Per esteso: (1) il campo e' text.position; (4) le texture di categoria terrain dentro un elemento pattern Dungeondraft le rende.
 
 Difetto trovato da validate SUBITO DOPO la correzione delle etichette, e corretto: passando l'angolo in alto a sinistra invece della mezzeria, il nome di un luogo vicino al bordo cominciava fuori dal canvas (DDF101, x = -104 px su una mappa quartiere). Nuovo compose._clamp_box: l'ingombro dell'etichetta viene spostato quel tanto che basta a rientrare, e il controllo di collisione usa il riquadro gia' spostato. Test test_no_label_falls_off_the_canvas. E' il tipo di difetto che l'occhio non vede su un'anteprima e che il validatore prende al primo colpo.
+
+NONO GIRO: gate umano (AC9) chiuso. Jay ha confermato sui tre preset (isolato/quartiere/citta) che i luoghi si riconoscono e le proporzioni reggono al tavolo, dopo la taratura delle etichette (misurate, non dedotte), le aree colorate per giardino/cimitero e gli sprite scelti sul campionario. Nessuna ulteriore modifica richiesta.
 <!-- SECTION:NOTES:END -->
 
 ## Comments
@@ -282,4 +284,6 @@ NON REGRESSIONE. Con --no-landmarks l'output e' byte-identico a prima del task: 
 TRE DIFETTI REALI TROVATI STRADA FACENDO, tutti corretti: riproducibilita' rotta fra processi (hash() di Python e' randomizzato per processo, sostituito con crc32 - lo ha trovato il test CLI, che gira in sottoprocesso); due regole di AC5 che non vincolavano nulla perche' si fidavano del tipo di sito (municipio/banca 'sulla piazza', monastero 'ai margini'); e nessun luogo largo piu' di una cella riusciva a stare sulla banchina, che e' una striscia di una colonna sola, quindi il porto restava senza cantiere navale.
 
 AC9 (gate umano) RESTA APERTA: Jay deve aprire in Dungeondraft generated/city_isolato_task48, city_quartiere_task48, city_citta_task48 e city_porto_task48 (quest'ultimo con --landmark porto, perche' il seed 1337 non estrae il porto da solo) e confermare che i luoghi si riconoscono e le proporzioni reggono al tavolo. Da guardare in particolare: l'ancoraggio delle etichette 'text', l'unico campo dello schema di docs/format.md 4 di cui non si conosce la semantica (un solo campione in tutto il progetto) - draw_landmark lo tratta come centro dell'ingombro, e se le etichette risultassero spostate in modo sistematico la correzione e' una riga.
+
+AC9 confermata da Jay il 2026-09-14 sui tre preset (isolato/quartiere/citta): luoghi riconoscibili e proporzioni valide al tavolo. Tutte le 9 AC verificate.
 <!-- SECTION:FINAL_SUMMARY:END -->
