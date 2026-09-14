@@ -651,6 +651,9 @@ _CITY_LANDMARK_SPRITES: dict[str, tuple[str, ...]] = {
     "locanda": ("inn_01",),
     "bordello": ("house_06",),
     "bagni": ("house_04",),
+    # Ripiego in attesa di nm_ospedale.png (prompt/01-ospedale.md, TASK-48.1):
+    # house_02 non e' usato da nessun altro luogo.
+    "ospedale": ("house_02",),
     "lazzaretto": ("strawhouse_03",),
     # --- struttura urbana -------------------------------------------------
     "torre_guardia": ("wood_walls_tower",),
@@ -672,7 +675,11 @@ _CITY_LANDMARK_SPRITES: dict[str, tuple[str, ...]] = {
         "tree_big_green_01", "tree_big_green_03", "tree_green_simple_01",
         "tree_green_simple_03", "tree_massive_green_01",
     ),
-    "cimitero": ("gravestone_01", "gravestone_02", "gravestone_04", "gravestone_05"),
+    # Variante C del foglio delle aree: lapidi e tumuli mescolati. Le lapidi
+    # sono lastre larghe, i tumuli fosse strette e lunghe: disposti a filari
+    # (LandmarkKind.layout) danno un camposanto in cui si distingue una tomba
+    # dall'altra invece di quattro file della stessa lastra.
+    "cimitero": ("gravestone_01", "gravestone_02", "grave_01", "grave_02", "grave_08"),
 }
 
 

@@ -218,6 +218,9 @@ class Landmark:
     # a scale diverse fra loro e la dimensione nativa di uno sprite non e'
     # la sua dimensione reale. Vedi LandmarkKind.piece_size.
     piece_size: float = 1.5
+    # Come si dispongono i pezzi: "sparso" o "filari". Vedi
+    # LandmarkKind.layout.
+    layout: str = "sparso"
     # Chiave di Palette.floors per il terreno steso sotto gli sprite sparsi
     # ("selciato", "verde", "terra"), o None per lasciare il terreno della
     # mappa. Solo per i luoghi open_air.

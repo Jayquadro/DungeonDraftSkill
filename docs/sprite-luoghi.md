@@ -69,7 +69,7 @@ tabelle qui sotto.
   le case del pacchetto BB cambiano tinta. Se si vuole la stessa variazione,
   la parte variabile (il tetto) va disegnata in rosso saturo.
 
-## 3. Luoghi chiusi — uno sprite ciascuno (28)
+## 3. Luoghi chiusi — uno sprite ciascuno (29)
 
 `disegnato a` è la dimensione a cui lo sprite viene effettivamente reso sulla
 mappa, misurata; `px consigliati` è la risoluzione nativa da consegnare, presa
@@ -94,6 +94,7 @@ con un margine sul caso peggiore.
 | `caserma` | Caserma della Guardia | 4,4 × 3,5 q / 1,3 × 1,2 q | 0,75 / 0,9 | corpo di guardia con cortile d'armi recintato |
 | `teatro` | Teatro | 4,9 × 3,4 q / 1,1 × 1,2 q | 0,4 / 0,45 | pianta semicircolare |
 | `bagni` | Bagni Pubblici | 4,0 × 4,4 q / 1,2 × 1,3 q | 0,25 / 0,35 | vasche a cielo aperto e spogliatoi |
+| `ospedale` | Ospedale | 4,0 × 4,1 q / 1,1 × 1,3 q | 0,60 / 0,65 | corsia unica con chiostro e orto dei semplici; dentro le mura, non isolato come il lazzaretto |
 | `mulino` | Mulino ad Acqua | 5,2 × 3,3 q / 1,0 × 1,4 q | 0,25 / 0,2 | **ad acqua**, con ruota sul lato: sta sempre sulla riva del fiume |
 | `faro` | Faro | 3,1 × 3,0 q / 1,0 × 1,2 q | 0,2 / 0,2 | torre cilindrica vista dall'alto, lanterna al centro; sta sulla banchina |
 | `lazzaretto` | Lazzaretto | 3,3 × 3,6 q / 0,9 × 1,0 q | 0,5 / 0,5 | edificio lungo e basso, isolato, con recinto; sta fuori le mura |
@@ -133,8 +134,8 @@ distribuisce a caso dentro l'area, senza mai sovrapporli.
 | `mercato` | Piazza del Mercato | 4,7 × 3,8 q | selciato | 2 q = **3 m** | banco con tenda ×3, cesta di merci, carro |
 | `patibolo` | Patibolo | 3,6 × 3,2 q | selciato | 2 q = **3 m** | forca, gogna, ceppo |
 | `statua` | Statua | 3,0 × 2,8 q | nessuno | 1,5 q = **2,2 m** | statua su piedistallo ×3 (guerriero, mago, figura ammantata) |
-| `giardino` | Giardino Pubblico | 7,8 × 7,8 q | erba | 3 q = **4,5 m** | albero ×3, cespuglio ×2, aiuola, panchina |
-| `cimitero` | Cimitero | 4,4 × 5,2 q | erba | 1,5 q = **2,2 m** | lapide ×3, tomba a cassa, croce, cappella |
+| `giardino` | Giardino Pubblico | 7,8 × 7,8 q | erba | 3 q = **4,5 m** | chioma d'albero ×3 (sole **verdi**), cespuglio ×2, aiuola |
+| `cimitero` | Cimitero | 4,4 × 5,2 q | erba | 1,5 q = **2,2 m** | lapide ×3 (lastra con la pietra in testa, vista dall'alto), croce, fossa recintata |
 | `fiera` | Fiera | 5,2 × 4,9 q | terra battuta | 3 q = **4,5 m** | tendone ×2, palco, fuoco da campo, carro, bancarella |
 
 **Dimensione dei pezzi sparsi: 512×512 px.**
@@ -178,14 +179,11 @@ Già in uso dal generatore:
 | mercato, patibolo, cantiere | `tileset_cobble` (selciato) |
 | statua | nessuna: sta già su una piazza pavimentata |
 
-> **Non verificato:** che Dungeondraft accetti una texture di categoria
-> `terrain` (`chr_grass`, `chr_dirt`) dentro un elemento `pattern`. L'indizio
-> a favore è che il template ricco disegnato a mano da Jay usa come pattern
-> texture di `tilesets/simple/`, quindi lo strumento non si limita a
-> `patterns/normal/`. La conferma arriva dal foglio di
-> `scripts/label_calibration.py`, che stende una toppa per ciascuna. Se il
-> pacchetto includesse le stesse texture anche sotto
-> `textures/patterns/normal/`, la questione sparirebbe del tutto.
+**Verificato**: Dungeondraft accetta una texture di categoria `terrain`
+dentro un elemento `pattern`. Il foglio di `scripts/label_calibration.py`
+stende una toppa per ognuna delle sedici texture candidate, e aperto in
+Dungeondraft si vedono tutte. Il pacchetto non ha quindi bisogno di
+consegnare le texture di terreno in doppia copia.
 
 ## 7. Cosa NON serve
 
@@ -219,9 +217,9 @@ che cambia di più il risultato.
 
 | categoria | pezzi |
 |---|---|
-| luoghi chiusi | 28 |
+| luoghi chiusi | 29 |
 | pezzi dei luoghi all'aperto | ~18 |
-| **totale minimo** | **~46** |
+| **totale minimo** | **~47** |
 | case ordinarie (facoltative) | 10–15 |
 
 Tre elementi che c'erano in una versione precedente di questo documento sono

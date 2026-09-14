@@ -4,9 +4,17 @@
 Serve a rispondere a tre domande a cui il codice, da solo, non puo' rispondere,
 perche' riguardano come DUNGEONDRAFT rende quello che scriviamo nel file. Su
 `text` il progetto ha un solo campione osservato in tutto (docs/format.md §4),
-e finora le risposte le ho DEDOTTE: la deduzione si e' rivelata sbagliata e le
-etichette sono uscite fuori misura e sovrapposte. Questo foglio le misura
-invece di indovinarle.
+e le risposte erano state DEDOTTE: la deduzione si e' rivelata sbagliata e le
+etichette uscivano fuori misura e sovrapposte. Questo foglio le misura invece
+di indovinarle.
+
+GIA' USATO UNA VOLTA, e le risposte stanno in docs/format.md §4: `position`
+e' l'angolo in alto a sinistra del riquadro; un carattere e' largo ~2,10
+pixel di mondo per unita' di `font_size`; corpo 64 e' il minimo leggibile a
+mappa intera; e le texture di categoria `terrain` dentro un `pattern`
+Dungeondraft le rende. Il foglio resta qui perche' serve di nuovo ogni volta
+che si tocca il modo di scrivere i nomi, o che si vuole aggiungere una
+texture di terreno.
 
     python scripts/label_calibration.py --out generated/calibrazione.dungeondraft_map
 

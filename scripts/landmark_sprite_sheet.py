@@ -118,6 +118,7 @@ CANDIDATES: dict[str, tuple[str, ...]] = {
     "locanda": ("inn_01", "large_house", "large_red_house", "house_02", "hamlet3"),
     "bordello": ("house_06", "house_08", "small_red_house", "bb_houses1_balcony", "house_04"),
     "bagni": ("house_04", "estate2_sm", "house_01", "hamlet1"),
+    "ospedale": ("house_02", "house_11", "house_12", "estate2_sm", "hamlet1", "large_house"),
     "lazzaretto": ("shed_02", "strawhouse_03", "small_house", "hamlet1", "house_08"),
     # --- struttura urbana -------------------------------------------------
     "torre_guardia": (
@@ -454,10 +455,11 @@ def areas(template: str, out: str) -> int:
                 mark = Landmark(
                     kind=kind, label="", rect=rect, site="band", open_air=True,
                     ground=ground, piece_size=BY_KEY[kind].piece_size,
+                    layout=BY_KEY[kind].layout,
                 )
                 # rng fisso: due varianti affiancate devono differire per i
                 # PEZZI, non per come sono caduti i dadi.
-                draw_landmark(levels, ids, mark, palette, random.Random(1337), labels=[])
+                draw_landmark(levels, ids, mark, palette, random.Random(1337))
             add_text(
                 levels["0"], ids, x + AREA_CELL_W / 2, small.y2 + 0.8,
                 f"{kind} {title}", font_size=LABEL_FONT,

@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@claude'
 created_date: '2026-09-09 08:36'
-updated_date: '2026-09-11 13:25'
+updated_date: '2026-09-14 12:53'
 labels: []
 milestone: m-8
 dependencies:
@@ -197,6 +197,45 @@ LIMITE NOTO del foglio delle aree: piece_size e' uno per luogo, quindi nella var
 DUE TEST RISCRITTI perche' la loro premessa era superata, non perche' fallivano per un bug:
 - test_a_gravestone_is_the_same_size_in_a_big_and_a_small_cemetery pretendeva scala 1.0 (dimensione nativa); ora verifica che il LATO DISEGNATO sia esattamente piece_size, che e' l'invariante vero.
 - test_requesting_an_element_does_not_reshuffle_the_rest confrontava la lista degli edifici, ma un luogo in piu' occupa per forza qualche lotto: il confronto giusto e' sulla rete stradale e sulle piazze, decise prima che i luoghi entrino in gioco.
+
+SETTIMO GIRO: scelta di Jay sulle aree con sprite multipli.
+
+GIARDINO: variante D (misto di chiome), solo sprite VERDI. Gli alberi che gli avevo mostrato al primo giro erano tree1..tree4 di City Terrain, che sono MARRONI: simboli da mappa di regione, non chiome. Fuori anche aceri rossi, ciliegi rosa, autunnali e secchi.
+
+CIMITERO: variante A (solo lapidi), ma disposte a FILARI e non sparse. Nuovo campo LandmarkKind.layout ('sparso' | 'filari'): la griglia e' calcolata, l'rng decide solo quale variante di lapide tocca a ogni posto, cosi' le file non sono tutte identiche. La griglia si centra nell'area invece di partire dall'angolo, e il passo (_ROWS_SPACING 1,15 volte il lato del pezzo) e' sopra 1, quindi la non sovrapposizione dei filari e' garantita per costruzione e non per tentativi. A 1,35, provato prima, un cimitero riceveva nove tombe in tutto e sembrava un prato con qualche sasso.
+
+LE LAPIDI NON ERANO IN CATALOGO. Il pck base di Dungeondraft ha una cartella objects/graveyard/ con 11 fosse e 7 lapidi viste dall'alto (lastra con la pietra in testa) che nessun template di Jay usava. Quelle che gli avevo mostrato prima erano i gruppi di tombe di City Terrain, che non sono lapidi ma cimiteri interi visti da lontano - il suo rilievo era giusto.
+
+PER PESCARLE, due aggiunte al catalogo:
+1. ddforge catalog --base-pck / --base-include. Le texture base non appartengono a nessun pack, quindi non compaiono in nessun asset_manifest e non possono far scattare DDF014 nemmeno in teoria: sono le piu' sicure che il progetto possa usare. --base-include e' obbligatorio e ripetibile perche' il pck base ha oltre duemila texture: si dichiara una cartella alla volta. Importate graveyard, vegetation/trees, vegetation/shrubs, more_trees.
+2. assets._image_size legge ora le dimensioni anche dai WebP (VP8X, VP8L, VP8), non piu' dai soli PNG: le texture base sono tutte WebP dentro i .stex. Di riflesso ha sistemato un buco noto, i pack in WebP letti con --pack che restavano senza misure.
+
+ATTENZIONE AL VOLUME DEL CATALOGO: passando anche il megapack WFW con --pack il catalogo e' schizzato a 5717 oggetti e 1,4 MB, perche' quel pack da solo ne ha 5267 in WebP che prima venivano saltati. Ricostruito senza: 543 oggetti, 88 KB.
+
+Il campionario e il foglio delle aree sono stati rigenerati di conseguenza; gli sprite usati oggi da _CITY_LANDMARK_SPRITES per giardino e cimitero vengono dal pck base.
+
+OTTAVO GIRO: cimitero variante C, e CALIBRAZIONE DELLE ETICHETTE CHIUSA.
+
+Cimitero: default su gravestone_01/02 (lastre larghe) piu' grave_01/02/08 (fosse strette e lunghe), disposti a filari. Mescolare le due forme e' cio' che rende un camposanto in cui si distingue una tomba dall'altra invece di quattro file della stessa lastra.
+
+LE ETICHETTE ORA SONO MISURATE, NON DEDOTTE. Jay ha aperto il foglio di scripts/label_calibration.py e ha risposto alle tre domande. Le risposte:
+1.  e' l'angolo IN ALTO A SINISTRA del riquadro del testo, non il centro: il nome cade in basso a destra rispetto al punto passato.
+2. Un carattere e' largo ~2,10 pixel di mondo per ogni unita' di font_size (misurato: 19 caratteri a corpo 64 occupano poco piu' di 10 quadretti). font_size NON e' quindi un'altezza in pixel di mondo, come avevo dedotto: e' una scala a cui il programma applica un fattore suo, circa 4,2. La mia deduzione sbagliava di quasi quattro volte, ed e' per questo che le etichette uscivano enormi e sovrapposte pur essendoci gia' un controllo di collisione.
+3. Corpo 64 e' il minimo leggibile a mappa intera.
+4. Bonus, era la quarta domanda del foglio: le texture di categoria  dentro un elemento  Dungeondraft le rende. Era l'ultima cosa non verificata delle aree colorate di parchi e cimiteri, e ora e' chiusa.
+
+CONSEGUENZE IN CODICE:
+- _label_font_size non dipende piu' dalla lunghezza del nome. La vecchia regola (allunga il corpo finche' il nome e' largo 1,4 volte il luogo) portava a corpi da centinaia, cioe' nomi che coprivano mezza citta'. Ora parte da 64 e cresce con l'ingombro fino a 128.
+- _place_label passa l'angolo in alto a sinistra invece della mezzeria.
+- Il disegno del nome e' uscito da draw_landmark ed e' una funzione a se', draw_landmark_label, perche' i nomi vanno messi in un ORDINE DIVERSO da quello in cui si disegnano i luoghi: dal piu' grande al piu' piccolo. Su una mappa fitta i nomi non ci stanno tutti e chi arriva prima vince il posto, quindi servendo i grandi per primi quello che sopravvive e' il nome della cattedrale e non quello del dodicesimo magazzino.
+
+MISURA DEL RISULTATO: nomi scritti sul totale dei luoghi, su 5 seed - isolato sempre 100%, quartiere 89-100%, citta 86-100%. La soglia del test e' stata abbassata da 90% a 85% per quartiere e citta: con ingombri misurati invece che sottostimati, su una mappa fitta qualche nome resta fuori per forza, e fingere il contrario vorrebbe dire riaccavallarli.
+
+Aggiornati docs/format.md (le tre risposte, al posto della nota 'dedotto non osservato'), docs/SPEC.md, docs/sprite-luoghi.md e docs/prompt-sprite-pack.md (le texture di terreno non vanno piu' consegnate in doppia copia), piu' l'intestazione di scripts/label_calibration.py, che resta perche' serve di nuovo ogni volta che si tocca il modo di scrivere i nomi.
+
+Rettifica: tre parole fra apici inversi sono state mangiate dalla shell nella nota qui sopra. Per esteso: (1) il campo e' text.position; (4) le texture di categoria terrain dentro un elemento pattern Dungeondraft le rende.
+
+Difetto trovato da validate SUBITO DOPO la correzione delle etichette, e corretto: passando l'angolo in alto a sinistra invece della mezzeria, il nome di un luogo vicino al bordo cominciava fuori dal canvas (DDF101, x = -104 px su una mappa quartiere). Nuovo compose._clamp_box: l'ingombro dell'etichetta viene spostato quel tanto che basta a rientrare, e il controllo di collisione usa il riquadro gia' spostato. Test test_no_label_falls_off_the_canvas. E' il tipo di difetto che l'occhio non vede su un'anteprima e che il validatore prende al primo colpo.
 <!-- SECTION:NOTES:END -->
 
 ## Comments

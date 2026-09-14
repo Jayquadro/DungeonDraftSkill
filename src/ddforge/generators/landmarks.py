@@ -109,6 +109,12 @@ class LandmarkKind:
     # dimensione nativa gli alberi di un parco venivano puntini - visto sul
     # foglio di confronto delle aree.
     piece_size: float = 1.5
+    # Solo per open_air: come si dispongono i pezzi dentro l'area.
+    # "sparso" = a caso senza sovrapporsi, "filari" = su una griglia regolare.
+    # Un mercato e una fiera sono disordinati per natura; un cimitero no, le
+    # tombe stanno in fila, ed e' proprio la regolarita' a farlo riconoscere
+    # come cimitero invece che come un prato con dei sassi.
+    layout: str = "sparso"
     # Solo per open_air: che terreno si stende sotto gli sprite sparsi.
     # Chiave di Palette.floors, o None per lasciare il terreno della mappa.
     # Un mercato sta su un selciato, un parco sull'erba, una fiera sulla terra
@@ -251,6 +257,13 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
     LandmarkKind(
         "bagni", "Bagni Pubblici", _BIG, SITE_LOT, unique=True, chance=0.4, lots=1.5,
     ),
+    # A differenza del lazzaretto (edificio d'isolamento, fuori le mura,
+    # SITE_BAND/RULE_EDGE), l'ospedale cittadino sta dentro il tessuto
+    # abitato come bagni/tempio/biblioteca: SITE_LOT, nessuna regola di
+    # posizione.
+    LandmarkKind(
+        "ospedale", "Ospedale", _BIG, SITE_LOT, unique=True, chance=0.5, lots=1.5,
+    ),
     LandmarkKind(
         "lazzaretto", "Lazzaretto", _BIG, SITE_BAND, RULE_EDGE, unique=True, chance=0.4,
     ),
@@ -284,6 +297,7 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
         "cimitero", "Cimitero", _ALL_SCALES, SITE_BAND, RULE_OUTSIDE_WALLS_OR_TEMPLE,
         unique=True, chance=0.8, lots=2.5, open_air=True, ground="verde",
         piece_size=1.5,  # una lapide col suo tumulo
+        layout="filari",  # le tombe stanno in fila, e' quello a farlo leggere cimitero
     ),
     LandmarkKind(
         "fiera", "Fiera", _BIG, SITE_BAND, RULE_EDGE,
@@ -306,7 +320,7 @@ BUILDING_TYPE: dict[str, str] = {
     "palazzo": "manor", "cattedrale": "manor", "tempio": "manor",
     "municipio": "manor", "teatro": "manor", "biblioteca": "manor",
     "accademia": "manor", "banca": "manor", "monastero": "manor",
-    "arena": "manor", "bagni": "manor",
+    "arena": "manor", "bagni": "manor", "ospedale": "manor",
     "magazzino": "warehouse", "dogana": "warehouse", "conceria": "warehouse",
     "macello": "warehouse", "mulino": "warehouse", "fabbro": "warehouse",
     "fornaio": "warehouse", "macelleria": "warehouse", "stalle": "warehouse",

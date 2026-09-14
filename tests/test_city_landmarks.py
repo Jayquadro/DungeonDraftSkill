@@ -566,35 +566,67 @@ def test_landmarks_get_their_name_on_the_map(scale):
     stanno entrambi, e in quel caso l'etichetta viene omessa invece di
     sovrapporsi a un'altra. Senza questa regola, al preset "quartiere" i
     quaranta nomi si accavallavano fino a non leggersene nessuno - verificato
-    guardando la mappa renderizzata."""
+    guardando la mappa renderizzata.
+
+    La soglia e' piu' bassa alle scale fitte, ed e' una misura e non una
+    resa: al preset "isolato" i nomi ci stanno sempre tutti, al "quartiere" e
+    al "citta" si scende all'86% sui seed peggiori. Con ingombri delle
+    etichette misurati in Dungeondraft invece che dedotti (TASK-48) un nome
+    e' molto piu' largo di quanto sembri dal numero di `font_size`, e su una
+    mappa fitta qualcuno resta fuori per forza."""
+    minima = {"isolato": 1.0, "quartiere": 0.85, "citta": 0.85}
     blueprint = _city(1337, scale)
     level = _render(blueprint)["world"]["levels"]["0"]
     drawn = [text["text"] for text in level["texts"]]
     wanted = [mark.label for mark in blueprint.landmarks]
 
     assert set(drawn) <= set(wanted), sorted(set(drawn) - set(wanted))
-    assert len(drawn) >= 0.9 * len(wanted), (len(drawn), len(wanted))
+    assert len(drawn) >= minima[scale] * len(wanted), (scale, len(drawn), len(wanted))
 
 
 @pytest.mark.parametrize("scale", SCALES)
 def test_two_labels_never_overlap(scale):
     """L'invariante vero dietro il test qui sopra: nessun nome finisce sopra
-    un altro. Il confronto usa la stessa stima di ingombro del disegno
-    (compose._label_box non e' richiamabile senza il rettangolo del luogo,
-    quindi qui si ricostruisce dai dati del testo scritto)."""
-    from ddforge.compose import _LABEL_CHAR_WIDTH, _LABEL_LINE_HEIGHT
+    un altro.
+
+    L'ingombro si ricostruisce dai dati del testo scritto, con i fattori
+    MISURATI in Dungeondraft (scripts/label_calibration.py): un carattere
+    largo _LABEL_CHAR_WIDTH_PX pixel di mondo per unita' di corpo, e
+    `position` che e' l'angolo in alto a sinistra del riquadro, non il suo
+    centro."""
+    from ddforge.compose import _LABEL_CHAR_WIDTH_PX, _LABEL_LINE_HEIGHT_PX
     from ddforge.godot import GRID
 
     level = _render(_city(1337, scale))["world"]["levels"]["0"]
     boxes = []
     for text in level["texts"]:
         x, y = (float(v) for v in text["position"][len("Vector2( "):-2].split(","))
-        w = len(text["text"]) * text["font_size"] * _LABEL_CHAR_WIDTH
-        h = text["font_size"] * _LABEL_LINE_HEIGHT
-        boxes.append(city.Rect((x - w / 2) / GRID, y / GRID, (x + w / 2) / GRID, (y + h) / GRID))
+        w = len(text["text"]) * text["font_size"] * _LABEL_CHAR_WIDTH_PX
+        h = text["font_size"] * _LABEL_LINE_HEIGHT_PX
+        boxes.append(city.Rect(x / GRID, y / GRID, (x + w) / GRID, (y + h) / GRID))
     for i, first in enumerate(boxes):
         for second in boxes[i + 1 :]:
             assert not first.overlaps(second), (scale, i)
+
+
+@pytest.mark.parametrize("scale", SCALES)
+def test_no_label_falls_off_the_canvas(scale):
+    """Regressione: l'etichetta e' ancorata all'angolo in alto a sinistra e
+    centrata sul luogo, quindi un nome lungo su un luogo vicino al bordo
+    cominciava FUORI dal canvas. Lo ha trovato validate con DDF101, non
+    l'occhio: su una mappa quartiere un nome partiva da x = -104 px."""
+    from ddforge.compose import _LABEL_CHAR_WIDTH_PX, _LABEL_LINE_HEIGHT_PX
+    from ddforge.godot import GRID
+
+    for seed in (0, 1337):
+        level = _render(_city(seed, scale))["world"]["levels"]["0"]
+        for text in level["texts"]:
+            x, y = (float(v) for v in text["position"][len("Vector2( "):-2].split(","))
+            w = len(text["text"]) * text["font_size"] * _LABEL_CHAR_WIDTH_PX
+            h = text["font_size"] * _LABEL_LINE_HEIGHT_PX
+            assert x >= 0 and y >= 0, (scale, seed, text["text"], x, y)
+            assert x + w <= CANVAS * GRID + 1e-6, (scale, seed, text["text"])
+            assert y + h <= CANVAS * GRID + 1e-6, (scale, seed, text["text"])
 
 
 def test_walls_are_drawn_broken_at_every_gate():
@@ -729,6 +761,43 @@ def test_a_gravestone_is_the_same_size_in_a_big_and_a_small_cemetery():
     assert all(abs(drawn_side(o) - wanted) < 1e-6 for o in big), sorted({drawn_side(o) for o in big})
     assert all(drawn_side(o) <= wanted + 1e-9 for o in small)
     assert len(big) > len(small)
+
+
+def test_the_cemetery_graves_stand_in_regular_rows():
+    """Scelta di Jay guardando il foglio delle aree: le tombe di un cimitero
+    stanno in fila, non sparse. E' la regolarita' a farlo riconoscere come
+    cimitero invece che come un prato con dei sassi.
+
+    L'invariante verificato e' che le posizioni cadano su una GRIGLIA: poche
+    x distinte e poche y distinte, tutte equidistanti. Un piazzamento casuale
+    darebbe tante x quante sono le tombe."""
+    palette = palette_for("city", load_catalog())
+    textures = {t for t, _w, _h in palette.landmark_sprites["cimitero"]}
+
+    for seed in range(12):
+        blueprint = _city(seed, "isolato")
+        marks = [m for m in blueprint.landmarks if m.kind == "cimitero"]
+        if not marks:
+            continue
+        level = _render(blueprint)["world"]["levels"]["0"]
+        graves = [o for o in level["objects"] if o["texture"] in textures]
+        if len(graves) < 6:
+            continue
+
+        def coords(index):
+            return sorted({round(float(o["position"][len("Vector2( "):-2].split(",")[index]), 3)
+                           for o in graves})
+
+        xs, ys = coords(0), coords(1)
+        assert len(xs) * len(ys) >= len(graves), (len(xs), len(ys), len(graves))
+        assert len(xs) < len(graves) and len(ys) < len(graves), "posizioni non su griglia"
+        for values in (xs, ys):
+            if len(values) < 3:
+                continue
+            steps = [b - a for a, b in zip(values, values[1:])]
+            assert max(steps) - min(steps) < 1e-6, ("passo non costante", steps)
+        return
+    raise AssertionError("nessun cimitero con abbastanza tombe: il test non ha verificato nulla")
 
 
 def test_the_port_water_reaches_the_native_water_layer():

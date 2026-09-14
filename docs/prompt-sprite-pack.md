@@ -179,10 +179,8 @@ gli altri sprite, e la sua coerenza con loro decide l'aspetto della mappa.
 | `nm_selciato.png` | Selciato in ciottoli grigi. |
 | `nm_ghiaia.png` | Ghiaia chiara per i vialetti. |
 
-Vanno consegnate **due volte**, in `textures/terrain/` e in
-`textures/patterns/normal/`: la prima cartella è quella naturale per un
-terreno, la seconda è l'unica da cui sappiamo per certo che il programma le
-accetta come area dipinta.
+Basta consegnarle in `textures/terrain/`: è verificato che Dungeondraft
+accetti una texture di terreno anche dentro un'area dipinta (`pattern`).
 
 ---
 

@@ -723,15 +723,12 @@ ricava dall'ingombro, chiedendo che il nome sia largo ~1,4 volte il luogo che
 nomina, e due etichette non si sovrappongono mai: la seconda va sopra invece
 che sotto e, se non c'è posto neanche lì, viene omessa.
 
-> **Le etichette non sono ancora tarate.** Il calcolo del corpo parte dal
-> presupposto che `text.font_size` sia in pixel di mondo (256 per quadretto),
-> dedotto dall'unico campione osservato in tutto il progetto (§4). Aperto in
-> Dungeondraft il risultato è sbagliato: le etichette escono fuori misura e
-> sovrapposte, quindi almeno una fra quella deduzione, l'ancoraggio di
-> `position` e la stima della larghezza di un carattere è errata.
-> `scripts/label_calibration.py` genera il foglio che le misura tutte e tre —
-> va aperto in Dungeondraft e guardato, e finché non lo è il calcolo resta
-> quello che è invece di essere indovinato una seconda volta.
+Le tre costanti che servono (ancoraggio di `position`, larghezza di un
+carattere, corpo minimo leggibile) sono **misurate** in Dungeondraft e non
+dedotte: vedi `docs/format.md` §4 e `scripts/label_calibration.py`, che
+genera il foglio con cui si misurano. I nomi si scrivono dal luogo più grande
+al più piccolo, così su una mappa fitta quello che sopravvive è il nome della
+cattedrale e non quello del dodicesimo magazzino.
 
 **Perché un monumento occupa al più un isolato.** L'ingombro di un luogo è un
 rettangolo e fra due isolati la partizione mette sempre una via: qualunque

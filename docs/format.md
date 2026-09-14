@@ -289,18 +289,37 @@ notevole di `generators/city.py` porta la sua etichetta col nome
 > al luogo), la correzione e una riga in `compose.draw_landmark` — e questa
 > nota va aggiornata con l'ancoraggio vero, finalmente osservato.
 
-> **`font_size` e in pixel di MONDO, non in punti di schermo** (dedotto, non
-> osservato su piu campioni). Un quadretto vale 256 px, quindi il 32 del
-> campione e alto un ottavo di quadretto: su una mappa di citta intera
-> un'etichetta cosi non si vede. `compose.draw_landmark` ricava percio il
-> corpo dall'ingombro del luogo, chiedendo che il nome sia largo ~1,4 volte
-> il luogo che nomina (limiti 24-600). Se al gate umano le etichette
-> risultassero enormi o minuscole, la deduzione e sbagliata ed e questa nota
-> a dover cambiare per prima.
+#### Ancoraggio e dimensione di `text`: MISURATI (TASK-48)
+
+Fino a TASK-48 erano dedotti da un solo campione, e la deduzione era
+sbagliata: le etichette uscivano fuori misura e sovrapposte.
+`scripts/label_calibration.py` genera un foglio che le misura — dieci righe
+dello stesso nome a corpi diversi, ognuna ancorata al centro di un quadrato
+rosa largo esattamente un quadretto, con un righello di quadretti a fianco.
+Aperto in Dungeondraft da Jay, ha dato tre risposte.
+
+1. **`position` e l'angolo IN ALTO A SINISTRA** del riquadro del testo, non
+   il suo centro: il nome cade in basso a destra rispetto al punto passato.
+   Per centrare un nome sotto un luogo si passa quindi l'angolo, non la
+   mezzeria.
+2. **Un carattere e largo ~2,10 pixel di mondo per ogni unita di
+   `font_size`.** Misurato su "Cattedrale corpo 64": 19 caratteri a corpo 64
+   occupano poco piu di 10 quadretti, cioe 2560 px. `font_size` **non e**
+   quindi un'altezza in pixel di mondo, come si era dedotto: e una scala a
+   cui il programma applica un fattore suo, circa 4,2.
+3. **Corpo 64 e il minimo leggibile** a mappa intera. Sotto non si legge;
+   sopra si cresce di poco e solo per i luoghi grandi, perche gia a 64 il
+   nome di una bottega e largo il quadruplo della bottega.
+
+L'altezza di riga resta dedotta (~4,2 px di mondo per unita, dallo stesso
+fattore della larghezza) e viene deliberatamente sovrastimata: sovrastimarla
+distanzia le etichette, sottostimarla le fa accavallare.
 
 Due etichette non si sovrappongono mai: `compose._place_label` prova sotto
 l'ingombro, poi sopra, e se non c'e posto omette l'etichetta invece di
-scriverne una illeggibile sopra un'altra.
+scriverne una illeggibile sopra un'altra. I nomi si scrivono dal luogo piu
+grande al piu piccolo, cosi quello che sopravvive su una mappa fitta e il
+nome della cattedrale e non quello del dodicesimo magazzino.
 
 **Condizione di stop dell'AC5 di TASK-3: non applicabile.** Il template
 ricco contiene sia luci sia testi (confermato anche in TASK-2): si procede.
@@ -1191,6 +1210,35 @@ statua) non finiscono in `object_sizes` nemmeno passandoli con `--pack`.
 `assets._lookup_size(..., optional=True)` ritorna `(None, None)` e chi lo usa
 ricade sulla stima per nome di `compose._texture_size`: meno precisa, ma
 esiste sempre, ed e meglio che rinunciare allo sprite giusto.
+
+### 10.4 Texture base del programma: `--base-pck` (TASK-48)
+
+Le texture che arrivano con Dungeondraft (`res://textures/...`) **non
+appartengono a nessun pack**, quindi non compaiono in nessun
+`asset_manifest` e non possono far scattare DDF014 nemmeno in teoria: sono
+le piu sicure che il progetto possa usare. Fino a TASK-48 finivano in
+catalogo solo se un template di Jay le usava, e intere famiglie restavano
+fuori - fra cui `objects/graveyard/`, che ha 11 fosse e 7 lapidi viste
+dall'alto, e `objects/vegetation/trees/`, che ha le chiome verdi.
+
+`ddforge catalog --base-pck <Dungeondraft.pck> --base-include <prefisso>`
+le importa. `--base-include` e **obbligatorio** e ripetibile: il pck base ha
+oltre duemila texture, e prenderle tutte riempirebbe il catalogo di roba che
+nessuno ha chiesto. Si dichiara una cartella alla volta.
+
+**Come sono archiviate.** Non al loro path: Godot le mette in
+`res://.import/<nome sorgente>-<md5>.stex`, un contenitore con dentro
+l'immagine vera. Il path di destinazione si ricostruisce dai fratelli
+`<path>.import`, che invece stanno al posto giusto; l'immagine si trova
+dentro lo `.stex` cercandone il magic, non a un offset fisso (che cambia con
+la versione del formato).
+
+**Sono tutte WebP.** `assets._image_size` legge percio le dimensioni sia da
+un PNG (IHDR) sia da un WebP, nelle tre varianti che il programma usa: VP8X
+(esteso), VP8L (lossless) e VP8 (lossy). Tutto con la sola stdlib, perche il
+core non dipende da Pillow (SPEC.md §4). Lo stesso lettore ha sistemato di
+riflesso i pack in WebP letti con `--pack`, che prima restavano senza
+dimensioni.
 
 ## 11. `tests/fixtures/reference_8x8.dungeondraft_map` — provenienza (TASK-5)
 

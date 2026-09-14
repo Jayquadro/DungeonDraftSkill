@@ -1212,6 +1212,7 @@ def _claim(sites: _Sites, kind, rect: Rect, lot_indices) -> None:
     sites.landmarks.append(
         Landmark(kind=kind.key, label=kind.label, rect=rect, site=kind.site,
                  open_air=kind.open_air, ground=kind.ground, piece_size=kind.piece_size,
+                 layout=kind.layout,
                  building=building_blueprint)
     )
 

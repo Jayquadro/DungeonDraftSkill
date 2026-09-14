@@ -776,20 +776,30 @@ def draw_city_building(level, ids, footprint: Rect, palette, rng: random.Random)
 # TASK-48: strutture urbane e luoghi notevoli
 # ---------------------------------------------------------------------------
 
-# Corpo del testo dell'etichetta. `font_size` e in PIXEL DI MONDO, e un
-# quadretto ne vale 256: il 32 del solo campione osservato (docs/format.md §4)
-# vale un ottavo di quadretto, cioe' un'etichetta che a mappa intera non si
-# vede. Il corpo si ricava quindi dall'ingombro del luogo, chiedendo che il
-# nome sia largo _LABEL_WIDTH_FACTOR volte il luogo che nomina: e' cosi' che
-# l'etichetta e leggibile alla scala a cui la mappa viene guardata, qualunque
-# sia il preset.
-_LABEL_WIDTH_FACTOR = 1.4
-# Larghezza media di un carattere in frazione del corpo del font. Stima: senza
-# il font vero non c'e modo di misurare un testo, e serve solo a dimensionare
-# e a capire se due nomi si pestano i piedi.
-_LABEL_CHAR_WIDTH = 0.55
-_LABEL_LINE_HEIGHT = 1.3
-_LABEL_FONT_RANGE = (24, 600)
+# Etichette: numeri MISURATI in Dungeondraft, non dedotti (vedi
+# scripts/label_calibration.py, che genera il foglio con cui si misurano).
+# Prima erano una deduzione da un solo campione, e le etichette uscivano
+# fuori misura e sovrapposte.
+#
+# Un carattere e largo 2,1 pixel di mondo per ogni unita di `font_size`:
+# misurato su "Cattedrale corpo 64", 19 caratteri a corpo 64, che occupano
+# poco piu di 10 quadretti (2560 px). Il corpo NON e quindi un'altezza in
+# pixel di mondo: e una scala a cui il programma applica un fattore suo.
+_LABEL_CHAR_WIDTH_PX = 2.10
+# Altezza di riga, dedotta dalla larghezza: se un carattere vale 2,1 e in un
+# font un carattere e largo circa meta del corpo tipografico, il corpo vale
+# ~4,2 pixel di mondo per unita. Sovrastimare l'altezza fa distanziare di
+# piu le etichette, sottostimarla le fa accavallare: meglio il primo.
+_LABEL_LINE_HEIGHT_PX = 4.2
+# 64 e il corpo a cui un nome si legge a mappa intera senza coprirla
+# (misurato). Sotto non si legge, quindi e il pavimento; sopra si cresce solo
+# per i luoghi grandi, e di poco, perche a 64 il nome di una bottega e gia
+# largo il quadruplo della bottega.
+_LABEL_FONT_MIN = 64
+_LABEL_FONT_MAX = 128
+# Ingombro a cui corrisponde il corpo minimo: un lotto del preset
+# "quartiere". Sopra, il corpo cresce in proporzione fino al massimo.
+_LABEL_FONT_REFERENCE = 2.4
 # L'etichetta sta SOTTO l'ingombro, staccata di questa frazione del lato: al
 # centro copriva lo sprite del luogo, che e' proprio la cosa che deve farsi
 # riconoscere. La distanza e' relativa e non assoluta perche un ingombro vale
@@ -824,6 +834,12 @@ _SCATTER_RANGE = (2, 24)
 # sovrappongono fra loro, e su uno spiazzo affollato l'ultimo posto libero non
 # si trova al primo colpo.
 _SCATTER_TRIES = 8
+# Passo della griglia dei filari, in multipli del lato del pezzo. Sopra 1 i
+# pezzi non si toccano mai, e la garanzia di non sovrapposizione dei filari e'
+# tutta qui: 1,15 lascia il vialetto fra una tomba e l'altra senza
+# sparpagliarle. A 1,35, provato prima, un cimitero riceveva nove tombe in
+# tutto e sembrava un prato con qualche sasso.
+_ROWS_SPACING = 1.15
 
 
 def draw_city_walls(level, ids, walls, palette) -> None:
@@ -915,44 +931,66 @@ def draw_port(level, ids, port, palette) -> None:
     add_path(level, ids, points, shore, width=int(grid_to_px(width / 2)))
 
 
-def _label_font_size(rect: Rect, text: str) -> int:
-    """Corpo del font perche' il nome sia largo _LABEL_WIDTH_FACTOR volte il
-    luogo che nomina. Un nome lungo su un luogo piccolo viene scritto piu'
-    fitto, non piu' largo: e' l'ingombro a comandare, altrimenti "Bottega
-    dell'Alchimista" invaderebbe le tre case accanto."""
-    lo, hi = _LABEL_FONT_RANGE
-    span = grid_to_px(rect.w) * _LABEL_WIDTH_FACTOR
-    return int(min(max(span / (max(1, len(text)) * _LABEL_CHAR_WIDTH), lo), hi))
+def _label_font_size(rect: Rect) -> int:
+    """Corpo del font per il nome di un luogo grande `rect`.
+
+    Parte dal minimo leggibile e cresce in proporzione all'ingombro, fino al
+    massimo. Non dipende dalla LUNGHEZZA del nome: a corpo 64 "Bottega
+    dell'Alchimista" e gia' largo dodici quadretti contro i due e mezzo della
+    bottega, quindi allungare il corpo per far quadrare il nome col luogo -
+    che era la vecchia regola - portava a corpi da centinaia, cioe' a nomi
+    che coprivano mezza citta'."""
+    grown = _LABEL_FONT_MIN * min(rect.w, rect.h) / _LABEL_FONT_REFERENCE
+    return int(min(max(grown, _LABEL_FONT_MIN), _LABEL_FONT_MAX))
 
 
 def _label_box(rect: Rect, text: str, font_size: int, *, above: bool) -> Rect:
-    """Ingombro stimato dell'etichetta, in quadretti, sopra o sotto `rect`.
+    """Ingombro dell'etichetta in quadretti, sopra o sotto `rect`.
 
-    La larghezza e' una stima per numero di caratteri (_LABEL_CHAR_WIDTH volte
-    il corpo del font): non c'e' modo di misurare davvero un testo senza il
-    font, e serve solo a sapere se due nomi si pestano i piedi."""
-    width = len(text) * font_size * _LABEL_CHAR_WIDTH / GRID
-    height = font_size * _LABEL_LINE_HEIGHT / GRID
+    Larghezza e altezza vengono dai fattori misurati in Dungeondraft
+    (_LABEL_CHAR_WIDTH_PX, _LABEL_LINE_HEIGHT_PX): un'etichetta e' molto piu'
+    larga di quanto il numero di `font_size` lasci pensare, ed e' per questo
+    che prima si accavallavano pur essendoci un controllo."""
+    width = len(text) * font_size * _LABEL_CHAR_WIDTH_PX / GRID
+    height = font_size * _LABEL_LINE_HEIGHT_PX / GRID
     gap = min(rect.w, rect.h) * _LABEL_GAP
     cx = (rect.x1 + rect.x2) / 2
     top = rect.y1 - gap - height if above else rect.y2 + gap
     return Rect(cx - width / 2, top, cx + width / 2, top + height)
 
 
-def _place_label(rect: Rect, text: str, font_size: int, taken: list) -> tuple | None:
-    """Posizione dell'etichetta, o None se non c'e' posto.
+def _clamp_box(box: Rect, bounds: Rect | None) -> Rect:
+    """Sposta `box` quel tanto che basta a stare dentro `bounds`.
 
-    Sotto l'ingombro, e se li' c'e' gia' un altro nome, sopra. Se non ci sta
-    da nessuna parte l'etichetta viene OMESSA: al preset "quartiere" i luoghi
-    sono una quarantina, e senza questo controllo i nomi si sovrapponevano fra
-    loro fino a non leggersene nessuno - meglio uno in meno che tre illeggibili
-    (lo sprite del luogo resta comunque, e resta riconoscibile)."""
+    Serve perche' l'etichetta e' ancorata all'angolo in alto a sinistra e
+    centrata sul luogo: un nome lungo su un luogo vicino al bordo comincia
+    fuori dal canvas. Trovato da validate (DDF101, coordinate fuori dal
+    canvas) su una mappa quartiere, non a occhio."""
+    if bounds is None:
+        return box
+    dx = max(bounds.x1 - box.x1, 0.0) - max(box.x2 - bounds.x2, 0.0)
+    dy = max(bounds.y1 - box.y1, 0.0) - max(box.y2 - bounds.y2, 0.0)
+    return Rect(box.x1 + dx, box.y1 + dy, box.x2 + dx, box.y2 + dy)
+
+
+def _place_label(rect: Rect, text: str, font_size: int, taken: list, bounds: Rect | None = None) -> tuple | None:
+    """Punto da passare ad add_text, o None se non c'e' posto.
+
+    `text.position` e' l'angolo IN ALTO A SINISTRA del riquadro del testo
+    (misurato: il nome cade in basso a destra rispetto al punto passato), non
+    il suo centro. Per centrare il nome sotto il luogo si passa quindi
+    l'angolo, non la mezzeria.
+
+    Si prova sotto l'ingombro e poi sopra; se non ci sta da nessuna parte
+    l'etichetta viene OMESSA. Al preset "quartiere" i luoghi sono una
+    quarantina e i nomi sono larghi: meglio un nome in meno che tre
+    illeggibili, tanto lo sprite del luogo resta."""
     for above in (False, True):
-        box = _label_box(rect, text, font_size, above=above)
+        box = _clamp_box(_label_box(rect, text, font_size, above=above), bounds)
         if any(box.overlaps(other) for other in taken):
             continue
         taken.append(box)
-        return (box.x1 + box.x2) / 2, box.y1
+        return box.x1, box.y1
     return None
 
 
@@ -1000,26 +1038,53 @@ def _draw_landmark_sprites(level, ids, landmark, palette, rng: random.Random) ->
         add_object(level, ids, cx, cy, sprite[0], scale=_sprite_scale(rect, sprite, _SPRITE_FILL))
         return
 
+    piece = landmark.piece_size
+
+    def _scaled(sprite):
+        """(scala, mezza larghezza, mezza altezza) di un pezzo.
+
+        Il lato lungo vale piece_size, sempre: la dimensione nativa dello
+        sprite serve solo a tenere le proporzioni. I pack sono disegnati a
+        scale incompatibili fra loro (un albero di City Terrain e' nativo 0,3
+        quadretti, uno di CHR 0,6) e fidarsi del nativo dava alberi grandi
+        come cespugli. Si rimpicciolisce solo se lo spiazzo e' piu' piccolo
+        del pezzo, cosa che succede alla scala "citta"."""
+        native_w, native_h = _sprite_size(sprite)
+        scale = min(piece / max(native_w, native_h), rect.w / native_w, rect.h / native_h)
+        return scale, native_w * scale / 2, native_h * scale / 2
+
+    if landmark.layout == "filari":
+        # Griglia regolare: un cimitero ha le tombe in fila, e la regolarita'
+        # e' proprio cio' che lo fa riconoscere come cimitero invece che come
+        # un prato con dei sassi (richiesta di Jay). Le posizioni sono
+        # calcolate, non estratte; l'rng decide solo QUALE variante di lapide
+        # tocca a ogni posto, perche' file di lapidi tutte identiche sarebbero
+        # l'eccesso opposto.
+        step = piece * _ROWS_SPACING
+        cols = max(1, int(rect.w / step))
+        rows = max(1, int(rect.h / step))
+        # La griglia si centra nell'area invece di partire dall'angolo: cosi'
+        # lo spazio che avanza diventa un margine uguale sui due lati e non una
+        # striscia vuota su un lato solo.
+        x0 = rect.x1 + (rect.w - cols * step) / 2 + step / 2
+        y0 = rect.y1 + (rect.h - rows * step) / 2 + step / 2
+        for row in range(rows):
+            for col in range(cols):
+                sprite = sprites[rng.randrange(len(sprites))]
+                scale, _half_w, _half_h = _scaled(sprite)
+                add_object(level, ids, x0 + col * step, y0 + row * step, sprite[0], scale=scale)
+        return
+
     # Quanti pezzi: densita' costante sulla dimensione DICHIARATA del pezzo
     # (Landmark.piece_size). Una lapide e' una lapide: se il cimitero e' il
     # doppio, le lapidi raddoppiano di numero, non di dimensione.
-    piece = landmark.piece_size
     lo, hi = _SCATTER_RANGE
     count = min(hi, max(lo, int(rect.w * rect.h / (piece * piece * _SCATTER_SPACING))))
 
     placed: list[Rect] = []
     for _ in range(count):
         sprite = sprites[rng.randrange(len(sprites))]
-        # Il lato lungo del pezzo vale piece_size, sempre: la dimensione
-        # nativa dello sprite serve solo a tenere le proporzioni. I pack sono
-        # disegnati a scale incompatibili fra loro (un albero di City Terrain
-        # e' nativo 0,3 quadretti, uno di CHR 0,6) e fidarsi del nativo dava
-        # alberi grandi come cespugli. Si rimpicciolisce solo se lo spiazzo e'
-        # piu' piccolo del pezzo, cosa che succede alla scala "citta".
-        native_w, native_h = _sprite_size(sprite)
-        scale = piece / max(native_w, native_h)
-        scale = min(scale, rect.w / native_w, rect.h / native_h)
-        half_w, half_h = native_w * scale / 2, native_h * scale / 2
+        scale, half_w, half_h = _scaled(sprite)
         for _attempt in range(_SCATTER_TRIES):
             x = rng.uniform(rect.x1 + half_w, max(rect.x1 + half_w, rect.x2 - half_w))
             y = rng.uniform(rect.y1 + half_h, max(rect.y1 + half_h, rect.y2 - half_h))
@@ -1031,7 +1096,7 @@ def _draw_landmark_sprites(level, ids, landmark, palette, rng: random.Random) ->
             break
 
 
-def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random, labels=None) -> None:
+def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random) -> None:
     """Un luogo urbano notevole (TASK-48): sprite ed ETICHETTA col nome.
 
     Tre forme, secondo com'e' fatto il luogo:
@@ -1048,16 +1113,9 @@ def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random,
       piazzale; la statua non ha area perche' sta gia' su una piazza
       pavimentata e una seconda toppa sopra non aggiunge niente.
 
-    L'etichetta va SOTTO l'ingombro e non al centro: al centro copre proprio
-    lo sprite che deve farsi riconoscere. `labels` e' la lista degli ingombri
-    gia' occupati da altre etichette, condivisa fra tutti i luoghi della
-    mappa: senza, al preset "quartiere" i quaranta nomi si sovrappongono fino
-    a non leggersene nessuno.
-
-    NOTA non verificata: `text.position` e' l'unico campo dello schema di
-    docs/format.md §4 di cui non si conosce l'ancoraggio (un solo campione in
-    tutto il progetto). Se al gate umano le etichette risultassero spostate
-    tutte nella stessa direzione, e' _label_box da correggere."""
+    Il NOME non si disegna qui: lo mette draw_landmark_label, che va chiamata
+    a parte perche' i nomi vanno messi in un ordine diverso da quello in cui
+    si disegnano i luoghi (vedi la sua docstring)."""
     level = level_stack["0"]
     rect = landmark.rect
     if landmark.building is not None:
@@ -1068,10 +1126,25 @@ def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random,
             add_pattern(level, ids, rect, palette.floors.get(landmark.ground, palette.floor))
         _draw_landmark_sprites(level, ids, landmark, palette, rng)
 
-    font_size = _label_font_size(rect, landmark.label)
-    position = _place_label(rect, landmark.label, font_size, labels if labels is not None else [])
-    if position is not None:
-        add_text(level, ids, position[0], position[1], landmark.label, font_size=font_size)
+
+def draw_landmark_label(level, ids, landmark, labels: list, bounds: Rect | None = None) -> bool:
+    """Scrive il nome di un luogo sotto il suo ingombro. Falso se non c'era
+    posto e il nome e' stato omesso.
+
+    `labels` e' la lista degli ingombri gia' occupati, condivisa da tutti i
+    luoghi della mappa: e' l'unico modo perche' due nomi vicini si accorgano
+    l'uno dell'altro.
+
+    CHI CHIAMA DEVE ORDINARE: su una mappa fitta i nomi non ci stanno tutti,
+    e chi viene servito per primo vince il posto. Passando i luoghi dal piu'
+    grande al piu' piccolo, il nome che sopravvive e' quello della cattedrale
+    e non quello del dodicesimo magazzino."""
+    font_size = _label_font_size(landmark.rect)
+    position = _place_label(landmark.rect, landmark.label, font_size, labels, bounds)
+    if position is None:
+        return False
+    add_text(level, ids, position[0], position[1], landmark.label, font_size=font_size)
+    return True
 
 
 def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: random.Random) -> None:
@@ -1141,11 +1214,19 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: rando
     # finisce coperta da quel che viene disegnato dopo.
     if blueprint.walls is not None:
         draw_city_walls(level, ids, blueprint.walls, palette)
-    # Le etichette gia' piazzate viaggiano di luogo in luogo: e' l'unico modo
-    # perche' due nomi vicini si accorgano l'uno dell'altro.
-    labels: list[Rect] = []
     for landmark in blueprint.landmarks:
-        draw_landmark(level_stack, ids, landmark, palette, rng, labels=labels)
+        draw_landmark(level_stack, ids, landmark, palette, rng)
+
+    # I NOMI in un secondo giro, e dal luogo piu' grande al piu' piccolo. Su
+    # una mappa fitta non ci stanno tutti e chi arriva prima si prende il
+    # posto: servendo i grandi per primi, il nome che sopravvive e' quello
+    # della cattedrale e non quello del dodicesimo magazzino.
+    labels: list[Rect] = []
+    canvas = Rect(0, 0, blueprint.width, blueprint.height)
+    for landmark in sorted(
+        blueprint.landmarks, key=lambda m: m.rect.w * m.rect.h, reverse=True,
+    ):
+        draw_landmark_label(level, ids, landmark, labels, canvas)
 
 
 def render_cave_blueprint(level, blueprint) -> None:
