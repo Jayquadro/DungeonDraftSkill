@@ -1,0 +1,420 @@
+{
+  "input": "assets",
+  "output": "assets\\sprites",
+  "sprite": [
+    {
+      "source": "ospedale.jpg",
+      "output": "nm_ospedale.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.4128,
+        "ricolorabile": 0.3252
+      }
+    },
+    {
+      "source": "teatro.jpg",
+      "output": "nm_teatro.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.2824,
+        "ricolorabile": 0.2252
+      }
+    },
+    {
+      "source": "accademia.jpg",
+      "output": "nm_accademia.png",
+      "categoria": "C1",
+      "rosso": "libero",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 781,
+        "canvas_px": 1024,
+        "ricolorabile": 0.0007
+      }
+    },
+    {
+      "source": "prigione.jpg",
+      "output": "nm_prigione.png",
+      "categoria": "C2",
+      "rosso": "vietato",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_rimosso": 0.0009,
+        "ricolorabile": 0.0
+      }
+    },
+    {
+      "source": "municipio.jpg",
+      "output": "nm_municipio.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.4716,
+        "ricolorabile": 0.3685
+      }
+    },
+    {
+      "source": "faro.jpg",
+      "output": "nm_faro.png",
+      "categoria": "C2",
+      "rosso": "vietato",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_rimosso": 0.0433,
+        "ricolorabile": 0.0
+      }
+    },
+    {
+      "source": "bagni_termali.jpg",
+      "output": "nm_bagni.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.3266,
+        "ricolorabile": 0.2669
+      }
+    },
+    {
+      "source": "Gemini_Generated_Image_z6vwunz6vwunz6vw.jpg",
+      "output": "nm_banco_mercato_1.png",
+      "categoria": "C4",
+      "rosso": "libero",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 341,
+        "canvas_px": 448,
+        "canvas_ampliato_da": 256,
+        "ricolorabile": 0.0063
+      }
+    },
+    {
+      "source": "bibilioteca.jpg",
+      "output": "nm_biblioteca.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.6171,
+        "ricolorabile": 0.4787
+      }
+    },
+    {
+      "source": "villa.jpg",
+      "output": "nm_villa_nobiliare.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.5095,
+        "ricolorabile": 0.4025
+      }
+    },
+    {
+      "source": "croce.jpg",
+      "output": "nm_cimitero_croce.png",
+      "categoria": "C4",
+      "rosso": "libero",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 256,
+        "canvas_px": 336,
+        "canvas_ampliato_da": 256,
+        "ricolorabile": 0.0237
+      }
+    },
+    {
+      "source": "fossa.jpg",
+      "output": "nm_cimitero_fossa.png",
+      "categoria": "C4",
+      "rosso": "libero",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 375,
+        "canvas_px": 496,
+        "canvas_ampliato_da": 256,
+        "ricolorabile": 0.0103
+      }
+    },
+    {
+      "source": "lapide.jpg",
+      "output": "nm_cimitero_lapide_1.png",
+      "categoria": "C4",
+      "rosso": "libero",
+      "stato": "avvisi",
+      "avvisi": [
+        "proporzioni 2.37:1 lontane da quelle attese 1.50:1"
+      ],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 256,
+        "canvas_px": 336,
+        "canvas_ampliato_da": 256,
+        "ricolorabile": 0.0173
+      }
+    },
+    {
+      "source": "armeria.jpg",
+      "output": "nm_armeria.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.5564,
+        "ricolorabile": 0.4316
+      }
+    },
+    {
+      "source": "tempio.jpg",
+      "output": "nm_tempio.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.5157,
+        "ricolorabile": 0.4164
+      }
+    },
+    {
+      "source": "monastero.jpg",
+      "output": "nm_monastero.png",
+      "categoria": "C1",
+      "rosso": "libero",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 781,
+        "canvas_px": 1024,
+        "ricolorabile": 0.4144
+      }
+    },
+    {
+      "source": "caserma.jpg",
+      "output": "nm_caserma.png",
+      "categoria": "C2",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 585,
+        "canvas_px": 768,
+        "rosso_normalizzato": 0.409,
+        "ricolorabile": 0.3275
+      }
+    },
+    {
+      "source": "banca.jpg",
+      "output": "nm_banca.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.599,
+        "ricolorabile": 0.4851
+      }
+    },
+    {
+      "source": "alchimista.jpg",
+      "output": "nm_alchimista.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.4363,
+        "ricolorabile": 0.3547
+      }
+    },
+    {
+      "source": "magazzino.jpg",
+      "output": "nm_magazzino.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.6706,
+        "ricolorabile": 0.5444
+      }
+    },
+    {
+      "source": "fabbro.jpg",
+      "output": "nm_fabbro.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.4634,
+        "ricolorabile": 0.3705
+      }
+    },
+    {
+      "source": "stalle.jpg",
+      "output": "nm_stalle.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.6295,
+        "ricolorabile": 0.5086
+      }
+    },
+    {
+      "source": "fornaio.jpg",
+      "output": "nm_fornaio.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.7298,
+        "ricolorabile": 0.5925
+      }
+    },
+    {
+      "source": "macellaio.jpg",
+      "output": "nm_macelleria.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.6724,
+        "ricolorabile": 0.5372
+      }
+    },
+    {
+      "source": "taverna1.jpg",
+      "output": "nm_taverna.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.7682,
+        "ricolorabile": 0.6177
+      }
+    },
+    {
+      "source": "locanda.jpg",
+      "output": "nm_locanda.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.8214,
+        "ricolorabile": 0.6595
+      }
+    },
+    {
+      "source": "bordello.jpg",
+      "output": "nm_bordello.png",
+      "categoria": "C3",
+      "rosso": "tetto",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 390,
+        "canvas_px": 512,
+        "rosso_normalizzato": 0.7377,
+        "ricolorabile": 0.5909
+      }
+    }
+  ],
+  "ignorati": [
+    "template.png"
+  ],
+  "riepilogo": {
+    "ok": 26,
+    "avvisi": 1,
+    "errore": 0,
+    "mancante": 0
+  }
+}

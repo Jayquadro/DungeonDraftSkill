@@ -15,6 +15,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 preview = ["Pillow>=10"]
+sprites = ["Pillow>=10", "numpy>=1.24"]
 
 [project.scripts]
 ddforge = "ddforge.cli:main"
