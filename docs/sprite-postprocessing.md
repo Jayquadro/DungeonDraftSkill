@@ -3,8 +3,8 @@
 Le schede in `prompt/` producono JPEG con un soggetto isolato su fondo magenta
 piatto (`#FF00FF`). In quella forma non sono usabili su Dungeondraft: niente
 canale alfa, frangia magenta sul bordo, ombra e canvas diversi da sprite a
-sprite, rosso dei tetti disomogeneo. Questa procedura porta un JPEG grezzo al
-PNG pronto per il pack, con **gli stessi numeri per tutto il pacchetto**.
+sprite. Questa procedura porta un JPEG grezzo al PNG pronto per il pack, con
+**gli stessi numeri per tutto il pacchetto**.
 
 ## Comando
 
@@ -44,39 +44,63 @@ script che lo richiama in sequenza.
    - `reale` (C4, pezzi a scala reale): 256 px = 1,5 m; il canvas si allarga
      quanto serve per contenere oggetto, margine e ombra, arrotondato a un
      multiplo di 16.
-5. **Rosso dei tetti.** Secondo la regola della scheda:
-   - `tetto`: i rossi entro ±25° di tinta e sopra le soglie di saturazione
-     minima vanno a tinta 0, saturazione 0,85, luminosità invariata —
-     rosso saturo uniforme, la stessa cosa che Dungeondraft userà come
-     canale di ricolorazione.
-   - `vietato`: i pixel che rientrano nelle soglie `custom_color_overrides`
-     di Dungeondraft (vedi sotto) vengono spostati su una tinta ocra, con un
-     margine di sicurezza più largo delle soglie stesse.
-   - `libero`: nessun intervento sul colore.
-6. **Ombra.** Aggiunta in post, mai lasciata al modello che ha generato
+5. **Ombra.** Aggiunta in post, mai lasciata al modello che ha generato
    l'immagine: offset 4% del lato maggiore dell'oggetto, sfocatura 2,5%,
    opacità 45%, colore `(22, 16, 10)`, portata in basso a destra (luce da
    in alto a sinistra).
-7. **Validazione.** Per ogni sprite: canale alfa reale, canvas quadrato,
+6. **Validazione.** Per ogni sprite: canale alfa reale, canvas quadrato,
    margine trasparente rispettato, proporzioni coerenti con le dimensioni in
-   metri dichiarate (dove note), frazione di pixel "ricolorabili" secondo le
-   soglie di Dungeondraft, quanti bordi dell'immagine grezza il soggetto
-   tocca (indizio di un soggetto tagliato in fase di generazione).
-8. **Salvataggio.** PNG con canale alfa, mai WebP: `assets.read_dungeondraft_pack`
+   metri dichiarate (dove note), quanti bordi dell'immagine grezza il
+   soggetto tocca (indizio di un soggetto tagliato in fase di generazione).
+7. **Salvataggio.** PNG con canale alfa, mai WebP: `assets.read_dungeondraft_pack`
    legge le dimensioni dall'header IHDR di un PNG, con un WebP resta cieco.
 
-I numeri (margine, ombra, soglie del rosso) sono quelli di
+**Nessun intervento sul colore.** Il tetto (e tutto il resto) resta
+esattamente come disegnato nel JPEG di partenza. Non è sempre stato così, ed
+è utile sapere perché:
+
+> **Storia (TASK-53).** La procedura aveva un passo in più: normalizzava il
+> rosso dei tetti a una tinta uniforme e saturata, così Dungeondraft poteva
+> offrire in gioco un canale "custom color" per ricolorare l'edificio (il
+> pack dichiarava `custom_color_overrides.enabled: true`). Due giri di
+> correzione non sono bastati a renderlo affidabile: il primo (soglie di
+> tinta/saturazione/luminosità più strette) ha risolto la ricolorazione di
+> travature in legno e contorni a inchiostro su 9 sprite su 19, ma ha
+> lasciato puntini isolati (salumi, dettagli su pozzi/ringhiere, tessitura
+> di muretti) abbastanza saturi da superare comunque la soglia; il secondo
+> (chiusura morfologica + filtro sulle componenti connesse, per tenere solo
+> le regioni abbastanza grandi da essere un vero tetto) ha risolto anche
+> quello, ma restava un limite strutturale mai chiuso: le soglie
+> `custom_color_overrides` che Dungeondraft usa DAL VIVO per ricolorare
+> (`min_redness`/`min_saturation`/`red_tolerance`, scritte nel pack) non
+> hanno un asse di luminosità, quindi non potevano replicare esattamente la
+> stessa distinzione fatta lato immagine — su un paio di sprite (taverna,
+> locanda, bordello) restava un rischio concreto che Dungeondraft
+> ricolorasse un po' di legno insieme al tetto quando Jay avesse applicato
+> un colore personalizzato, anche col PNG consegnato pulito. A quel punto
+> Jay ha deciso che il canale di ricolorabilità non gli serve: meglio uno
+> sprite dal colore fisso e prevedibile (il rosso del JPEG di partenza, così
+> come disegnato) che un canale bacato. Il pack di TASK-51 dichiara ora
+> `custom_color_overrides.enabled: false`.
+>
+> Il codice della normalizzazione (chroma-key sul rosso, chiusura
+> morfologica, filtro sulle componenti connesse) non è rimasto nel repository
+> come opzione spenta: è stato tolto — vedi la storia git di
+> `src/ddforge/sprite_prep/imaging.py`/`settings.py` per chi volesse
+> recuperarlo in futuro.
+
+I numeri che restano (margine, ombra) sono quelli di
 `sprite-batch.zip/catalogo.yaml` — non duplicarli altrove, cambiarli in un
 posto solo (`src/ddforge/sprite_prep/settings.py`) se mai devono cambiare.
 
 ## Il manifest: quale file va con quale sprite
 
 `src/ddforge/sprite_prep/manifest.py` associa ogni **nome file grezzo** in
-`assets/` alla sua categoria, canvas e regola del rosso, presi dalla tabella
-di intestazione della scheda corrispondente in `prompt/*.md`. Un file senza
-voce nel manifest (compreso `assets/template.png`, che non è uno sprite
-grezzo ma un'icona di riferimento) **non viene elaborato**: compare nella
-sezione "ignorati" del rapporto, così non sparisce senza spiegazione.
+`assets/` alla sua categoria e canvas, presi dalla tabella di intestazione
+della scheda corrispondente in `prompt/*.md`. Un file senza voce nel
+manifest (compreso `assets/template.png`, che non è uno sprite grezzo ma
+un'icona di riferimento) **non viene elaborato**: compare nella sezione
+"ignorati" del rapporto, così non sparisce senza spiegazione.
 
 Quando arriva un nuovo JPEG da Jay, la prima cosa da fare è aggiungere una
 riga al manifest — non un file a parte, non un caso speciale nel codice.
@@ -98,9 +122,9 @@ Jay le genera.
 - `stato`: `ok` (nessun avviso), `avvisi` (elaborato, ma con avvisi da
   guardare), `errore` (non elaborabile, es. immagine vuota dopo lo
   scontorno), `mancante` (il file grezzo non c'è in `--input`);
-- `avvisi`: la lista dei controlli falliti (vedi punto 7 sopra);
-- `info`: lato dell'oggetto e canvas usati, frazione di pixel ricolorabili,
-  quanti bordi tocca il soggetto grezzo.
+- `avvisi`: la lista dei controlli falliti (vedi punto 6 sopra);
+- `info`: lato dell'oggetto e canvas usati, quanti bordi tocca il soggetto
+  grezzo.
 
 **Da rigenerare**: tutto ciò che non è `ok`. `avvisi` non blocca — lo sprite
 è comunque salvato — ma va guardato prima di considerarlo definitivo.
@@ -120,7 +144,8 @@ pezzi di quel pacchetto non servivano ed erano un costo netto:
   rete, senza GPU e in modo riproducibile nei test;
 - l'assemblaggio del pack (`pack.json`, `preview.png`, …), che è TASK-51.
 
-I **numeri** di scala, ombra e soglie del rosso restano identici a quelli di
-`sprite-batch.zip/catalogo.yaml`: il codice puro che li applica (geometria,
-normalizzazione del rosso) è portato quasi identico in
-`src/ddforge/sprite_prep/imaging.py`.
+I **numeri** di scala e ombra restano identici a quelli di
+`sprite-batch.zip/catalogo.yaml`: il codice puro che li applica (geometria)
+è portato quasi identico in `src/ddforge/sprite_prep/imaging.py`. Le soglie
+del rosso di quel catalogo (`rosso.tetti`, `rosso.dungeondraft`) non sono
+state portate: vedi la nota storica sopra (TASK-53).

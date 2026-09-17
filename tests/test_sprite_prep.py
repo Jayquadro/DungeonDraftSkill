@@ -9,7 +9,7 @@ from PIL import Image
 from ddforge.sprite_prep import batch, imaging, manifest, pipeline
 from ddforge.sprite_prep.imaging import ProcessingError
 from ddforge.sprite_prep.manifest import SpriteJob
-from ddforge.sprite_prep.settings import CATEGORY_CANVAS, RedSettings, ScaleSettings, ShadowSettings
+from ddforge.sprite_prep.settings import CATEGORY_CANVAS, ScaleSettings, ShadowSettings
 
 MAGENTA = (255, 0, 255)
 
@@ -68,51 +68,6 @@ def test_edges_touched_counts_sides_reaching_the_frame():
 
 
 # --------------------------------------------------------------------------- #
-# Colore: normalizzazione e soppressione del rosso
-# --------------------------------------------------------------------------- #
-
-
-def _solid_rgba(color, size=(20, 20)) -> Image.Image:
-    return Image.new("RGBA", size, (*color, 255))
-
-
-def test_normalize_roof_red_moves_hue_to_zero_and_saturation_to_target():
-    cfg = RedSettings()
-    brick = _solid_rgba((196, 90, 60))  # rosso mattone, dentro la finestra di tinta
-    normalized, fraction = imaging.normalize_roof_red(brick, cfg)
-    assert fraction == pytest.approx(1.0)
-    rgb = np.asarray(normalized.convert("RGB"))[0, 0].astype(np.float64) / 255.0
-    hsv = imaging.rgb_to_hsv(rgb[None, None, :])[0, 0]
-    assert hsv[0] == pytest.approx(0.0, abs=1e-6)
-    assert hsv[1] == pytest.approx(cfg.roof_saturation, abs=0.01)
-
-
-def test_normalize_roof_red_leaves_non_red_pixels_alone():
-    cfg = RedSettings()
-    green = _solid_rgba((40, 160, 60))
-    normalized, fraction = imaging.normalize_roof_red(green, cfg)
-    assert fraction == 0.0
-    assert tuple(np.asarray(normalized)[0, 0][:3]) == (40, 160, 60)
-
-
-def test_suppress_red_moves_recolorable_pixels_to_ochre():
-    cfg = RedSettings()
-    red = _solid_rgba((210, 20, 20))  # ben dentro le soglie custom_color di Dungeondraft
-    before = imaging.recolorable_fraction(red, cfg)
-    suppressed, fraction = imaging.suppress_red(red, cfg)
-    after = imaging.recolorable_fraction(suppressed, cfg)
-    assert before == pytest.approx(1.0)
-    assert fraction == pytest.approx(1.0)
-    assert after == 0.0
-
-
-def test_dungeondraft_red_mask_ignores_neutral_colors():
-    cfg = RedSettings()
-    stone = _solid_rgba((150, 145, 140))
-    assert imaging.recolorable_fraction(stone, cfg) == 0.0
-
-
-# --------------------------------------------------------------------------- #
 # Geometria: canvas, centratura, ombra
 # --------------------------------------------------------------------------- #
 
@@ -168,14 +123,14 @@ def test_add_shadow_extends_alpha_below_right_without_changing_object_pixels():
 
 
 def _job(**overrides) -> SpriteJob:
-    base = dict(source="x.jpg", stem="x", category="C3", red_mode="libero")
+    base = dict(source="x.jpg", stem="x", category="C3")
     base.update(overrides)
     return SpriteJob(**base)
 
 
 def test_validate_object_flags_missing_alpha():
     opaque = Image.new("RGBA", (512, 512), (100, 100, 100, 255))
-    warnings = pipeline.validate_object(opaque, _job(), ScaleSettings(), RedSettings())
+    warnings = pipeline.validate_object(opaque, _job(), ScaleSettings())
     assert any("alfa" in w for w in warnings)
 
 
@@ -184,22 +139,8 @@ def test_validate_object_flags_margin_violation():
     for y in range(200):
         for x in range(200):
             sprite.putpixel((x, y), (10, 10, 10, 255))  # riempie tutto: nessun margine
-    warnings = pipeline.validate_object(sprite, _job(), ScaleSettings(margin=0.05), RedSettings())
+    warnings = pipeline.validate_object(sprite, _job(), ScaleSettings(margin=0.05))
     assert any("margine" in w for w in warnings)
-
-
-def test_validate_object_flags_roof_red_not_found():
-    sprite = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
-    sprite.paste(Image.new("RGBA", (100, 100), (40, 160, 60, 255)), (50, 50))
-    warnings = pipeline.validate_object(sprite, _job(red_mode="tetto"), ScaleSettings(), RedSettings())
-    assert any("ricolorabile" in w for w in warnings)
-
-
-def test_validate_object_flags_forbidden_red_left_over():
-    sprite = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
-    sprite.paste(Image.new("RGBA", (100, 100), (210, 20, 20, 255)), (50, 50))
-    warnings = pipeline.validate_object(sprite, _job(red_mode="vietato"), ScaleSettings(), RedSettings())
-    assert any("ricolorabili" in w for w in warnings)
 
 
 # --------------------------------------------------------------------------- #
@@ -232,8 +173,8 @@ def test_manifest_reale_scale_jobs_declare_size_m():
 
 def test_process_job_end_to_end_produces_valid_square_rgba_png(tmp_path):
     raw = _flat_magenta_with_subject(size=(400, 400), box=(120, 120, 280, 260), color=(196, 90, 60))
-    job = _job(category="C3", red_mode="tetto")
-    result = pipeline.process_job(raw, job, ScaleSettings(), ShadowSettings(), RedSettings())
+    job = _job(category="C3")
+    result = pipeline.process_job(raw, job, ScaleSettings(), ShadowSettings())
 
     assert result.image.mode == "RGBA"
     assert result.image.size == (job.canvas, job.canvas)
@@ -251,7 +192,21 @@ def test_process_job_end_to_end_produces_valid_square_rgba_png(tmp_path):
 def test_process_job_raises_on_empty_image():
     raw = Image.new("RGB", (50, 50), MAGENTA)  # tutto sfondo, nessun soggetto
     with pytest.raises(ProcessingError):
-        pipeline.process_job(raw, _job(), ScaleSettings(), ShadowSettings(), RedSettings())
+        pipeline.process_job(raw, _job(), ScaleSettings(), ShadowSettings())
+
+
+def test_process_job_does_not_touch_the_subject_color():
+    """TASK-53: niente normalizzazione del rosso, il colore resta quello del
+    JPEG di partenza - compreso un rosso che in una versione precedente della
+    procedura sarebbe stato interpretato come tetto e ridipinto."""
+    color = (196, 90, 60)  # dentro la ex "finestra di tinta" del tetto
+    raw = _flat_magenta_with_subject(size=(400, 400), box=(120, 120, 280, 260), color=color)
+    result = pipeline.process_job(raw, _job(category="C3"), ScaleSettings(), ShadowSettings())
+    box = imaging.alpha_bbox(result.image)
+    assert box is not None
+    left, top, right, bottom = box
+    center = np.asarray(result.image)[(top + bottom) // 2, (left + right) // 2]
+    assert tuple(int(c) for c in center[:3]) == color
 
 
 # --------------------------------------------------------------------------- #

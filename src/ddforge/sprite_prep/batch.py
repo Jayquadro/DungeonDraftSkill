@@ -8,7 +8,7 @@ from pathlib import Path
 from . import imaging, pipeline
 from .imaging import ProcessingError
 from .manifest import BY_SOURCE, MANIFEST
-from .settings import RedSettings, ScaleSettings, ShadowSettings
+from .settings import ScaleSettings, ShadowSettings
 
 RAW_SUFFIXES = {".jpg", ".jpeg", ".png"}
 
@@ -19,11 +19,9 @@ def run_batch(
     only: set[str] | None = None,
     scale: ScaleSettings | None = None,
     shadow: ShadowSettings | None = None,
-    red: RedSettings | None = None,
 ) -> dict:
     scale = scale or ScaleSettings()
     shadow = shadow or ShadowSettings()
-    red = red or RedSettings()
 
     jobs = [j for j in MANIFEST if only is None or j.stem in only]
     entries: list[dict] = []
@@ -34,7 +32,6 @@ def run_batch(
             "source": job.source,
             "output": job.filename,
             "categoria": job.category,
-            "rosso": job.red_mode,
         }
         if not raw_path.exists():
             entry["stato"] = "mancante"
@@ -43,7 +40,7 @@ def run_batch(
             continue
         try:
             raw = pipeline.load_raw(raw_path)
-            result = pipeline.process_job(raw, job, scale, shadow, red)
+            result = pipeline.process_job(raw, job, scale, shadow)
         except ProcessingError as exc:
             entry["stato"] = "errore"
             entry["avvisi"] = [str(exc)]

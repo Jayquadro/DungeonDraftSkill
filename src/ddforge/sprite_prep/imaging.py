@@ -1,12 +1,14 @@
-"""Passi deterministici del post-processing: scontorno, colore, geometria, ombra.
+"""Passi deterministici del post-processing: scontorno, geometria, ombra.
 
 Ordine per un oggetto: chroma-key magenta -> pulizia alfa -> ritaglio -> scala
-e centratura -> normalizzazione/soppressione del rosso -> ombra -> validazione.
+e centratura -> ombra -> validazione. Nessun intervento sul colore (TASK-53:
+tolta la normalizzazione del rosso dei tetti su richiesta di Jay, il canale
+di ricolorabilità di Dungeondraft non serve a questo pacchetto).
 
 Adattato da sprite-batch.zip/spritebatch/postprocess.py: stessa matematica per
-colore, geometria e ombra. Il solo passo diverso è lo scontorno, qui uno
-chroma-key deterministico sul magenta puro invece di rembg — lo sfondo delle
-schede prompt/*.md è sintetico e piatto (#FF00FF), non una foto, quindi uno
+geometria e ombra. Il solo passo diverso è lo scontorno, qui uno chroma-key
+deterministico sul magenta puro invece di rembg — lo sfondo delle schede
+prompt/*.md è sintetico e piatto (#FF00FF), non una foto, quindi uno
 scontorno per distanza colore è più affidabile di un modello di segmentazione
 pensato per soggetti fotografici, non richiede download di modelli né rete,
 ed è riproducibile nei test.
@@ -21,7 +23,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageFilter
 
-from .settings import RedSettings, ScaleSettings, ShadowSettings
+from .settings import ScaleSettings, ShadowSettings
 
 ALPHA_THRESHOLD = 8
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -157,85 +159,6 @@ def rgb_to_hsv(rgb: np.ndarray) -> np.ndarray:
     h = np.where(maxc == r, bc - gc, np.where(maxc == g, 2.0 + rc - bc, 4.0 + gc - rc))
     h = np.where(delta > 0, (h / 6.0) % 1.0, 0.0)
     return np.stack([h, s, maxc], axis=-1)
-
-
-def hsv_to_rgb(hsv: np.ndarray) -> np.ndarray:
-    h, s, v = hsv[..., 0], hsv[..., 1], hsv[..., 2]
-    i = np.floor(h * 6.0).astype(int) % 6
-    f = h * 6.0 - np.floor(h * 6.0)
-    p = v * (1 - s)
-    q = v * (1 - s * f)
-    t = v * (1 - s * (1 - f))
-    choices_r = [v, q, p, p, t, v]
-    choices_g = [t, v, v, q, p, p]
-    choices_b = [p, p, t, v, v, q]
-    r = np.choose(i, choices_r)
-    g = np.choose(i, choices_g)
-    b = np.choose(i, choices_b)
-    return np.stack([r, g, b], axis=-1)
-
-
-def _hue_distance_to_red(h: np.ndarray) -> np.ndarray:
-    return np.minimum(h, 1.0 - h)
-
-
-def dungeondraft_red_mask(rgba: np.ndarray, cfg: RedSettings, safety: float = 1.0) -> np.ndarray:
-    """Approssimazione dei pixel che Dungeondraft considera 'custom color'.
-
-    Usa le tre soglie di custom_color_overrides: distanza di tinta dal rosso
-    (red_tolerance), rossore minimo (qui R - max(G, B)) e saturazione minima.
-    """
-    rgb = rgba[..., :3].astype(np.float64) / 255.0
-    hsv = rgb_to_hsv(rgb)
-    redness = rgb[..., 0] - np.maximum(rgb[..., 1], rgb[..., 2])
-    return (
-        (rgba[..., 3] > 0)
-        & (_hue_distance_to_red(hsv[..., 0]) <= cfg.dd_red_tolerance * safety)
-        & (redness >= cfg.dd_min_redness / safety)
-        & (hsv[..., 1] >= cfg.dd_min_saturation)
-    )
-
-
-def recolorable_fraction(img: Image.Image, cfg: RedSettings) -> float:
-    rgba = np.asarray(img.convert("RGBA"))
-    opaque = rgba[..., 3] > 0
-    if not opaque.any():
-        return 0.0
-    return float(dungeondraft_red_mask(rgba, cfg).sum() / opaque.sum())
-
-
-def normalize_roof_red(img: Image.Image, cfg: RedSettings) -> tuple[Image.Image, float]:
-    """Porta i rossi dei tetti a tinta 0 e saturazione uniforme, conservando la luminosità."""
-    rgba = np.array(img.convert("RGBA"))
-    rgb = rgba[..., :3].astype(np.float64) / 255.0
-    hsv = rgb_to_hsv(rgb)
-    window = cfg.roof_hue_window_deg / 360.0
-    mask = (
-        (rgba[..., 3] > 0)
-        & (_hue_distance_to_red(hsv[..., 0]) <= window)
-        & (hsv[..., 1] >= cfg.roof_min_saturation)
-        & (hsv[..., 2] >= cfg.roof_min_value)
-    )
-    hsv[..., 0] = np.where(mask, 0.0, hsv[..., 0])
-    hsv[..., 1] = np.where(mask, cfg.roof_saturation, hsv[..., 1])
-    out = hsv_to_rgb(hsv)
-    rgba[..., :3] = np.where(mask[..., None], np.round(out * 255.0), rgba[..., :3]).astype(np.uint8)
-    opaque = max(int((rgba[..., 3] > 0).sum()), 1)
-    return Image.fromarray(rgba, "RGBA"), float(mask.sum() / opaque)
-
-
-def suppress_red(img: Image.Image, cfg: RedSettings) -> tuple[Image.Image, float]:
-    """Sposta su una tinta ocra i pixel che Dungeondraft ricolorerebbe."""
-    rgba = np.array(img.convert("RGBA"))
-    mask = dungeondraft_red_mask(rgba, cfg, safety=cfg.forbidden_safety)
-    if mask.any():
-        rgb = rgba[..., :3].astype(np.float64) / 255.0
-        hsv = rgb_to_hsv(rgb)
-        hsv[..., 0] = np.where(mask, cfg.forbidden_target_hue_deg / 360.0, hsv[..., 0])
-        out = hsv_to_rgb(hsv)
-        rgba[..., :3] = np.where(mask[..., None], np.round(out * 255.0), rgba[..., :3]).astype(np.uint8)
-    opaque = max(int((rgba[..., 3] > 0).sum()), 1)
-    return Image.fromarray(rgba, "RGBA"), float(mask.sum() / opaque)
 
 
 # --------------------------------------------------------------------------- #

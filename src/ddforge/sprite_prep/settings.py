@@ -34,20 +34,14 @@ class ShadowSettings:
         return self.offset + 2.0 * self.blur
 
 
-@dataclass(frozen=True)
-class RedSettings:
-    # Soglie di Dungeondraft (custom_color_overrides del pack)
-    dd_min_redness: float = 0.1
-    dd_min_saturation: float = 0.0
-    dd_red_tolerance: float = 0.04
-    # Normalizzazione dei tetti (rosso: tetto)
-    roof_hue_window_deg: float = 25.0
-    roof_min_saturation: float = 0.35
-    roof_min_value: float = 0.15
-    roof_saturation: float = 0.85
-    # Soppressione del rosso (rosso: vietato)
-    forbidden_target_hue_deg: float = 26.0
-    forbidden_safety: float = 1.5
+# Non c'e' piu' un RedSettings (TASK-53): la procedura non tocca piu' il
+# colore. Due giri di normalizzazione del rosso dei tetti (per dare a
+# Dungeondraft un canale di ricolorabilita' uniforme) hanno prodotto pixel
+# rossi dove non dovevano essercene - prima su travature in legno e
+# contorni a inchiostro, poi su accenti isolati come salumi, dettagli su
+# pozzi/ringhiere e tessitura dei muretti. Jay ha deciso di rinunciare al
+# canale di ricolorabilita': i PNG mantengono esattamente i colori del JPEG
+# di partenza, tetto compreso.
 
 
 CATEGORY_CANVAS = {"C1": 1024, "C2": 768, "C3": 512, "C4": 256}

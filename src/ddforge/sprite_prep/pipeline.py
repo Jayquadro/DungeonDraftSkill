@@ -10,7 +10,7 @@ from PIL import Image
 from . import imaging
 from .imaging import ProcessingError, ProcessResult
 from .manifest import SpriteJob
-from .settings import RedSettings, ScaleSettings, ShadowSettings
+from .settings import ScaleSettings, ShadowSettings
 
 
 def load_raw(path: Path) -> Image.Image:
@@ -24,7 +24,6 @@ def process_job(
     job: SpriteJob,
     scale: ScaleSettings,
     shadow: ShadowSettings,
-    red: RedSettings,
 ) -> ProcessResult:
     warnings: list[str] = []
     info: dict[str, object] = {}
@@ -53,18 +52,13 @@ def process_job(
         info["canvas_ampliato_da"] = job.canvas
 
     sprite = imaging.place_centered(obj, side, canvas)
-
-    if job.red_mode == "tetto":
-        sprite, fraction = imaging.normalize_roof_red(sprite, red)
-        info["rosso_normalizzato"] = round(fraction, 4)
-    elif job.red_mode == "vietato":
-        sprite, fraction = imaging.suppress_red(sprite, red)
-        info["rosso_rimosso"] = round(fraction, 4)
-
+    # Nessuna normalizzazione del colore (TASK-53: tolto su richiesta di Jay
+    # dopo due giri di correzione insufficienti - il canale di ricolorabilita'
+    # di Dungeondraft non serve a questo pacchetto). Il tetto resta esattamente
+    # come disegnato nel JPEG di partenza.
     sprite = imaging.add_shadow(sprite, side, shadow)
 
-    warnings.extend(validate_object(sprite, job, scale, red, obj_size=obj.size))
-    info["ricolorabile"] = round(imaging.recolorable_fraction(sprite, red), 4)
+    warnings.extend(validate_object(sprite, job, scale, obj_size=obj.size))
     return ProcessResult(image=sprite, warnings=warnings, info=info)
 
 
@@ -72,7 +66,6 @@ def validate_object(
     sprite: Image.Image,
     job: SpriteJob,
     scale: ScaleSettings,
-    red: RedSettings,
     obj_size: tuple[int, int] | None = None,
 ) -> list[str]:
     warnings: list[str] = []
@@ -96,9 +89,4 @@ def validate_object(
         if actual / expected > 1.35 or expected / actual > 1.35:
             warnings.append(f"proporzioni {actual:.2f}:1 lontane da quelle attese {expected:.2f}:1")
 
-    fraction = imaging.recolorable_fraction(sprite, red)
-    if job.red_mode == "tetto" and fraction < 0.02:
-        warnings.append(f"quasi nessun pixel ricolorabile ({fraction:.1%}): tetto rosso non riconosciuto")
-    if job.red_mode == "vietato" and fraction > 0.002:
-        warnings.append(f"restano pixel ricolorabili ({fraction:.1%}) in uno sprite che non deve cambiare colore")
     return warnings
