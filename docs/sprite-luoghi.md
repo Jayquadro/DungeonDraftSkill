@@ -117,7 +117,6 @@ casa**, non dalla dimensione.
 | `alchimista` | Bottega dell'Alchimista | 2,00 / — | serra o alambicchi sul tetto |
 | `biblioteca` | Biblioteca | 0,60 / 0,45 | edificio compatto con lucernari |
 | `banca` | Casa di Cambio | 0,60 / 0,65 | facciata con colonne, ingresso presidiato |
-| `gilda` | Sede di Gilda | 1,65 / 4,00 | stendardo sopra l'ingresso |
 | `dogana` | Dogana | 0,95 / 3,20 | tettoia per le merci e sbarra; sta **alle porte delle mura** |
 | `torre_guardia` | Torre di Guardia | 1,30 / 3,20 | torre quadrata dall'alto; sta **alle porte delle mura** |
 | `conceria` | Conceria | 0,30 / 0,20 | vasche di concia scoperte; sta **sul fiume, a valle** |
@@ -176,8 +175,13 @@ Già in uso dal generatore:
 |---|---|
 | giardino pubblico, cimitero | `chr_grass` (erba) |
 | fiera, quartiere povero | `chr_dirt` (terra battuta) |
-| mercato, patibolo, cantiere | `tileset_cobble` (selciato) |
-| statua | nessuna: sta già su una piazza pavimentata |
+| statua, mercato, patibolo | nessuna: stanno già su una piazza pavimentata |
+
+Mercato e patibolo disegnavano in passato un secondo pattern `tileset_cobble`
+sopra la propria cella della piazza: creava un rettangolo a sfondo opaco
+visibilmente diverso dalla piazza intorno, e Jay lo ha chiesto trasparente
+(TASK-60). Tolto: ora, come la statua, non dichiarano un terreno proprio e
+resta visibile solo il pavimento della piazza.
 
 **Verificato**: Dungeondraft accetta una texture di categoria `terrain`
 dentro un elemento `pattern`. Il foglio di `scripts/label_calibration.py`
@@ -217,13 +221,56 @@ che cambia di più il risultato.
 
 | categoria | pezzi |
 |---|---|
-| luoghi chiusi | 29 |
+| luoghi chiusi | 28 |
 | pezzi dei luoghi all'aperto | ~18 |
-| **totale minimo** | **~47** |
+| **totale minimo** | **~46** |
 | case ordinarie (facoltative) | 10–15 |
 
-Tre elementi che c'erano in una versione precedente di questo documento sono
-stati **tolti dal catalogo** perché Jay li ha scartati guardando il
-campionario: cantiere navale, mercato del pesce e quartiere povero. Con loro
-è uscita anche la torre sulla porta delle mura: il varco nella cinta resta,
-ma senza sprite sopra. Sulla banchina del porto resta il solo faro.
+Quattro elementi che c'erano in una versione precedente di questo documento
+sono stati **tolti dal catalogo** perché Jay li ha scartati guardando il
+campionario: cantiere navale, mercato del pesce, quartiere povero e sede di
+gilda. Con loro è uscita anche la torre sulla porta delle mura: il varco
+nella cinta resta, ma senza sprite sopra. Sulla banchina del porto resta il
+solo faro.
+
+## 10. Chi ha già lo sprite del pacchetto, chi è ancora sul ripiego
+
+TASK-52: il pacchetto Nova Mistralis (pack `Ada7IQuz`, assemblato in
+TASK-51 da `src/ddforge/sprite_prep/manifest.py`, TASK-50) è agganciato ad
+`assets._CITY_LANDMARK_SPRITES` per i luoghi che copre; gli altri restano sul
+ripiego preso dai 440 object dei pack di Jay (sez. 1-bis). Stato ad oggi, 23
+luoghi su 36 coperti:
+
+### Coperti dal pacchetto (23)
+
+| luogo | sprite | note |
+|---|---|---|
+| ospedale, teatro, accademia, prigione, municipio, faro, bagni, biblioteca, tempio, monastero, caserma, banca, alchimista, magazzino, fabbro, stalle, fornaio, macelleria, taverna, locanda, bordello | `nm_<luogo>` | 1:1, un edificio singolo come commissionato |
+| cimitero | `nm_cimitero_croce`, `nm_cimitero_fossa`, `nm_cimitero_lapide_1` | commissionate 3 varianti di lapide (prompt/11-cimitero.md), prodotta solo `lapide_1`: meno varietà fra una tomba e l'altra, non un errore |
+| mercato | `nm_banco_mercato_1` | commissionati banco×3/cesta/carro (sez. 4), prodotto solo un banco |
+
+### Ancora sul ripiego (13)
+
+| luogo | sprite di ripiego | perché |
+|---|---|---|
+| cattedrale, palazzo | `bb_keepsandcastles_*_color` | monumento fuori scala preso in prestito, mai commissionato per questo pacchetto |
+| arena | `tourney_grounds` | non commissionato |
+| dogana, conceria, macello | `shed_02` | non commissionato |
+| mulino | `windmill_02` | non commissionato |
+| lazzaretto | `strawhouse_03` | non commissionato |
+| torre_guardia | `wood_walls_tower` | non commissionato |
+| patibolo | `thehangedman` | non commissionato |
+| statua | `statue_male_mage_alt_03_a` | non commissionato |
+| fiera | `tent_03` | non commissionato |
+| giardino | alberi delle texture base del programma | non commissionato |
+
+### Generati ma non ancora agganciati
+
+`nm_villa_nobiliare.png` e `nm_armeria.png` sono nel pacchetto e nel catalogo
+(`data/assets.json`) ma **non finiscono su nessuna mappa**: non esiste un
+`LandmarkKind` "villa nobiliare" o "armeria" in
+`src/ddforge/generators/landmarks.py` (prompt/10-villa-nobiliare.md,
+prompt/12-armeria.md, TASK-49). Serve un task a parte per aggiungere il
+`LandmarkKind` (categoria, `scales`, `rule`, dimensione dei lotti, misurata
+come per l'ospedale in TASK-48.1) prima che questi due sprite abbiano un
+posto dove finire.

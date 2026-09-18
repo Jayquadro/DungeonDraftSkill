@@ -891,6 +891,9 @@ def draw_river(level, ids, river, palette) -> None:
     add_path(level, ids, river.points, texture, width=int(grid_to_px(river.width)))
 
 
+_TRANSPARENT = "00ffffff"
+
+
 def draw_bridge(level, ids, bridge, palette) -> None:
     """Impalcato del ponte dove una via incrocia il fiume: un pavimento steso
     sull'acqua, largo quanto l'attraversamento.
@@ -900,8 +903,14 @@ def draw_bridge(level, ids, bridge, palette) -> None:
     lungo quanto il fiume e' largo e orientato come la via che lo attraversa:
     scalarlo per coprire l'attraversamento lo deformava, e lasciarlo alla sua
     dimensione lasciava scoperta l'acqua ai lati. L'impalcato liscio fa il suo
-    lavoro senza raccontare una campata che non c'e'."""
-    add_pattern(level, ids, bridge.rect, palette.floors.get("ponte", palette.floor))
+    lavoro senza raccontare una campata che non c'e'.
+
+    color=_TRANSPARENT (TASK-60): add_pattern colora di 'ffffffff' (bianco
+    opaco) per default, e sopra il fiume questo rendeva il rettangolo
+    dell'impalcato uno sfondo opaco visibile invece di un pavimento posato
+    sull'acqua - Jay lo ha visto e chiesto trasparente. Il pattern (e la sua
+    texture) restano disegnati, solo il colore/sfondo diventa trasparente."""
+    add_pattern(level, ids, bridge.rect, palette.floors.get("ponte", palette.floor), color=_TRANSPARENT)
 
 
 def draw_port(level, ids, port, palette) -> None:

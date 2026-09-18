@@ -50,11 +50,11 @@ from ddforge.validate import validate  # noqa: E402
 #
 # L'ultima voce di ogni riga NON e' un suggerimento: l'ordine e' solo quello
 # in cui i candidati compaiono sulla mappa.
-# Cantiere navale, mercato del pesce, quartiere povero e porta delle mura
-# erano qui e sono stati tolti: Jay li ha scartati guardando il campionario
-# e non gli interessano, quindi sono usciti anche dal catalogo dei luoghi
-# (generators/landmarks.py). Rimetterli vuol dire rimetterli in entrambi i
-# posti.
+# Cantiere navale, mercato del pesce, quartiere povero, porta delle mura e
+# sede di gilda erano qui e sono stati tolti: Jay li ha scartati guardando il
+# campionario e non gli interessano, quindi sono usciti anche dal catalogo
+# dei luoghi (generators/landmarks.py). Rimetterli vuol dire rimetterli in
+# entrambi i posti.
 CANDIDATES: dict[str, tuple[str, ...]] = {
     # --- culto e potere --------------------------------------------------
     "tempio": (
@@ -102,7 +102,6 @@ CANDIDATES: dict[str, tuple[str, ...]] = {
     ),
     # --- commercio --------------------------------------------------------
     "banca": ("house_05", "estate2_sm", "estate1", "house_09"),
-    "gilda": ("house_09", "house_12", "estate2_sm", "bb_houses1_flag1", "bb_houses1_flag2", "hamlet2"),
     "magazzino": ("shed_02", "shed_01", "crates_01", "large_house", "hamlet1", "deck", "crate_wood_01"),
     "dogana": ("shed_01", "shed_02", "crates_01", "palisade_gate", "bounty_board_01", "signpost"),
     # --- artigianato ------------------------------------------------------

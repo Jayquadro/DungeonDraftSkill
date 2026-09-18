@@ -1204,6 +1204,28 @@ Risultato: 51 pack (invariato), `objects` 106 -> 440, `paths` 6 -> 9,
 `walls` 6 -> 9, `floors` 6 -> 9, `object_sizes` 57 -> 396. Nessuna chiave
 preesistente persa o modificata (verificato chiave per chiave).
 
+**Comando usato in TASK-52** per aggiungere il pacchetto dedicato Nova
+Mistralis (pack `Ada7IQuz`, TASK-51) al catalogo. Il pack e' gia'
+referenziato dall'`asset_manifest` dei tre template (Jay lo ha importato in
+Dungeondraft e risalvati, commit `6ef9d96`), quindi basta un `--pack` in
+piu' rispetto al comando di TASK-48; niente `.dungeondraft_pack` compilato
+nel repository (fuori da `dist/`, ignorata): il file usato per leggere le
+texture e' quello prodotto dal packer ufficiale sulla macchina di Jay
+(`Documents/Dungeondraft/NovaMistralis.dungeondraft_pack`):
+
+```
+ddforge catalog --from-catalog data/assets.json \
+  --from templates/blank_80x80.dungeondraft_map \
+  --from templates/rich_reference.dungeondraft_map \
+  --from templates/blank_160x160.dungeondraft_map \
+  --pack ".../Documents/Dungeondraft/NovaMistralis.dungeondraft_pack" \
+  --out data/assets.json
+```
+
+Risultato: 51 -> 52 pack, `objects` 543 -> 570 (+27, le sole texture `nm_*`
+del pack), `object_sizes` 508 -> 535 (+27, stessa origine). Nessuna chiave
+preesistente persa o modificata.
+
 **Texture non-PNG.** `read_dungeondraft_pack` legge le dimensioni dall'IHDR
 di un PNG, quindi i pack in WebP (per esempio WFWMFRDX, da cui viene la
 statua) non finiscono in `object_sizes` nemmeno passandoli con `--pack`.

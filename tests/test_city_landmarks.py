@@ -663,10 +663,11 @@ def test_bridges_are_a_deck_and_not_a_sprite(scale):
 @pytest.mark.parametrize("scale", SCALES)
 def test_open_air_landmarks_get_a_coloured_area_of_the_right_ground(scale):
     """Un luogo all'aperto e' un'area colorata con sopra gli sprite, e il
-    terreno dell'area e' quello che il luogo dichiara: selciato per il
-    mercato, erba per parco e cimitero, terra battuta per fiera e
-    fiera. Prima era selciato per tutti, ed e' il motivo per cui un
-    cimitero sembrava un piazzale."""
+    terreno dell'area e' quello che il luogo dichiara: erba per giardino e
+    cimitero, terra battuta per fiera. Prima era selciato per tutti, ed e'
+    il motivo per cui un cimitero sembrava un piazzale. Mercato e patibolo
+    non dichiarano piu' un terreno proprio (TASK-60): sono celle della
+    piazza, che ha gia' il suo pavimento."""
     palette = palette_for("city", load_catalog())
     seen = 0
     for seed in range(8):

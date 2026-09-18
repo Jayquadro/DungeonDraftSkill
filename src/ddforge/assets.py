@@ -557,7 +557,7 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         # sintetiche di TASK-48: lo spiazzo di un luogo all'aperto, la
         # banchina del porto e l'impalcato di un ponte.
         "floors": {
-            "piazza": "tileset_brick_basketweave", "selciato": "tileset_cobble",
+            "selciato": "tileset_cobble",
             # Non "cobblestone": e gia' `floor` di questo stile, e una
             # banchina indistinguibile dal pavimento di default non si
             # riconosce come banchina (ne' in Dungeondraft ne' in un test).
@@ -569,14 +569,18 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
         # mettono sotto /terrain/. Finiscono comunque in Palette.floors, che
         # e' il dizionario da cui compose pesca una texture di pavimento.
         #
-        # NON VERIFICATO che Dungeondraft accetti una texture di categoria
-        # terrain dentro un elemento `pattern`. L'indizio a favore: il
-        # template ricco disegnato a mano da Jay usa come pattern texture di
-        # `tilesets/simple/`, quindi lo strumento non si limita a
-        # `patterns/normal/`. La conferma sta nel file di calibrazione
-        # generato da scripts/label_calibration.py, che stende una toppa per
-        # ciascuna di queste texture.
-        "grounds": {"verde": "chr_grass", "terra": "chr_dirt"},
+        # Verificato che Dungeondraft accetta una texture di categoria
+        # terrain dentro un elemento `pattern` (docs/sprite-luoghi.md sez.6,
+        # scripts/label_calibration.py).
+        #
+        # "piazza" (TASK-54): prima era tileset_brick_basketweave (pietra
+        # chiara), che a Jay sembrava troppo bianca; ora e' la stessa terra
+        # battuta gia' usata per il terreno della fiera ("terra"), verificata
+        # gia' su un'area piu' piccola. Riusa "chr_dirt" invece di inventare
+        # una texture nuova, e resta distinguibile dal selciato di
+        # strade/banchina perche' e' un bucket di catalogo diverso
+        # (terrain, non tilesets).
+        "grounds": {"verde": "chr_grass", "terra": "chr_dirt", "piazza": "chr_dirt"},
         # TASK-48: le tre strutture urbane che si disegnano come path lungo
         # una polilinea. Tutte e tre dal pack 6VxwaRdj, gia' referenziato dal
         # template di produzione (nessun rischio DDF014).
@@ -593,8 +597,18 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
 # rettangolo bianco — la cosa che Jay ha bocciato guardando la mappa vera.
 # Ora un luogo e uno sprite come tutto il resto.
 #
-# Provenienza degli sprite, tutti da pack gia referenziati dal template di
-# produzione (nessun rischio DDF014):
+# TASK-52: il pacchetto dedicato Nova Mistralis (pack Ada7IQuz, assemblato in
+# TASK-51 da src/ddforge/sprite_prep/manifest.py, TASK-50) copre 21 luoghi
+# chiusi piu' due dei sei luoghi con sprite multipli (cimitero, mercato): le
+# voci sotto puntano ai suoi nm_* invece che al ripiego preso dai 440 object
+# dei pack di Jay. E' proprio la convivenza di due registri grafici diversi
+# (gli sprite dipinti del pacchetto contro le icone piatte o i monumenti
+# fuori scala presi in prestito) il motivo per cui la mappa non era ancora
+# bella (docs/sprite-luoghi.md sez. 8) — elenco di cosa resta sul ripiego in
+# docs/sprite-luoghi.md sez. 10.
+#
+# Provenienza del ripiego ancora in uso qui sotto, da pack gia referenziati
+# dal template di produzione (nessun rischio DDF014):
 # - Bp03igMq "CHR - Town Maps": edifici singoli disegnati alla scala di una
 #   mappa di paese (una casa ~0,8 quadretti). E il registro giusto per i
 #   preset "quartiere" e "citta", dove un edificio ordinario e uno sprite di
@@ -620,66 +634,66 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
 # singolo su sfondo trasparente: CHR Town Maps, City Terrain, Lost Lands.
 _CITY_LANDMARK_SPRITES: dict[str, tuple[str, ...]] = {
     # --- luoghi di culto e potere ----------------------------------------
-    "tempio": ("bb_city_cathedral_1_color",),
+    "tempio": ("nm_tempio",),
+    # Nessuno sprite dedicato: la cattedrale resta un monumento fuori scala
+    # preso in prestito, non coperta dal pacchetto (docs/sprite-luoghi.md).
     "cattedrale": ("bb_keepsandcastles_cathedral_color",),
-    "monastero": ("bb_keepsandcastles_forestkeep_color",),
-    "palazzo": ("bb_keepsandcastles_castle_color",),
-    "municipio": ("bb_houses1_flag1",),
-    "caserma": ("bb_city_fort_1_color",),
-    "prigione": ("cage_04",),
-    "arena": ("tourney_grounds",),
-    "teatro": ("bb_keepsandcastles_amphitheatre_color",),
+    "monastero": ("nm_monastero",),
+    "palazzo": ("bb_keepsandcastles_castle_color",),  # non coperto
+    "municipio": ("nm_municipio",),
+    "caserma": ("nm_caserma",),
+    "prigione": ("nm_prigione",),
+    "arena": ("tourney_grounds",),  # non coperto
+    "teatro": ("nm_teatro",),
     # --- sapere -----------------------------------------------------------
-    "accademia": ("castle_w_moat",),
-    "biblioteca": ("house_05",),
-    "alchimista": ("house_07",),
+    "accademia": ("nm_accademia",),
+    "biblioteca": ("nm_biblioteca",),
+    "alchimista": ("nm_alchimista",),
     # --- commercio --------------------------------------------------------
-    "banca": ("house_05",),
-    "gilda": ("house_09",),
-    "magazzino": ("shed_01",),
-    "dogana": ("shed_02",),
+    "banca": ("nm_banca",),
+    "magazzino": ("nm_magazzino",),
+    "dogana": ("shed_02",),  # non coperto
     # --- artigianato ------------------------------------------------------
-    "fabbro": ("shed_01",),
-    "stalle": ("shed_01",),
-    "fornaio": ("house_10",),
-    "macelleria": ("house_01",),
-    "conceria": ("shed_02",),
-    "macello": ("shed_02",),
-    "mulino": ("windmill_02",),
+    "fabbro": ("nm_fabbro",),
+    "stalle": ("nm_stalle",),
+    "fornaio": ("nm_fornaio",),
+    "macelleria": ("nm_macelleria",),
+    "conceria": ("shed_02",),  # non coperto
+    "macello": ("shed_02",),  # non coperto
+    "mulino": ("windmill_02",),  # non coperto
     # --- svago e servizi --------------------------------------------------
-    "taverna": ("house_03",),
-    "locanda": ("inn_01",),
-    "bordello": ("house_06",),
-    "bagni": ("house_04",),
-    # Ripiego in attesa di nm_ospedale.png (prompt/01-ospedale.md, TASK-48.1):
-    # house_02 non e' usato da nessun altro luogo.
-    "ospedale": ("house_02",),
-    "lazzaretto": ("strawhouse_03",),
+    "taverna": ("nm_taverna",),
+    "locanda": ("nm_locanda",),
+    "bordello": ("nm_bordello",),
+    "bagni": ("nm_bagni",),
+    "ospedale": ("nm_ospedale",),
+    "lazzaretto": ("strawhouse_03",),  # non coperto
     # --- struttura urbana -------------------------------------------------
-    "torre_guardia": ("wood_walls_tower",),
-    "faro": ("bb_seasandshores_cliff_lighthouse_color",),
-    "mercato": ("canopy_01",),
-    "patibolo": ("thehangedman",),
-    "statua": ("statue_male_mage_alt_03_a",),
-    "fiera": ("tent_03",),
-    # --- aree con sprite multipli: DA CONFERMARE --------------------------
-    # Giardino e cimitero non sono uno sprite ma una scena: un'area colorata
-    # con dentro piu' pezzi. Jay ha lasciato sul campionario tutti i
-    # candidati perche' vanno giudicati montati, non in fila. Questi sono i
-    # miei insiemi di lavoro, in attesa del suo verdetto sul foglio generato
-    # da `landmark_sprite_sheet.py --areas`: fuori i due sprite BB (giardino
-    # e frutteto sono tessere 3x3 con il loro terreno, e sparpagliate
-    # ricoprirebbero l'area invece di popolarla) e fuori panchina, recinto e
-    # sasso, che a queste dimensioni non si distinguono.
+    "torre_guardia": ("wood_walls_tower",),  # non coperto
+    "faro": ("nm_faro",),
+    "mercato": ("nm_banco_mercato_1",),
+    "patibolo": ("thehangedman",),  # non coperto
+    "statua": ("statue_male_mage_alt_03_a",),  # non coperto
+    "fiera": ("tent_03",),  # non coperto
+    # --- aree con sprite multipli ------------------------------------------
+    # Giardino: nessuno sprite del pacchetto (non commissionato), resta sul
+    # ripiego. Jay ha lasciato sul campionario tutti i candidati perche'
+    # vanno giudicati montati, non in fila; questo e' l'insieme scelto dal
+    # foglio generato da `landmark_sprite_sheet.py --areas`: fuori i due
+    # sprite BB (giardino e frutteto sono tessere 3x3 con il loro terreno, e
+    # sparpagliate ricoprirebbero l'area invece di popolarla) e fuori
+    # panchina, recinto e sasso, che a queste dimensioni non si distinguono.
     "giardino": (
         "tree_big_green_01", "tree_big_green_03", "tree_green_simple_01",
         "tree_green_simple_03", "tree_massive_green_01",
     ),
-    # Variante C del foglio delle aree: lapidi e tumuli mescolati. Le lapidi
-    # sono lastre larghe, i tumuli fosse strette e lunghe: disposti a filari
-    # (LandmarkKind.layout) danno un camposanto in cui si distingue una tomba
-    # dall'altra invece di quattro file della stessa lastra.
-    "cimitero": ("gravestone_01", "gravestone_02", "grave_01", "grave_02", "grave_08"),
+    # Cimitero: coperto dal pacchetto (prompt/11-cimitero.md, TASK-49/50/51),
+    # sostituisce per intero il ripiego BB — mischiare i due registri
+    # grafici nella stessa scena sarebbe lo stesso difetto che il pacchetto
+    # doveva risolvere. Solo una variante di lapide invece delle tre
+    # commissionate (nm_cimitero_lapide_1: lapide_2/3 non sono state
+    # prodotte): meno varieta' fra una tomba e l'altra, non un errore.
+    "cimitero": ("nm_cimitero_croce", "nm_cimitero_fossa", "nm_cimitero_lapide_1"),
 }
 
 

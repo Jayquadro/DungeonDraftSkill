@@ -55,6 +55,12 @@
       "version": "1.3"
     },
     {
+      "name": "NovaMistralis",
+      "id": "Ada7IQuz",
+      "author": "Jayquadro",
+      "version": "1"
+    },
+    {
       "name": "CHR - Town Maps",
       "id": "Bp03igMq",
       "author": "Crosshead",
@@ -727,6 +733,33 @@
     "mossy_trunks_05": "res://textures/objects/more_trees/mossy_trunks_05.png",
     "mossy_trunks_06": "res://textures/objects/more_trees/mossy_trunks_06.png",
     "moulin": "res://packs/RchUgE31/textures/objects/moulin.png",
+    "nm_accademia": "res://packs/Ada7IQuz/textures/objects/nm_accademia.png",
+    "nm_alchimista": "res://packs/Ada7IQuz/textures/objects/nm_alchimista.png",
+    "nm_armeria": "res://packs/Ada7IQuz/textures/objects/nm_armeria.png",
+    "nm_bagni": "res://packs/Ada7IQuz/textures/objects/nm_bagni.png",
+    "nm_banca": "res://packs/Ada7IQuz/textures/objects/nm_banca.png",
+    "nm_banco_mercato_1": "res://packs/Ada7IQuz/textures/objects/nm_banco_mercato_1.png",
+    "nm_biblioteca": "res://packs/Ada7IQuz/textures/objects/nm_biblioteca.png",
+    "nm_bordello": "res://packs/Ada7IQuz/textures/objects/nm_bordello.png",
+    "nm_caserma": "res://packs/Ada7IQuz/textures/objects/nm_caserma.png",
+    "nm_cimitero_croce": "res://packs/Ada7IQuz/textures/objects/nm_cimitero_croce.png",
+    "nm_cimitero_fossa": "res://packs/Ada7IQuz/textures/objects/nm_cimitero_fossa.png",
+    "nm_cimitero_lapide_1": "res://packs/Ada7IQuz/textures/objects/nm_cimitero_lapide_1.png",
+    "nm_fabbro": "res://packs/Ada7IQuz/textures/objects/nm_fabbro.png",
+    "nm_faro": "res://packs/Ada7IQuz/textures/objects/nm_faro.png",
+    "nm_fornaio": "res://packs/Ada7IQuz/textures/objects/nm_fornaio.png",
+    "nm_locanda": "res://packs/Ada7IQuz/textures/objects/nm_locanda.png",
+    "nm_macelleria": "res://packs/Ada7IQuz/textures/objects/nm_macelleria.png",
+    "nm_magazzino": "res://packs/Ada7IQuz/textures/objects/nm_magazzino.png",
+    "nm_monastero": "res://packs/Ada7IQuz/textures/objects/nm_monastero.png",
+    "nm_municipio": "res://packs/Ada7IQuz/textures/objects/nm_municipio.png",
+    "nm_ospedale": "res://packs/Ada7IQuz/textures/objects/nm_ospedale.png",
+    "nm_prigione": "res://packs/Ada7IQuz/textures/objects/nm_prigione.png",
+    "nm_stalle": "res://packs/Ada7IQuz/textures/objects/nm_stalle.png",
+    "nm_taverna": "res://packs/Ada7IQuz/textures/objects/nm_taverna.png",
+    "nm_teatro": "res://packs/Ada7IQuz/textures/objects/nm_teatro.png",
+    "nm_tempio": "res://packs/Ada7IQuz/textures/objects/nm_tempio.png",
+    "nm_villa_nobiliare": "res://packs/Ada7IQuz/textures/objects/nm_villa_nobiliare.png",
     "noose_1": "res://packs/roSIrsHG/textures/objects/Noose 1.png",
     "noose_2": "res://packs/roSIrsHG/textures/objects/Noose 2.png",
     "noose_3": "res://packs/roSIrsHG/textures/objects/Noose 3.png",
@@ -2325,6 +2358,114 @@
     "moulin": [
       227,
       267
+    ],
+    "nm_accademia": [
+      1024,
+      1024
+    ],
+    "nm_alchimista": [
+      512,
+      512
+    ],
+    "nm_armeria": [
+      512,
+      512
+    ],
+    "nm_bagni": [
+      768,
+      768
+    ],
+    "nm_banca": [
+      512,
+      512
+    ],
+    "nm_banco_mercato_1": [
+      448,
+      448
+    ],
+    "nm_biblioteca": [
+      512,
+      512
+    ],
+    "nm_bordello": [
+      512,
+      512
+    ],
+    "nm_caserma": [
+      768,
+      768
+    ],
+    "nm_cimitero_croce": [
+      336,
+      336
+    ],
+    "nm_cimitero_fossa": [
+      496,
+      496
+    ],
+    "nm_cimitero_lapide_1": [
+      336,
+      336
+    ],
+    "nm_fabbro": [
+      512,
+      512
+    ],
+    "nm_faro": [
+      768,
+      768
+    ],
+    "nm_fornaio": [
+      512,
+      512
+    ],
+    "nm_locanda": [
+      512,
+      512
+    ],
+    "nm_macelleria": [
+      512,
+      512
+    ],
+    "nm_magazzino": [
+      512,
+      512
+    ],
+    "nm_monastero": [
+      1024,
+      1024
+    ],
+    "nm_municipio": [
+      768,
+      768
+    ],
+    "nm_ospedale": [
+      768,
+      768
+    ],
+    "nm_prigione": [
+      768,
+      768
+    ],
+    "nm_stalle": [
+      512,
+      512
+    ],
+    "nm_taverna": [
+      512,
+      512
+    ],
+    "nm_teatro": [
+      768,
+      768
+    ],
+    "nm_tempio": [
+      768,
+      768
+    ],
+    "nm_villa_nobiliare": [
+      768,
+      768
     ],
     "noose_1": [
       81,

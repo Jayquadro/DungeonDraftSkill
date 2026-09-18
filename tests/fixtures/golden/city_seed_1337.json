@@ -7466,7 +7466,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
+            "texture": "res://packs/Bp03igMq/textures/terrain/chr_dirt.png",
             "node_id": "a"
           },
           {
@@ -7478,7 +7478,7 @@
             "layer": -400,
             "color": "ffffffff",
             "outline": false,
-            "texture": "res://textures/tilesets/simple/tileset_brick_basketweave.png",
+            "texture": "res://packs/Bp03igMq/textures/terrain/chr_dirt.png",
             "node_id": "c"
           },
           {
