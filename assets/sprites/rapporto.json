@@ -331,13 +331,49 @@
         "lato_oggetto_px": 390,
         "canvas_px": 512
       }
+    },
+    {
+      "source": "palazzo.jpg",
+      "output": "nm_palazzo.png",
+      "categoria": "C1",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 781,
+        "canvas_px": 1024
+      }
+    },
+    {
+      "source": "arena.jpg",
+      "output": "nm_arena.png",
+      "categoria": "C1",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 781,
+        "canvas_px": 1024
+      }
+    },
+    {
+      "source": "cattedrale.jpg",
+      "output": "nm_cattedrale.png",
+      "categoria": "C1",
+      "stato": "ok",
+      "avvisi": [],
+      "info": {
+        "soggetto_tocca_bordi": 0,
+        "lato_oggetto_px": 781,
+        "canvas_px": 1024
+      }
     }
   ],
   "ignorati": [
     "template.png"
   ],
   "riepilogo": {
-    "ok": 26,
+    "ok": 29,
     "avvisi": 1,
     "errore": 0,
     "mancante": 0

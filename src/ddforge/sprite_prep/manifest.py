@@ -83,6 +83,10 @@ MANIFEST: tuple[SpriteJob, ...] = (
     SpriteJob("taverna1.jpg", "taverna", "C3"),
     SpriteJob("locanda.jpg", "locanda", "C3"),
     SpriteJob("bordello.jpg", "bordello", "C3"),
+    # -------------------------------------------------- prompt/26..28 (TASK-55/57/58)
+    SpriteJob("palazzo.jpg", "palazzo", "C1"),
+    SpriteJob("arena.jpg", "arena", "C1"),
+    SpriteJob("cattedrale.jpg", "cattedrale", "C1"),
 )
 # fmt: on
 
