@@ -130,8 +130,8 @@ distribuisce a caso dentro l'area, senza mai sovrapporli.
 
 | luogo | etichetta | area | terreno | lato di un pezzo | pezzi da disegnare |
 |---|---|---|---|---|---|
-| `mercato` | Piazza del Mercato | 4,7 × 3,8 q | selciato | 2 q = **3 m** | banco con tenda ×3, cesta di merci, carro |
-| `patibolo` | Patibolo | 3,6 × 3,2 q | selciato | 2 q = **3 m** | forca, gogna, ceppo |
+| `mercato` | Piazza del Mercato | 4,7 × 3,8 q | nessuno | 2 q = **3 m** | banco con tenda ×3, cesta di merci, carro |
+| `patibolo` | Patibolo | 3,6 × 3,2 q | nessuno | 2 q = **3 m** | forca, gogna, ceppo |
 | `statua` | Statua | 3,0 × 2,8 q | nessuno | 1,5 q = **2,2 m** | statua su piedistallo ×3 (guerriero, mago, figura ammantata) |
 | `giardino` | Giardino Pubblico | 7,8 × 7,8 q | erba | 3 q = **4,5 m** | chioma d'albero ×3 (sole **verdi**), cespuglio ×2, aiuola |
 | `cimitero` | Cimitero | 4,4 × 5,2 q | erba | 1,5 q = **2,2 m** | lapide ×3 (lastra con la pietra in testa, vista dall'alto), croce, fossa recintata |
