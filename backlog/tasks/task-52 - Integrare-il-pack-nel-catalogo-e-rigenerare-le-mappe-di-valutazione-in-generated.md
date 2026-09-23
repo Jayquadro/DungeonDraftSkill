@@ -3,11 +3,11 @@ id: TASK-52
 title: >-
   Integrare il pack nel catalogo e rigenerare le mappe di valutazione in
   generated/
-status: In Progress
+status: Done
 assignee:
   - '@claude'
 created_date: '2026-09-15 07:18'
-updated_date: '2026-09-18 08:00'
+updated_date: '2026-09-23 09:01'
 labels: []
 milestone: m-9
 dependencies:
@@ -36,10 +36,10 @@ Vanno rigenerati anche i golden di tests/fixtures/golden se il cambio di sprite 
 - [x] #1 Il pack nuovo e' letto dal catalogo asset e i suoi sprite compaiono in data/assets.json con le dimensioni native lette dall'header PNG
 - [x] #2 assets._CITY_LANDMARK_SPRITES punta ai nuovi nm_* per ogni luogo coperto dal pacchetto, e conserva lo sprite di ripiego per i luoghi non ancora coperti
 - [x] #3 generated/ contiene mappe di valutazione rigenerate per i tre preset isolato, quartiere e citta, con seed fissi e nomi che dicono a quale task appartengono
-- [ ] #4 Le mappe rigenerate si aprono in Dungeondraft senza errori e superano ddforge validate
+- [x] #4 Le mappe rigenerate si aprono in Dungeondraft senza errori e superano ddforge validate
 - [x] #5 Un documento o una sezione di docs/ elenca quali luoghi usano ormai uno sprite del pacchetto e quali sono ancora sul ripiego, cosi' si sa cosa resta da disegnare
 - [x] #6 I golden di tests/fixtures/golden sono aggiornati dove il cambio di sprite li tocca e la suite completa passa
-- [ ] #7 Gate umano: Jay apre le mappe di generated/ in Dungeondraft e giudica il risultato complessivo
+- [x] #7 Gate umano: Jay apre le mappe di generated/ in Dungeondraft e giudica il risultato complessivo
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -67,4 +67,6 @@ Documentazione (AC5): docs/sprite-luoghi.md nuova sez. 10 "Chi ha gia' lo sprite
 Golden e suite (AC6): scripts/regen_city_golden.py --write ha rigenerato solo tests/fixtures/golden/city_seed_1337_landmarks.json (city_seed_1337.json, senza landmarks, invariato come atteso). Diff verificato: solo texture/scale degli object di cimitero e mercato (i due open_air coperti), nessuna regressione altrove. pytest -q sull'intera suite: 779 passed, 1 skipped (preesistente, non collegato), 0 failed.
 
 APERTO: AC4 (parte "si aprono in Dungeondraft senza errori") e AC7 (gate umano) restano da confermare - Jay deve aprire i tre file di generated/city_*_task52.dungeondraft_map in Dungeondraft e giudicare il risultato complessivo (luoghi coerenti con lo stile del pacchetto invece delle icone piatte BB).
+
+Gate umano confermato da Jay (2026-09-23): le mappe generated/city_*_task52.dungeondraft_map si aprono in Dungeondraft senza errori, risultato complessivo giudicato positivamente.
 <!-- SECTION:NOTES:END -->

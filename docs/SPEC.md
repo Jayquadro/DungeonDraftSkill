@@ -666,6 +666,23 @@ Decidi in M5 se supportare entrambe o solo il quartiere.
 > e tre i preset; cambiano solo i valori numerici (SCALE_PRESETS in
 > `generators/city.py`). Differenza fra i preset e come scegliere:
 > `README.md` e `skill/references/styles.md`.
+>
+> **TASK-64** (solo preset `quartiere`, `citta`/`isolato` invariati): due
+> correzioni dopo che Jay ha aperto una mappa quartiere in Dungeondraft.
+> `street_path_fraction` portato a 1.0 (dal 0.7 originale): il selciato
+> disegnato da `add_path` è sempre stato più stretto della fascia riservata
+> alla via (`gap_width`) e centrato al suo interno, per lasciare spazio alla
+> centro-linea di serpeggiare — ma alla giunzione fra la via di un isolato
+> "figlio" della partizione ricorsiva e quella dell'isolato "padre" questo
+> lasciava un margine non pavimentato, cioè le due vie non si toccavano. A
+> 1.0 il selciato riempie l'intera fascia riservata: le vie diventano
+> rettangoli dritti (niente più serpeggiamento) ma si toccano e si
+> intersecano sempre ai T e agli incroci, per costruzione. `target_lot_len`/
+> `min_lot_len` dimezzati (i lotti delle case ordinarie, non dei luoghi) per
+> riempire la mappa con case più piccole e più numerose invece di lasciare
+> spazio vuoto fra isolati larghi; `side_margin`/`setback_range` ridotti in
+> proporzione, altrimenti un margine pensato per lotti grandi il doppio
+> avrebbe mangiato una fetta molto più grande dei lotti nuovi.
 
 #### 9.4.1 Elementi urbani notevoli (TASK-48)
 
@@ -682,11 +699,16 @@ chiazza di pavimento più un'iconcina: era l'unico elemento non disegnato come
 sprite, e in mezzo alle case colorate leggeva come un rettangolo bianco —
 bocciato da Jay guardando la mappa vera. Tre forme:
 
-- preset `isolato`, luogo chiuso: un edificio a stanze vero, generato da
-  `building.py` con la tipologia della sua destinazione d'uso (una taverna è
-  divisa come una taverna, un magazzino come un magazzino);
-- preset `quartiere`/`citta`, luogo chiuso: **un** solo sprite che riempie
-  l'ingombro, come gli edifici ordinari dal TASK-46;
+- preset `isolato`, luogo chiuso non coperto dal pacchetto Nova Mistralis: un
+  edificio a stanze vero, generato da `building.py` con la tipologia della
+  sua destinazione d'uso (una taverna è divisa come una taverna, un
+  magazzino come un magazzino);
+- preset `quartiere`/`citta`, luogo chiuso, **oppure** luogo chiuso coperto
+  dal pacchetto a qualunque preset (`LandmarkKind.sprite_only`, TASK-63): **un**
+  solo sprite che riempie l'ingombro, come gli edifici ordinari dal TASK-46.
+  Per i 24 luoghi coperti Jay preferisce mostrare sempre l'illustrazione
+  commissionata invece della pianta interna generica, anche a isolato dove il
+  lotto sarebbe abbastanza grande per un edificio vero;
 - spiazzo aperto (mercato, cimitero, fiera, giardino, patibolo):
   un'**area colorata** più **sprite sparsi** sopra. Il terreno dell'area è
   quello che il luogo dichiara (`LandmarkKind.ground`): selciato per mercato,
@@ -702,12 +724,22 @@ cimitero doppio ha il doppio delle lapidi, non lapidi larghe il doppio. Prima
 ogni pezzo veniva scalato al 45% del lato dell'area e su un cimitero grande
 usciva una lapide da 4,5 quadretti, alta quasi sette metri.
 
-Al preset `isolato` un luogo chiuso dovrebbe sempre essere un edificio a
-stanze, ma `building.generate` pretende `min_building_side` per lato e molti
-lotti sono più stretti. `_lot_candidates` preferisce quindi i lotti in cui
-l'edificio ci sta (misurato su 30 seed: 55% dei luoghi chiusi ottiene la
-geometria vera, contro il 17% senza la preferenza); il resto ripiega sullo
-sprite, che è meglio di nessun luogo.
+Al preset `isolato` un luogo chiuso NON coperto dal pacchetto dovrebbe sempre
+essere un edificio a stanze, ma `building.generate` pretende
+`min_building_side` per lato e molti lotti sono più stretti.
+`_lot_candidates` preferisce quindi i lotti in cui l'edificio ci sta
+(misurato su 30 seed: 55% dei luoghi chiusi ottiene la geometria vera, contro
+il 17% senza la preferenza); il resto ripiega sullo sprite, che è meglio di
+nessun luogo. I luoghi coperti dal pacchetto (`sprite_only=True`) saltano
+sempre `_landmark_building`, a isolato come agli altri preset: non è un
+ripiego per lotto stretto, è la scelta deliberata di TASK-63.
+
+A `quartiere`, i luoghi coperti dal pacchetto riempiono il lotto di più degli
+edifici ordinari: `compose._SPRITE_FILL_QUARTIERE` (1.0, contro lo
+`_SPRITE_FILL` di 0.92 usato altrove) toglie il margine lasciato attorno allo
+sprite, sempre dentro il rettangolo buildable del lotto (già arretrato da
+`side_margin`/`setback` rispetto al lotto vicino, quindi senza sconfinare). A
+`citta` resta `_SPRITE_FILL`: Jay ha chiesto esplicitamente di non toccarla.
 
 Gli sprite vengono da pack già referenziati dal template di produzione:
 CHR Town Maps ed City Terrain per gli edifici singoli, Lost Lands Hamlets per

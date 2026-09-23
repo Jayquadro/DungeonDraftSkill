@@ -17,8 +17,8 @@ di uno sprite.
 
 | forma | quando | cosa serve |
 |---|---|---|
-| **edificio a stanze** | preset `isolato`, luogo chiuso | niente: lo genera `building.py` con muri, porte e tetto |
-| **uno sprite che riempie l'ingombro** | preset `quartiere`/`citta`, luogo chiuso | **1 sprite** (o più varianti dello stesso luogo) |
+| **edificio a stanze** | preset `isolato`, luogo chiuso NON coperto dal pacchetto | niente: lo genera `building.py` con muri, porte e tetto |
+| **uno sprite che riempie l'ingombro** | preset `quartiere`/`citta`, luogo chiuso; oppure luogo chiuso coperto dal pacchetto a QUALUNQUE preset, isolato compreso (`LandmarkKind.sprite_only`, TASK-63) | **1 sprite** (o più varianti dello stesso luogo) |
 | **più sprite sparsi** | luogo all'aperto, tutti i preset | **più pezzi** che compongono la scena (i banchi di un mercato, le lapidi di un cimitero) |
 
 Lo sprite viene scalato uniformemente per stare dentro l'ingombro del luogo
@@ -194,20 +194,25 @@ consegnare le texture di terreno in doppia copia.
 - Ponti, mura, fiume, riva: sono `path` o pavimenti, non object.
 
 Nient'altro. In particolare **servono** anche `fornaio` e `macelleria`, che
-esistono solo al preset `isolato`: pur essendo lì dei luoghi chiusi, ricadono
-spesso sullo sprite (vedi la nota qui sotto).
+esistono solo al preset `isolato`: sono coperti dal pacchetto, quindi
+mostrano sempre lo sprite li' (vedi la nota qui sotto).
 
 > **Perché anche i luoghi del preset `isolato` hanno bisogno di uno sprite.**
-> Lì un luogo chiuso *dovrebbe* essere un edificio a stanze vero, ma
-> `building.generate` pretende almeno 6 quadretti per lato e molti lotti sono
-> più stretti. Il generatore preferisce i lotti in cui l'edificio ci sta —
-> misurato su 30 seed, il 55% dei luoghi chiusi ottiene la geometria vera
-> contro il 17% di prima — ma il restante 45% ripiega sullo sprite. Il
-> ripiego è voluto: un luogo con lo sprite è meglio di nessun luogo.
+> Per un luogo chiuso NON coperto dal pacchetto, `isolato` *dovrebbe* sempre
+> essere un edificio a stanze vero, ma `building.generate` pretende almeno 6
+> quadretti per lato e molti lotti sono più stretti. Il generatore preferisce
+> i lotti in cui l'edificio ci sta — misurato su 30 seed, il 55% dei luoghi
+> chiusi ottiene la geometria vera contro il 17% di prima — ma il resto
+> ripiega sullo sprite, meglio di nessun luogo. Per i 24 luoghi coperti dal
+> pacchetto (`LandmarkKind.sprite_only`, TASK-63) non è un ripiego: mostrano
+> sempre l'illustrazione commissionata, anche quando il lotto sarebbe
+> abbastanza grande per un edificio vero — Jay preferisce l'illustrazione
+> alla pianta interna generica.
 
 ## 8. Facoltativo ma consigliato: le case ordinarie
 
-Una mappa `quartiere` ha ~160 edifici ordinari, una `citta` ~2700. Oggi usano
+Una mappa `quartiere` ha ~325 edifici ordinari (raddoppiati da TASK-64, sez.
+10), una `citta` ~3300. Oggi usano
 gli sprite del pacchetto BB Houses1, che sono icone piatte ricolorabili,
 mentre i luoghi useranno edifici dipinti: **i due registri grafici non
 combaciano**, ed è il motivo principale per cui la mappa non è ancora bella.
@@ -238,23 +243,23 @@ solo faro.
 TASK-52: il pacchetto Nova Mistralis (pack `Ada7IQuz`, assemblato in
 TASK-51 da `src/ddforge/sprite_prep/manifest.py`, TASK-50) è agganciato ad
 `assets._CITY_LANDMARK_SPRITES` per i luoghi che copre; gli altri restano sul
-ripiego preso dai 440 object dei pack di Jay (sez. 1-bis). Stato ad oggi, 23
-luoghi su 36 coperti:
+ripiego preso dai 440 object dei pack di Jay (sez. 1-bis). TASK-62: cattedrale,
+palazzo e arena sono stati commissionati (prompt/26-28, TASK-55/57/58),
+elaborati in TASK-61 e agganciati qui. Stato ad oggi, 26 luoghi su 36 coperti:
 
-### Coperti dal pacchetto (23)
+### Coperti dal pacchetto (26)
 
 | luogo | sprite | note |
 |---|---|---|
 | ospedale, teatro, accademia, prigione, municipio, faro, bagni, biblioteca, tempio, monastero, caserma, banca, alchimista, magazzino, fabbro, stalle, fornaio, macelleria, taverna, locanda, bordello | `nm_<luogo>` | 1:1, un edificio singolo come commissionato |
+| cattedrale, palazzo, arena | `nm_<luogo>` | TASK-62, sono SITE_BLOCK (occupano un isolato intero come accademia/monastero): cambia solo lo sprite, l'ingombro resta quello di un isolato |
 | cimitero | `nm_cimitero_croce`, `nm_cimitero_fossa`, `nm_cimitero_lapide_1` | commissionate 3 varianti di lapide (prompt/11-cimitero.md), prodotta solo `lapide_1`: meno varietà fra una tomba e l'altra, non un errore |
 | mercato | `nm_banco_mercato_1` | commissionati banco×3/cesta/carro (sez. 4), prodotto solo un banco |
 
-### Ancora sul ripiego (13)
+### Ancora sul ripiego (10)
 
 | luogo | sprite di ripiego | perché |
 |---|---|---|
-| cattedrale, palazzo | `bb_keepsandcastles_*_color` | monumento fuori scala preso in prestito, mai commissionato per questo pacchetto |
-| arena | `tourney_grounds` | non commissionato |
 | dogana, conceria, macello | `shed_02` | non commissionato |
 | mulino | `windmill_02` | non commissionato |
 | lazzaretto | `strawhouse_03` | non commissionato |
@@ -263,6 +268,58 @@ luoghi su 36 coperti:
 | statua | `statue_male_mage_alt_03_a` | non commissionato |
 | fiera | `tent_03` | non commissionato |
 | giardino | alberi delle texture base del programma | non commissionato |
+
+### Scala dei lotti (TASK-59, TASK-62)
+
+I 19 luoghi chiusi SITE_LOT/SITE_BAND coperti dal pacchetto (tutti quelli
+della prima tabella tranne accademia/monastero/cattedrale/palazzo/arena, che
+sono SITE_BLOCK e a isolato intero) hanno `LandmarkKind.lots=3.0` da
+TASK-62: partivano da 1.0 (un lotto), TASK-59 li aveva portati a 1.5/2.0,
+TASK-62 li ha portati tutti uniformemente a 3.0 su richiesta di Jay. Un
+lotto in più nella stessa fila allarga l'ingombro solo in larghezza (la
+profondità della fila resta fissa), quindi lo sprite cresce di scala ma non
+raddoppia semplicemente moltiplicando `lots` per due; una riscrittura del
+piazzamento su due assi resta fuori scope. Quando la fila non ha 3 lotti
+liberi di fila (soprattutto al preset "isolato"), `city._lot_candidates` e
+`city._band_candidates` ripiegano su uno span più piccolo invece di non
+piazzare il luogo: mercato, cimitero, accademia e monastero restano
+invariati (esclusi da Jay o senza una leva sicura, vedi commento su
+`_block_candidates`).
+
+### Sprite sempre, anche a isolato; fill maggiore a quartiere (TASK-63)
+
+Dopo aver visto le mappe di TASK-62, Jay ha chiesto due cose in più. Primo:
+i 24 luoghi chiusi coperti dal pacchetto (i 19 della sez. "Scala dei lotti"
+più cattedrale, palazzo, arena, accademia, monastero) mostrano ora sempre lo
+sprite dedicato anche al preset `isolato`, invece dell'edificio a stanze che
+`building.py` genererebbe quando il lotto è abbastanza grande
+(`LandmarkKind.sprite_only=True`, sez. 1 e 7). I luoghi ancora sul ripiego
+(dogana, conceria, macello, mulino, lazzaretto, torre_guardia) restano un
+edificio a stanze a isolato come prima, invariati. Secondo: a `quartiere` lo
+sprite riempie il lotto di più (`compose._SPRITE_FILL_QUARTIERE=1.0` invece
+di `_SPRITE_FILL=0.92`, un margine in meno attorno allo sprite, mai oltre il
+rettangolo buildable del lotto). A `citta` non cambia niente: Jay ha chiesto
+esplicitamente di non toccarla.
+
+### Ancora più grandi a quartiere, statua più piccola (TASK-64)
+
+Nemmeno il fill a 1.0 bastava: Jay ha aperto
+`generated/city_quartiere_task63.dungeondraft_map` in Dungeondraft e
+ridimensionato a mano la locanda (`nm_locanda`, scala 2.80804 → 3.33594,
++18.8%) come riferimento. `compose._SPRITE_SCALE_BOOST_QUARTIERE` applica
+lo stesso fattore alla scala finale di ogni luogo chiuso coperto, solo a
+`quartiere`: un moltiplicatore diretto sull'oggetto invece di spingere
+ancora `LandmarkKind.lots` (che avrebbe sbattuto di nuovo contro il tetto di
+profondità del lotto, sez. "Scala dei lotti") — può sconfinare leggermente
+nel margine attorno al lotto, ma è il riferimento scelto da Jay stesso.
+Le case ordinarie a `quartiere` sono state dimezzate in larghezza per
+riempire di più la mappa (`SCALE_PRESETS["quartiere"]` in `city.py`), il che
+rendeva la statua (`piece_size=1.5` su tutti i preset) sproporzionata:
+`compose._STATUA_PIECE_FACTOR_QUARTIERE=0.6` la rimpicciolisce, solo a
+`quartiere`. Le strade a `quartiere` ora si toccano e si intersecano sempre
+ai T e agli incroci (`street_path_fraction` portato a 1.0, costo: niente
+più serpeggiamento). Tutto solo a `quartiere`: `isolato` e `citta` restano
+come in TASK-63.
 
 ### Generati ma non ancora agganciati
 

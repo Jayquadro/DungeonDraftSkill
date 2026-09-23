@@ -158,20 +158,45 @@ SCALE_PRESETS: dict[str, ScalePreset] = {
     # decision-2: prepare() non tocca mai world.width/height). Anche qui il
     # secondo round del gate ha dimezzato le dimensioni: al primo round ogni
     # edificio era una striscia ~2x6 lunga quanto l'isolato.
+    # TASK-64: Jay ha aperto una mappa quartiere e trovato troppi buchi fra i
+    # lotti - le case ordinarie andavano dimezzate per riempire di piu' la
+    # mappa. target_lot_len/min_lot_len dimezzati (3.0->1.5, 2.2->1.1): un
+    # isolato della stessa larghezza (min_block/max_block invariati) ora ci
+    # infila il doppio delle case in fronte strada, non isolati piu' piccoli.
+    # side_margin/setback_range dimezzati in proporzione: altrimenti un
+    # margine fisso pensato per lotti da 3,0 quadretti avrebbe mangiato una
+    # fetta molto piu' grande di un lotto da 1,5, vanificando la densita' in
+    # piu'. building_depth_range NON tocato apposta: la profondita' resta
+    # quella di TASK-59/62/63 (e il tetto di scala dei luoghi con essa,
+    # LandmarkKind.lots), la leva per gli sprite dei luoghi qui e' solo
+    # compose._SPRITE_SCALE_BOOST_QUARTIERE (vedi nota li').
     "quartiere": ScalePreset(
         main_street_width=3.0,
         street_width_range=(1.4, 2.2),
-        street_path_fraction=0.7,
+        # street_path_fraction 0.7->1.0: Jay ha visto che le strade non si
+        # toccano ne' si intersecano ai T. Il selciato reale (path_width =
+        # gap_width * street_path_fraction) e' centrato dentro la fascia
+        # riservata (gap_width) e piu' stretto di lei: la via di un ramo
+        # figlio della partizione ricorsiva finisce esattamente al bordo di
+        # quella fascia (il taglio e' un tiling esatto, senza spazio perso),
+        # ma il selciato del ramo padre non arriva fin li' - un margine
+        # vuoto proprio dove i due dovrebbero incontrarsi. A 1.0 il selciato
+        # riempie l'intera fascia: si tocca sempre, si interseca dove due
+        # fasce si incrociano. Costo: la centro-linea non serpeggia piu
+        # (room = (corridor.w - path_width)/2 = 0), le vie diventano
+        # rettangoli dritti invece che leggermente curve - unico modo certo
+        # di garantire il contatto con questo meccanismo di piazzamento.
+        street_path_fraction=1.0,
         street_segment_len=4.0,
         min_block=6.0,
         max_block=11.0,
         # Piu profondo dell'isolato: servono piu tagli per scendere da un
         # canvas di ~76 quadretti a isolati di 6-11.
         depth_max=9,
-        target_lot_len=3.0,
-        min_lot_len=2.2,
-        side_margin=0.25,
-        setback_range=(0.15, 0.6),
+        target_lot_len=1.5,
+        min_lot_len=1.1,
+        side_margin=0.12,
+        setback_range=(0.08, 0.3),
         building_depth_range=(1.8, 3.0),
         min_yard=1.2,
         # Nessun vincolo da building.generate qui (l'edificio e un
@@ -1048,29 +1073,42 @@ def _rule_ok(sites: _Sites, kind, rect: Rect) -> bool:
 
 
 def _lot_candidates(sites: _Sites, kind) -> list:
-    """Ingombri ricavabili da lotti liberi: `kind.lots` lotti consecutivi
-    della stessa fila dello stesso isolato.
+    """Ingombri ricavabili da lotti liberi: fino a `kind.lots` lotti
+    consecutivi della stessa fila dello stesso isolato.
 
     Solo lotti che avevano davvero un edificio (`area` non None): un lotto
     troppo piccolo per una casa e' troppo piccolo anche per un luogo, e
     prendere lotti consecutivi con un buco in mezzo darebbe un ingombro che
-    include spazio mai riservato a nessuno."""
-    span = max(1, round(kind.lots))
+    include spazio mai riservato a nessuno.
+
+    TASK-62: lo span richiesto (`kind.lots`, arrivato a 3.0 per i luoghi
+    coperti dal pacchetto) puo' non trovare abbastanza lotti liberi
+    consecutivi in nessuna fila, specie al preset "isolato" dove le file sono
+    corte. Invece di lasciare il luogo senza candidati (e quindi non
+    piazzato, rompendo l'invariante "un luogo richiesto compare sempre" -
+    successo a TASK-59 con tempio), si ripiega su uno span piu' piccolo, fino
+    a un lotto singolo: il luogo prende l'ingombro piu' grande che la fila
+    puo' davvero offrire invece di sparire."""
     by_row: dict[tuple[int, int], list] = {}
     for index, lot in enumerate(sites.lots):
         by_row.setdefault((lot.block, lot.row), []).append(index)
-
-    candidates = []
     for indices in by_row.values():
         indices.sort(key=lambda i: sites.lots[i].strip)
-        for start in range(len(indices) - span + 1):
-            window = indices[start : start + span]
-            lots = [sites.lots[i] for i in window]
-            if any(lot.taken or lot.area is None for lot in lots):
-                continue
-            if any(b.strip - a.strip != 1 for a, b in zip(lots, lots[1:])):
-                continue
-            candidates.append((_union([lot.area for lot in lots]), window))
+
+    requested = max(1, round(kind.lots))
+    candidates = []
+    for span in range(requested, 0, -1):
+        for indices in by_row.values():
+            for start in range(len(indices) - span + 1):
+                window = indices[start : start + span]
+                lots = [sites.lots[i] for i in window]
+                if any(lot.taken or lot.area is None for lot in lots):
+                    continue
+                if any(b.strip - a.strip != 1 for a, b in zip(lots, lots[1:])):
+                    continue
+                candidates.append((_union([lot.area for lot in lots]), window))
+        if candidates:
+            break
 
     # Al preset "isolato" un luogo chiuso e' un edificio a stanze vero, e
     # building.generate pretende min_building_side per lato. Fra i lotti
@@ -1151,8 +1189,12 @@ def _plaza_candidates(sites: _Sites, kind) -> list:
 
 def _band_candidates(sites: _Sites, kind) -> list:
     """Celle della banchina (regola del porto) o della fascia
-    extramurale/di margine (tutte le altre)."""
-    span = max(1, round(kind.lots))
+    extramurale/di margine (tutte le altre).
+
+    TASK-62: stesso ripiego su span decrescente di _lot_candidates - il faro
+    (l'unico luogo SITE_BAND coperto dal pacchetto) e' arrivato a lots=3.0 e
+    una banchina corta puo' non avere tre celle libere di fila."""
+    requested = max(1, round(kind.lots))
     if kind.rule == lm.RULE_PORT:
         strips = [sites.port.quay] if sites.port is not None else []
     else:
@@ -1163,10 +1205,13 @@ def _band_candidates(sites: _Sites, kind) -> list:
         strips = _frame_strips(outer, inner, clearance)
 
     cell = max(sites.preset.target_lot_len, sites.preset.min_lot_len)
+    grids = [_cells(strip, cell) for strip in strips]
     candidates = []
-    for strip in strips:
-        grid = _cells(strip, cell)
-        candidates.extend((rect, None) for rect in _cell_runs(grid, span, sites.occupied))
+    for span in range(requested, 0, -1):
+        for grid in grids:
+            candidates.extend((rect, None) for rect in _cell_runs(grid, span, sites.occupied))
+        if candidates:
+            break
     return candidates
 
 
@@ -1205,7 +1250,13 @@ def _claim(sites: _Sites, kind, rect: Rect, lot_indices) -> None:
                 # tipologia della sua destinazione d'uso: un tempio non e' la
                 # casa che c'era prima con un cartello sopra.
                 sites.buildings[lot.index] = None
-        if not kind.open_air and not sites.preset.abstract_buildings:
+        # TASK-63: kind.sprite_only forza lo sprite dedicato anche a isolato
+        # (dove abstract_buildings e' False e un luogo chiuso diventerebbe
+        # altrimenti un edificio a stanze vero, vedi _landmark_building):
+        # building_blueprint resta None, e draw_landmark in compose.py
+        # ripiega gia' sullo sprite quando building e' None - lo stesso
+        # percorso usato quando il lotto e' troppo piccolo per una stanza.
+        if not kind.open_air and not sites.preset.abstract_buildings and not kind.sprite_only:
             building_blueprint = _landmark_building(sites, kind, rect)
     else:
         sites.occupied.append(rect)
@@ -1429,7 +1480,7 @@ def generate(
 
     return Blueprint(
         width=width, height=height, rooms=[], corridors=[], graph={},
-        seed=seed, style="city", streets=streets, plazas=plazas,
+        seed=seed, style="city", scale=scale, streets=streets, plazas=plazas,
         buildings=[bp for bp in buildings if bp is not None],
         building_footprints=[f for f in footprints if f is not None],
         landmarks=marks, walls=walls, river=river, bridges=bridges, port=port,

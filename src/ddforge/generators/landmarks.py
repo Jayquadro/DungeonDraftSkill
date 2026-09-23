@@ -37,7 +37,7 @@ una riprogettazione.
 """
 
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 # Siti da cui puo' essere ricavato l'ingombro di un luogo. Non sono un
 # dettaglio di rendering: dicono a city.py DOVE cercare spazio, ed e' la
@@ -121,6 +121,15 @@ class LandmarkKind:
     # battuta: dare a tutti la stessa pavimentazione urbana era il motivo per
     # cui un cimitero sembrava un piazzale.
     ground: str | None = None
+    # TASK-63: forza lo sprite dedicato anche al preset "isolato", dove un
+    # luogo chiuso normalmente diventa un edificio a stanze vero (building.py,
+    # SPEC.md, TASK-48). Per i 24 luoghi coperti dal pacchetto Nova Mistralis
+    # Jay preferisce mostrare sempre l'illustrazione commissionata invece
+    # della pianta interna generica, anche quando il lotto sarebbe abbastanza
+    # grande per un edificio vero. Non tocca i luoghi ancora sul ripiego
+    # (restano un edificio a stanze quando il lotto ce lo consente, come
+    # prima) ne' gli open_air (gia' sempre sprite, a qualunque preset).
+    sprite_only: bool = False
 
 
 # Strutture urbane. Non sono luoghi da visitare ma la forma della citta': le
@@ -151,7 +160,7 @@ STRUCTURE_CHANCE: dict[str, float] = {
 # (il cimitero cerca il tempio, vedi RULE_OUTSIDE_WALLS_OR_TEMPLE), e i
 # vincolati vanno serviti prima dei liberi, altrimenti i luoghi "any" si
 # prendono i lotti buoni e alla dogana non resta un lotto vicino alla porta.
-LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
+_LANDMARK_KINDS_RAW: tuple[LandmarkKind, ...] = (
     # --- vincolati da una regola: prima di tutti -------------------------
     LandmarkKind(
         "dogana", "Dogana", _BIG, SITE_LOT, RULE_GATE,
@@ -173,10 +182,11 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
         "macello", "Macello", _BIG, SITE_LOT, RULE_RIVER_DOWNSTREAM,
         unique=True, chance=0.5,
     ),
-    # lots=2.0 (TASK-59): sprite nm_faro ingrandito quanto la leva lots
-    # consente in modo sicuro (vedi nota su tempio piu' sotto).
+    # lots=3.0 (TASK-62, vedi nota su tempio piu' sotto): il pacchetto Nova
+    # Mistralis ha ricevuto nuovi asset e Jay ha chiesto un ulteriore giro di
+    # ingrandimento (1.5x) rispetto al lots=2.0 di TASK-59.
     LandmarkKind(
-        "faro", "Faro", _BIG, SITE_BAND, RULE_PORT, unique=True, chance=0.7, lots=2.0,
+        "faro", "Faro", _BIG, SITE_BAND, RULE_PORT, unique=True, chance=0.7, lots=3.0,
     ),
     # Niente 'ground' (TASK-60, torna al default None): mercato e patibolo
     # sono celle della PIAZZA stessa (SITE_PLAZA), che ha gia' il suo
@@ -208,27 +218,36 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
     # (vincolato dalla dimensione piu' piccola del rettangolo, sono tutti
     # quadrati) cresce di scala ma si ferma a un tetto intorno a ~1.1-1.4x -
     # verificato rigenerando in process e confrontando con generated/city_*
-    # _task52.dungeondraft_map. Jay ha accettato esplicitamente questo tetto
-    # invece di una nuova logica di piazzamento su due assi (una modifica
-    # "massiccia" che ha chiesto di evitare per ora).
+    # _task52.dungeondraft_map.
     #
-    # I luoghi che gia' avevano lots>=1.5 (tempio, municipio, caserma,
-    # teatro, bagni, ospedale, poco sotto) restano ALLA LORO misura
-    # originale: sono gia' oltre il tetto di cui sopra (raddoppiarli non li
-    # ingrandiva affatto, verificato) e a canvas piccoli un valore ancora
-    # piu' alto puo' non trovare abbastanza lotti liberi consecutivi nella
-    # stessa fila, facendo sparire il luogo anche quando richiesto
-    # esplicitamente con --landmark - rotto durante lo sviluppo di questo
-    # task (test_a_requested_landmark_is_always_present[tempio] e la catena
-    # di test del cimitero che dipendono dal tempio), poi tornato al valore
-    # originale.
+    # TASK-62: Jay ha aggiornato di nuovo il pacchetto e ha chiesto un
+    # ulteriore +1.5x rispetto al valore di TASK-59, questa volta per TUTTI i
+    # 19 luoghi chiusi SITE_LOT/SITE_BAND coperti (compresi tempio, municipio,
+    # caserma, teatro, bagni, ospedale, che in TASK-59 erano rimasti invariati
+    # perche' gia' a lots=1.5/2.0). lots=3.0 per tutti, uniformemente: e' la
+    # soglia oltre la quale a TASK-59 il tempio spariva dalle mappe di
+    # dimensione "isolato" quando richiesto esplicitamente (non abbastanza
+    # lotti liberi consecutivi nella stessa fila). Invece di rinunciare di
+    # nuovo al tetto, city._lot_candidates e city._band_candidates (per il
+    # faro) ora ripiegano su uno span piu' piccolo (fino a 1 lotto) quando lo
+    # span richiesto non trova candidati nella fila: il luogo resta sempre
+    # piazzabile (AC1 non si rompe piu', vedi test_a_requested_landmark_is_
+    # always_present) ma prende il lotto piu' grande disponibile invece di un
+    # numero fisso. Verificato rigenerando in process su tutti e 19 i luoghi
+    # ai tre preset: nessuna sparizione, crescita di scala reale dove lo
+    # spazio lo consente.
     #
     # Non tocca i luoghi ancora sul ripiego (invariati) ne' accademia/
-    # monastero (siti a isolato intero: SITE_BLOCK ignora `lots` per
-    # costruzione, vedi city._block_candidates) ne' mercato/cimitero (sprite
-    # sparsi, esclusi da Jay perche' gia' vanno bene).
+    # monastero/palazzo/arena/cattedrale (siti a isolato intero: SITE_BLOCK
+    # ignora `lots` per costruzione, vedi city._block_candidates - nessuna
+    # leva sicura senza riscrivere la partizione delle strade) ne' mercato/
+    # cimitero (sprite sparsi, esclusi da Jay perche' gia' vanno bene).
+    #
+    # TASK-65: la prigione, uno dei 19 di cui sopra all'epoca di TASK-62, e'
+    # da allora un sesto monumento SITE_BLOCK (vedi la sua voce piu' sotto):
+    # restano 18 luoghi chiusi SITE_LOT/SITE_BAND a lots=3.0.
     LandmarkKind(
-        "tempio", "Tempio", _ALL_SCALES, SITE_LOT, unique=True, chance=0.85, lots=2.0,
+        "tempio", "Tempio", _ALL_SCALES, SITE_LOT, unique=True, chance=0.85, lots=3.0,
     ),
     LandmarkKind(
         "cattedrale", "Cattedrale", _BIG, SITE_BLOCK, unique=True, chance=0.8,
@@ -236,16 +255,20 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
     LandmarkKind(
         "palazzo", "Palazzo del Signore", _BIG, SITE_BLOCK, unique=True, chance=0.9,
     ),
-    LandmarkKind(
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "municipio", "Municipio", _BIG, SITE_LOT, RULE_PLAZA,
-        unique=True, chance=0.75, lots=1.5,
+        unique=True, chance=0.75, lots=3.0,
     ),
-    LandmarkKind(
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "caserma", "Caserma della Guardia", _ALL_SCALES, SITE_LOT,
-        unique=True, chance=0.8, lots=1.5,
+        unique=True, chance=0.8, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
-        "prigione", "Prigione", _BIG, SITE_LOT, unique=True, chance=0.5, lots=2.0,
+    # TASK-65: promossa a monumento SITE_BLOCK, come cattedrale/palazzo/
+    # accademia - Jay la vuole fra i luoghi "grandi" che occupano un isolato
+    # intero invece che un lotto. 'lots' rimosso: city._block_candidates lo
+    # ignora per costruzione (vedi la sua nota).
+    LandmarkKind(
+        "prigione", "Prigione", _BIG, SITE_BLOCK, unique=True, chance=0.5,
     ),
     LandmarkKind(
         "monastero", "Monastero", _BIG, SITE_BLOCK, RULE_EDGE, unique=True, chance=0.45,
@@ -254,68 +277,68 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
         "arena", "Arena", frozenset({CITTA}), SITE_BLOCK, unique=True, chance=0.45,
     ),
     LandmarkKind(
-        "teatro", "Teatro", _BIG, SITE_LOT, unique=True, chance=0.4, lots=1.5,
+        "teatro", "Teatro", _BIG, SITE_LOT, unique=True, chance=0.4, lots=3.0,
     ),
     # --- sapere ----------------------------------------------------------
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
-        "biblioteca", "Biblioteca", _ALL_SCALES, SITE_LOT, unique=True, chance=0.55, lots=2.0,
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
+        "biblioteca", "Biblioteca", _ALL_SCALES, SITE_LOT, unique=True, chance=0.55, lots=3.0,
     ),
     LandmarkKind(
         "accademia", "Accademia di Magia", _BIG, SITE_BLOCK, unique=True, chance=0.35,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "alchimista", "Bottega dell'Alchimista", frozenset({ISOLATO, QUARTIERE}),
-        SITE_LOT, rate=0.012, max_count=3, lots=2.0,
+        SITE_LOT, rate=0.012, max_count=3, lots=3.0,
     ),
     # --- commercio -------------------------------------------------------
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
-        "banca", "Casa di Cambio", _BIG, SITE_LOT, RULE_PLAZA, unique=True, chance=0.5, lots=2.0,
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
+        "banca", "Casa di Cambio", _BIG, SITE_LOT, RULE_PLAZA, unique=True, chance=0.5, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "magazzino", "Magazzino", frozenset({ISOLATO, QUARTIERE}), SITE_LOT,
-        rate=0.03, max_count=8, lots=2.0,
+        rate=0.03, max_count=8, lots=3.0,
     ),
     # --- svago e servizi -------------------------------------------------
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "taverna", "Taverna", frozenset({ISOLATO, QUARTIERE}), SITE_LOT,
-        rate=0.04, max_count=12, lots=2.0,
+        rate=0.04, max_count=12, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "locanda", "Locanda", frozenset({ISOLATO, QUARTIERE}), SITE_LOT,
-        rate=0.02, max_count=6, lots=2.0,
+        rate=0.02, max_count=6, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "bordello", "Casa di Piacere", frozenset({ISOLATO, QUARTIERE}), SITE_LOT,
-        rate=0.008, max_count=2, lots=2.0,
+        rate=0.008, max_count=2, lots=3.0,
     ),
-    LandmarkKind(
-        "bagni", "Bagni Pubblici", _BIG, SITE_LOT, unique=True, chance=0.4, lots=1.5,
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
+        "bagni", "Bagni Pubblici", _BIG, SITE_LOT, unique=True, chance=0.4, lots=3.0,
     ),
     # A differenza del lazzaretto (edificio d'isolamento, fuori le mura,
     # SITE_BAND/RULE_EDGE), l'ospedale cittadino sta dentro il tessuto
     # abitato come bagni/tempio/biblioteca: SITE_LOT, nessuna regola di
     # posizione.
-    LandmarkKind(
-        "ospedale", "Ospedale", _BIG, SITE_LOT, unique=True, chance=0.5, lots=1.5,
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
+        "ospedale", "Ospedale", _BIG, SITE_LOT, unique=True, chance=0.5, lots=3.0,
     ),
     LandmarkKind(
         "lazzaretto", "Lazzaretto", _BIG, SITE_BAND, RULE_EDGE, unique=True, chance=0.4,
     ),
     # --- artigianato -----------------------------------------------------
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "fabbro", "Fabbro", frozenset({ISOLATO, QUARTIERE}), SITE_LOT,
-        rate=0.025, max_count=6, lots=2.0,
+        rate=0.025, max_count=6, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "stalle", "Stalle e Maniscalco", frozenset({ISOLATO, QUARTIERE}), SITE_LOT,
-        rate=0.016, max_count=4, lots=2.0,
+        rate=0.016, max_count=4, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
-        "fornaio", "Fornaio", frozenset({ISOLATO}), SITE_LOT, rate=0.03, max_count=4, lots=2.0,
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
+        "fornaio", "Fornaio", frozenset({ISOLATO}), SITE_LOT, rate=0.03, max_count=4, lots=3.0,
     ),
-    LandmarkKind(  # lots=2.0, TASK-59 (vedi nota su tempio)
+    LandmarkKind(  # lots=3.0, TASK-62 (vedi nota su tempio)
         "macelleria", "Macelleria", frozenset({ISOLATO}), SITE_LOT,
-        rate=0.02, max_count=3, lots=2.0,
+        rate=0.02, max_count=3, lots=3.0,
     ),
     # --- struttura urbana minore ----------------------------------------
     LandmarkKind(
@@ -338,6 +361,24 @@ LANDMARK_KINDS: tuple[LandmarkKind, ...] = (
         unique=True, chance=0.4, lots=2.5, open_air=True, ground="terra",
         piece_size=3.0,  # un tendone
     ),
+)
+
+# TASK-63: i 24 luoghi chiusi coperti dal pacchetto Nova Mistralis (18
+# SITE_LOT/SITE_BAND a lots=3.0 sopra, piu' 6 monumenti SITE_BLOCK - la
+# prigione e' passata dal primo al secondo gruppo in TASK-65) mostrano sempre
+# lo sprite dedicato, anche a isolato - vedi LandmarkKind.sprite_only. Elenco
+# separato invece di un campo in piu' su ogni singola LandmarkKind qui sopra:
+# un solo posto da aggiornare se la copertura del pacchetto cambia ancora.
+_SPRITE_ONLY_KEYS = frozenset({
+    "tempio", "cattedrale", "palazzo", "municipio", "caserma", "prigione",
+    "monastero", "arena", "teatro", "biblioteca", "accademia", "alchimista",
+    "banca", "magazzino", "taverna", "locanda", "bordello", "bagni",
+    "ospedale", "fabbro", "stalle", "fornaio", "macelleria", "faro",
+})
+
+LANDMARK_KINDS: tuple[LandmarkKind, ...] = tuple(
+    replace(kind, sprite_only=True) if kind.key in _SPRITE_ONLY_KEYS else kind
+    for kind in _LANDMARK_KINDS_RAW
 )
 
 BY_KEY: dict[str, LandmarkKind] = {kind.key: kind for kind in LANDMARK_KINDS}

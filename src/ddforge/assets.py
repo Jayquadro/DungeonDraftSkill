@@ -601,10 +601,13 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
 # TASK-51 da src/ddforge/sprite_prep/manifest.py, TASK-50) copre 21 luoghi
 # chiusi piu' due dei sei luoghi con sprite multipli (cimitero, mercato): le
 # voci sotto puntano ai suoi nm_* invece che al ripiego preso dai 440 object
-# dei pack di Jay. E' proprio la convivenza di due registri grafici diversi
-# (gli sprite dipinti del pacchetto contro le icone piatte o i monumenti
-# fuori scala presi in prestito) il motivo per cui la mappa non era ancora
-# bella (docs/sprite-luoghi.md sez. 8) — elenco di cosa resta sul ripiego in
+# dei pack di Jay. TASK-62: cattedrale, palazzo e arena (commissionati dopo,
+# elaborati in TASK-61) sono i tre ultimi monumenti passati dal ripiego al
+# pacchetto, per un totale di 24 luoghi chiusi coperti. E' proprio la
+# convivenza di due registri grafici diversi (gli sprite dipinti del
+# pacchetto contro le icone piatte o i monumenti fuori scala presi in
+# prestito) il motivo per cui la mappa non era ancora bella
+# (docs/sprite-luoghi.md sez. 8) — elenco di cosa resta sul ripiego in
 # docs/sprite-luoghi.md sez. 10.
 #
 # Provenienza del ripiego ancora in uso qui sotto, da pack gia referenziati
@@ -635,15 +638,19 @@ _STYLE_DEFINITIONS: dict[str, dict] = {
 _CITY_LANDMARK_SPRITES: dict[str, tuple[str, ...]] = {
     # --- luoghi di culto e potere ----------------------------------------
     "tempio": ("nm_tempio",),
-    # Nessuno sprite dedicato: la cattedrale resta un monumento fuori scala
-    # preso in prestito, non coperta dal pacchetto (docs/sprite-luoghi.md).
-    "cattedrale": ("bb_keepsandcastles_cathedral_color",),
+    # TASK-62: cattedrale, palazzo e arena erano gli ultimi tre monumenti sul
+    # ripiego (fuori scala, preso in prestito da BB KeepsAndCastles/CHR). Il
+    # pacchetto Nova Mistralis ora li copre (schede prompt/26-28, TASK-55/57/
+    # 58, elaborati in TASK-61): sono SITE_BLOCK come accademia/monastero,
+    # quindi l'ingombro resta l'isolato intero (city.py._block_candidates
+    # ignora 'lots' per costruzione), cambia solo lo sprite disegnato sopra.
+    "cattedrale": ("nm_cattedrale",),
     "monastero": ("nm_monastero",),
-    "palazzo": ("bb_keepsandcastles_castle_color",),  # non coperto
+    "palazzo": ("nm_palazzo",),
     "municipio": ("nm_municipio",),
     "caserma": ("nm_caserma",),
     "prigione": ("nm_prigione",),
-    "arena": ("tourney_grounds",),  # non coperto
+    "arena": ("nm_arena",),
     "teatro": ("nm_teatro",),
     # --- sapere -----------------------------------------------------------
     "accademia": ("nm_accademia",),

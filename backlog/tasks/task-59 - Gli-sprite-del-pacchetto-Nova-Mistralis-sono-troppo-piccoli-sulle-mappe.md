@@ -1,11 +1,11 @@
 ---
 id: TASK-59
 title: Gli sprite del pacchetto Nova Mistralis sono troppo piccoli sulle mappe
-status: In Progress
+status: Done
 assignee:
   - '@claude'
 created_date: '2026-09-18 08:21'
-updated_date: '2026-09-18 12:02'
+updated_date: '2026-09-23 09:02'
 labels: []
 dependencies:
   - TASK-52
@@ -27,7 +27,7 @@ Jay ha guardato le mappe di valutazione rigenerate in TASK-52 (generated/city_*_
 - [x] #3 I luoghi ancora sul ripiego (non coperti dal pacchetto) restano alla dimensione attuale, invariati
 - [x] #4 Le mappe di valutazione in generated/ per i tre preset sono rigenerate con la nuova dimensione, seed fissi, e superano ddforge validate
 - [x] #5 Suite di test completa verde, golden aggiornati dove il cambio di scala li tocca
-- [ ] #6 Gate umano: Jay apre le mappe rigenerate in Dungeondraft e conferma che la dimensione ora gli piace
+- [x] #6 Gate umano: Jay apre le mappe rigenerate in Dungeondraft e conferma che la dimensione ora gli piace
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -44,6 +44,10 @@ Jay ha guardato le mappe di valutazione rigenerate in TASK-52 (generated/city_*_
 
 <!-- SECTION:NOTES:BEGIN -->
 Raddoppiato LandmarkKind.lots (da 1.0 a 2.0) in src/ddforge/generators/landmarks.py per i 13 luoghi chiusi coperti dal pacchetto che partivano da un lotto singolo: prigione, biblioteca, alchimista, banca, magazzino, taverna, locanda, bordello, fabbro, stalle, fornaio, macelleria, faro. I 6 luoghi coperti che avevano gia' lots>=1.5 (tempio, municipio, caserma, teatro, bagni, ospedale) sono rimasti alla loro misura originale: raddoppiarli anche loro non li ingrandiva affatto (gia' oltre il tetto dato dalla profondita' di fila, verificato rigenerando in process) e a canvas piccoli rompeva l'invariante 'un luogo richiesto esplicitamente compare sempre' (5 test falliti durante lo sviluppo: test_a_requested_landmark_is_always_present[tempio], la catena di test del cimitero che dipende dal tempio, test_generate_city_landmark_flag_forces_an_element - tutti tornati verdi dopo il ripristino). Accademia e monastero (SITE_BLOCK, occupano gia' un isolato intero) e mercato/cimitero (sprite sparsi, Jay ha detto che vanno gia' bene) restano invariati per scelta esplicita, vedi commento sullo scope. Trovato e corretto un secondo problema durante lo sviluppo: select() in landmarks.py calcolava il budget MAX_LANDMARK_FRACTION contando le istanze dei luoghi comuni come se costassero tutte un lotto (riga 'total = sum(count ...)'), ma ora alcuni ne costano 2: al preset isolato (pochi lotti in tutto) questo faceva superare ai luoghi il numero di edifici ordinari per un seed (test_landmarks_never_eat_the_whole_city[isolato], seed 6: 13 luoghi contro 11 edifici). Corretto pesando il totale per kind.lots, cosi' il budget riflette i lotti davvero consumati, non il numero di istanze; effetto collaterale intenzionale: alcuni luoghi comuni ora compaiono in meno istanze ma piu' grandi a parita' di budget. Misurato su generated/city_*_task59.dungeondraft_map contro generated/city_*_task52.dungeondraft_map: i luoghi toccati crescono di scala di circa 1.05x-1.3x (taverna, magazzino, locanda, stalle, fabbro, bordello, alchimista, biblioteca, prigione), i luoghi non toccati (ripiego, accademia, monastero, mercato, cimitero, tempio/municipio/caserma/teatro/bagni/ospedale) restano alla stessa scala a meno di rumore normale di seed (0.9x-1.16x, dovuto a come si spostano gli altri piazzamenti, non a un cambio di codice su di loro). Mappe rigenerate in generated/ per i tre preset (city_isolato_task59, city_quartiere_task59, city_citta_task59, seed 1337, canvas 78x78): tutte e tre superano ddforge validate. Golden tests/fixtures/golden/city_seed_1337_landmarks.json rigenerato con scripts/regen_city_golden.py. Suite completa: 779 passed, 1 skipped.
+
+Trovato prima del gate umano (richiesta di Jay): le mappe generated/city_*_task59.dungeondraft_map erano state generate alle 13:51 del 18/09, PRIMA che lo stesso commit (f67aaab, 17:06) applicasse anche la correzione TASK-60 (sfondo trasparente di patibolo/mercato/ponti). Verificato con evidenza oggettiva: le mappe task59 avevano 0 occorrenze di color='00ffffff', mentre le mappe task60 (generate 17:03, dopo la correzione) ne avevano gia'. Le sprite nm_palazzo/nm_arena/nm_cattedrale di TASK-61 non sono invece pertinenti alle mappe cittadine: assets.py._CITY_LANDMARK_SPRITES mappa ancora cattedrale/palazzo/arena sul ripiego (bb_keepsandcastles_*/tourney_grounds), TASK-61 ha preparato solo gli asset per il pack, senza agganciarli al generatore. Rigenerate le tre mappe (stesso comando di TASK-52/59: seed 1337, canvas 78x78, template blank_80x80) con il codice attuale: ora includono sia il raddoppio lots di TASK-59 sia la trasparenza di TASK-60. Tutte e tre superano ddforge validate. Verificato color=00ffffff presente in quartiere (6) e citta (19), assente in isolato (0) coerentemente con city_isolato_task60 (0, nessun ponte/pattern trasparente generato a quel seed/preset). Suite completa: 779 passed, 1 skipped, invariata.
+
+Gate umano confermato da Jay (2026-09-23): dimensione degli sprite ingranditi approvata sulle mappe rigenerate.
 <!-- SECTION:NOTES:END -->
 
 ## Comments

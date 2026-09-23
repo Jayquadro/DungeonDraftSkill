@@ -97,7 +97,13 @@ def test_main_street_is_wider_than_every_secondary_street(seed, scale):
 def test_street_centerline_stays_inside_its_reserved_corridor(seed, scale):
     """La centro-linea serpeggia (piu' di due vertici, scarto laterale non
     nullo) ma il selciato resta dentro l'ingombro riservato: e' da questo
-    che dipendono le garanzie di TASK-35, non dalla forma del tracciato."""
+    che dipendono le garanzie di TASK-35, non dalla forma del tracciato.
+
+    Preset 'quartiere' fa eccezione da TASK-64: street_path_fraction=1.0
+    (invece di <1) elimina di proposito il serpeggiamento, perche' il
+    selciato deve riempire l'intera fascia riservata e toccare/intersecare
+    quello dell'isolato adiacente ai T - vedi il commento su
+    street_path_fraction in city.SCALE_PRESETS['quartiere']."""
     blueprint = city.generate(width=70, height=70, seed=seed, scale=scale)
     with_corridor = [s for s in blueprint.streets if s.corridor is not None]
     assert with_corridor, "nessuna via da un taglio"
@@ -126,7 +132,14 @@ def test_street_centerline_stays_inside_its_reserved_corridor(seed, scale):
             abs(p[index] - axis) > 1e-6 for p in street.points[1:-1]
         ):
             swaying += 1
-    assert swaying > 0, "nessuna via serpeggia: la rete e' tornata una griglia"
+        if scale == "quartiere":
+            assert street.width == pytest.approx(hi - lo), (
+                "a quartiere il selciato deve riempire l'intera fascia riservata (TASK-64)"
+            )
+    if scale == "quartiere":
+        assert swaying == 0, "quartiere non dovrebbe piu' serpeggiare (TASK-64)"
+    else:
+        assert swaying > 0, "nessuna via serpeggia: la rete e' tornata una griglia"
 
 
 @pytest.mark.parametrize("scale", ["isolato", "quartiere", "citta"])
@@ -442,12 +455,19 @@ def test_quartiere_preset_fits_many_more_and_much_smaller_buildings_than_isolato
 
 
 @pytest.mark.parametrize("seed", [0, 1, 1337, 42])
-def test_citta_preset_has_an_order_of_magnitude_more_buildings_than_quartiere(seed):
+def test_citta_preset_has_many_more_buildings_than_quartiere(seed):
     """AC4: la citta e' capace di contenere una decina di quartieri, cioe'
-    un ordine di grandezza in piu' di edifici del preset quartiere sullo
-    stesso canvas. Misurato al momento della taratura (SCALE_PRESETS["citta"]):
-    fra ~9,6x e ~10,8x su 7 seed a 78x78; qui si verifica un margine largo
-    (5x-20x) per non far dipendere il test dal seed esatto.
+    molti piu' edifici del preset quartiere sullo stesso canvas. Misurato al
+    momento della taratura (SCALE_PRESETS["citta"]): fra ~9,6x e ~10,8x su 7
+    seed a 78x78 - un "ordine di grandezza", da cui il nome originale di
+    questo test.
+
+    TASK-64 ha dimezzato i lotti delle case ordinarie SOLO a "quartiere" (Jay
+    ha chiesto una mappa quartiere piu' densa, "citta" e' rimasta invariata
+    di proposito): il rapporto e' sceso a ~4,7x-5,1x su questi 4 seed, non
+    piu' un ordine di grandezza ma ancora "molti di piu'" - la citta' non e'
+    diventata meno densa, e' quartiere che e' diventato molto piu' denso.
+    Margine largo (3.5x-8x) per non far dipendere il test dal seed esatto.
 
     `landmarks=False` per lo stesso motivo del test qui sopra (TASK-48):
     e' la taratura dei preset a essere sotto esame, non l'ingombro dei
@@ -456,7 +476,7 @@ def test_citta_preset_has_an_order_of_magnitude_more_buildings_than_quartiere(se
     citta = city.generate(width=78, height=78, seed=seed, scale="citta", landmarks=False)
 
     ratio = len(citta.building_footprints) / len(quartiere.building_footprints)
-    assert 5.0 < ratio < 20.0, (len(citta.building_footprints), len(quartiere.building_footprints), ratio)
+    assert 3.5 < ratio < 8.0, (len(citta.building_footprints), len(quartiere.building_footprints), ratio)
 
 
 @pytest.mark.parametrize("scale", ["quartiere", "citta"])

@@ -735,6 +735,7 @@
     "moulin": "res://packs/RchUgE31/textures/objects/moulin.png",
     "nm_accademia": "res://packs/Ada7IQuz/textures/objects/nm_accademia.png",
     "nm_alchimista": "res://packs/Ada7IQuz/textures/objects/nm_alchimista.png",
+    "nm_arena": "res://packs/Ada7IQuz/textures/objects/nm_arena.png",
     "nm_armeria": "res://packs/Ada7IQuz/textures/objects/nm_armeria.png",
     "nm_bagni": "res://packs/Ada7IQuz/textures/objects/nm_bagni.png",
     "nm_banca": "res://packs/Ada7IQuz/textures/objects/nm_banca.png",
@@ -742,6 +743,7 @@
     "nm_biblioteca": "res://packs/Ada7IQuz/textures/objects/nm_biblioteca.png",
     "nm_bordello": "res://packs/Ada7IQuz/textures/objects/nm_bordello.png",
     "nm_caserma": "res://packs/Ada7IQuz/textures/objects/nm_caserma.png",
+    "nm_cattedrale": "res://packs/Ada7IQuz/textures/objects/nm_cattedrale.png",
     "nm_cimitero_croce": "res://packs/Ada7IQuz/textures/objects/nm_cimitero_croce.png",
     "nm_cimitero_fossa": "res://packs/Ada7IQuz/textures/objects/nm_cimitero_fossa.png",
     "nm_cimitero_lapide_1": "res://packs/Ada7IQuz/textures/objects/nm_cimitero_lapide_1.png",
@@ -754,6 +756,7 @@
     "nm_monastero": "res://packs/Ada7IQuz/textures/objects/nm_monastero.png",
     "nm_municipio": "res://packs/Ada7IQuz/textures/objects/nm_municipio.png",
     "nm_ospedale": "res://packs/Ada7IQuz/textures/objects/nm_ospedale.png",
+    "nm_palazzo": "res://packs/Ada7IQuz/textures/objects/nm_palazzo.png",
     "nm_prigione": "res://packs/Ada7IQuz/textures/objects/nm_prigione.png",
     "nm_stalle": "res://packs/Ada7IQuz/textures/objects/nm_stalle.png",
     "nm_taverna": "res://packs/Ada7IQuz/textures/objects/nm_taverna.png",
@@ -2367,6 +2370,10 @@
       512,
       512
     ],
+    "nm_arena": [
+      1024,
+      1024
+    ],
     "nm_armeria": [
       512,
       512
@@ -2394,6 +2401,10 @@
     "nm_caserma": [
       768,
       768
+    ],
+    "nm_cattedrale": [
+      1024,
+      1024
     ],
     "nm_cimitero_croce": [
       336,
@@ -2442,6 +2453,10 @@
     "nm_ospedale": [
       768,
       768
+    ],
+    "nm_palazzo": [
+      1024,
+      1024
     ],
     "nm_prigione": [
       768,

@@ -809,6 +809,34 @@ _LABEL_GAP = 0.12
 # questa frazione tornerebbe a leggersi come un'iconcina appoggiata su una
 # toppa di pavimento, che e' il difetto che questa taratura corregge.
 _SPRITE_FILL = 0.92
+# TASK-63: a "quartiere" Jay ha chiesto lo sprite del luogo il piu' grande
+# possibile nel suo lotto, margine compreso - la leva "lots" li' e' gia' al
+# tetto dato dalla profondita' del lotto (vedi generators/landmarks.py, nota
+# su tempio). 1.0 riempie l'intero rettangolo buildable sull'asse che lo
+# vincola (gia' arretrato da side_margin/setback rispetto al lotto vicino,
+# quindi senza sconfinare) invece di lasciargli l'8% di margine di
+# _SPRITE_FILL. Solo "quartiere": "isolato" e "citta'" restano a _SPRITE_FILL
+# (Jay, esplicitamente, "la citta' va bene, non toccarla").
+_SPRITE_FILL_QUARTIERE = 1.0
+# TASK-64: anche _SPRITE_FILL_QUARTIERE non bastava a Jay. Ha aperto
+# generated/city_quartiere_task63.dungeondraft_map in Dungeondraft e
+# ridimensionato a mano la locanda (nm_locanda, node e0: scale 2.80804 ->
+# 3.33594) come riferimento di quanto la vuole piu' grande - un moltiplicatore
+# diretto sulla scala finale dell'oggetto, non una modifica al rettangolo del
+# lotto. Replicarlo cosi' invece che spingendo ulteriormente `lots` evita di
+# scontrarsi di nuovo col tetto dato dalla profondita' del lotto (vedi
+# generators/landmarks.py, nota su tempio): la locanda di Jay probabilmente
+# sconfina leggermente nel margine intorno al lotto, ma e' esattamente il
+# riferimento che ha scelto lui stesso, quindi qui accettato di proposito.
+# Solo "quartiere", solo sul luogo chiuso (non sui pezzi sparsi sotto).
+_SPRITE_SCALE_BOOST_QUARTIERE = 3.33594 / 2.80804
+# TASK-64: a quartiere le case ordinarie sono state dimezzate in larghezza
+# (SCALE_PRESETS["quartiere"].target_lot_len/min_lot_len, city.py) per
+# riempire di piu' la mappa; la statua (piece_size=1.5 su tutti i preset,
+# unico pezzo sparso che compare anche accanto a lotti minuscoli) risultava
+# sproporzionata al confronto. Fattore solo visivo, solo a quartiere: non
+# tocca LandmarkKind.piece_size (che resta 1.5 per isolato/citta').
+_STATUA_PIECE_FACTOR_QUARTIERE = 0.6
 # Uno spiazzo aperto e' fatto di piu' sprite piccoli sparsi: un mercato sono i
 # banchi, un cimitero le lapidi. Uno solo grande al centro non sarebbe ne'
 # l'uno ne' l'altro.
@@ -1024,7 +1052,9 @@ def _sprite_scale(area: Rect, sprite, fill: float) -> float:
     return min(area.w / native_w, area.h / native_h) * fill
 
 
-def _draw_landmark_sprites(level, ids, landmark, palette, rng: random.Random) -> None:
+def _draw_landmark_sprites(
+    level, ids, landmark, palette, rng: random.Random, scale_name: str = "",
+) -> None:
     """Gli sprite che FANNO il luogo dentro il suo ingombro.
 
     Un luogo chiuso e' un solo sprite grande, come un edificio ordinario (che
@@ -1035,19 +1065,31 @@ def _draw_landmark_sprites(level, ids, landmark, palette, rng: random.Random) ->
 
     E' questo il rimedio al difetto visto sulla mappa vera: prima un luogo era
     l'unico elemento reso come chiazza di pavimento piu' iconcina, e in mezzo
-    alle case colorate leggeva come un rettangolo bianco."""
+    alle case colorate leggeva come un rettangolo bianco.
+
+    `scale_name` (TASK-63/TASK-64) e' il nome del preset ("isolato"/
+    "quartiere"/"citta'", da Blueprint.scale) per le tarature che valgono solo
+    a "quartiere": fill del luogo chiuso, il boost di scala calcato sulla
+    locanda di Jay, la statua rimpicciolita."""
     sprites = palette.landmark_sprites.get(landmark.kind)
     if not sprites:
         return
     rect = landmark.rect
+    is_quartiere = scale_name == "quartiere"
 
     if not landmark.open_air:
         sprite = sprites[rng.randrange(len(sprites))]
         cx, cy = rect.center()
-        add_object(level, ids, cx, cy, sprite[0], scale=_sprite_scale(rect, sprite, _SPRITE_FILL))
+        fill = _SPRITE_FILL_QUARTIERE if is_quartiere else _SPRITE_FILL
+        scale = _sprite_scale(rect, sprite, fill)
+        if is_quartiere:
+            scale *= _SPRITE_SCALE_BOOST_QUARTIERE
+        add_object(level, ids, cx, cy, sprite[0], scale=scale)
         return
 
     piece = landmark.piece_size
+    if is_quartiere and landmark.kind == "statua":
+        piece *= _STATUA_PIECE_FACTOR_QUARTIERE
 
     def _scaled(sprite):
         """(scala, mezza larghezza, mezza altezza) di un pezzo.
@@ -1105,15 +1147,19 @@ def _draw_landmark_sprites(level, ids, landmark, palette, rng: random.Random) ->
             break
 
 
-def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random) -> None:
+def draw_landmark(
+    level_stack: dict, ids, landmark, palette, rng: random.Random, scale_name: str = "",
+) -> None:
     """Un luogo urbano notevole (TASK-48): sprite ed ETICHETTA col nome.
 
     Tre forme, secondo com'e' fatto il luogo:
-    - ha un edificio a stanze (preset "isolato", luogo non all'aperto): si
-      disegna come qualunque altro edificio della citta', muri, porte e tetto,
-      con la tipologia della sua destinazione d'uso;
-    - e' un edificio dei preset astratti: un solo sprite grande che riempie
-      l'ingombro, perche' li' un edificio E' uno sprite (TASK-46);
+    - ha un edificio a stanze (preset "isolato", luogo non all'aperto e non
+      kind.sprite_only): si disegna come qualunque altro edificio della
+      citta', muri, porte e tetto, con la tipologia della sua destinazione
+      d'uso;
+    - e' un edificio dei preset astratti, o un luogo con kind.sprite_only
+      (TASK-63): un solo sprite grande che riempie l'ingombro, perche' li'
+      un edificio E' uno sprite (TASK-46);
     - e' uno spiazzo aperto: un'AREA COLORATA piu' sprite sparsi sopra. Il
       terreno dell'area e' quello che il luogo dichiara (Landmark.ground):
       selciato per mercato, patibolo e banchina, erba per parco e cimitero,
@@ -1121,6 +1167,9 @@ def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random)
       pavimentazione urbana era il motivo per cui un cimitero sembrava un
       piazzale; la statua non ha area perche' sta gia' su una piazza
       pavimentata e una seconda toppa sopra non aggiunge niente.
+
+    `scale_name` (TASK-63/TASK-64) passa a _draw_landmark_sprites, che lo usa
+    per le tarature valide solo a "quartiere" (fill, boost di scala, statua).
 
     Il NOME non si disegna qui: lo mette draw_landmark_label, che va chiamata
     a parte perche' i nomi vanno messi in un ordine diverso da quello in cui
@@ -1133,7 +1182,7 @@ def draw_landmark(level_stack: dict, ids, landmark, palette, rng: random.Random)
     else:
         if landmark.ground is not None:
             add_pattern(level, ids, rect, palette.floors.get(landmark.ground, palette.floor))
-        _draw_landmark_sprites(level, ids, landmark, palette, rng)
+        _draw_landmark_sprites(level, ids, landmark, palette, rng, scale_name=scale_name)
 
 
 def draw_landmark_label(level, ids, landmark, labels: list, bounds: Rect | None = None) -> bool:
@@ -1223,8 +1272,11 @@ def render_city_blueprint(level_stack: dict, ids, blueprint, palette, rng: rando
     # finisce coperta da quel che viene disegnato dopo.
     if blueprint.walls is not None:
         draw_city_walls(level, ids, blueprint.walls, palette)
+    # TASK-63/TASK-64: solo "quartiere" ha tarature diverse (fill, boost di
+    # scala, statua), su richiesta esplicita di Jay ("la citta' va bene, non
+    # toccarla").
     for landmark in blueprint.landmarks:
-        draw_landmark(level_stack, ids, landmark, palette, rng)
+        draw_landmark(level_stack, ids, landmark, palette, rng, scale_name=blueprint.scale)
 
     # I NOMI in un secondo giro, e dal luogo piu' grande al piu' piccolo. Su
     # una mappa fitta non ci stanno tutti e chi arriva prima si prende il

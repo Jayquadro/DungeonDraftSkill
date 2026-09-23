@@ -293,6 +293,13 @@ class Blueprint:
     # disegnarlo con draw_building() esattamente come farebbe per un edificio
     # a se stante, senza forzare piu edifici dentro un unico bounding
     # box/tetto.
+    # Nome del preset di scala che ha generato questo Blueprint cittadino
+    # ("isolato"/"quartiere"/"citta", TASK-63): vuoto per i Blueprint che non
+    # vengono da city.py (un dungeon, un singolo edificio). compose.py lo usa
+    # per scegliere quanto riempire il lotto con lo sprite di un luogo -
+    # un'informazione che il Blueprint stesso non porterebbe altrimenti,
+    # visto che quartiere e citta' condividono lo stesso `abstract_buildings`.
+    scale: str = ""
     streets: list[Street] = field(default_factory=list)
     plazas: list[Rect] = field(default_factory=list)
     buildings: list["Blueprint"] = field(default_factory=list)
