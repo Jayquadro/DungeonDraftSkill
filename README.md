@@ -7,9 +7,10 @@ Il lavoro e tracciato in Backlog.md sotto `backlog/` (milestone M0-M7).
 
 ## Stato
 
-Repository in fase di bootstrap (M0). I moduli sotto `src/ddforge/` sono
-ancora stub: consultare `docs/SPEC.md` per l'architettura e il piano delle
-milestone.
+Milestone M0-M5 completate (core, validatore, generatori dungeon/edifici/
+grotte/citta). M6 (renderer di anteprima) e M7 (skill Claude e
+documentazione finale) sono in corso: consultare `backlog/milestones/` e
+`docs/SPEC.md` §5 per il dettaglio.
 
 ## Installazione (sviluppo)
 
@@ -17,15 +18,88 @@ milestone.
 pip install -e ".[dev]"
 ```
 
+Extra opzionali, mai richiesti dal core (`docs/SPEC.md` §4): `preview`
+(Pillow, per `ddforge preview`) e `sprites` (Pillow + numpy, per gli script
+di post-processing sprite in `src/ddforge/sprite_prep/`). Es.
+`pip install -e ".[dev,preview]"`.
+
 ## Uso
 
 ```bash
 ddforge --help
 ```
 
-I sottocomandi (`generate`, `validate`, `inspect`, `catalog`, `preview`)
-sono documentati in `docs/SPEC.md` §8 e vengono implementati milestone per
-milestone.
+I cinque sottocomandi sono documentati in dettaglio in `docs/SPEC.md` §8;
+qui un esempio minimo per ciascuno. Ogni sottocomando ha il proprio
+`--help` con l'elenco completo delle opzioni.
+
+### `generate` — genera una mappa
+
+```bash
+ddforge generate dungeon \
+    --template templates/blank_80x80.dungeondraft_map \
+    --out cripta.dungeondraft_map \
+    --width 40 --height 40 --rooms 8 --seed 1337 \
+    --style crypt --lights --furnish medium
+```
+
+`algorithm` e `dungeon | building | cave | sewer | city` (vedi
+`docs/SPEC.md` §9 per la logica di ciascuno; `building` ha
+`--building-type`/`--l-shaped`, `city` ha `--scale`/`--landmark`/
+`--no-landmarks`, riassunti sotto in "Mappe cittadine"). `--seed` rende la
+generazione riproducibile byte per byte. Il comando valida sempre il
+risultato prima di scriverlo: se ci sono errori non scrive nulla e stampa
+gli `Issue` (vedi `validate` sotto).
+
+### `validate` — controlla un file gia scritto
+
+```bash
+ddforge validate cripta.dungeondraft_map
+```
+
+Rilanciato internamente da `generate` prima di salvare; utile anche da solo
+su una mappa esistente (generata o disegnata a mano) per trovare gli errori
+elencati in `docs/SPEC.md` §7.
+
+### `inspect` — ispeziona un file esistente
+
+```bash
+ddforge inspect cripta.dungeondraft_map
+```
+
+Stampa dimensioni, `format`, `creation_build`, pack referenziati e conteggi
+per livello (muri, porte, pattern, oggetti, luci, testi, tetti). Il primo
+strumento da usare quando si esporta un nuovo template da Dungeondraft (vedi
+sotto) o quando un file di terzi si comporta in modo inatteso.
+
+### `catalog` — rigenera `data/assets.json`
+
+```bash
+ddforge catalog \
+    --from templates/rich_reference.dungeondraft_map \
+    --from templates/blank_80x80.dungeondraft_map \
+    --out data/assets.json
+```
+
+Estrae pack, texture e alias semantici (muri, pavimenti, porte, oggetti...)
+dai documenti passati con `--from` (ripetibile). `--pack` legge un
+`.dungeondraft_pack` compilato per ottenere le dimensioni pixel native delle
+texture; `--from-catalog` fa crescere un catalogo esistente in modo
+incrementale invece di ripartire da zero; `--base-pck`/`--base-include`
+importano texture di base del programma (mai soggette a DDF014). Dettagli e
+comandi storici usati sul progetto in `docs/format.md` §10.
+
+### `preview` — anteprima PNG senza aprire Dungeondraft
+
+```bash
+ddforge preview cripta.dungeondraft_map --out cripta.png --scale 8
+```
+
+Richiede l'extra opzionale `preview` (`pip install -e ".[preview]"`, vedi
+sotto): senza Pillow installato il comando lo dice con un messaggio chiaro
+invece di un traceback. Legge il file `.dungeondraft_map` gia scritto su
+disco, mai lo stato in memoria, cosi l'anteprima verifica davvero cio che e
+stato salvato.
 
 ### Mappe cittadine: i tre preset di scala
 
@@ -150,7 +224,120 @@ ddforge generate city --template templates/blank_80x80.dungeondraft_map \
 pytest -q
 ```
 
+## Schema del formato e trappole
+
+Lo schema completo e verificato di `.dungeondraft_map` — ogni tipo di
+elemento, le costanti derivate dai template reali, e tutte le regole di
+orientamento/allineamento calibrate nei gate umani di M1/M3/M4 (tangente
+della porta, muri di canale, riproiezione delle porte quando una stanza si
+allarga, tetti a linea di colmo...) — vive in `docs/format.md`, non qui: e
+un documento vivo, aggiornato ogni volta che una milestone verifica un campo
+nuovo. `docs/SPEC.md` §6 e §13 restano il riferimento architetturale di
+partenza, ma dove i due divergono `docs/format.md` e la fonte aggiornata
+(la versione di Dungeondraft realmente in uso e piu recente di quella
+analizzata per la spec).
+
+Le trappole che hanno gia rotto una mappa una volta (`docs/SPEC.md` §14,
+elenco completo li):
+
+| Trappola | Rimedio |
+|---|---|
+| Costruire il JSON da zero | usa sempre un template esportato da Dungeondraft |
+| `points` come lista di `Vector2` | serializza come un'unica stringa `PoolVector2Array(...)` |
+| Colore a 6 cifre | sempre 8 cifre ARGB (`ffrrggbb`) |
+| Porta come elemento di livello | va annidata dentro `wall['portals']` |
+| `world.next_node_id` non aggiornato | chiama sempre `finalize()` prima di `save()` |
+| Pack ID inventati | solo quelli gia presenti in `header.asset_manifest` del template |
+| `world.format` diverso da quello del template | ereditalo sempre dal template, non impostarlo a mano |
+| Coordinate in pixel dentro `world.width`/`world.height` | quei due campi sono in quadretti; le coordinate degli elementi sono in pixel |
+| `path.edit_points` assoluti | sono relativi a `position` (il primo punto) |
+| Primo punto ripetuto con `wall.loop = true` | o il flag o il punto ripetuto, mai entrambi |
+
 ## Esportare un nuovo template
 
-Documentazione da completare in TASK-39, quando il formato e le procedure
-di calibrazione saranno confermate nei gate umani di M1 e M3.
+Il progetto non genera mai il JSON da zero: carica un template esportato
+dall'installazione reale di Dungeondraft e ci inietta la geometria
+generata (`docs/SPEC.md` §2). Quando Dungeondraft cambia versione, i
+template in `templates/` vanno rifatti con questa procedura — mai
+modificati sul posto (sono tenuti in sola lettura apposta):
+
+1. **Esporta due file da Dungeondraft**, con la versione aggiornata:
+   - un template **vuoto** (`File > New`, dimensione scelta — quella in uso
+     nel progetto e 80×80, il default dell'installazione di riferimento);
+   - un template **ricco**, con un esemplare disegnato a mano di ogni
+     elemento: muro, porta, finestra, pavimento, oggetto, **luce**, tetto,
+     percorso e **testo**. Luci e testi sono i campi meno stabili fra le
+     build (vedi `docs/format.md` §4): senza un esemplare vero non c'e modo
+     di verificarne lo schema.
+   - Salva entrambi con un nome che porti la dimensione e/o la build
+     (es. `blank_80x80.dungeondraft_map`), copiali in `templates/` e
+     rimettili in sola lettura. Non toccare i template esistenti finche il
+     nuovo non ha superato tutti i passi seguenti.
+
+2. **Ispeziona i nuovi file** prima di usarli:
+
+   ```bash
+   ddforge inspect templates/<nuovo_vuoto>.dungeondraft_map
+   ddforge inspect templates/<nuovo_ricco>.dungeondraft_map
+   ```
+
+   Confronta `format`, `creation_build`, numero di pack e conteggi degli
+   elementi con l'output sugli stessi file sulla build precedente. Un
+   cambio di `world.format` o della lista di chiavi di livello (`LEVEL_KEYS`
+   in `src/ddforge/template.py`) e il segnale piu importante che il formato
+   e cambiato davvero, non solo il numero di build.
+
+3. **Verifica le formule dei blob binari** (`docs/SPEC.md` §2,
+   `docs/format.md` §11 e §14): `len(tiles.cells) == width*height`,
+   `len(terrain.splat) == width*height*64`, e la lunghezza di
+   `cave.bitmap`/`cave.entrance_bitmap` secondo
+   `ceil((4*width+3)*(4*height+3)/8)`. Se una formula non torna piu sul
+   nuovo template, il layer binario e cambiato e va investigato prima di
+   proseguire (non ridurre la verifica a "il file si apre").
+
+4. **Fai girare la suite di test** puntandola, dove serve, ai nuovi
+   template (in particolare `tests/test_template.py`,
+   `tests/test_cave_bitmap_format.py` e i test golden file):
+
+   ```bash
+   pytest -q
+   ```
+
+   Un fallimento nei golden file e atteso quando il template cambia
+   davvero (i byte del documento generato includono i blob del template):
+   verifica che la differenza sia spiegabile dal nuovo template, poi
+   rigenera i golden invece di ignorare il test.
+
+5. **Se emergono differenze di schema** (una chiave di livello in piu o in
+   meno, un campo nuovo su `portal`/`light`/`text`, un formato diverso di un
+   blob), aggiornale nel codice (`template.py`, `validate.py`) e
+   documentale in `docs/format.md` nello stile delle sezioni esistenti: mai
+   ipotizzare un valore, sempre citare il file reale in cui e stato
+   osservato (vedi `docs/format.md` §12 per un esempio di questo tipo di
+   voce, la scoperta della 18ª chiave `texts_vis`).
+
+6. **Se il nuovo template referenzia pack diversi**, rigenera il catalogo
+   invece di lasciarlo disallineato:
+
+   ```bash
+   ddforge catalog --from-catalog data/assets.json \
+       --from templates/<nuovo_ricco>.dungeondraft_map \
+       --from templates/<nuovo_vuoto>.dungeondraft_map \
+       --out data/assets.json
+   ```
+
+   `--from-catalog` conserva le chiavi gia note che non hanno piu una fonte
+   sul disco (`docs/format.md` §10.3): usalo sempre per un aggiornamento
+   incrementale invece di ripartire da zero.
+
+7. **Ripeti il gate umano** (`docs/SPEC.md` §5): genera una mappa di prova
+   sul nuovo template e aprila davvero in Dungeondraft.
+
+   ```bash
+   ddforge generate dungeon --template templates/<nuovo_vuoto>.dungeondraft_map \
+       --out prova_gate.dungeondraft_map --seed 1 --rooms 8
+   ```
+
+   Conferma che la stanza appare, i muri sono chiusi e le porte sono sul
+   muro e non fluttuano. Solo dopo questa conferma visiva il nuovo template
+   sostituisce il vecchio come riferimento di produzione.
