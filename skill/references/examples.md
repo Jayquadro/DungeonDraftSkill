@@ -87,13 +87,16 @@ Entrambe scrivono il file con un paio di avvisi `DDF102`: normale, vedi
 ## Grotte
 
 Niente `--furnish`/`--lights`: una grotta non ha stanze nel senso del
-Blueprint principale.
+Blueprint principale. Niente `--width`/`--height` nemmeno: il layer cave
+nativo copre sempre l'intera mappa del template (mai una sotto-regione più
+piccola, a differenza degli altri stili), quindi le dimensioni sono sempre
+quelle del template scelto.
 
 ```bash
 ddforge generate cave \
     --template templates/blank_80x80.dungeondraft_map \
     --out generated/grotta.dungeondraft_map \
-    --width 78 --height 78 --seed 1337
+    --seed 1337
 ```
 
 ## Fognature
@@ -147,10 +150,9 @@ ddforge preview generated/cripta.dungeondraft_map \
 ```
 
 `--scale` sono i pixel per quadretto (default 8). Disegna pavimenti, muri,
-porte e oggetti; **non** le strade (`paths`) né i tetti — su una mappa
-cittadina si vedono gli edifici ma non la viabilità. Per le **grotte** esce
-un PNG completamente nero (bug noto nella decodifica del layer `cave`): non
-significa che la mappa sia vuota, verificala aprendola in Dungeondraft.
+porte, oggetti e il layer cave nativo delle grotte; **non** le strade
+(`paths`) né i tetti — su una mappa cittadina si vedono gli edifici ma non
+la viabilità.
 
 ## Rivalidare un file già scritto
 

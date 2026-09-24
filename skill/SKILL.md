@@ -115,9 +115,8 @@ Quando `generate` scrive il file con successo:
   `ddforge preview <file> --out <file>.png` rende una planimetria PNG che
   puoi guardare senza aprire Dungeondraft, utile per accorgersi di una mappa
   vistosamente sbagliata. Attenzione ai suoi limiti: disegna pavimenti,
-  muri, porte e oggetti, **non** le strade (`paths`) né i tetti, e per le
-  grotte esce **completamente vuota** (bug noto nella decodifica del layer
-  `cave`: il PNG nero non significa che la mappa sia vuota).
+  muri, porte, oggetti e il layer cave nativo delle grotte, ma **non** le
+  strade (`paths`) né i tetti.
 - spiega come aprirlo: in Dungeondraft, **File → Open Map** (o l'analogo nel
   menu principale) e selezionare il file `.dungeondraft_map` generato; non
   serve importarlo o convertirlo, è già nel formato nativo

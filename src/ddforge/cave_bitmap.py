@@ -33,10 +33,22 @@ def encode_cave_bitmap(grid: list[list[int]], width: int, height: int) -> str:
 
 
 def decode_cave_bitmap(blob: str, width: int, height: int) -> list[list[int]]:
-    """Inverso di encode_cave_bitmap, per verificare il round-trip."""
+    """Inverso di encode_cave_bitmap, per verificare il round-trip.
+
+    Solleva ValueError (non un IndexError nudo) se il blob e troppo corto
+    per width/height: capita quando chi ha scritto il documento ha usato
+    dimensioni diverse da quelle dichiarate in world.width/height (TASK-37.1
+    — il layer cave copre sempre l'intera mappa, docs/format.md §14)."""
     grid_w, grid_h = cave_grid_shape(width, height)
     inner = blob[blob.index("(") + 1 : blob.rindex(")")].strip()
     data = [int(x) for x in inner.split(",")] if inner else []
+    expected_bytes = (grid_w * grid_h + 7) // 8
+    if len(data) < expected_bytes:
+        raise ValueError(
+            f"cave.bitmap troppo corto per {width}x{height} quadretti "
+            f"(griglia {grid_w}x{grid_h} sotto-celle): {len(data)} byte, "
+            f"attesi almeno {expected_bytes}"
+        )
     return [
         [(data[(y * grid_w + x) // 8] >> ((y * grid_w + x) % 8)) & 1 for x in range(grid_w)]
         for y in range(grid_h)

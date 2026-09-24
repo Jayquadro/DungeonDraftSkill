@@ -80,10 +80,11 @@ def _draw_cave_bitmap(draw, level: dict, width: int, height: int, scale: int) ->
 
     from ddforge.cave_bitmap import cave_grid_shape, decode_cave_bitmap
 
-    try:
-        grid = decode_cave_bitmap(blob, width, height)
-    except (ValueError, IndexError):
-        return
+    # Nessun try/except qui (TASK-37.1): un fallimento di decodifica lascia
+    # propagare il ValueError fino a _cmd_preview, che lo stampa come
+    # "Errore: ..." e ritorna 1, invece di scrivere in silenzio un PNG vuoto
+    # con codice 0 (il difetto peggiore possibile: sembra una mappa vuota).
+    grid = decode_cave_bitmap(blob, width, height)
     grid_w, grid_h = cave_grid_shape(width, height)
     sub_px = scale / 4  # 4 sotto-celle per quadretto; sotto-cella 0 = quadretto 0 (docs/format.md §14)
 

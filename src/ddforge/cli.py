@@ -128,6 +128,43 @@ def _cmd_generate(args: argparse.Namespace) -> int:
             # esplicito, non un traceback.
             print(f"Errore: {exc}", file=sys.stderr)
             return 1
+    elif is_cave:
+        # Il layer cave nativo copre SEMPRE l'intera mappa: la sua lunghezza
+        # in byte dipende solo da world.width/height (docs/format.md §14),
+        # mai da un ingombro di contenuto piu piccolo come per gli altri
+        # algoritmi (che possono generare dentro una sotto-regione di un
+        # template piu grande, vedi test_preview.py). Un --width/--height
+        # diverso dal template produrrebbe un cave.bitmap che non corrisponde
+        # piu a world.width/height scritto nel documento: JSON valido ma
+        # indecodificabile (TASK-37.1). Si usano sempre le dimensioni del
+        # template; un valore esplicito incoerente e un errore chiaro, non un
+        # file rotto.
+        world_w, world_h = doc["world"].get("width"), doc["world"].get("height")
+        valid_world_dims = (
+            isinstance(world_w, int) and not isinstance(world_w, bool)
+            and isinstance(world_h, int) and not isinstance(world_h, bool)
+            and world_w > 0 and world_h > 0
+        )
+        if not valid_world_dims:
+            print(
+                f"Errore: il template non ha world.width/world.height validi, "
+                f"necessari per generare una grotta: {world_w!r}, {world_h!r}",
+                file=sys.stderr,
+            )
+            return 1
+        if (args.width is not None and args.width != world_w) or (
+            args.height is not None and args.height != world_h
+        ):
+            print(
+                "Errore: 'cave' non supporta --width/--height diversi dalle "
+                f"dimensioni del template ({world_w}x{world_h}): il layer cave "
+                "nativo copre sempre l'intera mappa, non puo' essere piu piccolo "
+                "(docs/format.md §14). Usa un template di quella dimensione, "
+                "oppure ometti --width/--height.",
+                file=sys.stderr,
+            )
+            return 1
+        blueprint = generators[args.algorithm].generate(width=world_w, height=world_h, seed=args.seed)
     else:
         blueprint = generators[args.algorithm].generate(
             width=args.width if args.width is not None else 40,

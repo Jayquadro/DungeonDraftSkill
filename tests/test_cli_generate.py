@@ -113,6 +113,44 @@ def test_generate_cave_produces_a_valid_file_with_no_walls(tmp_path):
     assert level["cave"]["bitmap"] != template_doc["world"]["levels"]["0"]["cave"]["bitmap"]
 
 
+def test_generate_cave_without_explicit_size_uses_template_dimensions(tmp_path):
+    """TASK-37.1: senza --width/--height 'cave' non deve piu' cadere sul
+    default generico 40x40 (sbagliato per un template 80x80: il layer cave
+    nativo copre sempre l'intera mappa, docs/format.md §14), ma usare le
+    dimensioni del template stesso."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "cave",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--seed", "1337",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    assert doc["world"]["width"] == 80
+    assert doc["world"]["height"] == 80
+
+
+def test_generate_cave_rejects_width_height_mismatched_with_template(tmp_path):
+    """TASK-37.1: un --width/--height diverso dal template produceva prima
+    un file 'valido' (JSON ok, ddforge validate silenzioso) ma con
+    cave.bitmap dimensionato per il contenuto invece che per world.width/
+    height, indecodificabile da preview. Ora e' un errore chiaro in
+    generate, nessun file scritto."""
+    out = tmp_path / "out.dungeondraft_map"
+    result = _run(
+        "generate", "cave",
+        "--template", "templates/blank_80x80.dungeondraft_map",
+        "--out", str(out),
+        "--width", "78", "--height", "78",
+        "--seed", "1337",
+    )
+    assert result.returncode == 1
+    assert not out.exists()
+    assert "Errore" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
 def test_generate_sewer_produces_a_valid_file_with_sewer_palette(tmp_path):
     """La variante fognature disegna muri/pavimenti/porte veri con la
     palette sewer (TASK-33/AC3), a differenza della grotta nativa."""

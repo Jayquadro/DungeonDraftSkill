@@ -176,6 +176,74 @@ def test_render_preview_on_cave_map_is_not_blank(tmp_path):
     assert _FLOOR in colors
 
 
+@pytest.mark.parametrize(
+    "template,seed",
+    [
+        ("templates/blank_80x80.dungeondraft_map", 1337),
+        ("templates/blank_160x160.dungeondraft_map", 42),
+    ],
+)
+def test_render_preview_on_cave_map_is_not_blank_on_multiple_sizes(tmp_path, template, seed):
+    """TASK-37.1 AC2/AC4: round-trip generate->preview su piu' dimensioni di
+    mappa (non solo 80x80), senza passare --width/--height esplicite (usano
+    sempre le dimensioni del template, vedi test_cli_generate.py)."""
+    pytest.importorskip("PIL")
+    from PIL import Image
+
+    out_map = tmp_path / "cave.dungeondraft_map"
+    result = _run(
+        "generate", "cave",
+        "--template", template,
+        "--out", str(out_map),
+        "--seed", str(seed),
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    out_png = tmp_path / "cave.png"
+    doc = json.loads(out_map.read_text(encoding="utf-8"))
+    render_preview(doc, out_png)
+
+    from ddforge.preview import _BACKGROUND, _FLOOR
+
+    with Image.open(out_png) as img:
+        raw_colors = img.getcolors(maxcolors=1_000_000)
+    assert raw_colors is not None
+    colors = {color for _count, color in raw_colors}
+    assert _BACKGROUND in colors
+    assert _FLOOR in colors
+
+
+def test_render_preview_on_corrupted_cave_bitmap_raises_instead_of_blank(tmp_path):
+    """TASK-37.1 AC3: se il layer cave non decodifica piu' (blob troppo
+    corto per world.width/height), render_preview deve sollevare un errore
+    chiaro invece di restituire in silenzio un canvas vuoto."""
+    doc = json.loads(Path("templates/blank_80x80.dungeondraft_map").read_text(encoding="utf-8"))
+    level = doc["world"]["levels"]["0"]
+    level["cave"]["bitmap"] = "PoolByteArray( 1, 2, 3 )"
+
+    with pytest.raises(ValueError, match="cave.bitmap"):
+        render_preview(doc, tmp_path / "out.png")
+
+
+def test_cli_preview_on_corrupted_cave_bitmap_exits_one_with_clear_message(tmp_path):
+    """TASK-37.1 AC3, end-to-end via CLI: nessun PNG scritto, exit 1,
+    messaggio chiaro invece di un traceback o un file vuoto con codice 0."""
+    pytest.importorskip("PIL")
+    doc = json.loads(Path("templates/blank_80x80.dungeondraft_map").read_text(encoding="utf-8"))
+    doc["world"]["levels"]["0"]["cave"]["bitmap"] = "PoolByteArray( 1, 2, 3 )"
+    doc_path = tmp_path / "broken_cave.dungeondraft_map"
+    doc_path.write_text(json.dumps(doc), encoding="utf-8")
+
+    out_png = tmp_path / "out.png"
+    result = _run("preview", str(doc_path), "--out", str(out_png))
+
+    assert result.returncode == 1
+    assert "Errore" in (result.stdout + result.stderr)
+    assert "cave.bitmap" in (result.stdout + result.stderr)
+    assert "Traceback" not in result.stderr
+    assert not out_png.exists()
+
+
 # ---------------------------------------------------------------------------
 # AC6: il comando CLI e coperto da test end-to-end
 # ---------------------------------------------------------------------------
