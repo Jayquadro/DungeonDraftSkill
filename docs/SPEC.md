@@ -151,7 +151,7 @@ dungeondraft-forge/
 │   ├── test_validate.py
 │   ├── test_generators.py
 │   └── fixtures/
-└── skill/                       # la skill Claude, in M7
+└── skills/generator/            # la skill Claude, in M7 (skills/decorator/ in M10)
     ├── SKILL.md
     └── references/
 ```
@@ -665,7 +665,7 @@ Decidi in M5 se supportare entrambe o solo il quartiere.
 > queste scale il lotto non ha. Punti 1–6 di questa sezione valgono per tutti
 > e tre i preset; cambiano solo i valori numerici (SCALE_PRESETS in
 > `generators/city.py`). Differenza fra i preset e come scegliere:
-> `README.md` e `skill/references/styles.md`.
+> `README.md` e `skills/generator/references/styles.md`.
 >
 > **TASK-64** (solo preset `quartiere`, `citta`/`isolato` invariati): due
 > correzioni dopo che Jay ha aperto una mappa quartiere in Dungeondraft.
@@ -942,7 +942,7 @@ L'errore da non ripetere: **la skill non deve contenere lo schema del formato
 né riscrivere il generatore.** Deve essere sottile e chiamare il CLI.
 
 ```
-skill/
+skills/generator/
 ├── SKILL.md
 └── references/
     ├── styles.md        # stili disponibili e quando usarli
