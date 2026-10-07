@@ -1502,3 +1502,127 @@ contenitore vuoto al primo utilizzo (se il template non ce l'ha, come
 `blank_80x80`), poi appende un figlio per ogni poligono passato. Usato da
 `compose.render_sewer_blueprint` per disegnare un poligono d'acqua per ogni
 canale e ogni camera della variante fognature.
+
+## 16. `terrain.splat` e il pavimento delle grotte — codifica risolta (TASK-67)
+
+Spike per `ddforge decorate` (milestone M10, docs/SPEC-decorate.md §7.3):
+il terreno di un livello ha 4 slot (`texture_1..texture_4`) e un blob
+`splat`, ma nessun codice del progetto lo scriveva ancora. Risolto sul
+modello di TASK-31 (`cave.bitmap`, §14), con un'unica evidenza reale:
+`tests/fixtures/cave_freehand_80x80.dungeondraft_map` — lo stesso file del
+campione cave a mano libera, perche Jay aveva dipinto anche il terreno
+nella stessa sessione di disegno. Nessun altro `.dungeondraft_map` trovato
+sul suo sistema ha il terreno dipinto.
+
+### La struttura dello splat
+
+`terrain.splat` e una griglia di **sotto-celle**, **4 byte ciascuna**:
+
+```
+larghezza = 4 · width, altezza = 4 · height    (4 sotto-celle per quadretto per lato)
+lunghezza totale = width · height · 64 byte    (16 sotto-celle/quadretto · 4 byte)
+```
+
+A differenza di `cave.bitmap` **non c'e margine**: la griglia copre
+esattamente `4w × 4h` sotto-celle, confermato sul campione reale (80×80 →
+409.600 byte = 80·80·64, nessun resto).
+
+Regole di serializzazione (stessa stringa `PoolByteArray(...)` di
+`cave.bitmap`, ma qui ogni elemento e un byte 0-255, non un bit):
+
+- ordine **row-major su tutta la mappa** (riga di sotto-celle per riga),
+  **non** un blocco di 16 sotto-celle contiguo per quadretto: l'indice
+  della sotto-cella `(x, y)` (in coordinate di sotto-cella, 0-based) e
+  `y · (4·width) + x`, e il suo gruppo di 4 byte sta a
+  `data[4·i : 4·i+4]`;
+- i 4 byte di un gruppo sono il **peso 0-255 di ciascuno dei quattro slot**
+  `texture_1..texture_4`, nell'ordine; per un pennello pieno (non
+  sfumato) summano a 255 — e il blend del pennello nativo di Dungeondraft
+  sul bordo di una pennellata (es. `(247, 0, 8, 0)`, `(239, 0, 16, 0)`:
+  258 valori di byte distinti nel campione reale, quasi tutti bordi di
+  sfumatura fra due soli slot);
+- il default (nessuna pennellata) e `(255, 0, 0, 0)`: slot 1 al 100%.
+
+### Come e stata isolata l'ordinatura
+
+Il campione reale ha una sola pennellata (slot 3, `texture_3` = sabbia)
+sopra il resto non toccato. Due ipotesi sull'ordine dei gruppi di 4 byte
+sono state confrontate ricostruendo, per ciascuna, le coordinate
+`(x, y)` dei gruppi non-default e misurando la densita' nel loro
+bounding box (una pennellata vera e una macchia continua, quindi densa
+nel suo riquadro; un ordine sbagliato la spezzetta):
+
+| Ipotesi | Bounding box | Densita' |
+|---|---|---|
+| **A** — row-major su tutta la griglia (quella giusta) | 121×94 sotto-celle | **0,54** |
+| B — blocco di 16 sotto-celle contiguo per quadretto, poi quadretti in row-major | 272×96 sotto-celle | 0,23 |
+
+Il rendering ASCII dell'ipotesi A (slot dominante per sotto-cella) mostra
+una pennellata diagonale a bordi sfumati, coerente con un vero tratto di
+pennello; l'ipotesi B la spezzetta visibilmente. Confermato dal round-trip
+byte-esatto: `decode_terrain_splat` → `encode_terrain_splat` sul blob
+reale restituisce gli stessi identici byte solo con l'ipotesi A.
+
+### Gli slot delle texture
+
+`texture_1..texture_4` sono stringhe `res://...` semplici, senza
+codifica: si possono sovrascrivere direttamente con una chiave del
+catalogo (nessuna verifica fatta su quali categorie Dungeondraft accetti
+li oltre a `terrain` — nel template di riferimento sono tutte e quattro
+sotto `textures/terrain/`, quindi `decorate` deve limitarsi a quella
+categoria del catalogo).
+
+### Il pavimento nativo delle grotte: `cave.texture`
+
+Decisione di Jay (SPEC-decorate §14 D6): `decorate` cambia anche la
+texture del pavimento delle grotte, **senza** toccare `cave.bitmap` (la
+forma non cambia mai). Il campo e `level['cave']['texture']`, una stringa
+semplice accanto a `ground_color`/`wall_color` (tinte ARGB che si
+applicano alla variante colorabile). Solo tre texture verificate sul
+disco di Jay:
+
+| Chiave | Texture | Provenienza |
+|---|---|---|
+| `colorable` (default) | `res://textures/caves/colorable/floor.png` | base del programma |
+| `rocky` | `res://textures/caves/rocky/floor.png` | base del programma |
+| `limestone` | `res://packs/DnDgCORE/textures/caves/limestone_cave/floor.webp` | pack "DnDungeon Overhaul", gia nel manifest di produzione |
+
+Nessuna di queste e nel catalogo `data/assets.json`: `assets._classify`
+non riconosce ancora i path sotto `/caves/` (nessuna categoria dedicata,
+a differenza di `/terrain/`, `/walls/`, ecc.), quindi finora nessuna
+texture di quella cartella e mai finita in catalogo, nemmeno dopo il
+censimento di TASK-68. **Bug collaterale scoperto durante lo spike**:
+`assets.read_base_pack` indicizza le destinazioni per solo nome file
+(`rsplit("/", 1)[-1]`), quindi `textures/caves/colorable/floor.png` e
+`textures/caves/rocky/floor.png` collidono sulla stessa chiave `floor.png`
+e uno dei due sparisce silenziosamente (oggi vince `rocky`, l'ordine di
+iterazione del dict lo rende fragile). Non toccato da questo task (fuori
+perimetro di TASK-67): segnalato come follow-up, perche risolverlo per
+bene estenderebbe la lista delle texture di grotta disponibili oltre le
+tre sopra, verificate a mano.
+
+### Campioni e codice
+
+Nessuna nuova fixture committata: `tests/fixtures/cave_freehand_80x80.dungeondraft_map`
+(gia' presente da TASK-31/32) contiene anche il terreno dipinto di questo
+spike, byte-identico al file `cave_spike.dungeondraft_map` nei backup di
+Dungeondraft di Jay. `tests/test_terrain_splat_format.py` blocca: formula
+della lunghezza, round-trip byte-esatto sul blob reale, forma della
+pennellata reale, comportamento di `paint_tiles` (pittura a copertura
+piena e parziale, rifiuto di una mask di dimensioni sbagliate) e di
+`build.set_cave_floor_texture` (non tocca mai `bitmap`/`entrance_bitmap`,
+rifiuta una chiave sconosciuta).
+
+Codec in `ddforge.terrain_splat`: `encode_terrain_splat`/
+`decode_terrain_splat`/`terrain_grid_shape` (stesso schema di
+`cave_bitmap.py`), `default_weights` (terreno non dipinto), `paint_tiles`
+(dipinge uno slot su una maschera a risoluzione quadretto, con copertura
+parziale miscelata linearmente — la funzione richiesta da TASK-67 AC2),
+`CAVE_FLOOR_TEXTURES`. Le primitive che mutano il documento stanno in
+`build.py` (`set_terrain_splat`, `set_cave_floor_texture`), stessa
+disciplina di `set_cave_bitmap`.
+
+**Resta da fare** (gate umano, non automatizzabile): generare una mappa
+di prova con terreno dipinto da questo codec e una con pavimento di grotta
+cambiato, farle aprire a Jay in Dungeondraft e confermare che il risultato
+appare dove previsto (TASK-67 AC4/AC6).

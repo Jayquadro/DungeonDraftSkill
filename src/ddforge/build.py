@@ -8,6 +8,7 @@ import math
 
 from ddforge.cave_bitmap import encode_cave_bitmap
 from ddforge.godot import grid_to_px, parse_pv2, pv2, v2
+from ddforge.terrain_splat import CAVE_FLOOR_TEXTURES, encode_terrain_splat
 
 # Default del Light2D.tscn interno di Dungeondraft (estratto da
 # Dungeondraft.pck): texture soft.png, colore Color(0.937255, 0.752941,
@@ -287,6 +288,29 @@ def set_cave_bitmap(level, grid: list[list[int]], width: int, height: int) -> No
     `wall_color` e `texture` restano quelli del template: bastano perche
     Dungeondraft renda la grotta (docs/format.md §14)."""
     level["cave"]["bitmap"] = encode_cave_bitmap(grid, width, height)
+
+
+def set_terrain_splat(level, weights, width: int, height: int) -> None:
+    """Scrive `level['terrain']['splat']` (TASK-67, docs/format.md §16):
+    come `set_cave_bitmap`, sovrascrive un blob gia dimensionato dal
+    template invece di aggiungere un elemento a una lista. `texture_1..4`
+    restano quelli del template: cambiarli e responsabilita di chi chiama
+    (sono semplici stringhe, nessuna codifica)."""
+    level["terrain"]["splat"] = encode_terrain_splat(weights, width, height)
+
+
+def set_cave_floor_texture(level, key: str, ground_color: str | None = None) -> None:
+    """Cambia il pavimento nativo della grotta (TASK-67, docs/format.md §16,
+    decisione di Jay SPEC-decorate §14 D6), mai `cave.bitmap`/
+    `entrance_bitmap` (la forma non cambia mai). `key` e una delle chiavi di
+    `terrain_splat.CAVE_FLOOR_TEXTURES`."""
+    if key not in CAVE_FLOOR_TEXTURES:
+        raise ValueError(
+            f"chiave cave floor sconosciuta: {key!r}. Valide: {sorted(CAVE_FLOOR_TEXTURES)}"
+        )
+    level["cave"]["texture"] = CAVE_FLOOR_TEXTURES[key]
+    if ground_color is not None:
+        level["cave"]["ground_color"] = ground_color
 
 
 def add_text(level, ids, x, y, content, *,

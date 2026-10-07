@@ -14,11 +14,16 @@ from ddforge.build import (
     add_wall,
     add_water_polygon,
     set_cave_bitmap,
+    set_cave_floor_texture,
+    set_terrain_splat,
 )
 from ddforge.cave_bitmap import cave_grid_shape, decode_cave_bitmap
 from ddforge.godot import parse_pv2
 from ddforge.ids import IdAllocator
 from ddforge.model import Rect
+from ddforge.terrain_splat import (
+    CAVE_FLOOR_TEXTURES, decode_terrain_splat, default_weights,
+)
 
 
 def _empty_level():
@@ -242,6 +247,40 @@ def test_set_cave_bitmap_writes_a_roundtrippable_blob():
 
     assert decode_cave_bitmap(level["cave"]["bitmap"], width, height) == grid
     assert level["cave"]["ground_color"] == "ffffffff"  # non toccato (decision-1)
+
+
+def test_set_terrain_splat_writes_a_roundtrippable_blob():
+    level = {"terrain": {"splat": "PoolByteArray(  )"}}
+    width, height = 3, 2
+    weights = default_weights(width, height, slot=2)
+
+    set_terrain_splat(level, weights, width, height)
+
+    assert decode_terrain_splat(level["terrain"]["splat"], width, height) == weights
+
+
+def test_set_cave_floor_texture_does_not_touch_the_shape():
+    level = {
+        "cave": {
+            "texture": CAVE_FLOOR_TEXTURES["colorable"],
+            "ground_color": "ff7f7e71",
+            "bitmap": "PoolByteArray( 1, 2 )",
+            "entrance_bitmap": "PoolByteArray( 3, 4 )",
+        }
+    }
+
+    set_cave_floor_texture(level, "rocky", ground_color="ff112233")
+
+    assert level["cave"]["texture"] == CAVE_FLOOR_TEXTURES["rocky"]
+    assert level["cave"]["ground_color"] == "ff112233"
+    assert level["cave"]["bitmap"] == "PoolByteArray( 1, 2 )"
+    assert level["cave"]["entrance_bitmap"] == "PoolByteArray( 3, 4 )"
+
+
+def test_set_cave_floor_texture_rejects_unknown_key():
+    level = {"cave": {"texture": CAVE_FLOOR_TEXTURES["colorable"]}}
+    with pytest.raises(ValueError):
+        set_cave_floor_texture(level, "non_esiste")
 
 
 def test_add_water_polygon_creates_tree_on_first_use():
