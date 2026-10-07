@@ -51,6 +51,15 @@ generazione riproducibile byte per byte. Il comando valida sempre il
 risultato prima di scriverlo: se ci sono errori non scrive nulla e stampa
 gli `Issue` (vedi `validate` sotto).
 
+Accanto a `cripta.dungeondraft_map`, `generate` scrive sempre anche
+`cripta.ddforge.json` (il "sidecar", nessun flag per disattivarlo): conserva
+la semantica che il formato `.dungeondraft_map` non rappresenta (stanza
+boss, corridoi bui, ruoli delle stanze, strade/landmark di una citta...),
+piu l'hash della mappa e del catalogo usati. Non cambia nulla del file
+`.dungeondraft_map`; serve al futuro comando `ddforge decorate`
+(milestone M10, `docs/SPEC-decorate.md` §4) per abbellire una mappa senza
+dover ricostruire le stanze dai muri.
+
 ### `validate` — controlla un file gia scritto
 
 ```bash

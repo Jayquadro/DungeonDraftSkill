@@ -15,6 +15,13 @@ Adatta seed, dimensioni e opzioni alla richiesta — questi sono punti di
 partenza. Per il significato di ogni opzione vedi `references/styles.md` o
 `ddforge generate --help`.
 
+Ogni invocazione qui sotto scrive, oltre alla mappa, un secondo file
+`<nome>.ddforge.json` accanto ad essa (il "sidecar"): non va toccato ne
+cancellato, conserva la semantica (stanza boss, corridoi bui, ruoli delle
+stanze...) che il file `.dungeondraft_map` non porta, e serve al comando
+`ddforge decorate` (milestone M10) per abbellire la mappa in un secondo
+momento.
+
 ## Scegliere il template e le dimensioni
 
 `ddforge` non ridimensiona mai il canvas: viene dal template, e

@@ -12,6 +12,7 @@ from pathlib import Path
 
 
 _GENERATORS = {}  # popolato pigramente in _cmd_generate: import lazy per stile
+_CATALOG_PATH = "data/assets.json"  # stesso default di assets.load_catalog
 
 
 def _load_generators() -> dict:
@@ -82,7 +83,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
 
     try:
-        catalog = load_catalog()
+        catalog = load_catalog(_CATALOG_PATH)
     except (FileNotFoundError, ValueError) as exc:
         print(f"Errore: {exc}", file=sys.stderr)
         return 1
@@ -105,23 +106,25 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         from ddforge.generators.building import default_size
 
         default_w, default_h = default_size(args.building_type)
-        blueprint = generators[args.algorithm].generate(
-            width=args.width if args.width is not None else default_w,
-            height=args.height if args.height is not None else default_h,
-            seed=args.seed,
-            building_type=args.building_type, l_shaped=args.l_shaped,
-        )
+        effective_args = {
+            "width": args.width if args.width is not None else default_w,
+            "height": args.height if args.height is not None else default_h,
+            "seed": args.seed,
+            "building_type": args.building_type, "l_shaped": args.l_shaped,
+        }
+        blueprint = generators[args.algorithm].generate(**effective_args)
     elif is_city:
         # --scale, --landmark e --no-landmarks sono i parametri esclusivi di
         # city (TASK-41/TASK-48): passati solo qui, come
         # --building-type/--l-shaped per building.
+        effective_args = {
+            "width": args.width if args.width is not None else 40,
+            "height": args.height if args.height is not None else 40,
+            "seed": args.seed, "scale": args.scale,
+            "landmarks": not args.no_landmarks, "requested_landmarks": args.landmark,
+        }
         try:
-            blueprint = generators[args.algorithm].generate(
-                width=args.width if args.width is not None else 40,
-                height=args.height if args.height is not None else 40,
-                seed=args.seed, scale=args.scale,
-                landmarks=not args.no_landmarks, requested_landmarks=args.landmark,
-            )
+            blueprint = generators[args.algorithm].generate(**effective_args)
         except ValueError as exc:
             # Tipicamente: un elemento urbano chiesto con --landmark che non e
             # ammissibile al preset di scala scelto (TASK-48 AC3). Messaggio
@@ -164,13 +167,15 @@ def _cmd_generate(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
             return 1
-        blueprint = generators[args.algorithm].generate(width=world_w, height=world_h, seed=args.seed)
+        effective_args = {"width": world_w, "height": world_h, "seed": args.seed}
+        blueprint = generators[args.algorithm].generate(**effective_args)
     else:
-        blueprint = generators[args.algorithm].generate(
-            width=args.width if args.width is not None else 40,
-            height=args.height if args.height is not None else 40,
-            seed=args.seed, rooms=args.rooms,
-        )
+        effective_args = {
+            "width": args.width if args.width is not None else 40,
+            "height": args.height if args.height is not None else 40,
+            "seed": args.seed, "rooms": args.rooms,
+        }
+        blueprint = generators[args.algorithm].generate(**effective_args)
 
     # Ogni piano riceve un nome proprio: senza, ereditano tutti la label del
     # template ("Ground") e in Dungeondraft non si distingue un piano
@@ -225,9 +230,26 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
 
     save(prepared, args.out)
+
+    # Il sidecar si scrive sempre, senza un flag per disattivarlo (decisione
+    # di Jay, docs/SPEC-decorate.md §14 D2): conserva la semantica del
+    # Blueprint che il formato .dungeondraft_map non rappresenta, cosi
+    # `ddforge decorate` (M10) non deve ricostruire stanze/ruoli dai muri.
+    # L'hash e' calcolato sui byte appena scritti, non ricostruito, cosi
+    # corrisponde sempre esattamente al file sul disco (TASK-66 AC4).
+    from ddforge.decorate.sidecar import build_sidecar, write_sidecar
+
+    map_bytes = Path(args.out).read_bytes()
+    sidecar = build_sidecar(
+        algorithm=args.algorithm, args=effective_args, template=args.template,
+        catalog_path=_CATALOG_PATH, map_bytes=map_bytes, blueprint=blueprint,
+    )
+    sidecar_file = write_sidecar(args.out, sidecar)
+
     warnings = [i for i in issues if i.severity == "warning"]
     suffix = f" ({len(warnings)} avvisi)" if warnings else ""
     print(f"\nScritto {args.out}{suffix}")
+    print(f"Scritto {sidecar_file}")
     return 0
 
 
